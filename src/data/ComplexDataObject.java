@@ -6,6 +6,13 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**
+ * ComplexDataObject is a key-value store that can be used to model complex
+ * real-world objects.
+ * 
+ * @author Jürgen Bernard
+ *
+ */
 public class ComplexDataObject implements IDataObject, Iterable<String> {
 
 	protected Long ID = -1L;
