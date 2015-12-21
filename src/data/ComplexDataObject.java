@@ -10,7 +10,7 @@ import java.util.TreeMap;
  * ComplexDataObject is a key-value store that can be used to model complex
  * real-world objects.
  * 
- * @author Jürgen Bernard
+ * @author Juergen Bernard
  *
  */
 public class ComplexDataObject implements IDataObject, Iterable<String> {

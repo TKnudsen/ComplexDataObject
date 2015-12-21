@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Locale;
 
 import data.ComplexDataContainer;
@@ -13,6 +14,8 @@ public class DoubleConverter implements IPreprocessingRoutine {
 
 	String attribute;
 	String targetAttribute;
+
+	private List<String> missingValueIndicators = null;
 
 	// NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
 	NumberFormat format = null;
@@ -69,7 +72,9 @@ public class DoubleConverter implements IPreprocessingRoutine {
 		for (ComplexDataObject complexDataObject : container) {
 			Double d = Double.NaN;
 
-			if (format != null)
+			if (missingValueIndicators != null && missingValueIndicators.contains(complexDataObject.get(attribute).toString()))
+				d = Double.NaN;
+			else if (format != null)
 				try {
 					Number number = format.parse(complexDataObject.get(attribute).toString());
 					d = number.doubleValue();
@@ -93,5 +98,13 @@ public class DoubleConverter implements IPreprocessingRoutine {
 
 			complexDataObject.add(targetAttribute, d);
 		}
+	}
+
+	public List<String> getMissingValueIndicators() {
+		return missingValueIndicators;
+	}
+
+	public void setMissingValueIndicators(List<String> missingValueIndicators) {
+		this.missingValueIndicators = missingValueIndicators;
 	}
 }

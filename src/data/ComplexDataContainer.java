@@ -1,5 +1,6 @@
 package data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -7,6 +8,8 @@ import java.util.Map;
 public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 
 	private Map<Long, ComplexDataObject> objectsMap = new HashMap<Long, ComplexDataObject>();
+
+	private Map<String, Map<Long, Object>> attributeValues = new HashMap<String, Map<Long, Object>>();
 
 	private DataSchema dataSchema;
 
@@ -51,6 +54,8 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 		// TODO What about the default value? Should it be delegated to the
 		// ComplexDataObjects?
 
+		attributeValues = new HashMap<String, Map<Long, Object>>();
+
 		return dataSchema.add(attribute, type, defaultValue);
 	}
 
@@ -75,4 +80,34 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 		return objectsMap.values().iterator();
 	}
 
+	public Boolean isNumeric(String attribute) {
+		if (Number.class.isAssignableFrom(dataSchema.getType(attribute)))
+			return true;
+		return false;
+	}
+
+	public Collection<String> getAttributeNames() {
+		return dataSchema.getAttributeNames();
+	}
+
+	public Map<Long, Object> getAttributeValues(String attribute) {
+		if (attributeValues.get(attribute) == null) {
+			calculateEntities(attribute);
+		}
+		return attributeValues.get(attribute);
+	}
+
+	private void calculateEntities(String attribute) {
+		Map<Long, Object> ent = new HashMap<Long, Object>();
+		for (Long l : objectsMap.keySet())
+			if (objectsMap.get(l).get(attribute) != null)
+				ent.put(l, objectsMap.get(l).get(attribute));
+		this.attributeValues.put(attribute, ent);
+	}
+
+	public int size() {
+		if (objectsMap == null)
+			return 0;
+		return objectsMap.size();
+	}
 }
