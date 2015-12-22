@@ -4,9 +4,9 @@ import java.util.Map;
 
 public interface IDataObject {
 
-	public Long getID();
+	public long getID();
 
-	public int Size();
+	public int size();
 
 	public String getName();
 
@@ -20,7 +20,7 @@ public interface IDataObject {
 
 	public Map<String, Class<?>> getTypes();
 
-	public void remove(String attribute);
+	public boolean remove(String attribute);
 
 	public String toString();
 }

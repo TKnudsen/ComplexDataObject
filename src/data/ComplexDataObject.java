@@ -1,21 +1,26 @@
 package data;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * ComplexDataObject is a key-value store that can be used to model complex
  * real-world objects.
+ * 
+ * For the use of ComplexDataObject in combination with DB solutions some
+ * constructors allow the definition of the ID from an external competence.
  * 
  * @author Juergen Bernard
  *
  */
 public class ComplexDataObject implements IDataObject, Iterable<String> {
 
-	protected Long ID = -1L;
+	protected long ID = -1L;
 	protected String name;
 	protected String description;
 
@@ -25,7 +30,7 @@ public class ComplexDataObject implements IDataObject, Iterable<String> {
 		this.ID = getRandomLong();
 	}
 
-	public ComplexDataObject(Long ID) {
+	public ComplexDataObject(long ID) {
 		this.ID = ID;
 	}
 
@@ -35,19 +40,19 @@ public class ComplexDataObject implements IDataObject, Iterable<String> {
 		this.description = description;
 	}
 
-	public ComplexDataObject(Long ID, String name, String description) {
+	public ComplexDataObject(long ID, String name, String description) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 	}
 
 	/**
-	 * Little Helper for the Generation of a unique Identifier.
+	 * Little helper for the generation of a unique identifier.
 	 * 
 	 * @return unique ID
 	 */
-	private Long getRandomLong() {
-		return (long) (Math.random() * (Long.MAX_VALUE - 1));
+	private long getRandomLong() {
+		return UUID.randomUUID().getMostSignificantBits();
 	}
 
 	public void setName(String name) {
@@ -68,9 +73,12 @@ public class ComplexDataObject implements IDataObject, Iterable<String> {
 	}
 
 	@Override
-	public void remove(String attribute) {
-		if (attributes.containsKey(attribute))
+	public boolean remove(String attribute) {
+		if (attributes.get(attribute) != null) {
 			attributes.remove(attribute);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -98,12 +106,12 @@ public class ComplexDataObject implements IDataObject, Iterable<String> {
 	}
 
 	@Override
-	public Long getID() {
+	public long getID() {
 		return ID;
 	}
 
 	@Override
-	public int Size() {
+	public int size() {
 		if (attributes == null)
 			return 0;
 		return attributes.size();
@@ -142,8 +150,58 @@ public class ComplexDataObject implements IDataObject, Iterable<String> {
 
 	@Override
 	public Map<String, Class<?>> getTypes() {
-		// TODO Auto-generated method stub
+		Map<String, Class<?>> ret = new HashMap<>();
+		for (String string : attributes.keySet())
+			if (attributes.get(string) == null)
+				ret.put(string, null);
+			else
+				ret.put(string, attributes.get(string).getClass());
 		return null;
 	}
 
+	@Override
+	public int hashCode() {
+		return (int) ID;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ComplexDataObject other = (ComplexDataObject) obj;
+		return this.hashCode() == other.hashCode() ? true : false;
+	}
+
+	/**
+	 * Is true if the ComplexDataObject and a given Object have identical
+	 * attributes and attribute values. ID, name and description are ignored.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public boolean equalValues(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ComplexDataObject other = (ComplexDataObject) obj;
+
+		if (size() != other.size())
+			return false;
+
+		Set<String> keys = attributes.keySet();
+		keys.addAll(other.keySet());
+
+		for (String string : keys)
+			if (!get(string).equals(other.get(string)))
+				return false;
+
+		return true;
+	}
 }
