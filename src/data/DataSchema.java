@@ -113,7 +113,7 @@ public class DataSchema {
 	/**
 	 * @return the number of attributes defined in this schema.
 	 */
-	public int Size() {
+	public int size() {
 		return attributes.size();
 	}
 
