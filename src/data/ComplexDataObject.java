@@ -9,14 +9,24 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * ComplexDataObject is a key-value store that can be used to model complex
- * real-world objects.
+ * <p>
+ * Title: ComplexDataObject
+ * </p>
+ * 
+ * <p>
+ * Description: ComplexDataObject is a key-value store that can be used to model
+ * complex real-world objects.
  * 
  * For the use of ComplexDataObject in combination with DB solutions some
  * constructors allow the definition of the ID from an external competence.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2015
+ * </p>
  * 
  * @author Juergen Bernard
- *
+ * @version 1.0
  */
 public class ComplexDataObject implements IDataObject, Iterable<String> {
 
