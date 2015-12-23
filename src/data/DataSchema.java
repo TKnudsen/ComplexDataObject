@@ -8,12 +8,25 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Interface for data object schema definitions.
+ * <p>
+ * Title: DataSchema
+ * </p>
+ * 
+ * <p>
+ * Description: Interface for data object schema definitions.
  * 
  * It is very similar to IDataObject, it actually inherit from it, but the
  * add(String, Object) method seems to be a bit too ambiguous.
  * 
  * Maybe use a builder for immutable schema objects.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2015
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
  */
 public class DataSchema {
 	private final String name;

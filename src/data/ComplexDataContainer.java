@@ -5,6 +5,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * <p>
+ * Title: ComplexDataContainer
+ * </p>
+ * 
+ * <p>
+ * Description: ComplexDataContainer stores and manages various
+ * ComplexDataObjects. A DataSchema contains all keys of the ComplexDataObjects.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2015
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
+ */
 public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 
 	private Map<Long, ComplexDataObject> objectsMap = new HashMap<Long, ComplexDataObject>();

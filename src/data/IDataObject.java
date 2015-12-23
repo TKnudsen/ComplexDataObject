@@ -2,6 +2,23 @@ package data;
 
 import java.util.Map;
 
+/**
+ * <p>
+ * Title: IDataObject
+ * </p>
+ * 
+ * <p>
+ * Description: The interface for a ComplexDataObject. Currently it is not yet
+ * forseeable whether other implementations of IDataObject will follow.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2015
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
+ */
 public interface IDataObject {
 
 	public long getID();
