@@ -45,7 +45,7 @@ public class DataSchema {
 		}
 
 		public SchemaEntry(String name, Class<T> type, T defaultValue, DataSchema typeSchema) {
-			if (!IDataObject.class.isAssignableFrom(type) && typeSchema != null) {
+			if (!IKeyValueStore.class.isAssignableFrom(type) && typeSchema != null) {
 				throw new IllegalArgumentException("types with a defined typeSchema must inherit IDataObject");
 			}
 
@@ -249,7 +249,7 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IDataObject> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
+	public <T extends IKeyValueStore> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
 		return add(attribute, type, dataSchema, null);
 	}
 
@@ -265,7 +265,7 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IDataObject> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
+	public <T extends IKeyValueStore> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
 		final SchemaEntry<T> entry = new SchemaEntry<T>(attribute, type, defaultValue, dataSchema);
 		this.attributes.put(attribute, entry);
 

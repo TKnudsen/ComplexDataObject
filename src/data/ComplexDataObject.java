@@ -28,7 +28,7 @@ import java.util.UUID;
  * @author Juergen Bernard
  * @version 1.0
  */
-public class ComplexDataObject implements IDataObject, Iterable<String> {
+public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 
 	protected long ID = -1L;
 	protected String name;

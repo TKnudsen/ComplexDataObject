@@ -4,12 +4,12 @@ import java.util.Map;
 
 /**
  * <p>
- * Title: IDataObject
+ * Title: IKeyValueStore
  * </p>
  * 
  * <p>
  * Description: The interface for a ComplexDataObject. Currently it is not yet
- * forseeable whether other implementations of IDataObject will follow.
+ * forseeable whether other implementations of IKeyValueStore will follow.
  * </p>
  * 
  * <p>
@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Juergen Bernard
  * @version 1.0
  */
-public interface IDataObject {
+public interface IKeyValueStore {
 
 	public long getID();
 
