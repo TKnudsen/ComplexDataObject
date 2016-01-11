@@ -13,15 +13,15 @@ import java.util.Map;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015
+ * Copyright: Copyright (c) 2015-2016
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 public interface IKeyValueStore {
 
-	public long getID();
+	public Long getID();
 
 	public int size();
 
