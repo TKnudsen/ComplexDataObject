@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 
-	protected Long ID = -1L;
+	protected Long ID;
 	protected String name;
 	protected String description;
 
