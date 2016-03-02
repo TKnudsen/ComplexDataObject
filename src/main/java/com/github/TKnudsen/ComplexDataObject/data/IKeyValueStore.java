@@ -17,11 +17,11 @@ import java.util.Map;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public interface IKeyValueStore {
 
-	public Long getID();
+	public long getID();
 
 	public int size();
 

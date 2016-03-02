@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 
-	protected Long ID;
+	protected long ID;
 	protected String name;
 	protected String description;
 
@@ -40,9 +40,17 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 		this.ID = getRandomLong();
 	}
 
+	/**
+	 * @deprecated use long instead of Long.
+	 * @param ID
+	 */
 	public ComplexDataObject(Long ID) {
 		if (ID == null)
 			throw new IllegalArgumentException("ID was null");
+		this.ID = ID;
+	}
+
+	public ComplexDataObject(long ID) {
 		this.ID = ID;
 	}
 
@@ -65,7 +73,7 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 	 * 
 	 * @return unique ID
 	 */
-	private Long getRandomLong() {
+	private long getRandomLong() {
 		return UUID.randomUUID().getMostSignificantBits();
 	}
 
@@ -108,7 +116,8 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 			return "";
 
 		String output = "";
-		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
+		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: "
+				+ attributes.get(attribute));
 		return output;
 	}
 
@@ -120,7 +129,7 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 	}
 
 	@Override
-	public Long getID() {
+	public long getID() {
 		return ID;
 	}
 
@@ -175,7 +184,7 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 
 	@Override
 	public int hashCode() {
-		return ID.intValue();
+		return (int) ID;
 	}
 
 	@Override
