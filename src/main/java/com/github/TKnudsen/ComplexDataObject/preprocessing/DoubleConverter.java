@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.preprocessing;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -7,8 +7,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 
 public class DoubleConverter implements IPreprocessingRoutine {
 

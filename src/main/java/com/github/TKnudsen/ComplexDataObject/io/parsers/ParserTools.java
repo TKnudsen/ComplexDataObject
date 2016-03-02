@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.io.parsers;
+package com.github.TKnudsen.ComplexDataObject.io.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.data.enums;
+package com.github.TKnudsen.ComplexDataObject.data.enums;
 
 public enum AttributeType {
 	NUMERIC, ORDINAL, CATEGORICAL, BINARY
