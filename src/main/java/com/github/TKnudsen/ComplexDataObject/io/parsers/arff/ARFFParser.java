@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
+package com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,9 +12,9 @@ import java.util.Map.Entry;
 
 import org.apache.commons.math3.exception.NullArgumentException;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
 import weka.core.Instance;
 import weka.core.Instances;
 

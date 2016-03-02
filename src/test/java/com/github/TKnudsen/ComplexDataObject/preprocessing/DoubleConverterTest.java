@@ -1,13 +1,15 @@
-package preprocessing;
+package com.github.TKnudsen.ComplexDataObject.preprocessing;
 
 import java.util.Arrays;
 import java.util.List;
 
-import data.ComplexDataContainer;
-import data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.tools.ComplexDataObjectFactory;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.preprocessing.DoubleConverter;
+
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
-import tools.ComplexDataObjectFactory;
 
 public class DoubleConverterTest {
 

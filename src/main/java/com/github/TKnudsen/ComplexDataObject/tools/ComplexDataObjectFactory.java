@@ -1,6 +1,6 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.tools;
+package com.github.TKnudsen.ComplexDataObject.tools;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 
 public class ComplexDataObjectFactory {
 

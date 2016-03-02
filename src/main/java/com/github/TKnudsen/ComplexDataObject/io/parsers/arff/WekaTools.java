@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
+package com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;

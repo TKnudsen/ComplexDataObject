@@ -1,4 +1,4 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.csv;
+package com.github.TKnudsen.ComplexDataObject.io.parsers.csv;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,10 +10,10 @@ import java.util.Map.Entry;
 
 import org.apache.commons.math3.exception.NullArgumentException;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
-import main.java.com.github.TKnudsen.ComplexDataObject.io.parsers.arff.WekaTools;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.io.parsers.arff.WekaTools;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;

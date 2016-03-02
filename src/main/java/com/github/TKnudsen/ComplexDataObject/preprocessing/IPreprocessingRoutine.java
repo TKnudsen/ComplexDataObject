@@ -1,6 +1,6 @@
-package main.java.com.github.TKnudsen.ComplexDataObject.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.preprocessing;
 
-import main.java.com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 
 public interface IPreprocessingRoutine {
 
