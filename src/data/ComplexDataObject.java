@@ -115,7 +115,7 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 	public String toStringInLine() {
 		String output = "";
 		for (String key : attributes.keySet())
-			output += (key + attributes.get(key).toString() + "/t");
+			output += (key + attributes.get(key).toString() + "\t");
 		return output;
 	}
 
