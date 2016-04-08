@@ -102,6 +102,12 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 			return true;
 		return false;
 	}
+	
+	public Boolean isBoolean(String attribute) {
+		if (Boolean.class.isAssignableFrom(dataSchema.getType(attribute)))
+			return true;
+		return false;
+	}
 
 	public Collection<String> getAttributeNames() {
 		return dataSchema.getAttributeNames();

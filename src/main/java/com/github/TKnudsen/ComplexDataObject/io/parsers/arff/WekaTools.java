@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.math3.exception.NullArgumentException;
+
+import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -32,6 +36,42 @@ import weka.core.Instances;
  * @version 1.0
  */
 public class WekaTools {
+
+	public static List<ComplexDataObject> getComplexDataObjects(Instances instances) {
+		List<ComplexDataObject> data = new ArrayList<>();
+
+		// Step1: create metaMapping
+		Map<Integer, Entry<String, Class<?>>> metaMapping = WekaTools.getAttributeSchema(instances);
+
+		// Step2: create ComplexDataObjects
+		for (int zeile = 0; zeile < instances.numInstances(); zeile++) {
+
+			Instance instance = instances.instance(zeile);
+
+			ComplexDataObject complexDataObject = new ComplexDataObject();
+
+			// parse columns
+			for (Integer spalte = 0; spalte < instances.numAttributes(); spalte++) {
+
+				Entry<String, ?> entry = WekaTools.assignEntry(metaMapping, instance, spalte, "?");
+
+				if (entry != null) {
+					if (entry.getValue() != null && entry.getValue() instanceof String) {
+						Date date = ParserTools.parseDate((String) entry.getValue());
+						if (date != null)
+							complexDataObject.add(entry.getKey(), date);
+						else
+							complexDataObject.add(entry.getKey(), entry.getValue());
+					} else
+						complexDataObject.add(entry.getKey(), entry.getValue());
+				} else
+					throw new NullArgumentException();
+			}
+			data.add(complexDataObject);
+		}
+		return data;
+	}
+
 	public static Map<Integer, Entry<String, Class<?>>> getAttributeSchema(Instances instances) {
 		Map<Integer, Entry<String, Class<?>>> attributeSchema = new HashMap<Integer, Entry<String, Class<?>>>();
 
