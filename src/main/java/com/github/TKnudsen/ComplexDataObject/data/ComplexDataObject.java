@@ -1,7 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -116,8 +118,7 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 			return "";
 
 		String output = "";
-		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: "
-				+ attributes.get(attribute));
+		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
 		return output;
 	}
 
@@ -180,6 +181,21 @@ public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
 			else
 				ret.put(string, attributes.get(string).getClass());
 		return null;
+	}
+
+	/**
+	 * retrieves all attributes for objects matching a given class type.
+	 * 
+	 * @param classType
+	 * @return List of attributes
+	 */
+	public List<String> getAttributes(Class<?> classType) {
+		List<String> properties = new ArrayList<>();
+		for (String property : attributes.keySet())
+			if (get(property) != null && get(property) != null && get(property).getClass().equals(classType))
+				if (!properties.contains(property))
+					properties.add(property);
+		return properties;
 	}
 
 	@Override

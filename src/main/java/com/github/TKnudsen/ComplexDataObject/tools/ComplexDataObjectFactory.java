@@ -9,6 +9,5 @@ public class ComplexDataObjectFactory {
 		a.add(attribute1, value1);
 		a.add(attribute2, value2);
 		return a;
-
 	}
 }
