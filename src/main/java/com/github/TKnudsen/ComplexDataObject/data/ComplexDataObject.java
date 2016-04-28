@@ -101,12 +101,10 @@ public class ComplexDataObject implements IDObject, IKeyValueStore, ITextDescrip
 	}
 
 	@Override
-	public boolean remove(String attribute) {
-		if (attributes.get(attribute) != null) {
-			attributes.remove(attribute);
-			return true;
-		}
-		return false;
+	public Object remove(String attribute) {
+		if (attributes.get(attribute) != null)
+			return attributes.remove(attribute);
+		return null;
 	}
 
 	@Override

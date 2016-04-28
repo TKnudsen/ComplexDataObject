@@ -16,7 +16,7 @@ import java.util.Map;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public interface IKeyValueStore {
 
@@ -30,7 +30,7 @@ public interface IKeyValueStore {
 
 	public Map<String, Class<?>> getTypes();
 
-	public boolean remove(String attribute);
+	public Object remove(String attribute);
 
 	public int hashCode();
 
