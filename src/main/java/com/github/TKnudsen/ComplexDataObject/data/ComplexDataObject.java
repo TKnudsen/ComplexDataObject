@@ -10,6 +10,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueStore;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ITextDescription;
+
 /**
  * <p>
  * Title: ComplexDataObject
@@ -30,7 +34,7 @@ import java.util.UUID;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class ComplexDataObject implements IKeyValueStore, Iterable<String> {
+public class ComplexDataObject implements IDObject, IKeyValueStore, ITextDescription, Iterable<String> {
 
 	protected long ID;
 	protected String name;

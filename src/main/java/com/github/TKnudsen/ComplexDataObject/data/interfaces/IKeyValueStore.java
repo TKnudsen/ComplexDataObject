@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.data;
+package com.github.TKnudsen.ComplexDataObject.data.interfaces;
 
 import java.util.Map;
 
@@ -8,8 +8,7 @@ import java.util.Map;
  * </p>
  * 
  * <p>
- * Description: The interface for a ComplexDataObject. Currently it is not yet
- * forseeable whether other implementations of IKeyValueStore will follow.
+ * Description: interface for objects containing key-value pairs.
  * </p>
  * 
  * <p>
@@ -17,17 +16,11 @@ import java.util.Map;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public interface IKeyValueStore {
 
-	public long getID();
-
 	public int size();
-
-	public String getName();
-
-	public String getDescription();
 
 	public void add(String attribute, Object value);
 
@@ -39,5 +32,7 @@ public interface IKeyValueStore {
 
 	public boolean remove(String attribute);
 
-	public String toString();
+	public int hashCode();
+
+	public boolean equals(Object obj);
 }
