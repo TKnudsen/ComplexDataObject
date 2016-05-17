@@ -62,7 +62,7 @@ public class ARFFParser implements ComplexDataObjectParser {
 
 				Entry<String, ?> entry = null;
 				try {
-					WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
+					entry = WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
 				} catch (Exception e) {
 
 				}
