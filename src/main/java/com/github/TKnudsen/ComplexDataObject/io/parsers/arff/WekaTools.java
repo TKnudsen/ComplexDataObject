@@ -100,7 +100,12 @@ public class WekaTools {
 
 	public static Entry<String, ?> assignEntry(Map<Integer, Entry<String, Class<?>>> attributeSchema, Instance instance, int spalte, String missingValueIndicator) {
 
-		boolean missingValue = instance.isMissing(spalte);
+		boolean missingValue = false;
+		try {
+			missingValue = instance.isMissing(spalte);
+		} catch (IncompatibleClassChangeError changeError) {
+			System.out.println("WekaTools: IncompatibleClassChangeError.");
+		}
 
 		Entry<String, ?> entry = null;
 

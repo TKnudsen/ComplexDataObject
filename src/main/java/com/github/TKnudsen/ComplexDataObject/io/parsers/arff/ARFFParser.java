@@ -15,6 +15,7 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -59,7 +60,12 @@ public class ARFFParser implements ComplexDataObjectParser {
 			// parse columns
 			for (Integer spalte = 0; spalte < instances.numAttributes(); spalte++) {
 
-				Entry<String, ?> entry = WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
+				Entry<String, ?> entry = null;
+				try {
+					WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
+				} catch (Exception e) {
+
+				}
 
 				if (entry != null) {
 					if (entry.getValue() != null && entry.getValue() instanceof String) {
@@ -76,6 +82,7 @@ public class ARFFParser implements ComplexDataObjectParser {
 			data.add(complexDataObject);
 		}
 		return data;
+
 	}
 
 	public static Instances parseARFF(String arffFile) {
