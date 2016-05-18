@@ -11,6 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
+
+import weka.core.Instance;
 
 /**
  * <p>
@@ -232,5 +237,110 @@ public abstract class ParserTools implements Serializable {
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * assigns an identifier and an object to an Entry.
+	 * 
+	 * @param identifier
+	 * @param value
+	 * @param missingValueIndicator
+	 * @return
+	 */
+	public static Entry<String, ?> assignEntry(String identifier, Object value, String missingValueIndicator) {
+
+		if (identifier == null || value == null)
+			return null;
+
+		Entry<String, ?> entry = null;
+
+		// Integer
+		if (value.equals(Integer.class))
+			try {
+				entry = new SimpleEntry<String, Integer>(identifier, Integer.parseInt(String.valueOf((int) value)));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		// Date (real date)
+		else if (value.equals(Date.class))
+			if (String.valueOf(value).equals(""))
+				entry = new SimpleEntry<String, Date>(identifier, null);
+			else
+				entry = new SimpleEntry<String, Date>(identifier, ParserTools.parseDate(String.valueOf(value)));
+		// Double //TODO check for Number?
+		else if (value.equals(Double.class))
+			if (String.valueOf(value).equals("") || String.valueOf(value).equals(missingValueIndicator))
+				entry = new SimpleEntry<String, Double>(identifier, Double.NaN);
+			else {
+				try {
+					entry = new SimpleEntry<String, Double>(identifier, new Double(String.valueOf(value).replace(",", ".")));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+		// String
+		else if (value.equals(String.class))
+			entry = new SimpleEntry<String, String>(identifier, new String(String.valueOf(value)));
+		// Boolean
+		else if (value.equals(Boolean.class)) {
+			String s = String.valueOf(value);
+
+			switch (s) {
+			case "j": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "V": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "1": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "1.0": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "Ja": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "ja": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "yes": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
+				break;
+			}
+			case "0": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
+				break;
+			}
+			case "0.0": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
+				break;
+			}
+			case "Nein": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
+				break;
+			}
+			case "nein": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
+				break;
+			}
+			case "no": {
+				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
+				break;
+			}
+			default:
+				System.out.println("ParserTools.assignEntry: new boolean!!!: " + s);
+				System.exit(-1);
+				break;
+			}
+		}
+
+		return entry;
 	}
 }
