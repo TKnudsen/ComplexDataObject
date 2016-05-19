@@ -102,7 +102,7 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 			return true;
 		return false;
 	}
-	
+
 	public Boolean isBoolean(String attribute) {
 		if (Boolean.class.isAssignableFrom(dataSchema.getType(attribute)))
 			return true;
@@ -118,6 +118,12 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 			calculateEntities(attribute);
 		}
 		return attributeValues.get(attribute);
+	}
+
+	public boolean contains(ComplexDataObject object) {
+		if (objectsMap.containsKey(object.getID()))
+			return true;
+		return false;
 	}
 
 	private void calculateEntities(String attribute) {
