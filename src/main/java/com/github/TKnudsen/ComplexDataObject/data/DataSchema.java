@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueStore;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015
+ * Copyright: Copyright (c) 2015-2016
  * </p>
  * 
  * @author Juergen Bernard
