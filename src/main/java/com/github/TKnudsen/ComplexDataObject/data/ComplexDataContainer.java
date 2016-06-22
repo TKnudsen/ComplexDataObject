@@ -77,6 +77,31 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 	}
 
 	/**
+	 * Remove functionality. For test purposes. Maybe this functionality will be
+	 * removed sometime.
+	 * 
+	 * @param complexDataObject
+	 * @return
+	 */
+	public boolean remove(ComplexDataObject complexDataObject) {
+		if (complexDataObject == null)
+			return false;
+
+		long id = complexDataObject.getID();
+		if (!objectsMap.containsKey(id))
+			return false;
+
+		for (String attribute : attributeValues.keySet()) {
+			if (attributeValues.get(attribute) != null)
+				attributeValues.get(attribute).remove(id);
+		}
+
+		objectsMap.remove(id);
+
+		return true;
+	}
+
+	/**
 	 * Removes an attribute from the container and the set of
 	 * ComplexDataObjects.
 	 * 
