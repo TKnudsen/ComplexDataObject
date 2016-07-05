@@ -73,7 +73,16 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 
 		attributeValues = new HashMap<String, Map<Long, Object>>();
 
-		return dataSchema.add(attribute, type, defaultValue);
+		dataSchema.add(attribute, type, defaultValue);
+
+		Iterator<ComplexDataObject> objectIterator = iterator();
+		while (objectIterator.hasNext()) {
+			ComplexDataObject next = objectIterator.next();
+			if (next.get(attribute) == null)
+				next.add(attribute, defaultValue);
+		}
+
+		return dataSchema;
 	}
 
 	/**
@@ -132,6 +141,13 @@ public class ComplexDataContainer implements Iterable<ComplexDataObject> {
 			if (objectsMap.get(l).get(attribute) != null)
 				ent.put(l, objectsMap.get(l).get(attribute));
 		this.attributeValues.put(attribute, ent);
+	}
+
+	@Override
+	public String toString() {
+		if (dataSchema == null)
+			return super.toString();
+		return dataSchema.toString();
 	}
 
 	public int size() {
