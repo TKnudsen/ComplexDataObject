@@ -72,7 +72,9 @@ public class DoubleConverter implements IPreprocessingRoutine {
 		for (ComplexDataObject complexDataObject : container) {
 			Double d = Double.NaN;
 
-			if (missingValueIndicators != null && missingValueIndicators.contains(complexDataObject.get(attribute).toString()))
+			if (complexDataObject.get(attribute) == null)
+				d = Double.NaN;
+			else if (missingValueIndicators != null && missingValueIndicators.contains(complexDataObject.get(attribute).toString()))
 				d = Double.NaN;
 			else if (format != null)
 				try {
