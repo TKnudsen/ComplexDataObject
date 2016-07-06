@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Juergen Bernard
  * @version 1.04
  */
-public interface IKeyValueStore {
+public interface IKeyValueProvider {
 
 	public int size();
 

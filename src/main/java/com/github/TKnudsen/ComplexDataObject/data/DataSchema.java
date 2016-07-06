@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueStore;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
@@ -16,9 +16,6 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueStore;
  * 
  * <p>
  * Description: Interface for data object schema definitions.
- * 
- * It is very similar to IDataObject, it actually inherit from it, but the
- * add(String, Object) method seems to be a bit too ambiguous.
  * 
  * Maybe use a builder for immutable schema objects.
  * </p>
@@ -47,7 +44,7 @@ public class DataSchema {
 		}
 
 		public SchemaEntry(String name, Class<T> type, T defaultValue, DataSchema typeSchema) {
-			if (!IKeyValueStore.class.isAssignableFrom(type) && typeSchema != null) {
+			if (!IKeyValueProvider.class.isAssignableFrom(type) && typeSchema != null) {
 				throw new IllegalArgumentException("types with a defined typeSchema must inherit IDataObject");
 			}
 
@@ -251,7 +248,7 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IKeyValueStore> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
+	public <T extends IKeyValueProvider> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
 		return add(attribute, type, dataSchema, null);
 	}
 
@@ -267,7 +264,7 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IKeyValueStore> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
+	public <T extends IKeyValueProvider> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
 		final SchemaEntry<T> entry = new SchemaEntry<T>(attribute, type, defaultValue, dataSchema);
 		this.attributes.put(attribute, entry);
 

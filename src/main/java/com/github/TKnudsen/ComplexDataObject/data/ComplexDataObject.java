@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueStore;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ITextDescription;
 
 /**
@@ -34,7 +34,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ITextDescription;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class ComplexDataObject implements IDObject, IKeyValueStore, ITextDescription, Iterable<String> {
+public class ComplexDataObject implements IDObject, IKeyValueProvider, ITextDescription, Iterable<String> {
 
 	protected long ID;
 	protected String name;
