@@ -11,8 +11,8 @@ import java.util.Map;
  * </p>
  * 
  * <p>
- * Description: ComplexDataContainer stores and manages various
- * ComplexDataObjects. A DataSchema contains all keys of the ComplexDataObjects.
+ * Description: ComplexDataContainer stores and manages ComplexDataObjects. A
+ * DataSchema contains all keys of the ComplexDataObjects.
  * </p>
  * 
  * <p>
