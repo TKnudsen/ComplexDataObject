@@ -30,7 +30,7 @@ public class BigDecimalConverter implements IPreprocessingRoutine {
 	@Override
 	public void process(ComplexDataContainer container) {
 		// add new attribute to schema
-		container.add(targetAttribute, BigDecimal.class, BigDecimal.ZERO);
+		container.addAttribute(targetAttribute, BigDecimal.class, BigDecimal.ZERO);
 
 		// parse
 		for (ComplexDataObject complexDataObject : container) {

@@ -66,7 +66,7 @@ public class DoubleConverter implements IPreprocessingRoutine {
 	public void process(ComplexDataContainer container) {
 
 		// add new attribute to schema
-		container.add(targetAttribute, Double.class, Double.NaN);
+		container.addAttribute(targetAttribute, Double.class, Double.NaN);
 
 		// parse
 		for (ComplexDataObject complexDataObject : container) {

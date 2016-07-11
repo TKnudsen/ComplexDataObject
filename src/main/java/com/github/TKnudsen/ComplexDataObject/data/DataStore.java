@@ -12,7 +12,7 @@ import java.util.UUID;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IMasterProvider;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ITextDescription;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * <p>
@@ -29,9 +29,8 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ITextDescription;
  * 
  * @author Juergen Bernard
  */
-public class DataStore<T extends IDObject> implements IDObject, ITextDescription, Iterable<T> {
+public class DataStore<T extends IDObject> implements IDObject, ISelfDescription, Iterable<T> {
 
-	private IDObject master = null;
 	private long ID;
 	private String name;
 	protected int hash = -1;
@@ -42,15 +41,15 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 	private transient Map<Long, T> dataMap = new HashMap<Long, T>();
 
 	/**
-	 * List<T> dataArrayList: access the data via an List. Always consistent
-	 * with the dataMaps (!)
+	 * List<T> dataList: access the data via an List. Consistent dataMap
+	 * representation
 	 */
-	private transient List<T> dataArrayList = new ArrayList<>();
+	private transient List<T> dataList = new ArrayList<>();
 
 	/**
 	 * 
 	 */
-	private Set<String> attributeKeys = new TreeSet<>();
+	private Set<String> attributes = new TreeSet<>();
 
 	public DataStore(List<T> data) {
 		this.ID = getRandomLong();
@@ -61,11 +60,11 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 
 		// initialize data
 		for (T dataObject : data) {
-			dataArrayList.add(dataObject);
+			dataList.add(dataObject);
 			dataMap.put(dataObject.getID(), dataObject);
 		}
 
-		initializeAttributeKeys();
+		initializeAttributes();
 	}
 
 	public DataStore(Map<Long, T> data) {
@@ -78,10 +77,10 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 		// initialize data
 		for (Long l : data.keySet()) {
 			dataMap.put(l, data.get(l));
-			dataArrayList.add(data.get(l));
+			dataList.add(data.get(l));
 		}
 
-		initializeAttributeKeys();
+		initializeAttributes();
 	}
 
 	/**
@@ -105,10 +104,10 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 			return false;
 
 		dataMap.put(dataObject.getID(), dataObject);
-		if (!dataArrayList.contains(dataObject))
-			dataArrayList.add(dataObject);
+		if (!dataList.contains(dataObject))
+			dataList.add(dataObject);
 
-		addAttributeKeys(dataObject);
+		addAttributes(dataObject);
 
 		return true;
 	}
@@ -136,9 +135,9 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 	public List<T> getDataByName(String name) {
 		List<T> ret = new ArrayList<T>();
 
-		for (T dataObject : dataArrayList) {
-			if (dataObject instanceof ITextDescription)
-				if (((ITextDescription) dataObject).getName().equals(name))
+		for (T dataObject : dataList) {
+			if (dataObject instanceof ISelfDescription)
+				if (((ISelfDescription) dataObject).getName().equals(name))
 					ret.add(dataObject);
 				else if (dataObject.toString().equals(name))
 					ret.add(dataObject);
@@ -166,12 +165,12 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 	}
 
 	public List<T> getDataList() {
-		return dataArrayList;
+		return dataList;
 	}
 
-	public List<T> getDataByMaster(IDObject master) {
+	public List<T> getDataByMaster(T master) {
 		List<T> data = new ArrayList<>();
-		for (T e : dataArrayList)
+		for (T e : dataList)
 			if (e instanceof IMasterProvider)
 				if (((IMasterProvider) e).getMaster() != null)
 					if (((IMasterProvider) e).getMaster().equals(master))
@@ -180,43 +179,42 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 	}
 
 	/**
-	 * Adds Attributes to the attributeKeys if a given Object has new
-	 * attributes.
+	 * Adds new attributes of a given object.
 	 */
-	private void addAttributeKeys(T dataObject) {
-		if (attributeKeys == null)
-			initializeAttributeKeys();
+	private void addAttributes(T dataObject) {
+		if (attributes == null)
+			initializeAttributes();
 
 		if (dataObject instanceof IKeyValueProvider) {
-			IKeyValueProvider keyValueStore = (IKeyValueProvider) dataObject;
+			IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
 			Map<String, Class<?>> types = keyValueStore.getTypes();
 			for (String s : types.keySet())
-				attributeKeys.add(s);
+				attributes.add(s);
 		}
 	}
 
 	/**
-	 * Initializes the attribute keys by re-initializing the data structure. Use
-	 * validateAttributeKeys() when adding new DataObjects.
+	 * Initializes the attribute keys. Use addAttributes(T dataObject) when
+	 * adding new 0bjects.
 	 */
-	private void initializeAttributeKeys() {
-		if (attributeKeys == null)
-			attributeKeys = new TreeSet<>();
-		for (T dataObject : dataArrayList)
+	private void initializeAttributes() {
+		if (attributes == null)
+			attributes = new TreeSet<>();
+		for (T dataObject : dataList)
 			if (dataObject instanceof IKeyValueProvider) {
-				IKeyValueProvider keyValueStore = (IKeyValueProvider) dataObject;
+				IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
 				Map<String, Class<?>> types = keyValueStore.getTypes();
 				for (String s : types.keySet())
-					attributeKeys.add(s);
+					attributes.add(s);
 			}
 	}
 
-	public T getDataByObjectID(Long objectID) {
-		return dataMap.get(objectID);
+	public T getDataByID(long ID) {
+		return dataMap.get(ID);
 	}
 
-	public Set<String> getAttributeKeys() {
-		return attributeKeys;
+	public Set<String> getAttributes() {
+		return attributes;
 	}
 
 	public boolean contains(T t) {
@@ -227,10 +225,6 @@ public class DataStore<T extends IDObject> implements IDObject, ITextDescription
 
 	public int size() {
 		return dataMap.size();
-	}
-
-	public IDObject getMaster() {
-		return master;
 	}
 
 	@Override

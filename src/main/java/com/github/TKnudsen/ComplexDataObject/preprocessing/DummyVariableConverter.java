@@ -49,7 +49,7 @@ public class DummyVariableConverter implements IPreprocessingRoutine {
 		
 		// Add the to-be-created dummy variables to the data schema
 		for(Object val : uniqueValues){
-			container.add(attribute+"-"+val.toString(), Integer.class, null);
+			container.addAttribute(attribute+"-"+val.toString(), Integer.class, null);
 		}
 		
 		for(ComplexDataObject complexDataObject : container){

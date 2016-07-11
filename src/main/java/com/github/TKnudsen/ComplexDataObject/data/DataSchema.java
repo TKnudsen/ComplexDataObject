@@ -15,9 +15,8 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * <p>
- * Description: Interface for data object schema definitions.
- * 
- * Maybe use a builder for immutable schema objects.
+ * Description: Contains and maintains the keys of a given set of key-value
+ * attributes. Can be seen as a sort of header for tabular data sets.
  * </p>
  * 
  * <p>
@@ -25,65 +24,14 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 public class DataSchema {
 	private final String name;
 	private final String description;
 
-	// store each property into its own map (this way defaultValue and maybe
-	// type could be sparse)?
-	public final class SchemaEntry<T> {
-		private final String name;
-		private final Class<T> type;
-		private final DataSchema typeSchema;
-		private final T defaultValue;
-
-		public SchemaEntry(String name, Class<T> type, T defaultValue) {
-			this(name, type, defaultValue, null);
-		}
-
-		public SchemaEntry(String name, Class<T> type, T defaultValue, DataSchema typeSchema) {
-			if (!IKeyValueProvider.class.isAssignableFrom(type) && typeSchema != null) {
-				throw new IllegalArgumentException("types with a defined typeSchema must inherit IDataObject");
-			}
-
-			this.name = name;
-			this.type = type;
-			this.typeSchema = typeSchema;
-			this.defaultValue = defaultValue;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Class<T> getType() {
-			return type;
-		}
-
-		public DataSchema getTypeSchema() {
-			return typeSchema;
-		}
-
-		public T getDefaultValue() {
-			return defaultValue;
-		}
-
-		public boolean isComplexType() {
-			return typeSchema != null;
-		}
-
-		@Override
-		public String toString() {
-			String output = "";
-			output += ("Name: " + name + "\t" + "Type: " + type + "\t" + "Default Value: " + defaultValue);
-			return output;
-		}
-	}
-
 	// why sorted?!
-	private final SortedMap<String, SchemaEntry<?>> attributes = new TreeMap<String, SchemaEntry<?>>();
+	protected final SortedMap<String, DataSchemaEntry<?>> attributes = new TreeMap<String, DataSchemaEntry<?>>();
 
 	public DataSchema() {
 		this(null, null);
@@ -99,7 +47,7 @@ public class DataSchema {
 	}
 
 	/**
-	 * Whether the DataSchema contains a given attribute.
+	 * Whether the DataSchemaEntry contains a given attribute.
 	 * 
 	 * @param key
 	 * @return
@@ -154,11 +102,11 @@ public class DataSchema {
 	/**
 	 * @return a collection of the attributes entries contained in this schema.
 	 */
-	public Collection<SchemaEntry<?>> getAttributeEntries() {
+	public Collection<DataSchemaEntry<?>> getAttributeEntries() {
 		return Collections.unmodifiableCollection(attributes.values());
 	}
 
-	public SchemaEntry<?> getAttributeEntry(String attribute) {
+	public DataSchemaEntry<?> getAttributeEntry(String attribute) {
 		return attributes.get(attribute);
 	}
 
@@ -230,7 +178,7 @@ public class DataSchema {
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> DataSchema add(String attribute, Class<T> type, T defaultValue) {
-		final SchemaEntry<T> entry = new SchemaEntry<T>(attribute, type, defaultValue);
+		final DataSchemaEntry<T> entry = new DataSchemaEntry<T>(attribute, type, defaultValue);
 		this.attributes.put(attribute, entry);
 
 		return this;
@@ -248,7 +196,7 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IKeyValueProvider> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
+	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
 		return add(attribute, type, dataSchema, null);
 	}
 
@@ -264,8 +212,8 @@ public class DataSchema {
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IKeyValueProvider> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
-		final SchemaEntry<T> entry = new SchemaEntry<T>(attribute, type, defaultValue, dataSchema);
+	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
+		final DataSchemaEntry<T> entry = new DataSchemaEntry<T>(attribute, type, defaultValue, dataSchema);
 		this.attributes.put(attribute, entry);
 
 		return this;

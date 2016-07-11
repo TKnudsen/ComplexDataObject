@@ -14,6 +14,7 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
 import com.github.TKnudsen.ComplexDataObject.io.parsers.arff.WekaTools;
+
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;

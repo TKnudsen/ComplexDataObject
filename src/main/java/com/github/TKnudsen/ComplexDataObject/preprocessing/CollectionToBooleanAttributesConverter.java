@@ -53,7 +53,7 @@ public class CollectionToBooleanAttributesConverter implements IPreprocessingRou
 
 		// 2) create new FuzzyBoolenCategory attributes
 		for (String string : observations)
-			container.add(attributeString + "_" + string, FuzzyBooleanCategory.class, FuzzyBooleanCategory.NO_INFORMATION);
+			container.addAttribute(attributeString + "_" + string, FuzzyBooleanCategory.class, FuzzyBooleanCategory.NO_INFORMATION);
 
 		// 3) add entries for the objects
 		iterator = container.iterator();
