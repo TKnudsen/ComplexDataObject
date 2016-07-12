@@ -2,21 +2,22 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
  * Title: Feature
  * </p>
- * 
+ *
  * <p>
  * Description: Representation of a single feature consisting of its name and
  * its value.
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2016
  * </p>
- * 
+ *
  * @author Juergen Bernard
  * @version 1.0
  */
@@ -24,7 +25,7 @@ import java.util.Map;
 public abstract class Feature<V extends Object> implements Comparable<Feature<V>>, Map.Entry<String, V>, Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 921823756506274008L;
 
@@ -50,8 +51,13 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	 * @param featureValue
 	 */
 	public Feature(String featureName, V featureValue) {
+		this(featureName, featureValue, FeatureType.DOUBLE);
+	}
+
+	public Feature(String featureName, V featureValue, FeatureType featureType) {
 		this.featureName = featureName;
 		this.featureValue = featureValue;
+		this.featureType = featureType;
 	}
 
 	public String getFeatureName() {
@@ -73,7 +79,7 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 
 	/**
 	 * return the type of feature. Default: DOUBLE
-	 * 
+	 *
 	 * @return
 	 */
 	public FeatureType getFeatureType() {

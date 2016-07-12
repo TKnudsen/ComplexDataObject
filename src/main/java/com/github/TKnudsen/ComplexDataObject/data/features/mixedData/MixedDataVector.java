@@ -4,22 +4,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
  * Title: MixedDataVector
  * </p>
- * 
+ *
  * <p>
  * Description: AlgorithmDataObject representation for mixed data involving
  * Double, String, and Boolean. Used for objects containing numerical,
  * categorical, and binary attributes.
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2015-2016
  * </p>
- * 
+ *
  * @author Juergen Bernard
  * @version 1.0
  */
@@ -46,7 +47,7 @@ public class MixedDataVector extends AbstractFeatureDataObject<Object, MixedData
 	}
 
 	@Override
-	public void addFeature(String featureName, Object value) {
-		addFeature(new MixedDataFeature(featureName, value));
+	public void addFeature(String featureName, Object value, FeatureType type) {
+		addFeature(new MixedDataFeature(featureName, value, type));
 	}
 }

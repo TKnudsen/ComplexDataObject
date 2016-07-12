@@ -7,23 +7,23 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * <p>
  * Title: MixedDataFeature
  * </p>
- * 
+ *
  * <p>
  * Description: Single feature, e.g. for a MixedDataVector. Can be numerical,
  * categorical, or binary.
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2015-2016
  * </p>
- * 
+ *
  * @author Juergen Bernard
  * @version 1.0
  */
 public class MixedDataFeature extends Feature<Object> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3432718477169096454L;
 
@@ -31,27 +31,16 @@ public class MixedDataFeature extends Feature<Object> {
 	 *
 	 * @param featureName
 	 * @param featureValue
-	 */
-	public MixedDataFeature(String featureName, Object featureValue) {
-		super(featureName, featureValue);
-		this.featureType = MixedDataFeatureTools.guessFeatureType(featureValue);
-	}
-
-	/**
-	 * 
-	 * @param featureName
-	 * @param featureValue
 	 * @param featureType
 	 */
 	public MixedDataFeature(String featureName, Object featureValue, FeatureType featureType) {
-		super(featureName, featureValue);
-		this.featureType = featureType;
+		super(featureName, featureValue, featureType);
 	}
 
 	@Override
 	/**
 	 * enables setting the featureValue. precondition: featureType match!
-	 * 
+	 *
 	 * @param featureValue
 	 * @return
 	 */
