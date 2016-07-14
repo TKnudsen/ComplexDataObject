@@ -11,16 +11,16 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * <p>
  * Title: FeatureContainer
  * </p>
- * 
+ *
  * <p>
  * Description: Stores and manages collections of Feature Vectors. A
  * FeatureSchema manages the keys/attributes of the collection.
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2016
  * </p>
- * 
+ *
  * @author Juergen Bernard
  * @version 1.0
  */
@@ -59,7 +59,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 
 	/**
 	 * Introduces or updates a new attribute.
-	 * 
+	 *
 	 * @param featureName
 	 *            the attribute name
 	 * @param type
@@ -78,7 +78,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		while (objectIterator.hasNext()) {
 			T next = objectIterator.next();
 			if (next.getFeature(feature.getFeatureName()) == null)
-				next.addFeature(feature.getFeatureName(), null);
+				next.addFeature(feature.getFeatureName(), null, feature.getFeatureType());
 		}
 
 		return featureSchema;
@@ -86,7 +86,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 
 	/**
 	 * Introduces or updates a new attribute.
-	 * 
+	 *
 	 * @param featureName
 	 *            the attribute name
 	 * @param type
@@ -105,7 +105,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		while (objectIterator.hasNext()) {
 			T next = objectIterator.next();
 			if (next.getFeature(featureName) == null)
-				next.addFeature(featureName, null);
+				next.addFeature(featureName, null, featureType);
 		}
 
 		return featureSchema;
@@ -114,7 +114,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	/**
 	 * Remove functionality. For test purposes. Maybe this functionality will be
 	 * removed sometime.
-	 * 
+	 *
 	 * @param featureVector
 	 * @return
 	 */
@@ -138,7 +138,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 
 	/**
 	 * Removes an attribute from the container and the set of objects.
-	 * 
+	 *
 	 * @param featureName
 	 *            the attribute name.
 	 * @return the data schema instance for call-chaining.

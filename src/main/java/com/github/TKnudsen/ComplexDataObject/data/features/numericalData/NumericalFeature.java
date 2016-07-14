@@ -7,15 +7,15 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * <p>
  * Title: NumericalFeature
  * </p>
- * 
+ *
  * <p>
  * Description:
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2016
  * </p>
- * 
+ *
  * @author Juergen Bernard
  * @version 1.0
  */
@@ -23,15 +23,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 public class NumericalFeature extends Feature<Double> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7244765037515290604L;
 
 	public NumericalFeature(String featureName, Double featureValue) {
-		super(featureName, featureValue);
-
-		// redundant type definition. For clarification.
-		featureType = FeatureType.DOUBLE;
+		super(featureName, featureValue, FeatureType.DOUBLE);
 	}
 
 	@Override
