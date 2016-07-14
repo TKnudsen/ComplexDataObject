@@ -1,13 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
-import static org.assertj.core.api.Assertions.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+
+import org.junit.Test;
+
 import com.github.TKnudsen.ComplexDataObject.tools.ComplexDataObjectFactory;
 
 public class ComplexDataContainerTest {

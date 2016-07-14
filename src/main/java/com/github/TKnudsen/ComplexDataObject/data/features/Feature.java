@@ -2,7 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>
