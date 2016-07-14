@@ -60,7 +60,7 @@ public class MixedDataFeature extends Feature<Object> {
 
 	@Override
 	public String toString() {
-		return "MixedDataFeature " + featureName + ": " + featureValue + " (" + featureType.name() + ")";
+		return "MixedDataFeature " + featureName + ": " + featureValue + " (" + featureType.name() + ") ";
 	}
 
 	@Override

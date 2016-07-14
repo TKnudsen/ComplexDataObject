@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class MixedDataVectorTester {
 
 		// mixedDataFeatures.add(new MixedDataFeature("A", false));
 
-		MixedDataVector vector = new MixedDataVector(mixedDataFeatures);
+		MixedDataFeatureVector vector = new MixedDataFeatureVector(mixedDataFeatures);
 
 		vector.removeFeature("B");
 	}

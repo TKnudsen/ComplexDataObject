@@ -33,7 +33,7 @@ public class NumericalFeature extends Feature<Double> {
 
 	@Override
 	public String toString() {
-		return "NumericalFeature " + featureName + ": " + featureValue + " (" + featureType.name() + ")";
+		return "NumericalFeature " + featureName + ": " + featureValue + " (" + featureType.name() + ") ";
 	}
 
 	public double doubleValue() {

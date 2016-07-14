@@ -32,7 +32,7 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * @version 1.0
  */
 
-public abstract class AbstractFeatureDataObject<O extends Object, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureDataObject<O, F> {
+public abstract class AbstractFeatureVector<O extends Object, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureDataObject<O, F> {
 
 	private String name;
 
@@ -50,7 +50,7 @@ public abstract class AbstractFeatureDataObject<O extends Object, F extends Feat
 
 	protected Map<String, F> featuresMap;
 
-	public AbstractFeatureDataObject(List<F> features) {
+	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
 
 		generalizeFromList();
@@ -58,13 +58,13 @@ public abstract class AbstractFeatureDataObject<O extends Object, F extends Feat
 		checkForDuplicateFeatures();
 	}
 
-	public AbstractFeatureDataObject(F[] features) {
+	public AbstractFeatureVector(F[] features) {
 		generalizeFromArray(features);
 
 		checkForDuplicateFeatures();
 	}
 
-	public AbstractFeatureDataObject(Map<String, F> featuresMap) {
+	public AbstractFeatureVector(Map<String, F> featuresMap) {
 		this.featuresMap = featuresMap;
 
 		generalizeFromMap();

@@ -134,7 +134,7 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 
 	@Override
 	public String toString() {
-		return "Feature " + featureName + ": " + featureValue + " (" + featureType.name() + ")";
+		return "Feature " + featureName + ": " + featureValue + " (" + featureType.name() + ") ";
 	}
 
 	@Override

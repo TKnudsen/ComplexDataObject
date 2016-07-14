@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 import de.javagl.nd.tuples.d.DoubleTuple;
@@ -28,7 +28,7 @@ import de.javagl.nd.tuples.d.DoubleTuple;
  * @version 1.0
  */
 
-public class NumericalFeatureVector extends AbstractFeatureDataObject<Double, NumericalFeature> implements DoubleTuple {
+public class NumericalFeatureVector extends AbstractFeatureVector<Double, NumericalFeature> implements DoubleTuple {
 
 	public NumericalFeatureVector(List<NumericalFeature> features) {
 		super(features);

@@ -3,7 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 import java.util.List;
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
@@ -25,24 +25,24 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * @version 1.0
  */
 
-public class MixedDataVector extends AbstractFeatureDataObject<Object, MixedDataFeature> {
+public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedDataFeature> {
 
-	public MixedDataVector(List<MixedDataFeature> features) {
+	public MixedDataFeatureVector(List<MixedDataFeature> features) {
 		super(features);
 	}
 
-	public MixedDataVector(MixedDataFeature[] features) {
+	public MixedDataFeatureVector(MixedDataFeature[] features) {
 		super(features);
 	}
 
-	public MixedDataVector(Map<String, MixedDataFeature> featuresMap) {
+	public MixedDataFeatureVector(Map<String, MixedDataFeature> featuresMap) {
 		super(featuresMap);
 	}
 
 	@Override
-	public MixedDataVector subTuple(int fromIndex, int toIndex) {
+	public MixedDataFeatureVector subTuple(int fromIndex, int toIndex) {
 		if (featuresList != null)
-			return new MixedDataVector(featuresList.subList(fromIndex, toIndex));
+			return new MixedDataFeatureVector(featuresList.subList(fromIndex, toIndex));
 		return null;
 	}
 

@@ -55,7 +55,7 @@ public class FeatureSchemaEntry<T> {
 	@Override
 	public String toString() {
 		String output = "";
-		output += ("Name: " + name + "\t" + "Type: " + type + "\t" + "FeatureType: " + featureType);
+		output += ("Name: " + name + "\t" + "Type: " + type.getSimpleName() + "\t" + "FeatureType: " + featureType);
 		return output;
 	}
 }

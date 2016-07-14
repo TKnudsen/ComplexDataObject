@@ -24,7 +24,8 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * @author Juergen Bernard
  * @version 1.0
  */
-public class FeatureContainer<O extends Object, F extends Feature<O>, T extends AbstractFeatureDataObject<O, F>> implements Iterable<T> {
+public class FeatureContainer<O extends Object, F extends Feature<O>, T extends AbstractFeatureVector<O, F>>
+		implements Iterable<T> {
 
 	private Map<Long, T> featureVectorMap = new HashMap<Long, T>();
 
@@ -54,7 +55,8 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	private void extendDataSchema(T object) {
 		for (String feature : object.getFeatureKeySet())
 			if (!featureSchema.contains(feature))
-				featureSchema.add(feature, object.getFeature(feature).getClass(), object.getFeature(feature).getFeatureType());
+				featureSchema.add(feature, object.getFeature(feature).getClass(),
+						object.getFeature(feature).getFeatureType());
 	}
 
 	/**
@@ -194,7 +196,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		while (iterator.hasNext()) {
 			T o = iterator.next();
 			if (o instanceof IKeyValueProvider)
-				ent.put(o.getID(), o.get(featureName));
+				ent.put(o.getID(), o.getFeature(featureName));
 		}
 
 		this.featureValues.put(featureName, ent);

@@ -64,7 +64,7 @@ public class DataSchemaEntry<T> {
 	@Override
 	public String toString() {
 		String output = "";
-		output += ("Name: " + name + "\t" + "Type: " + type + "\t" + "Default Value: " + defaultValue);
+		output += ("Name: " + name + "\t" + "Type: " + type.getSimpleName() + "\t" + "Default Value: " + defaultValue);
 		return output;
 	}
 }
