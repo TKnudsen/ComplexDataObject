@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IMasterProvider;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
@@ -32,7 +32,7 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * @version 1.0
  */
 
-public abstract class AbstractFeatureVector<O extends Object, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureDataObject<O, F> {
+public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
 
 	private String name;
 

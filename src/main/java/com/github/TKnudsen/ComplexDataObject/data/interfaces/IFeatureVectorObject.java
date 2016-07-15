@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * @version 1.0
  */
 
-public interface IFeatureDataObject<O extends Object, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {
+public interface IFeatureVectorObject<O extends Object, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {
 
 	public F getFeature(int index);
 
@@ -38,7 +38,7 @@ public interface IFeatureDataObject<O extends Object, F extends Feature<O>> exte
 
 	public F removeFeature(String featureName);
 
-	public IFeatureDataObject<O, F> subTuple(int fromIndex, int toIndex);
+	public IFeatureVectorObject<O, F> subTuple(int fromIndex, int toIndex);
 
 	public List<F> getVectorRepresentation();
 
