@@ -17,11 +17,9 @@ import java.util.Set;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public interface IKeyValueProvider<V extends Object> extends IDObject {
-
-	public int sizeOfFeatures();
 
 	public void add(String attribute, V value);
 

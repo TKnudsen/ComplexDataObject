@@ -86,9 +86,6 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 		}
 		final ComplexDataObject other = (ComplexDataObject) obj;
 
-		if (sizeOfFeatures() != other.sizeOfFeatures())
-			return false;
-
 		Set<String> keys = attributes.keySet();
 		keys.addAll(other.keySet());
 
@@ -97,13 +94,6 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 				return false;
 
 		return true;
-	}
-
-	@Override
-	public int sizeOfFeatures() {
-		if (attributes == null)
-			return 0;
-		return attributes.size();
 	}
 
 	@Override
