@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
+package com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.apache.commons.math3.exception.NullArgumentException;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
-import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 
 import weka.core.Attribute;
 import weka.core.Instance;

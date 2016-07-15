@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.TKnudsen.ComplexDataObject.tools.ComplexDataObjectFactory;
+import com.github.TKnudsen.ComplexDataObject.model.tools.ComplexDataObjectFactory;
 
 public class ComplexDataContainerTest {
 

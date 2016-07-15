@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.tools;
+package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.HashMap;
 import java.util.Iterator;

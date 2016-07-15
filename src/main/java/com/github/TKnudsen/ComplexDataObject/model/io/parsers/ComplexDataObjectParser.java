@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.io.parsers;
+package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
 import java.io.IOException;
 import java.util.List;

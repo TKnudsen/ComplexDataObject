@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.io.parsers.examples.TitanicParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
 
 public class TitanicDataSetParserTester {
 	public static void main(String[] args) {

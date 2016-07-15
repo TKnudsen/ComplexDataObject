@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.preprocessing.utility;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility;
 
 import java.util.HashSet;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.github.TKnudsen.ComplexDataObject.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.preprocessing.utility.IItemSplitter;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IItemSplitter;
 
 /**
  * Used to split each value for a given attribute of each

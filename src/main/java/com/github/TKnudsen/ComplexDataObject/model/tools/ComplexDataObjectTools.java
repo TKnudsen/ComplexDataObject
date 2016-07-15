@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.tools;
+package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 

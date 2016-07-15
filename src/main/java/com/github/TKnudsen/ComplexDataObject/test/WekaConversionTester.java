@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.io.parsers.arff.WekaTools;
-import com.github.TKnudsen.ComplexDataObject.tools.WekaConversion;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff.WekaTools;
+import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
 
 import weka.core.Instances;
 

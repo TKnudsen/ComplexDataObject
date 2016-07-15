@@ -1,8 +1,6 @@
-package com.github.TKnudsen.ComplexDataObject.io.parsers.arff;
+package com.github.TKnudsen.ComplexDataObject.model.io.parsers.csv;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,19 +11,21 @@ import java.util.Map.Entry;
 import org.apache.commons.math3.exception.NullArgumentException;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.io.parsers.ComplexDataObjectParser;
-import com.github.TKnudsen.ComplexDataObject.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ComplexDataObjectParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff.WekaTools;
 
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
 
 /**
  * <p>
- * Title: ARFFParser
+ * Title: CSVParser
  * </p>
  * 
  * <p>
- * Description: Parses ComplexDataObjects from an ARFF file. Note: this parser
+ * Description: Parses ComplexDataObjects from a CSV file. Note: this parser
  * is not part of the persistence layer. In fact, it gathers new
  * ComplexDataObjects from a given file.
  * </p>
@@ -37,13 +37,20 @@ import weka.core.Instances;
  * @author Juergen Bernard
  * @version 1.0
  */
-public class ARFFParser implements ComplexDataObjectParser {
+public class CSVParser implements ComplexDataObjectParser {
 
-	private String missingValueIndicator = "?";
+	private String missingValueIndicator;
+
+	public CSVParser(String missingValueIndicator) {
+		this.missingValueIndicator = missingValueIndicator;
+	}
 
 	@Override
 	public List<ComplexDataObject> parse(String filename) throws IOException {
-		Instances instances = parseARFF(filename);
+
+		CSVLoader loader = new CSVLoader();
+		loader.setSource(new File(filename));
+		Instances instances = loader.getDataSet();
 
 		List<ComplexDataObject> data = new ArrayList<>();
 
@@ -60,12 +67,7 @@ public class ARFFParser implements ComplexDataObjectParser {
 			// parse columns
 			for (Integer spalte = 0; spalte < instances.numAttributes(); spalte++) {
 
-				Entry<String, ?> entry = null;
-				try {
-					entry = WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
-				} catch (Exception e) {
-
-				}
+				Entry<String, ?> entry = WekaTools.assignEntry(metaMapping, instance, spalte, missingValueIndicator);
 
 				if (entry != null) {
 					if (entry.getValue() != null && entry.getValue() instanceof String) {
@@ -82,26 +84,6 @@ public class ARFFParser implements ComplexDataObjectParser {
 			data.add(complexDataObject);
 		}
 		return data;
-
-	}
-
-	public static Instances parseARFF(String arffFile) {
-		if (arffFile == null)
-			return null;
-
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(arffFile));
-			Instances instances = new Instances(reader);
-			reader.close();
-			return instances;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	public String getMissingValueIndicator() {
