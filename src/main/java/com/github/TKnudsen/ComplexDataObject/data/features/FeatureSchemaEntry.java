@@ -14,7 +14,7 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 
 public class FeatureSchemaEntry<T> {
@@ -24,6 +24,8 @@ public class FeatureSchemaEntry<T> {
 	private final FeatureType featureType;
 
 	protected final FeatureSchema typeSchema;
+	
+	private Double weight = 1.0;
 
 	public FeatureSchemaEntry(String name, Class<T> type, FeatureType featureType) {
 		this(name, type, featureType, null);
@@ -57,5 +59,13 @@ public class FeatureSchemaEntry<T> {
 		String output = "";
 		output += ("Name: " + name + "\t" + "Type: " + type.getSimpleName() + "\t" + "FeatureType: " + featureType);
 		return output;
+	}
+
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
 	}
 }
