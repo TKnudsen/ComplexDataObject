@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
@@ -31,6 +32,7 @@ public interface ComplexDataObjectParser {
 	 * @param filename
 	 * @return
 	 * @throws IOException
+	 * @throws ParseException
 	 */
-	public abstract List<ComplexDataObject> parse(String filename) throws IOException;
+	public abstract List<ComplexDataObject> parse(String filename) throws IOException, ParseException;
 }

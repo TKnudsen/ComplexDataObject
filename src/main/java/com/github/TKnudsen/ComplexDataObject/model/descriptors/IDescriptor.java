@@ -26,7 +26,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  */
 public interface IDescriptor<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription {
 
-	public List<X> process(ComplexDataObject complexDataObject);
+	public List<X> transform(ComplexDataObject complexDataObject);
 
 	public List<X> transform(List<ComplexDataObject> complexDataObjects);
 }
