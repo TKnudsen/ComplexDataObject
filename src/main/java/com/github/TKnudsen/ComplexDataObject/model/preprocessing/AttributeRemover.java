@@ -16,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 
 public class AttributeRemover implements IPreprocessingRoutine {
@@ -38,5 +38,10 @@ public class AttributeRemover implements IPreprocessingRoutine {
 
 	public void setAttributeString(String attributeString) {
 		this.attributeString = attributeString;
+	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.DATA_REDUCTION;
 	}
 }

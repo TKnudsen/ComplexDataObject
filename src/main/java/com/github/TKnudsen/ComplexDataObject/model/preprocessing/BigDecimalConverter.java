@@ -8,6 +8,22 @@ import java.text.ParseException;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 
+/**
+ * <p>
+ * Title: BigDecimalConverter
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class BigDecimalConverter implements IPreprocessingRoutine {
 
 	String attribute;
@@ -44,6 +60,11 @@ public class BigDecimalConverter implements IPreprocessingRoutine {
 
 			complexDataObject.add(targetAttribute, bd);
 		}
+	}
+	
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 
 }

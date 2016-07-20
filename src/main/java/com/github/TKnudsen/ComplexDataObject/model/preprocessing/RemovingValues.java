@@ -8,8 +8,8 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 
 /**
- * Used to delete a given list of (extreme) values from each {@link ComplexDataObject} 
- * in the {@link ComplexDataContainer}.
+ * Used to delete a given list of (extreme) values from each
+ * {@link ComplexDataObject} in the {@link ComplexDataContainer}.
  * 
  * @author Robert Heimbach
  *
@@ -20,22 +20,27 @@ public class RemovingValues<T extends Object> implements IPreprocessingRoutine {
 	private String attribute;
 	private Set<T> valuesToRemove;
 
-	public RemovingValues(String attribute, List<T> valuesToRemove){
+	public RemovingValues(String attribute, List<T> valuesToRemove) {
 		this.attribute = attribute;
 		this.valuesToRemove = new HashSet<T>(valuesToRemove);
 	}
-	
+
 	@Override
 	public void process(ComplexDataContainer container) {
-		
-		for(ComplexDataObject complexDataObject : container){
-			
+
+		for (ComplexDataObject complexDataObject : container) {
+
 			Object value = complexDataObject.get(attribute);
-		
-			if(value != null && valuesToRemove.contains(value)){
-					
-					complexDataObject.remove(attribute);
+
+			if (value != null && valuesToRemove.contains(value)) {
+
+				complexDataObject.remove(attribute);
 			}
 		}
+	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.DATA_CLEANING;
 	}
 }

@@ -10,14 +10,17 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IUnique
 /**
  * A multistage preprocessing routine.
  * 
- * <p> For a given attribute, which is assumed to store a List of Objects, all unique values
- * are identified, using a {@link IUniqueValuesIdentifier}, and Dummy Variables, stored as 0/1 Integer, 
- * are created.
+ * <p>
+ * For a given attribute, which is assumed to store a List of Objects, all
+ * unique values are identified, using a {@link IUniqueValuesIdentifier}, and
+ * Dummy Variables, stored as 0/1 Integer, are created.
  * 
- * <p> The naming scheme of the dummy variables is as follows:
- * <br> attribute-nameOfUniqueValue
+ * <p>
+ * The naming scheme of the dummy variables is as follows: <br>
+ * attribute-nameOfUniqueValue
  * 
- * <p> The old attribute storing the List is removed.
+ * <p>
+ * The old attribute storing the List is removed.
  * 
  * @author Robert Heimbach
  *
@@ -26,13 +29,13 @@ public class DummyVariableConverter implements IPreprocessingRoutine {
 
 	private String attribute;
 	private IUniqueValuesIdentifier uniqueValuesIdentifier;
-	
-	public DummyVariableConverter(String attribute, IUniqueValuesIdentifier uniqueValuesIdentifier){
+
+	public DummyVariableConverter(String attribute, IUniqueValuesIdentifier uniqueValuesIdentifier) {
 		this.attribute = attribute;
 		this.uniqueValuesIdentifier = uniqueValuesIdentifier;
-		
+
 		// Set the attribute to be checked if not done already
-		if(!uniqueValuesIdentifier.hasAttribute()){
+		if (!uniqueValuesIdentifier.hasAttribute()) {
 			uniqueValuesIdentifier.setAttribute(this.attribute);
 		}
 	}
@@ -41,42 +44,46 @@ public class DummyVariableConverter implements IPreprocessingRoutine {
 	public void process(ComplexDataContainer container) {
 
 		// Get a list of unique values for the given attribute
-		if(!uniqueValuesIdentifier.hasDataContainer()){
+		if (!uniqueValuesIdentifier.hasDataContainer()) {
 			uniqueValuesIdentifier.setDataContainer(container);
 		}
-		
+
 		Set<? extends Object> uniqueValues = uniqueValuesIdentifier.getUniqueValues();
-		
+
 		// Add the to-be-created dummy variables to the data schema
-		for(Object val : uniqueValues){
-			container.addAttribute(attribute+"-"+val.toString(), Integer.class, null);
+		for (Object val : uniqueValues) {
+			container.addAttribute(attribute + "-" + val.toString(), Integer.class, null);
 		}
-		
-		for(ComplexDataObject complexDataObject : container){
-			
+
+		for (ComplexDataObject complexDataObject : container) {
+
 			Object values = complexDataObject.get(attribute);
-			
-			if(values != null && values instanceof List){
-				
+
+			if (values != null && values instanceof List) {
+
 				List<?> listOfValues = (List<?>) values;
-				
+
 				// Fill out the dummy variables
-				for(Object val : uniqueValues){
-					
-					if(listOfValues.contains(val)){
-						complexDataObject.add(attribute+"-"+val.toString(), new Integer(1));
-					}
-					else {
-						complexDataObject.add(attribute+"-"+val.toString(), new Integer(0));
+				for (Object val : uniqueValues) {
+
+					if (listOfValues.contains(val)) {
+						complexDataObject.add(attribute + "-" + val.toString(), new Integer(1));
+					} else {
+						complexDataObject.add(attribute + "-" + val.toString(), new Integer(0));
 					}
 				}
-				
+
 				// remove the old list attribute from (each) data object
 				complexDataObject.remove(attribute);
-			}		
+			}
 		}
-		
+
 		// Remove the old attribute from the data schema
 		container.remove(attribute);
+	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }

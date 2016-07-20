@@ -58,4 +58,9 @@ public class NullAttributeValueObjectRemover implements IPreprocessingRoutine {
 	public void setAttribute(String attribute) {
 		this.attribute = attribute;
 	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.DATA_CLEANING;
+	}
 }

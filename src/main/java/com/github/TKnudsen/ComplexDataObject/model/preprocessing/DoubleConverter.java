@@ -10,6 +10,22 @@ import java.util.Locale;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 
+/**
+ * <p>
+ * Title: CollectionToBooleanAttributesConverter
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class DoubleConverter implements IPreprocessingRoutine {
 
 	String attribute;
@@ -108,5 +124,10 @@ public class DoubleConverter implements IPreprocessingRoutine {
 
 	public void setMissingValueIndicators(List<String> missingValueIndicators) {
 		this.missingValueIndicators = missingValueIndicators;
+	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }

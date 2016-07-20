@@ -11,7 +11,7 @@ import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
 
 /**
  * <p>
- * Title: StringCollectionToBooleanAttributesConverter
+ * Title: CollectionToBooleanAttributesConverter
  * </p>
  * 
  * <p>
@@ -23,9 +23,8 @@ import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
-
 public class CollectionToBooleanAttributesConverter implements IPreprocessingRoutine {
 
 	private String attributeString;
@@ -83,4 +82,8 @@ public class CollectionToBooleanAttributesConverter implements IPreprocessingRou
 		this.attributeString = attributeString;
 	}
 
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	}
 }

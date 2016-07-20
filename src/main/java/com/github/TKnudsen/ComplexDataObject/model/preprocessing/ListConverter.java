@@ -36,4 +36,9 @@ public class ListConverter implements IPreprocessingRoutine {
 			}
 		}
 	}
+
+	@Override
+	public PreprocessingCategory getPreprocessingCategory() {
+		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	}
 }
