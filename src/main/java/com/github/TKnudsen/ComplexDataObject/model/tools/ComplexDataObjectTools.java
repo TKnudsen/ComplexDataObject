@@ -1,6 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 public class ComplexDataObjectTools {
 

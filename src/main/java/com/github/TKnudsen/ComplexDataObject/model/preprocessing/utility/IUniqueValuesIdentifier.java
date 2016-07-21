@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility;
 
 import java.util.Set;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 
 public interface IUniqueValuesIdentifier {
 	

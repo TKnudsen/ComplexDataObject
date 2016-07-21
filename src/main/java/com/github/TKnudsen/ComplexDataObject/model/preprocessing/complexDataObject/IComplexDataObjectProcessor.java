@@ -1,7 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessing;
 
 /**

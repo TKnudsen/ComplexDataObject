@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.DoubleConverter;
 import com.github.TKnudsen.ComplexDataObject.model.tools.ComplexDataObjectFactory;
 

@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.math3.exception.NullArgumentException;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ComplexDataObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff.WekaTools;

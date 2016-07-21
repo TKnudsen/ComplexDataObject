@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.data;
+package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
 import java.util.ArrayList;
 import java.util.List;

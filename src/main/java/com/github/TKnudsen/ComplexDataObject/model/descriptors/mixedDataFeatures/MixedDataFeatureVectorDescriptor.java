@@ -3,7 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.descriptors.mixedDataFeature
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureTools;

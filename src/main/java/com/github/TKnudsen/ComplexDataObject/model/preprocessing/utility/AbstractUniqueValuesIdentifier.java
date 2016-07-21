@@ -1,6 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 
 /**
  * Default implementations of the getter and setter methods of the {@link IUniqueValuesIdentifier} 

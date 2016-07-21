@@ -20,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * <p>
- * Description:
+ * Description: stores collections of IDObjects.
  * </p>
  * 
  * <p>
@@ -84,6 +84,37 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 	}
 
 	/**
+	 * Initializes the attribute keys. Use addAttributes(T dataObject) when
+	 * adding new 0bjects.
+	 */
+	private void initializeAttributes() {
+		if (attributes == null)
+			attributes = new TreeSet<>();
+		for (T dataObject : dataList)
+			if (dataObject instanceof IKeyValueProvider) {
+				IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
+				Map<String, Class<?>> types = keyValueStore.getTypes();
+				for (String s : types.keySet())
+					attributes.add(s);
+			}
+	}
+
+	/**
+	 * Adds new attributes of a given object.
+	 */
+	private void addAttributes(T dataObject) {
+		if (attributes == null)
+			initializeAttributes();
+
+		if (dataObject instanceof IKeyValueProvider) {
+			IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
+			Map<String, Class<?>> types = keyValueStore.getTypes();
+			for (String s : types.keySet())
+				attributes.add(s);
+		}
+	}
+
+	/**
 	 * Adds a List of objects to the data store
 	 * 
 	 * @param objects
@@ -110,18 +141,6 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 		addAttributes(dataObject);
 
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		if (hash == -1) {
-
-			hash = 19;
-
-			for (Long i : dataMap.keySet())
-				hash += 31 * hash + (int) dataMap.get(i).hashCode();
-		}
-		return hash;
 	}
 
 	/**
@@ -178,37 +197,6 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 		return data;
 	}
 
-	/**
-	 * Adds new attributes of a given object.
-	 */
-	private void addAttributes(T dataObject) {
-		if (attributes == null)
-			initializeAttributes();
-
-		if (dataObject instanceof IKeyValueProvider) {
-			IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
-			Map<String, Class<?>> types = keyValueStore.getTypes();
-			for (String s : types.keySet())
-				attributes.add(s);
-		}
-	}
-
-	/**
-	 * Initializes the attribute keys. Use addAttributes(T dataObject) when
-	 * adding new 0bjects.
-	 */
-	private void initializeAttributes() {
-		if (attributes == null)
-			attributes = new TreeSet<>();
-		for (T dataObject : dataList)
-			if (dataObject instanceof IKeyValueProvider) {
-				IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
-				Map<String, Class<?>> types = keyValueStore.getTypes();
-				for (String s : types.keySet())
-					attributes.add(s);
-			}
-	}
-
 	public T getDataByID(long ID) {
 		return dataMap.get(ID);
 	}
@@ -221,6 +209,18 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 		if (dataMap.containsKey(t.getID()))
 			return true;
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		if (hash == -1) {
+
+			hash = 19;
+
+			for (Long i : dataMap.keySet())
+				hash += 31 * hash + (int) dataMap.get(i).hashCode();
+		}
+		return hash;
 	}
 
 	public int size() {

@@ -3,7 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.test;
 import java.io.IOException;
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
 
 public class TitanicDataSetParserTester {
