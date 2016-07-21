@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * <p>
@@ -24,16 +25,15 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public class DoubleConverter implements IPreprocessingRoutine {
+public class DoubleConverter implements IComplexDataObjectProcessor {
 
 	String attribute;
 	String targetAttribute;
 
 	private List<String> missingValueIndicators = null;
 
-	// NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
 	NumberFormat format = null;
 
 	DecimalFormat decimalFormat = null;
@@ -117,6 +117,12 @@ public class DoubleConverter implements IPreprocessingRoutine {
 			complexDataObject.add(targetAttribute, d);
 		}
 	}
+	
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		ComplexDataContainer container = new ComplexDataContainer(data);
+		process(container);
+	}
 
 	public List<String> getMissingValueIndicators() {
 		return missingValueIndicators;
@@ -127,7 +133,7 @@ public class DoubleConverter implements IPreprocessingRoutine {
 	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }

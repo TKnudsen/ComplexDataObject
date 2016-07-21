@@ -1,7 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IItemSplitter;
 
 /**
@@ -12,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IItemSp
  * @author Robert Heimbach
  *
  */
-public class ListConverter implements IPreprocessingRoutine {
+public class ListConverter implements IComplexDataObjectProcessor {
 
 	private String attribute;
 	private IItemSplitter splitter;
@@ -24,8 +28,13 @@ public class ListConverter implements IPreprocessingRoutine {
 
 	@Override
 	public void process(ComplexDataContainer container) {
+		for (ComplexDataObject complexDataObject : container)
+			process(Arrays.asList(complexDataObject));
+	}
 
-		for (ComplexDataObject complexDataObject : container) {
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		for (ComplexDataObject complexDataObject : data) {
 
 			// Load the old value
 			Object oldValue = complexDataObject.get(attribute);
@@ -38,7 +47,7 @@ public class ListConverter implements IPreprocessingRoutine {
 	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }

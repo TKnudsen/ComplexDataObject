@@ -1,11 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * Used to delete a given list of (extreme) values from each
@@ -15,7 +17,7 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
  *
  * @param <T>
  */
-public class RemovingValues<T extends Object> implements IPreprocessingRoutine {
+public class RemovingValues<T extends Object> implements IComplexDataObjectProcessor {
 
 	private String attribute;
 	private Set<T> valuesToRemove;
@@ -27,8 +29,13 @@ public class RemovingValues<T extends Object> implements IPreprocessingRoutine {
 
 	@Override
 	public void process(ComplexDataContainer container) {
+		for (ComplexDataObject complexDataObject : container)
+			process(Arrays.asList(complexDataObject));
+	}
 
-		for (ComplexDataObject complexDataObject : container) {
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		for (ComplexDataObject complexDataObject : data) {
 
 			Object value = complexDataObject.get(attribute);
 
@@ -40,7 +47,7 @@ public class RemovingValues<T extends Object> implements IPreprocessingRoutine {
 	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.DATA_CLEANING;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.DATA_CLEANING;
 	}
 }

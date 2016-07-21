@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IUniqueValuesIdentifier;
 
 /**
@@ -25,7 +26,7 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IUnique
  * @author Robert Heimbach
  *
  */
-public class DummyVariableConverter implements IPreprocessingRoutine {
+public class DummyVariableConverter implements IComplexDataObjectProcessor {
 
 	private String attribute;
 	private IUniqueValuesIdentifier uniqueValuesIdentifier;
@@ -81,9 +82,15 @@ public class DummyVariableConverter implements IPreprocessingRoutine {
 		// Remove the old attribute from the data schema
 		container.remove(attribute);
 	}
+	
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		ComplexDataContainer container = new ComplexDataContainer(data);
+		process(container);
+	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }

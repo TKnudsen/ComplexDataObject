@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * <p>
@@ -24,7 +28,7 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class BigDecimalConverter implements IPreprocessingRoutine {
+public class BigDecimalConverter implements IComplexDataObjectProcessor {
 
 	String attribute;
 	String targetAttribute;
@@ -48,8 +52,14 @@ public class BigDecimalConverter implements IPreprocessingRoutine {
 		// add new attribute to schema
 		container.addAttribute(targetAttribute, BigDecimal.class, BigDecimal.ZERO);
 
+		for (ComplexDataObject complexDataObject : container)
+			process(Arrays.asList(complexDataObject));
+	}
+
+	@Override
+	public void process(List<ComplexDataObject> data) {
 		// parse
-		for (ComplexDataObject complexDataObject : container) {
+		for (ComplexDataObject complexDataObject : data) {
 			BigDecimal bd = BigDecimal.ZERO;
 
 			try {
@@ -61,10 +71,10 @@ public class BigDecimalConverter implements IPreprocessingRoutine {
 			complexDataObject.add(targetAttribute, bd);
 		}
 	}
-	
+
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 
 }

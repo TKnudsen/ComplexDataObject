@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * <p>
@@ -22,9 +23,9 @@ import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public class NullAttributeValueObjectRemover implements IPreprocessingRoutine {
+public class NullAttributeValueObjectRemover implements IComplexDataObjectProcessor {
 
 	private String attribute;
 
@@ -51,6 +52,12 @@ public class NullAttributeValueObjectRemover implements IPreprocessingRoutine {
 			container.remove(complexDataObject);
 	}
 
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		ComplexDataContainer container = new ComplexDataContainer(data);
+		process(container);
+	}
+
 	public String getAttribute() {
 		return attribute;
 	}
@@ -60,7 +67,7 @@ public class NullAttributeValueObjectRemover implements IPreprocessingRoutine {
 	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.DATA_CLEANING;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.DATA_CLEANING;
 	}
 }

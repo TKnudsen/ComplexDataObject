@@ -3,11 +3,13 @@ package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * <p>
@@ -25,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class CollectionToBooleanAttributesConverter implements IPreprocessingRoutine {
+public class CollectionToBooleanAttributesConverter implements IComplexDataObjectProcessor {
 
 	private String attributeString;
 
@@ -74,6 +76,12 @@ public class CollectionToBooleanAttributesConverter implements IPreprocessingRou
 		}
 	}
 
+	@Override
+	public void process(List<ComplexDataObject> data) {
+		ComplexDataContainer container = new ComplexDataContainer(data);
+		process(container);
+	}
+
 	public String getAttributeString() {
 		return attributeString;
 	}
@@ -83,7 +91,7 @@ public class CollectionToBooleanAttributesConverter implements IPreprocessingRou
 	}
 
 	@Override
-	public PreprocessingCategory getPreprocessingCategory() {
-		return PreprocessingCategory.SECONDARY_DATA_PROVIDER;
+	public DataProcessingCategory getPreprocessingCategory() {
+		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
 	}
 }
