@@ -53,13 +53,17 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 
 	public DataStore(List<T> data) {
 		this.ID = getRandomLong();
-		if (data != null && data.size() > 0)
-			this.name = "Data Store for Objects of Type: " + data.get(0).getClass();
-		else
+		if (data == null || data.size() == 0)
 			return;
 
 		// initialize data
 		for (T dataObject : data) {
+			if (dataObject == null)
+				continue;
+
+			if (name == null)
+				name = "Data Store for Objects of Type: " + data.getClass();
+
 			dataList.add(dataObject);
 			dataMap.put(dataObject.getID(), dataObject);
 		}
@@ -69,13 +73,17 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 
 	public DataStore(Map<Long, T> data) {
 		this.ID = getRandomLong();
-		if (data != null && data.size() > 0)
-			this.name = "Data Store for Objects of Type: " + data.values().iterator().next().getClass();
-		else
+		if (data == null || data.size() == 0)
 			return;
 
 		// initialize data
 		for (Long l : data.keySet()) {
+			if (data.get(l) == null)
+				continue;
+
+			if (name == null)
+				name = "Data Store for Objects of Type: " + data.get(l).getClass();
+
 			dataMap.put(l, data.get(l));
 			dataList.add(data.get(l));
 		}
