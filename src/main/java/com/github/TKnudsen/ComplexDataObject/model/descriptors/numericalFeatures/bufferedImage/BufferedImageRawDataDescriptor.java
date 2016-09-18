@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.descriptors.numericalFeatures;
+package com.github.TKnudsen.ComplexDataObject.model.descriptors.numericalFeatures.bufferedImage;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -10,6 +10,23 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.INumericFeatureVectorDescriptor;
 
+/**
+ * <p>
+ * Title: BufferedImageRawDataDescriptor
+ * </p>
+ * 
+ * <p>
+ * Description: Basic transformation of BufferedImages into the numerical
+ * feature space. The luminance of every pixel creates an inidividual dimemsion.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor {
 
 	private String bufferedImageAttributeName;
