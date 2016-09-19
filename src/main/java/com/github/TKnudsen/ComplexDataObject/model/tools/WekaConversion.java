@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -64,5 +65,29 @@ public class WekaConversion {
 		}
 
 		return instances;
+	}
+
+	public static Instances getInstances(List<NumericalFeatureVector> fvs) {
+		int length = fvs.get(0).getVector().length;
+		FastVector attrs = new FastVector(length);
+		for (int i = 0; i < length; i++) {
+			Attribute a = new Attribute(i + 1 + "");
+			attrs.addElement(a);
+		}
+
+		Instances data = new Instances("NumericalFeatureVectors", attrs, fvs.size());
+		addInstances(fvs, data);
+		return data;
+	}
+
+	public static void addInstances(List<NumericalFeatureVector> fvs, Instances data) {
+		for (NumericalFeatureVector fv : fvs) {
+			double[] vector = fv.getVector();
+			Instance ins = new DenseInstance(vector.length);
+			for (int i = 0; i < vector.length; i++) {
+				ins.setValue(i, vector[i]);
+			}
+			data.add(ins);
+		}
 	}
 }
