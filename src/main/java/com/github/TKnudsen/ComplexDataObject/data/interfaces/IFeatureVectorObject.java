@@ -42,8 +42,6 @@ public interface IFeatureVectorObject<O extends Object, F extends Feature<O>> ex
 
 	public List<F> getVectorRepresentation();
 
-	public F[] getArrayRepresentation();
-
 	public Set<String> getFeatureKeySet();
 
 	public int sizeOfFeatures();
