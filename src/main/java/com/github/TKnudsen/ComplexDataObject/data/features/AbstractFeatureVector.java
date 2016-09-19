@@ -210,12 +210,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return Collections.unmodifiableList(featuresList);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public F[] getArrayRepresentation() {
-		return featuresList.toArray((F[]) new Object[featuresList.size()]);
-	}
-
 	@Override
 	public Set<String> getFeatureKeySet() {
 		if (featuresMap == null)
@@ -228,6 +222,11 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	public int sizeOfFeatures() {
 		return featuresList.size();
 	}
+	
+	public int getDimensions() {
+		return featuresList.size();
+	}
+	
 
 	@Override
 	/**
