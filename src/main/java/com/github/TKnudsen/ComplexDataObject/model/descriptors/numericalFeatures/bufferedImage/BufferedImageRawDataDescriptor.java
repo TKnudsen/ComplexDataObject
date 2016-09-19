@@ -1,6 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.descriptors.numericalFeatures.bufferedImage;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.INumericFeatureVectorDescriptor;
+import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 
 /**
  * <p>
@@ -54,11 +54,7 @@ public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDesc
 
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < heigth; y++) {
-					int color = image.getRGB(x, y);
-					int R = (color >>> 16) & 0xFF;
-					int G = (color >>> 8) & 0xFF;
-					int B = (color >>> 0) & 0xFF;
-					double luminance = (0.2126 * R + 0.7152 * G + 0.0722 * B) / 255.0;
+					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					features.add(new NumericalFeature(x + "_" + y, luminance));
 				}
 

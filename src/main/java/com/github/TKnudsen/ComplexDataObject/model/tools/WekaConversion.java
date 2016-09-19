@@ -15,6 +15,22 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
+/**
+ * <p>
+ * Title: WekaConversion
+ * </p>
+ *
+ * <p>
+ * Description:
+ * </p>
+ *
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ *
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class WekaConversion {
 
 	public static Instances getInstances(ComplexDataContainer container) {
