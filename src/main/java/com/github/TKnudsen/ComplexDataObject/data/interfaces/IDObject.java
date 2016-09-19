@@ -15,7 +15,7 @@ package com.github.TKnudsen.ComplexDataObject.data.interfaces;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.06
  */
 public interface IDObject {
 
