@@ -1,18 +1,54 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * <p>
+ * Title: NumericalFeatureVectorTools
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
+ */
 
 public class NumericalFeatureVectorTools {
 
-	public static NumericalFeatureVector createNumericalFeatureVector(double[] vector) {
-		if (vector == null)
-			return null;
+	/**
+	 * retrieves the minimum value.
+	 * 
+	 * @param featureVector
+	 * @return
+	 */
+	public static Double getMin(NumericalFeatureVector featureVector) {
+		if (featureVector == null)
+			return Double.NaN;
 
-		List<NumericalFeature> features = new ArrayList<>();
-		for (int i = 0; i < vector.length; i++)
-			features.add(new NumericalFeature("[" + i + "]", vector[i]));
-
-		return new NumericalFeatureVector(features);
+		Double d = Double.MAX_VALUE - 1;
+		for (NumericalFeature feature : featureVector.getVectorRepresentation())
+			d = Math.min(d, feature.doubleValue());
+		return d;
 	}
+
+	/**
+	 * retrieves the maximum value.
+	 * 
+	 * @param featureVector
+	 * @return
+	 */
+	public static Double getMax(NumericalFeatureVector featureVector) {
+		if (featureVector == null)
+			return Double.NaN;
+
+		Double d = Double.MIN_VALUE + 1;
+		for (NumericalFeature feature : featureVector.getVectorRepresentation())
+			d = Math.max(d, feature.doubleValue());
+		return d;
+	}
+
 }
