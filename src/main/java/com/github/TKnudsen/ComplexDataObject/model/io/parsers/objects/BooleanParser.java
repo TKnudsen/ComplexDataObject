@@ -1,5 +1,21 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
+/**
+ * <p>
+ * Title: BooleanParser
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
+ */
 public class BooleanParser implements IObjectParser<Boolean> {
 
 	@Override
