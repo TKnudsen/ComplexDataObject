@@ -158,7 +158,11 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
-			featureVectors.add(new NumericalFeatureVector(features));
+		
+			NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
+			featureVector.setMaster(complexDataObject);
+			
+			featureVectors.add(featureVector);
 			return featureVectors;
 
 		} else
