@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -105,5 +106,41 @@ public class WekaConversion {
 			}
 			data.add(ins);
 		}
+	}
+
+	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
+
+		Instances inst = getInstances(fvs);
+
+		List<String> destinctList = destinctListCreator(labels);
+
+		FastVector fastV = new FastVector();
+
+		for (int i = 0; i < destinctList.size(); i++)
+			fastV.addElement(destinctList.get(i));
+
+		Attribute classAtt = new Attribute("class", fastV);
+
+		inst.insertAttributeAt(classAtt, inst.numAttributes());
+		inst.setClass(classAtt);
+		inst.setClassIndex(inst.numAttributes() - 1);
+
+		for (int i = 0; i < labels.size(); i++)
+			inst.instance(i).setClassValue(labels.get(i));
+
+		inst.setClass(classAtt);
+		inst.setClassIndex(inst.numAttributes() - 1);
+
+		return inst;
+	}
+
+	public static List<String> destinctListCreator(List<String> list) {
+		List<String> destinctList = new ArrayList<String>();
+
+		for (String str : list)
+			if (!destinctList.contains(str))
+				destinctList.add(str);
+
+		return destinctList;
 	}
 }
