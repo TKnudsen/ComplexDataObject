@@ -139,7 +139,7 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			}
 
 			// starting east, direction north west
-			for (int y = 0; y < height-1; y++) {
+			for (int y = 0; y < height - 1; y++) {
 				// starting point for every diagonal
 				deltaX = width - 1;
 				deltaY = y;
@@ -158,10 +158,12 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
-		
+
 			NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
 			featureVector.setMaster(complexDataObject);
-			
+			if (complexDataObject.get("Label") != null)
+				featureVector.add("Label", complexDataObject.get("Label"));
+
 			featureVectors.add(featureVector);
 			return featureVectors;
 

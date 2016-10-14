@@ -59,9 +59,11 @@ public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDesc
 				}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
-			
+
 			NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
 			featureVector.setMaster(complexDataObject);
+			if (complexDataObject.get("Label") != null)
+				featureVector.add("Label", complexDataObject.get("Label"));
 
 			featureVectors.add(featureVector);
 			return featureVectors;
