@@ -57,7 +57,9 @@ public abstract class ParserTools implements Serializable {
 	 *            token as String.
 	 * @return
 	 * @throws ParseException
+	 * @Deprecated use DateParser
 	 */
+	@Deprecated
 	public static synchronized Date parseDate(String token) {
 		Date date = null;
 		String t = token.replace("T", " ");
