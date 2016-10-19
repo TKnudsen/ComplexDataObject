@@ -24,6 +24,11 @@
 			<version>3.8.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.pentaho.pentaho-commons</groupId>
+			<artifactId>pentaho-package-manager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
 			<version>${commons-math3.version}</version>
