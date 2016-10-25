@@ -75,6 +75,9 @@ public class WekaTools {
 	public static Map<Integer, Entry<String, Class<?>>> getAttributeSchema(Instances instances) {
 		Map<Integer, Entry<String, Class<?>>> attributeSchema = new HashMap<Integer, Entry<String, Class<?>>>();
 
+		if (instances == null)
+			return null;
+
 		for (int i = 0; i < instances.numAttributes(); i++) {
 			AttributeType type = getAttributeType(instances, instances.attribute(i));
 			switch (type) {

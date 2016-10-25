@@ -143,12 +143,16 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public Boolean isNumeric(String attribute) {
+		if (!dataSchema.contains(attribute))
+			return false;
 		if (Number.class.isAssignableFrom(dataSchema.getType(attribute)))
 			return true;
 		return false;
 	}
 
 	public Boolean isBoolean(String attribute) {
+		if (!dataSchema.contains(attribute))
+			return false;
 		if (Boolean.class.isAssignableFrom(dataSchema.getType(attribute)))
 			return true;
 		return false;
@@ -186,9 +190,12 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 	@Override
 	public String toString() {
+		String s = "Container with " + size() + " objects. Schema:\n";
 		if (dataSchema == null)
-			return super.toString();
-		return dataSchema.toString();
+			s += super.toString();
+		else
+			s += dataSchema.toString();
+		return s;
 	}
 
 	public int size() {

@@ -60,22 +60,25 @@ public class WekaConversion {
 		Instances instances = new Instances("ComplexDataContainer " + container.toString(), attrs, container.size());
 
 		// create instance objects
-		for (ComplexDataObject object : container) {
+		for (ComplexDataObject cdo : container) {
 			Instance instance = new DenseInstance(dims);
 
-			Iterator<String> attNames = object.iterator();
+			Iterator<String> attNames = cdo.iterator();
 			while (attNames.hasNext()) {
 				String attName = attNames.next();
 				Attribute attribute = attributeMap.get(attName);
 
-				Object value = object.get(attName);
-				if (value instanceof String)
-					instance.setValue(attribute, (String) value);
-				else if (value instanceof Boolean) {
-					Integer i = ((Boolean) value).booleanValue() ? 1 : 0;
-					instance.setValue(attribute, ((Number) i).doubleValue());
-				} else if (Number.class.isAssignableFrom(value.getClass()))
-					instance.setValue(attribute, ((Number) value).doubleValue());
+				Object value = cdo.get(attName);
+				if (container.isNumeric(attName)) {
+					if (value != null)
+						instance.setValue(attribute, ((Number) value).doubleValue());
+				} else if (container.isBoolean(attName)) {
+					if (value != null) {
+						Integer i = ((Boolean) value).booleanValue() ? 1 : 0;
+						instance.setValue(attribute, ((Number) i).doubleValue());
+					}
+				} else if (value != null)
+					instance.setValue(attribute, value.toString());
 			}
 
 			instances.add(instance);

@@ -44,6 +44,8 @@ public class ARFFParser implements ComplexDataObjectParser {
 	@Override
 	public List<ComplexDataObject> parse(String filename) throws IOException {
 		Instances instances = parseARFF(filename);
+		if (instances == null)
+			return null;
 
 		List<ComplexDataObject> data = new ArrayList<>();
 
@@ -91,7 +93,8 @@ public class ARFFParser implements ComplexDataObjectParser {
 
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(arffFile));
+			FileReader fileReader = new FileReader(arffFile);
+			reader = new BufferedReader(fileReader);
 			Instances instances = new Instances(reader);
 			reader.close();
 			return instances;
