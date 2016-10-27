@@ -57,6 +57,11 @@ public class WekaConversion {
 			attributeMap.put(string, a);
 		}
 
+		if (!attributeMap.containsKey("Name"))
+			attributeMap.put("Name", new Attribute("Name"));
+		if (!attributeMap.containsKey("Description"))
+			attributeMap.put("Description", new Attribute("Description"));
+
 		Instances instances = new Instances("ComplexDataContainer " + container.toString(), attrs, container.size());
 
 		// create instance objects
@@ -80,6 +85,12 @@ public class WekaConversion {
 				} else if (value != null)
 					instance.setValue(attribute, value.toString());
 			}
+
+			Attribute nameAttribute = attributeMap.get("Name");
+			instance.setValue(nameAttribute, cdo.getName());
+
+			Attribute descripptionAttribute = attributeMap.get("Description");
+			instance.setValue(descripptionAttribute, cdo.getDescription());
 
 			instances.add(instance);
 		}

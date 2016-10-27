@@ -60,9 +60,13 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	@Override
 	public String getName() {
-		if (name == null)
-			return toString();
-		return name;
+		if (name != null)
+			return name;
+
+		if (get("Name") != null)
+			return get("Name").toString();
+
+		return "no name available";
 	}
 
 	public void setName(String name) {

@@ -40,10 +40,19 @@ public class ComplexDataObjectTools {
 	public static ComplexDataObject mergeObjects(Iterable<ComplexDataObject> objects) {
 		ComplexDataObject mergedObject = new ComplexDataObject();
 
-		for (ComplexDataObject object : objects)
-			for (String attribute : object.keySet())
+		for (ComplexDataObject object : objects) {
+			for (String attribute : object.keySet()) {
+				if (mergedObject.get(attribute) != null)
+					System.out.println("overwriting attribute " + attribute + "(" + object.get(attribute) + "->" + mergedObject.get(attribute) + ")");
 				mergedObject.add(attribute, object.get(attribute));
+			}
 
+			if (object.getName() != null)
+				mergedObject.setName(object.getName());
+			
+			if (object.getDescription() != null)
+				mergedObject.setDescription(object.getDescription());
+		}
 		return mergedObject;
 	}
 }

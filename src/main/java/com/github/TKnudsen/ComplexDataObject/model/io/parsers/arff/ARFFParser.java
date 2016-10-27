@@ -80,6 +80,13 @@ public class ARFFParser implements ComplexDataObjectParser {
 						complexDataObject.add(entry.getKey(), entry.getValue());
 				} else
 					throw new NullArgumentException();
+
+				if (complexDataObject.get("Name") != null)
+					complexDataObject.setName(complexDataObject.get("Name").toString());
+
+				if (complexDataObject.get("Description") != null)
+					complexDataObject.setDescription(complexDataObject.get("Description").toString());
+
 			}
 			data.add(complexDataObject);
 		}
