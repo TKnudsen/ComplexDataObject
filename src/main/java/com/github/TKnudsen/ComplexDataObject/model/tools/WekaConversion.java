@@ -38,10 +38,22 @@ public class WekaConversion {
 		if (container == null)
 			return null;
 
-		int dims = container.getAttributeNames().size();
-
-		FastVector attrs = new FastVector(dims);
+		FastVector attrs = new FastVector<>();
 		Map<String, Attribute> attributeMap = new HashMap<>();
+
+		int dims = container.getAttributeNames().size();
+		if (!container.getAttributeNames().contains("Name")) {
+			dims++;
+			Attribute a = new Attribute("Name", (List<String>) null);
+			attrs.addElement(a);
+			attributeMap.put("Name", a);
+		}
+		if (!container.getAttributeNames().contains("Description")) {
+			dims++;
+			Attribute a = new Attribute("Description", (List<String>) null);
+			attrs.addElement(a);
+			attributeMap.put("Description", a);
+		}
 
 		for (Iterator<String> iterator = container.getAttributeNames().iterator(); iterator.hasNext();) {
 			String string = iterator.next();
@@ -56,11 +68,6 @@ public class WekaConversion {
 			attrs.addElement(a);
 			attributeMap.put(string, a);
 		}
-
-		if (!attributeMap.containsKey("Name"))
-			attributeMap.put("Name", new Attribute("Name"));
-		if (!attributeMap.containsKey("Description"))
-			attributeMap.put("Description", new Attribute("Description"));
 
 		Instances instances = new Instances("ComplexDataContainer " + container.toString(), attrs, container.size());
 
