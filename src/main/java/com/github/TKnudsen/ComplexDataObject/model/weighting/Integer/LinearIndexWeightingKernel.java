@@ -1,8 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.weighting.Integer;
 
-import com.github.TKnudsen.ComplexDataObject.model.weighting.IWeightingKernel;
-
-public class LinearIndexWeightingKernel implements IWeightingKernel<Integer> {
+public class LinearIndexWeightingKernel implements IIntegerWeightingKernel {
 
 	private Integer reference;
 	private Integer interval;
