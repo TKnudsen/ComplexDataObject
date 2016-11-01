@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;

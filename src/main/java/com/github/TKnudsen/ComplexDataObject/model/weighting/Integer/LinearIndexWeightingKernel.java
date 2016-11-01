@@ -1,11 +1,13 @@
-package com.github.TKnudsen.ComplexDataObject.model.weighting;
+package com.github.TKnudsen.ComplexDataObject.model.weighting.Integer;
 
-public class IndexWeightingKernel implements IIntWeightingKernel {
+import com.github.TKnudsen.ComplexDataObject.model.weighting.IWeightingKernel;
+
+public class LinearIndexWeightingKernel implements IWeightingKernel<Integer> {
 
 	private Integer reference;
 	private Integer interval;
 
-	public IndexWeightingKernel(Integer interval) {
+	public LinearIndexWeightingKernel(Integer interval) {
 		this.interval = interval;
 	}
 
@@ -15,7 +17,7 @@ public class IndexWeightingKernel implements IIntWeightingKernel {
 	}
 
 	@Override
-	public void setKernelInterval(Integer t) {
+	public void setInterval(Integer t) {
 		this.interval = t;
 	}
 
@@ -25,7 +27,7 @@ public class IndexWeightingKernel implements IIntWeightingKernel {
 			return 0.0;
 
 		if (interval == 0)
-			return 0.0;
+			return 1.0;
 
 		return 1.0 - (Math.abs(reference - t) / (double) interval);
 	}
@@ -37,6 +39,6 @@ public class IndexWeightingKernel implements IIntWeightingKernel {
 
 	@Override
 	public void setReference(Integer t) {
-		this.reference = t;
+		this.reference = t.intValue();
 	}
 }

@@ -17,16 +17,21 @@ package com.github.TKnudsen.ComplexDataObject.model.weighting;
  * @author Juergen Bernard
  * @version 1.02
  */
-public interface IWeightingKernel<T> {
-
-	public T getInterval();
-
-	public void setKernelInterval(T t);
+public interface IWeightingKernel<T extends Number> {
 
 	public double getWeight(T t);
 
 	public T getReference();
 
 	public void setReference(T t);
+
+	/**
+	 * Value range where the kernel provides weights
+	 * 
+	 * @return
+	 */
+	public T getInterval();
+
+	public void setInterval(T interval);
 
 }
