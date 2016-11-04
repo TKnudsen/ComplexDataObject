@@ -6,10 +6,6 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
 
-/**
- * 
- * @author jubernar
- */
 public class TitanicDataSetParserTester {
 	public static void main(String[] args) {
 		List<ComplexDataObject> titanicData = null;
