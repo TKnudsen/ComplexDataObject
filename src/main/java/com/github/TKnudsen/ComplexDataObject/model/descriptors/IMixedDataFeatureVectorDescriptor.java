@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.descriptors;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 
 /**
  * <p>
@@ -17,8 +18,8 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public interface IMixedDataFeatureVectorDescriptor extends IDescriptor<Object, MixedDataFeatureVector> {
+public interface IMixedDataFeatureVectorDescriptor<I extends IDObject> extends IDescriptor<I, Object, MixedDataFeatureVector> {
 
 }

@@ -27,9 +27,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.00
+ * @version 1.02
  */
-public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatureVectorDescriptor {
+public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
 	private String bufferedImageAttributeName;
 

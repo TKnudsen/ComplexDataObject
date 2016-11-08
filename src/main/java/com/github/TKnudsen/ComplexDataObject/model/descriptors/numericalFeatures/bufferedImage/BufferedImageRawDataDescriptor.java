@@ -27,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor {
+public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
 	private String bufferedImageAttributeName;
 

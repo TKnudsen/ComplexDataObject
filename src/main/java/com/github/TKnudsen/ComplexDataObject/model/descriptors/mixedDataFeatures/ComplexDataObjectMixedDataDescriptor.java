@@ -12,7 +12,7 @@ import com.github.TKnudsen.ComplexDataObject.model.descriptors.IMixedDataFeature
 
 /**
  * <p>
- * Title: MixedDataFeatureVectorDescriptor
+ * Title: ComplexDataObjectMixedDataDescriptor
  * </p>
  *
  * <p>
@@ -25,9 +25,9 @@ import com.github.TKnudsen.ComplexDataObject.model.descriptors.IMixedDataFeature
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
-public class MixedDataFeatureVectorDescriptor implements IMixedDataFeatureVectorDescriptor {
+public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVectorDescriptor<ComplexDataObject> {
 
 	@Override
 	public List<MixedDataFeatureVector> transform(ComplexDataObject complexDataObject) {

@@ -2,9 +2,9 @@ package com.github.TKnudsen.ComplexDataObject.model.descriptors;
 
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
@@ -22,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public interface IDescriptor<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription {
+public interface IDescriptor<I extends IDObject, O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription {
 
-	public List<X> transform(ComplexDataObject complexDataObject);
+	public List<X> transform(I input);
 
-	public List<X> transform(List<ComplexDataObject> complexDataObjects);
+	public List<X> transform(List<I> inputObjects);
 }
