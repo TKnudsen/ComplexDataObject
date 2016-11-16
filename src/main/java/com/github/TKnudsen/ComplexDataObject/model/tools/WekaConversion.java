@@ -119,27 +119,27 @@ public class WekaConversion {
 		addInstances(fvs, data);
 		return data;
 	}
-	
+
 	public static Instances getMixedInstances(List<MixedDataFeatureVector> mfvs) {
 		int length = mfvs.get(0).getVectorRepresentation().size();
 		FastVector attrs = new FastVector(length);
 		for (int i = 0; i < length; i++) {
 
 			Attribute a;
-			
+
 			if (mfvs.get(0).getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
 				List<String> strList = new ArrayList<String>();
 				for (MixedDataFeatureVector mfv : mfvs) {
 					if (!strList.contains((String) mfv.getVectorRepresentation().get(i).getFeatureValue()))
 						strList.add((String) mfv.getVectorRepresentation().get(i).getFeatureValue());
 				}
-				
-				 a = new Attribute(i + 1 + "",strList);
-				
+
+				a = new Attribute(i + 1 + "", strList);
+
 			} else {
-				 a = new Attribute(i + 1 + "");
+				a = new Attribute(i + 1 + "");
 			}
-			
+
 			attrs.addElement(a);
 		}
 
@@ -158,15 +158,15 @@ public class WekaConversion {
 			data.add(ins);
 		}
 	}
-	
+
 	public static void addMixedInstances(List<MixedDataFeatureVector> mfvs, Instances data) {
 		for (MixedDataFeatureVector mfv : mfvs) {
 			int length = mfv.getVectorRepresentation().size();
-			
+
 			data.add(new DenseInstance(length));
-			
-			Instance ins = data.get(data.size()-1);
-			
+
+			Instance ins = data.get(data.size() - 1);
+
 			for (int i = 0; i < length; i++) {
 
 				if (mfv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
@@ -176,7 +176,7 @@ public class WekaConversion {
 					ins.setValue(i, str);
 				}
 			}
-			
+
 		}
 	}
 
@@ -221,48 +221,39 @@ public class WekaConversion {
 		return inst;
 
 	}
-	
-	public static Instances addLabelAttributeToInstance(Instances inst, List<String> labels){
-		
-		List<String> destinctList = destinctListCreator(labels);
 
-		FastVector fastV = new FastVector();
+	public static Instances addLabelAttributeToInstance(Instances inst, List<String> labels) {
 
-		for (int i = 0; i < destinctList.size(); i++)
-			fastV.addElement(destinctList.get(i));
+		List<String> distinctList = destinctListCreator(labels);
 
-		Attribute classAtt = new Attribute("class", fastV);
+		Attribute classAtt = new Attribute("class", distinctList);
 
 		inst.insertAttributeAt(classAtt, inst.numAttributes());
 		inst.setClass(classAtt);
 		inst.setClassIndex(inst.numAttributes() - 1);
-		
+
 		return inst;
 
 	}
-	
-	
-public static Instances addNumericLabelAttributeToInstance(Instances inst){
-		
+
+	public static Instances addNumericLabelAttributeToInstance(Instances inst) {
 
 		Attribute classAtt = new Attribute("num");
 
 		inst.insertAttributeAt(classAtt, inst.numAttributes());
 		inst.setClass(classAtt);
 		inst.setClassIndex(inst.numAttributes() - 1);
-		
+
 		return inst;
 
 	}
 
 	private static Instances addLabelsToInstances(Instances inst, List<String> labels) {
 
-		
-		Instances inst2 = addLabelAttributeToInstance( inst, labels);
+		Instances inst2 = addLabelAttributeToInstance(inst, labels);
 
 		for (int i = 0; i < labels.size(); i++)
 			inst2.instance(i).setClassValue(labels.get(i));
-
 
 		return inst2;
 

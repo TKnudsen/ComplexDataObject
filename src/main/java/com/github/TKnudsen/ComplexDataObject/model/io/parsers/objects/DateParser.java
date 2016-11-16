@@ -4,6 +4,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * <p>
+ * Title: DateParser
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class DateParser implements IObjectParser<Date> {
 
 	private static SimpleDateFormat ISO0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
@@ -16,6 +32,8 @@ public class DateParser implements IObjectParser<Date> {
 	private static SimpleDateFormat IS06b = new SimpleDateFormat("dd_MM_yyyy");
 	private static SimpleDateFormat IS07 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 	private static SimpleDateFormat IS08 = new SimpleDateFormat("MM.dd.yyyy");
+	private static SimpleDateFormat IS09a = new SimpleDateFormat("dd/MM/yyyy");
+	private static SimpleDateFormat IS09b = new SimpleDateFormat("dd\\MM\\yyyy");
 
 	@Override
 	public synchronized Date apply(Object inputObject) {
@@ -91,6 +109,20 @@ public class DateParser implements IObjectParser<Date> {
 								date = IS08.parse(replacedT);
 							}
 						} catch (ParseException pe__) {
+							try {
+								// 13/01/1969
+								synchronized (IS09a) {
+									date = IS09a.parse(replacedT);
+								}
+							} catch (ParseException pe___) {
+								try {
+									// 13\01\1969
+									synchronized (IS09b) {
+										date = IS09b.parse(replacedT);
+									}
+								} catch (ParseException pe____) {
+								}
+							}
 						}
 					}
 				}
