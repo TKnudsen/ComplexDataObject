@@ -2,6 +2,9 @@ package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
 import java.util.List;
 
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
+
 /**
  * <p>
  * Title: NumericalFeatureVectorTools
@@ -51,6 +54,16 @@ public class NumericalFeatureVectorTools {
 		for (NumericalFeature feature : featureVector.getVectorRepresentation())
 			d = Math.max(d, feature.doubleValue());
 		return d;
+	}
+
+	public static void addClassAttribute(List<NumericalFeatureVector> featureVectors, List<String> labels, String classAttribute) {
+		for (int i = 0; i < featureVectors.size(); i++)
+			featureVectors.get(i).add(classAttribute, labels.get(i));
+	}
+
+	public static void addNumericAttribute(List<NumericalFeatureVector> features, List<Double> labels, String attributeName) {
+		for (int i = 0; i < features.size(); i++)
+			features.get(i).add(attributeName, labels.get(i));
 	}
 
 }
