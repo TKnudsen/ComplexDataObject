@@ -14,7 +14,6 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -40,20 +39,20 @@ public class WekaConversion {
 		if (container == null)
 			return null;
 
-		FastVector attrs = new FastVector<>();
+		List<Attribute> attrs = new ArrayList<Attribute>();
 		Map<String, Attribute> attributeMap = new HashMap<>();
 
 		int dims = container.getAttributeNames().size();
 		if (!container.getAttributeNames().contains("Name")) {
 			dims++;
 			Attribute a = new Attribute("Name", (List<String>) null);
-			attrs.addElement(a);
+			attrs.add(a);
 			attributeMap.put("Name", a);
 		}
 		if (!container.getAttributeNames().contains("Description")) {
 			dims++;
 			Attribute a = new Attribute("Description", (List<String>) null);
-			attrs.addElement(a);
+			attrs.add(a);
 			attributeMap.put("Description", a);
 		}
 
@@ -67,11 +66,11 @@ public class WekaConversion {
 				a = new Attribute(string);
 			else
 				a = new Attribute(string, (List<String>) null);
-			attrs.addElement(a);
+			attrs.add(a);
 			attributeMap.put(string, a);
 		}
 
-		Instances instances = new Instances("ComplexDataContainer " + container.toString(), attrs, container.size());
+		Instances instances = new Instances("ComplexDataContainer " + container.toString(), (ArrayList<Attribute>) attrs, container.size());
 
 		// create instance objects
 		for (ComplexDataObject cdo : container) {
@@ -109,20 +108,20 @@ public class WekaConversion {
 
 	public static Instances getInstances(List<NumericalFeatureVector> fvs) {
 		int length = fvs.get(0).getVector().length;
-		FastVector attrs = new FastVector(length);
+		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
 			Attribute a = new Attribute(i + 1 + "");
-			attrs.addElement(a);
+			attrs.add(a);
 		}
 
-		Instances data = new Instances("NumericalFeatureVectors", attrs, fvs.size());
+		Instances data = new Instances("NumericalFeatureVectors", (ArrayList<Attribute>) attrs, fvs.size());
 		addInstances(fvs, data);
 		return data;
 	}
 
 	public static Instances getMixedInstances(List<MixedDataFeatureVector> mfvs) {
 		int length = mfvs.get(0).getVectorRepresentation().size();
-		FastVector attrs = new FastVector(length);
+		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
 
 			Attribute a;
@@ -140,10 +139,10 @@ public class WekaConversion {
 				a = new Attribute(i + 1 + "");
 			}
 
-			attrs.addElement(a);
+			attrs.add(a);
 		}
 
-		Instances data = new Instances("MixedFeatureVectors", attrs, mfvs.size());
+		Instances data = new Instances("MixedFeatureVectors", (ArrayList<Attribute>) attrs, mfvs.size());
 		addMixedInstances(mfvs, data);
 		return data;
 	}
@@ -224,9 +223,9 @@ public class WekaConversion {
 
 	public static Instances addLabelAttributeToInstance(Instances inst, List<String> labels) {
 
-		List<String> distinctList = destinctListCreator(labels);
+		List<String> destinctList = destinctListCreator(labels);
 
-		Attribute classAtt = new Attribute("class", distinctList);
+		Attribute classAtt = new Attribute("class", destinctList);
 
 		inst.insertAttributeAt(classAtt, inst.numAttributes());
 		inst.setClass(classAtt);
