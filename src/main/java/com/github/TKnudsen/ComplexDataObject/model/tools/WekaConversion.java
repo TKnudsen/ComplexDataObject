@@ -179,6 +179,19 @@ public class WekaConversion {
 		}
 	}
 
+	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, String classAttribute) {
+		List<String> labels = new ArrayList<>();
+		for (int i = 0; i < fvs.size(); i++)
+			if (fvs.get(i).get(classAttribute) instanceof String)
+				labels.add((String) fvs.get(i).get(classAttribute));
+			else
+				labels.add(fvs.get(i).get(classAttribute).toString());
+
+		Instances inst = getInstances(fvs);
+
+		return addLabelsToInstances(inst, labels);
+	}
+
 	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
 
 		Instances inst = getInstances(fvs);

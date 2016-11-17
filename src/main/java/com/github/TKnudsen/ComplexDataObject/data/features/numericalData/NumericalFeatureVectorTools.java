@@ -1,5 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
+import java.util.List;
+
 /**
  * <p>
  * Title: NumericalFeatureVectorTools
