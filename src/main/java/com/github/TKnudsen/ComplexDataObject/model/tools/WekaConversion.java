@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -106,7 +108,25 @@ public class WekaConversion {
 		return instances;
 	}
 
-	public static Instances getInstances(List<NumericalFeatureVector> fvs) {
+	/**
+	 * 
+	 * @param fvs
+	 * @return
+	 */
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs) {
+		int length = fvs.get(0).getDimensions();
+		List<Attribute> attrs = new ArrayList<Attribute>(length);
+		for (int i = 0; i < length; i++) {
+			Attribute a = new Attribute(i + 1 + "");
+			attrs.add(a);
+		}
+
+		Instances data = new Instances(fvs.get(0).getClass().getName(), (ArrayList<Attribute>) attrs, fvs.size());
+		addInstances(fvs, data);
+		return data;
+	}
+
+	public static Instances getInstancesNumerical(List<NumericalFeatureVector> fvs) {
 		int length = fvs.get(0).getVector().length;
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
@@ -119,7 +139,7 @@ public class WekaConversion {
 		return data;
 	}
 
-	public static Instances getMixedInstances(List<MixedDataFeatureVector> mfvs) {
+	public static Instances getInstancesMixed(List<MixedDataFeatureVector> mfvs) {
 		int length = mfvs.get(0).getVectorRepresentation().size();
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
@@ -179,7 +199,26 @@ public class WekaConversion {
 		}
 	}
 
-	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, String classAttribute) {
+	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
+		List<String> labels = new ArrayList<>();
+		for (int i = 0; i < fvs.size(); i++)
+			if (fvs.get(i).get(classAttribute) instanceof String)
+				labels.add((String) fvs.get(i).get(classAttribute));
+			else
+				labels.add(fvs.get(i).get(classAttribute).toString());
+
+		Instances inst = getInstancesNumerical(fvs);
+
+		return addLabelsToInstances(inst, labels);
+	}
+
+	/**
+	 *
+	 * @param fvs
+	 * @param classAttribute
+	 * @return
+	 */
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, String classAttribute) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).get(classAttribute) instanceof String)
@@ -192,30 +231,30 @@ public class WekaConversion {
 		return addLabelsToInstances(inst, labels);
 	}
 
-	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
+	public static  Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
 
-		Instances inst = getInstances(fvs);
+		Instances inst = getInstancesNumerical(fvs);
 
 		return addLabelsToInstances(inst, labels);
 	}
 
 	public static Instances getLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<String> labels) {
 
-		Instances inst = getMixedInstances(mfvs);
+		Instances inst = getInstancesMixed(mfvs);
 
 		return addLabelsToInstances(inst, labels);
 	}
 
 	public static Instances getNumericLabeledInstances(List<NumericalFeatureVector> fvs, List<Double> numLabels) {
 
-		Instances inst = getInstances(fvs);
+		Instances inst = getInstancesNumerical(fvs);
 
 		return addNumericLabelsToInstances(inst, numLabels);
 	}
 
 	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels) {
 
-		Instances inst = getMixedInstances(mfvs);
+		Instances inst = getInstancesMixed(mfvs);
 
 		return addNumericLabelsToInstances(inst, numLabels);
 	}
