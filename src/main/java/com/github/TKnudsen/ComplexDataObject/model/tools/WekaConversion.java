@@ -33,7 +33,7 @@ import weka.core.Instances;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.03
  */
 public class WekaConversion {
 
@@ -167,14 +167,24 @@ public class WekaConversion {
 		return data;
 	}
 
-	public static void addInstances(List<NumericalFeatureVector> fvs, Instances data) {
-		for (NumericalFeatureVector fv : fvs) {
-			double[] vector = fv.getVector();
-			Instance ins = new DenseInstance(vector.length);
-			for (int i = 0; i < vector.length; i++) {
-				ins.setValue(i, vector[i]);
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
+		for (FV mf : fvs) {
+			int length = mf.getVectorRepresentation().size();
+
+			data.add(new DenseInstance(length));
+
+			Instance ins = data.get(data.size() - 1);
+
+			for (int i = 0; i < length; i++) {
+
+				if (mf.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
+					ins.setValue(i, (Double) mf.getVectorRepresentation().get(i).getFeatureValue());
+				else if (mf.getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
+					String str = (String) mf.getVectorRepresentation().get(i).getFeatureValue();
+					ins.setValue(i, str);
+				}
 			}
-			data.add(ins);
+
 		}
 	}
 
@@ -231,7 +241,7 @@ public class WekaConversion {
 		return addLabelsToInstances(inst, labels);
 	}
 
-	public static  Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
+	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
 
 		Instances inst = getInstancesNumerical(fvs);
 
