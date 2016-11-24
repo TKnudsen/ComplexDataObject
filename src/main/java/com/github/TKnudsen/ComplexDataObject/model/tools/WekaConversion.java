@@ -117,7 +117,11 @@ public class WekaConversion {
 		int length = fvs.get(0).getDimensions();
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
-			Attribute a = new Attribute(i + 1 + "");
+			Attribute a = null;
+			if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
+				a = new Attribute(i + 1 + "");
+			else
+				a = new Attribute(i + 1 + "", (List<String>) null);
 			attrs.add(a);
 		}
 
@@ -126,6 +130,11 @@ public class WekaConversion {
 		return data;
 	}
 
+	/**
+	 * @deprecated
+	 * @param fvs
+	 * @return
+	 */
 	public static Instances getInstancesNumerical(List<NumericalFeatureVector> fvs) {
 		int length = fvs.get(0).getVector().length;
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
@@ -139,6 +148,11 @@ public class WekaConversion {
 		return data;
 	}
 
+	/**
+	 * @deprecated
+	 * @param mfvs
+	 * @return
+	 */
 	public static Instances getInstancesMixed(List<MixedDataFeatureVector> mfvs) {
 		int length = mfvs.get(0).getVectorRepresentation().size();
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
@@ -168,8 +182,8 @@ public class WekaConversion {
 	}
 
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
-		for (FV mf : fvs) {
-			int length = mf.getVectorRepresentation().size();
+		for (FV fv : fvs) {
+			int length = fv.getVectorRepresentation().size();
 
 			data.add(new DenseInstance(length));
 
@@ -177,10 +191,10 @@ public class WekaConversion {
 
 			for (int i = 0; i < length; i++) {
 
-				if (mf.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
-					ins.setValue(i, (Double) mf.getVectorRepresentation().get(i).getFeatureValue());
-				else if (mf.getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
-					String str = (String) mf.getVectorRepresentation().get(i).getFeatureValue();
+				if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
+					ins.setValue(i, (Double) fv.getVectorRepresentation().get(i).getFeatureValue());
+				else if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
+					String str = (String) fv.getVectorRepresentation().get(i).getFeatureValue();
 					ins.setValue(i, str);
 				}
 			}
@@ -243,28 +257,14 @@ public class WekaConversion {
 
 	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
 
-		Instances inst = getInstancesNumerical(fvs);
+		Instances inst = getInstances(fvs);
 
 		return addLabelsToInstances(inst, labels);
-	}
-
-	public static Instances getLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<String> labels) {
-
-		Instances inst = getInstancesMixed(mfvs);
-
-		return addLabelsToInstances(inst, labels);
-	}
-
-	public static Instances getNumericLabeledInstances(List<NumericalFeatureVector> fvs, List<Double> numLabels) {
-
-		Instances inst = getInstancesNumerical(fvs);
-
-		return addNumericLabelsToInstances(inst, numLabels);
 	}
 
 	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels) {
 
-		Instances inst = getInstancesMixed(mfvs);
+		Instances inst = getInstances(mfvs);
 
 		return addNumericLabelsToInstances(inst, numLabels);
 	}
