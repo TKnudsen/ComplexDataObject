@@ -184,13 +184,10 @@ public class WekaConversion {
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
 		for (FV fv : fvs) {
 			int length = fv.getVectorRepresentation().size();
-
 			data.add(new DenseInstance(length));
-
 			Instance ins = data.get(data.size() - 1);
 
 			for (int i = 0; i < length; i++) {
-
 				if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
 					ins.setValue(i, (Double) fv.getVectorRepresentation().get(i).getFeatureValue());
 				else if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
@@ -198,7 +195,6 @@ public class WekaConversion {
 					ins.setValue(i, str);
 				}
 			}
-
 		}
 	}
 
@@ -285,9 +281,9 @@ public class WekaConversion {
 
 	public static Instances addLabelAttributeToInstance(Instances inst, List<String> labels) {
 
-		List<String> destinctList = destinctListCreator(labels);
+		List<String> distinctLabels = distinctListCreator(labels);
 
-		Attribute classAtt = new Attribute("class", destinctList);
+		Attribute classAtt = new Attribute("class", distinctLabels);
 
 		inst.insertAttributeAt(classAtt, inst.numAttributes());
 		inst.setClass(classAtt);
@@ -320,13 +316,22 @@ public class WekaConversion {
 
 	}
 
-	public static List<String> destinctListCreator(List<String> list) {
-		List<String> destinctList = new ArrayList<String>();
+	/**
+	 * Improve this piece of code!
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public static List<String> distinctListCreator(List<String> list) {
+		List<String> distinctList = new ArrayList<String>();
+
+		if (list == null)
+			return distinctList;
 
 		for (String str : list)
-			if (!destinctList.contains(str))
-				destinctList.add(str);
+			if (!distinctList.contains(str))
+				distinctList.add(str);
 
-		return destinctList;
+		return distinctList;
 	}
 }
