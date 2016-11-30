@@ -33,6 +33,16 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 
 	private String bufferedImageAttributeName;
 
+	/**
+	 * determines which x-st row/column is used
+	 */
+	private int sampling = 1;
+
+	/**
+	 * determines how many pixels are skipped at each image border
+	 */
+	private int cropBorders = 0;
+
 	public BufferedImageRowColumnDescriptor(String bufferedImageAttributeName) {
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
 	}
@@ -55,22 +65,24 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 			int height = image.getHeight();
 
 			double lum = 0;
-			for (int x = 0; x < width; x++) {
+			for (int x = cropBorders; x < width - cropBorders; x++) {
 				lum = 0;
 				for (int y = 0; y < height; y++) {
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				features.add(new NumericalFeature("Luminance column " + x, lum));
+				if ((x-cropBorders) % sampling == 0)
+					features.add(new NumericalFeature("Luminance column " + x, lum));
 			}
 
-			for (int y = 0; y < height; y++) {
+			for (int y = cropBorders; y < height - cropBorders; y++) {
 				lum = 0;
 				for (int x = 0; x < width; x++) {
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				features.add(new NumericalFeature("Luminance row " + y, lum));
+				if ((y-cropBorders) % sampling == 0)
+					features.add(new NumericalFeature("Luminance row " + y, lum));
 			}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
@@ -116,6 +128,28 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 
 	public void setBufferedImageAttributeName(String bufferedImageAttributeName) {
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
+	}
+
+	public int getSampling() {
+		return sampling;
+	}
+
+	public void setSampling(int sampling) {
+		if (sampling < 1)
+			throw new IllegalArgumentException("parameter must be >= 1");
+
+		this.sampling = sampling;
+	}
+
+	public int getCropBorders() {
+		return cropBorders;
+	}
+
+	public void setCropBorders(int cropBorders) {
+		if (cropBorders < 0)
+			throw new IllegalArgumentException("parameter must be >= 0");
+
+		this.cropBorders = cropBorders;
 	}
 
 }

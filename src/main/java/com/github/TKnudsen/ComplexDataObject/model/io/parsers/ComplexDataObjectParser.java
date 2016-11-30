@@ -1,9 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
@@ -21,18 +17,8 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
-public interface ComplexDataObjectParser {
+public interface ComplexDataObjectParser extends IKeyValueObjectParser<Object, ComplexDataObject> {
 
-	/**
-	 * Parses a data file and returns an List of ComplexDataObjects. Every line
-	 * will be a ComplexDataObject.
-	 * 
-	 * @param filename
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public abstract List<ComplexDataObject> parse(String filename) throws IOException, ParseException;
 }

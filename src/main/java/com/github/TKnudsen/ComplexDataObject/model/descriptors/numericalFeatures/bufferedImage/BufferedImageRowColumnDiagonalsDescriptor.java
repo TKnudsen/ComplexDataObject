@@ -33,6 +33,16 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 	private String bufferedImageAttributeName;
 
+	/**
+	 * determines which x-st row/column is used
+	 */
+	private int sampling = 1;
+
+	/**
+	 * determines how many pixels are skipped at each image border
+	 */
+	private int cropBorders = 0;
+
 	public BufferedImageRowColumnDiagonalsDescriptor(String bufferedImageAttributeName) {
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
 	}
@@ -56,27 +66,31 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 			// columns
 			double lum = 0;
-			for (int x = 0; x < width; x++) {
+			for (int x = cropBorders; x < width - cropBorders; x++) {
 				lum = 0;
 				for (int y = 0; y < height; y++) {
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				features.add(new NumericalFeature("Luminance column " + x, lum));
+				if ((x-cropBorders) % sampling == 0)
+					features.add(new NumericalFeature("Luminance column " + x, lum));
 			}
 
 			// rows
-			for (int y = 0; y < height; y++) {
+			for (int y = cropBorders; y < height - cropBorders; y++) {
 				lum = 0;
 				for (int x = 0; x < width; x++) {
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				features.add(new NumericalFeature("Luminance row " + y, lum));
+				if ((y-cropBorders) % sampling == 0)
+					features.add(new NumericalFeature("Luminance row " + y, lum));
 			}
 
 			// diagonals
 			double lengthMin = Math.min(width, height) * 0.5;
+			lengthMin += cropBorders;
+
 			double lengthAkt = 0;
 			int deltaX;
 			int deltaY;
@@ -97,7 +111,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 				}
 
 				if (lengthAkt > lengthMin)
-					features.add(new NumericalFeature("Luminance, diagonal NE, start (" + 0 + ", " + y + ")", lum));
+					if (y % (sampling) == 0)
+						features.add(new NumericalFeature("Luminance, diagonal NE, start (" + 0 + ", " + y + ")", lum));
 			}
 
 			// starting south, direction north east
@@ -116,7 +131,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 				}
 
 				if (lengthAkt > lengthMin)
-					features.add(new NumericalFeature("Luminance, diagonal NE, start (" + x + ", " + (height - 1) + ")", lum));
+					if (x % (sampling) == 0)
+						features.add(new NumericalFeature("Luminance, diagonal NE, start (" + x + ", " + (height - 1) + ")", lum));
 			}
 
 			// starting south, direction north west
@@ -135,7 +151,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 				}
 
 				if (lengthAkt > lengthMin)
-					features.add(new NumericalFeature("Luminance, diagonal NW, start (" + x + ", " + (height - 1) + ")", lum));
+					if (x % (sampling) == 0)
+						features.add(new NumericalFeature("Luminance, diagonal NW, start (" + x + ", " + (height - 1) + ")", lum));
 			}
 
 			// starting east, direction north west
@@ -154,7 +171,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 				}
 
 				if (lengthAkt > lengthMin)
-					features.add(new NumericalFeature("Luminance, diagonal NW, start (" + (width - 1) + ", " + y + ")", lum));
+					if (y % (sampling) == 0)
+						features.add(new NumericalFeature("Luminance, diagonal NW, start (" + (width - 1) + ", " + y + ")", lum));
 			}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
@@ -202,4 +220,25 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
 	}
 
+	public int getSampling() {
+		return sampling;
+	}
+
+	public void setSampling(int sampling) {
+		if (sampling < 1)
+			throw new IllegalArgumentException("parameter must be >= 1");
+
+		this.sampling = sampling;
+	}
+
+	public int getCropBorders() {
+		return cropBorders;
+	}
+
+	public void setCropBorders(int cropBorders) {
+		if (cropBorders < 0)
+			throw new IllegalArgumentException("parameter must be >= 0");
+
+		this.cropBorders = cropBorders;
+	}
 }
