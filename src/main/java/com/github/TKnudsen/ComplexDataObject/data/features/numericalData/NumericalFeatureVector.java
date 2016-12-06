@@ -21,11 +21,11 @@ import de.javagl.nd.tuples.d.DoubleTuple;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2015-2016
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 
 public class NumericalFeatureVector extends AbstractFeatureVector<Double, NumericalFeature> implements DoubleTuple {
@@ -69,12 +69,11 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 
 	public void setVector(double vector[]) {
 		featuresList = new ArrayList<>();
+		featuresMap = null;
 
 		if (vector != null)
 			for (int i = 0; i < vector.length; i++)
 				featuresList.add(new NumericalFeature("Dim " + i + 1, vector[i]));
-
-		generalizeFromList();
 	}
 
 	public double[] getVectorClone() {

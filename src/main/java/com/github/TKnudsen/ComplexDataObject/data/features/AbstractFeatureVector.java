@@ -16,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>
- * Title: AbstractFeatureDataObject
+ * Title: AbstractFeatureVector
  * </p>
  * 
  * <p>
@@ -29,7 +29,7 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 
 public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
@@ -42,37 +42,24 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	protected List<F> featuresList;
 
-	// @Deprecated
-	// /**
-	// * array representation of the features. Deprecated due to redundancy.
-	// */
-	// protected F[] featuresArray;
-
 	protected Map<String, F> featuresMap;
 
 	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
-
-		generalizeFromList();
-
-		checkForDuplicateFeatures();
+		this.featuresMap = null;
 	}
 
 	public AbstractFeatureVector(F[] features) {
 		generalizeFromArray(features);
-
-		checkForDuplicateFeatures();
 	}
 
 	public AbstractFeatureVector(Map<String, F> featuresMap) {
 		this.featuresMap = featuresMap;
 
 		generalizeFromMap();
-
-		checkForDuplicateFeatures();
 	}
 
-	protected void generalizeFromList() {
+	protected void createFeatureNamesMap() {
 		featuresMap = null;
 
 		if (featuresList == null)
@@ -83,6 +70,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		for (int i = 0; i < featuresList.size(); i++)
 			if (featuresList.get(i) != null && featuresList.get(i).getFeatureName() != null)
 				featuresMap.put(featuresList.get(i).getFeatureName(), featuresList.get(i));
+		checkFeatureNameConsistency();
 	}
 
 	protected void generalizeFromArray(F[] featuresArray) {
@@ -93,12 +81,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 			return;
 
 		featuresList = new ArrayList<>();
-		featuresMap = new HashMap<>();
+		featuresMap = null;
 
 		for (F feature : featuresArray) {
 			featuresList.add(feature);
-			if (feature != null && feature.getFeatureName() != null)
-				featuresMap.put(feature.getFeatureName(), feature);
+			// refactoring. lazy implementation to save computation time
+			// if (feature != null && feature.getFeatureName() != null)
+			// featuresMap.put(feature.getFeatureName(), feature);
 		}
 	}
 
@@ -109,11 +98,16 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 			return;
 
 		featuresList = new ArrayList<>();
-
 		for (String s : featuresMap.keySet())
 			featuresList.add(featuresMap.get(s));
 	}
 
+	/**
+	 * really nececssary?
+	 * 
+	 * @param featureName
+	 * @return
+	 */
 	protected boolean checkForDuplicateFeatureName(String featureName) {
 		for (F entry : featuresList)
 			if (entry != null && entry.getFeatureName() != null)
@@ -122,7 +116,10 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return false;
 	}
 
-	protected void checkForDuplicateFeatures() {
+	/**
+	 * really necessary?
+	 */
+	protected void checkForDuplicateFeatureNames() {
 		Set<String> featureNames = new HashSet<String>();
 		String errorString = "";
 
@@ -134,7 +131,16 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 					featureNames.add(entry.getFeatureName());
 
 		if (!errorString.equals(""))
-			throw new IllegalArgumentException("FeatureDataObject - duplicate Features: " + errorString.substring(0, errorString.length() - 2));
+			throw new IllegalArgumentException("FeatureVector - duplicate Features: " + errorString.substring(0, errorString.length() - 2));
+	}
+
+	private boolean checkFeatureNameConsistency() {
+		if (featuresList != null) {
+			if (featuresList.size() != getFeaturesMap().size())
+				throw new IllegalArgumentException("FeatureVector: name conflict, features with identical name?");
+		}
+
+		return true;
 	}
 
 	@Override
@@ -149,8 +155,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public F getFeature(String featureName) {
-		if (featuresMap != null)
-			return featuresMap.get(featureName);
+		if (getFeaturesMap() != null)
+			return getFeaturesMap().get(featureName);
 		return null;
 	}
 
@@ -163,17 +169,17 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (feature == null)
 			return;
 
-		if (checkForDuplicateFeatureName(feature.getFeatureName()))
-			return;
-
 		if (featuresList == null)
 			featuresList = new ArrayList<>();
-		if (!featuresList.contains(feature))
-			featuresList.add(feature);
+		if (featuresList.contains(feature))
+			return;
 
-		if (featuresMap == null)
-			featuresMap = new HashMap<>();
-		featuresMap.put(feature.getFeatureName(), feature);
+		if (featuresMap != null) {
+			if (!featuresMap.containsKey(feature.getFeatureName()))
+				featuresMap.put(feature.getFeatureName(), feature);
+			else
+				throw new IllegalArgumentException("FeatureVector: name conflict, features with identical name");
+		}
 	}
 
 	@Override
@@ -186,9 +192,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	public void setFeature(int index, F feature) {
 		if (featuresList != null)
 			featuresList.set(index, feature);
-		if (featuresMap == null)
-			featuresMap = new HashMap<>();
-		featuresMap.put(feature.getFeatureName(), feature);
+
+		if (featuresMap != null) {
+			if (!featuresMap.containsKey(feature.getFeatureName()))
+				featuresMap.put(feature.getFeatureName(), feature);
+			else
+				throw new IllegalArgumentException("FeatureVector: name conflict, features with identical name");
+		}
 	}
 
 	@Override
@@ -212,21 +222,20 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public Set<String> getFeatureKeySet() {
-		if (featuresMap == null)
+		if (getFeaturesMap() == null)
 			return null;
 
-		return featuresMap.keySet();
+		return getFeaturesMap().keySet();
 	}
 
 	@Override
 	public int sizeOfFeatures() {
 		return featuresList.size();
 	}
-	
+
 	public int getDimensions() {
 		return featuresList.size();
 	}
-	
 
 	@Override
 	/**
@@ -284,12 +293,18 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	public String toString() {
 		String string = this.getName() + ", " + this.getID() + "\t";
 
-		string += "[";
-		for (F feature : this.getVectorRepresentation())
-			string += feature.toString();
-		string += "]\t";
+		// string += "[";
+		// for (F feature : this.getVectorRepresentation())
+		// string += feature.toString();
+		// string += "]\t";
 
 		return string;
 	}
 
+	protected Map<String, F> getFeaturesMap() {
+		if (featuresMap == null)
+			createFeatureNamesMap();
+
+		return featuresMap;
+	}
 }
