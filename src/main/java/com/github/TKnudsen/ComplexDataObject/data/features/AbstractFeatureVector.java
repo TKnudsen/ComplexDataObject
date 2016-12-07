@@ -291,7 +291,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public String toString() {
-		String string = this.getName() + ", " + this.getID() + "\t";
+		String string = this.getName() + ", " + this.getID() + ", dim: " + getDimensions() + "\t";
 
 		// string += "[";
 		// for (F feature : this.getVectorRepresentation())
