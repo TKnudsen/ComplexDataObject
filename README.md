@@ -15,3 +15,13 @@ Maven coordinates:
   <version>0.1.1</version>
 </dependency>
 ```
+
+Current snapshot:
+
+```xml
+<dependency>
+  <groupId>com.github.tknudsen</groupId>
+  <artifactId>complex-data-object</artifactId>
+  <version>0.1.2-SNAPSHOT</version>
+</dependency>
+```
