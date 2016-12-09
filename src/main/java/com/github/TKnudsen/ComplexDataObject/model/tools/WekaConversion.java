@@ -25,7 +25,8 @@ import weka.core.Instances;
  * </p>
  *
  * <p>
- * Description:
+ * Description: helper tools that ease the use of WEKA data structures, i.e.,
+ * Instances and Instance objects.
  * </p>
  *
  * <p>
@@ -33,7 +34,7 @@ import weka.core.Instances;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class WekaConversion {
 
@@ -130,57 +131,6 @@ public class WekaConversion {
 		return data;
 	}
 
-	/**
-	 * @deprecated
-	 * @param fvs
-	 * @return
-	 */
-	public static Instances getInstancesNumerical(List<NumericalFeatureVector> fvs) {
-		int length = fvs.get(0).getVector().length;
-		List<Attribute> attrs = new ArrayList<Attribute>(length);
-		for (int i = 0; i < length; i++) {
-			Attribute a = new Attribute(i + 1 + "");
-			attrs.add(a);
-		}
-
-		Instances data = new Instances("NumericalFeatureVectors", (ArrayList<Attribute>) attrs, fvs.size());
-		addInstances(fvs, data);
-		return data;
-	}
-
-	/**
-	 * @deprecated
-	 * @param mfvs
-	 * @return
-	 */
-	public static Instances getInstancesMixed(List<MixedDataFeatureVector> mfvs) {
-		int length = mfvs.get(0).getVectorRepresentation().size();
-		List<Attribute> attrs = new ArrayList<Attribute>(length);
-		for (int i = 0; i < length; i++) {
-
-			Attribute a;
-
-			if (mfvs.get(0).getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
-				List<String> strList = new ArrayList<String>();
-				for (MixedDataFeatureVector mfv : mfvs) {
-					if (!strList.contains((String) mfv.getVectorRepresentation().get(i).getFeatureValue()))
-						strList.add((String) mfv.getVectorRepresentation().get(i).getFeatureValue());
-				}
-
-				a = new Attribute(i + 1 + "", strList);
-
-			} else {
-				a = new Attribute(i + 1 + "");
-			}
-
-			attrs.add(a);
-		}
-
-		Instances data = new Instances("MixedFeatureVectors", (ArrayList<Attribute>) attrs, mfvs.size());
-		addMixedInstances(mfvs, data);
-		return data;
-	}
-
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
 		for (FV fv : fvs) {
 			int length = fv.getVectorRepresentation().size();
@@ -227,9 +177,9 @@ public class WekaConversion {
 			else
 				labels.add(fvs.get(i).get(classAttribute).toString());
 
-		Instances inst = getInstancesNumerical(fvs);
+		Instances insances = getInstances(fvs);
 
-		return addLabelsToInstances(inst, labels);
+		return addLabelsToInstances(insances, labels);
 	}
 
 	/**
@@ -239,6 +189,19 @@ public class WekaConversion {
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, String classAttribute) {
+
+		return getLabeledInstances(fvs, null, classAttribute);
+	}
+
+	/**
+	 * creates instances with weights for a given List of FVs.
+	 * 
+	 * @param fvs
+	 * @param weights
+	 * @param classAttribute
+	 * @return
+	 */
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).get(classAttribute) instanceof String)
@@ -246,68 +209,87 @@ public class WekaConversion {
 			else
 				labels.add(fvs.get(i).get(classAttribute).toString());
 
-		Instances inst = getInstances(fvs);
+		Instances insances = getInstances(fvs);
 
-		return addLabelsToInstances(inst, labels);
+		if (weights != null && weights.size() == insances.size())
+			addWeightsToInstances(insances, weights);
+
+		return addLabelsToInstances(insances, labels);
+	}
+
+	/**
+	 * Uses WEKAs ability to assign weights to Instances.
+	 * 
+	 * @param insances
+	 * @param weights
+	 * @return
+	 */
+	private static Instances addWeightsToInstances(Instances insances, List<Double> weights) {
+		if (insances == null || weights == null)
+			return insances;
+
+		for (int i = 0; i < weights.size(); i++) {
+			double w = weights.get(i);
+			if (Double.isNaN(w))
+				w = 0;
+			insances.instance(i).setWeight(w);
+		}
+
+		return insances;
+
 	}
 
 	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
+		Instances insances = getInstances(fvs);
 
-		Instances inst = getInstances(fvs);
-
-		return addLabelsToInstances(inst, labels);
+		return addLabelsToInstances(insances, labels);
 	}
 
 	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels) {
+		Instances insances = getInstances(mfvs);
 
-		Instances inst = getInstances(mfvs);
-
-		return addNumericLabelsToInstances(inst, numLabels);
+		return addNumericLabelsToInstances(insances, numLabels);
 	}
 
-	private static Instances addNumericLabelsToInstances(Instances inst, List<Double> numLabels) {
-
+	private static Instances addNumericLabelsToInstances(Instances insances, List<Double> numLabels) {
 		Attribute classAtt = new Attribute("num");
 
-		inst.insertAttributeAt(classAtt, inst.numAttributes());
-		inst.setClassIndex(inst.numAttributes() - 1);
+		insances.insertAttributeAt(classAtt, insances.numAttributes());
+		insances.setClassIndex(insances.numAttributes() - 1);
 
 		for (int i = 0; i < numLabels.size(); i++)
-			inst.instance(i).setValue(inst.numAttributes() - 1, numLabels.get(i));
+			insances.instance(i).setValue(insances.numAttributes() - 1, numLabels.get(i));
 
-		return inst;
+		return insances;
 
 	}
 
-	public static Instances addLabelAttributeToInstance(Instances inst, List<String> labels) {
-
+	public static Instances addLabelAttributeToInstance(Instances insances, List<String> labels) {
 		List<String> distinctLabels = distinctListCreator(labels);
 
 		Attribute classAtt = new Attribute("class", distinctLabels);
 
-		inst.insertAttributeAt(classAtt, inst.numAttributes());
-		inst.setClass(classAtt);
-		inst.setClassIndex(inst.numAttributes() - 1);
+		insances.insertAttributeAt(classAtt, insances.numAttributes());
+		insances.setClass(classAtt);
+		insances.setClassIndex(insances.numAttributes() - 1);
 
-		return inst;
+		return insances;
 
 	}
 
-	public static Instances addNumericLabelAttributeToInstance(Instances inst) {
-
+	public static Instances addNumericLabelAttributeToInstance(Instances insances) {
 		Attribute classAtt = new Attribute("num");
 
-		inst.insertAttributeAt(classAtt, inst.numAttributes());
-		inst.setClass(classAtt);
-		inst.setClassIndex(inst.numAttributes() - 1);
+		insances.insertAttributeAt(classAtt, insances.numAttributes());
+		insances.setClass(classAtt);
+		insances.setClassIndex(insances.numAttributes() - 1);
 
-		return inst;
+		return insances;
 
 	}
 
-	private static Instances addLabelsToInstances(Instances inst, List<String> labels) {
-
-		Instances inst2 = addLabelAttributeToInstance(inst, labels);
+	private static Instances addLabelsToInstances(Instances insances, List<String> labels) {
+		Instances inst2 = addLabelAttributeToInstance(insances, labels);
 
 		for (int i = 0; i < labels.size(); i++)
 			inst2.instance(i).setClassValue(labels.get(i));
