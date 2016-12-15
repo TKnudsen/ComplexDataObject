@@ -220,22 +220,25 @@ public class WekaConversion {
 	/**
 	 * Uses WEKAs ability to assign weights to Instances.
 	 * 
-	 * @param insances
+	 * @param instances
 	 * @param weights
 	 * @return
 	 */
-	private static Instances addWeightsToInstances(Instances insances, List<Double> weights) {
-		if (insances == null || weights == null)
-			return insances;
+	private static Instances addWeightsToInstances(Instances instances, List<Double> weights) {
+		if (instances == null || weights == null)
+			return instances;
+
+		if (instances.size() != weights.size())
+			throw new IllegalArgumentException();
 
 		for (int i = 0; i < weights.size(); i++) {
 			double w = weights.get(i);
 			if (Double.isNaN(w))
 				w = 0;
-			insances.instance(i).setWeight(w);
+			instances.instance(i).setWeight(w);
 		}
 
-		return insances;
+		return instances;
 
 	}
 
