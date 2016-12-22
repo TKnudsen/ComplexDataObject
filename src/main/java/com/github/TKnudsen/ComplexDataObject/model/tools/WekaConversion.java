@@ -267,17 +267,16 @@ public class WekaConversion {
 
 	}
 
-	public static Instances addLabelAttributeToInstance(Instances insances, List<String> labels) {
+	public static Instances addLabelAttributeToInstance(Instances instances, List<String> labels) {
 		List<String> distinctLabels = distinctListCreator(labels);
 
 		Attribute classAtt = new Attribute("class", distinctLabels);
 
-		insances.insertAttributeAt(classAtt, insances.numAttributes());
-		insances.setClass(classAtt);
-		insances.setClassIndex(insances.numAttributes() - 1);
+		instances.insertAttributeAt(classAtt, instances.numAttributes());
+		instances.setClass(classAtt);
+		instances.setClassIndex(instances.numAttributes() - 1);
 
-		return insances;
-
+		return instances;
 	}
 
 	public static Instances addNumericLabelAttributeToInstance(Instances insances) {
@@ -291,14 +290,13 @@ public class WekaConversion {
 
 	}
 
-	private static Instances addLabelsToInstances(Instances insances, List<String> labels) {
-		Instances inst2 = addLabelAttributeToInstance(insances, labels);
+	private static Instances addLabelsToInstances(Instances instances, List<String> labels) {
+		Instances inst2 = addLabelAttributeToInstance(instances, labels);
 
 		for (int i = 0; i < labels.size(); i++)
 			inst2.instance(i).setClassValue(labels.get(i));
 
 		return inst2;
-
 	}
 
 	/**
