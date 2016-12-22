@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.DataProcessingCategory;
 
 /**
  * <p>

@@ -20,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  * 
  * @author Juergen Bernard
  */
-public class EuclideanDistanceMeasure implements IFeatureVectorDistanceMeasure {
+public class EuclideanDistanceMeasure implements INumericalFeatureVectorDistanceMeasure {
 
 	/**
 	 * 

@@ -1,11 +1,10 @@
-package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.utility.IItemSplitter;
 
 /**

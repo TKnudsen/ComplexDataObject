@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * Used to delete a given list of (extreme) values from each

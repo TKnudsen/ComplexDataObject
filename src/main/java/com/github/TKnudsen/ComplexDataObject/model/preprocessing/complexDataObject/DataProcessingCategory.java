@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject;
 
 import java.awt.Color;
 

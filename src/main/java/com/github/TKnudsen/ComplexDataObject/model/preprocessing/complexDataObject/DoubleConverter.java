@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.preprocessing;
+package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.IComplexDataObjectProcessor;
 
 /**
  * <p>
