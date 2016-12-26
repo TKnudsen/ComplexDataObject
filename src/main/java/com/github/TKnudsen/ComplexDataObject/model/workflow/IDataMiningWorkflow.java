@@ -8,7 +8,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessing;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.features.IFeatureVectorProcessor;
 
 /**
@@ -26,9 +26,9 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.features.IFeatu
  * 
  * @author Juergen Bernard
  */
-public interface IDataMiningWorkflow<O extends IDObject, F extends Object, FV extends AbstractFeatureVector<F, ? extends Feature<F>>> extends Function<List<O>, List<FV>> {
+public interface IDataMiningWorkflow<O extends IDObject, F extends Object, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, PP extends IDataProcessor<? super O>> extends Function<List<O>, List<FV>> {
 
-	public void addProcessor(IDataProcessing<O> processor);
+	public void addPreProcessor(PP processor);
 
 	public void setDescriptor(IDescriptor<O, F, FV> descriptor);
 

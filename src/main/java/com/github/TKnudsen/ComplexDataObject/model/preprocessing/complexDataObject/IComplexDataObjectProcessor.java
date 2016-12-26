@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObj
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessing;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessor;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessing
  * @version 1.0
  */
 
-public interface IComplexDataObjectProcessor extends IDataProcessing<ComplexDataObject> {
+public interface IComplexDataObjectProcessor extends IDataProcessor<ComplexDataObject> {
 
 	public void process(ComplexDataContainer container);
 }

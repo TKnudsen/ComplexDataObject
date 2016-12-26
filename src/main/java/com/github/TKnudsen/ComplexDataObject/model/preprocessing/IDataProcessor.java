@@ -7,11 +7,11 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObje
 
 /**
  * <p>
- * Title: IDataProcessing
+ * Title: IDataProcessor
  * </p>
  * 
  * <p>
- * Description:
+ * Description: Baseline behavior of a data processing routine.
  * </p>
  * 
  * <p>
@@ -19,9 +19,9 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObje
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
-public interface IDataProcessing<D extends IDObject> {
+public interface IDataProcessor<D extends IDObject> {
 
 	public void process(List<D> data);
 
