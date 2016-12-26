@@ -26,11 +26,12 @@ import com.github.TKnudsen.ComplexDataObject.model.preprocessing.features.IFeatu
  * 
  * @author Juergen Bernard
  */
-public interface IDataMiningWorkflow<O extends IDObject, F extends Object, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, PP extends IDataProcessor<? super O>> extends Function<List<O>, List<FV>> {
+public interface IDataMiningWorkflow<O extends IDObject, F extends Object, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, PP extends IDataProcessor<? super O>, DESC extends IDescriptor<? super O, F, FV>>
+		extends Function<List<O>, List<FV>> {
 
 	public void addPreProcessor(PP processor);
 
-	public void setDescriptor(IDescriptor<O, F, FV> descriptor);
+	public void setDescriptor(DESC descriptor);
 
 	public void setDistanceMeasure(IDistanceMeasure<FV> distanceMeasure);
 
