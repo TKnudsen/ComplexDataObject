@@ -1,9 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 
 /**
  * <p>
@@ -54,6 +52,35 @@ public class NumericalFeatureVectorTools {
 		for (NumericalFeature feature : featureVector.getVectorRepresentation())
 			d = Math.max(d, feature.doubleValue());
 		return d;
+	}
+
+	/**
+	 * calculates the mean value
+	 * 
+	 * @param features
+	 * @param dim
+	 * @return
+	 */
+	public static double getMean(List<NumericalFeatureVector> features, int dim) {
+		double sum = 0;
+		double count = 0;
+
+		for (int n = 0; n < features.size(); n++) {
+			if (!Double.isNaN(features.get(n).get(dim))) {
+				sum += features.get(n).get(dim);
+				count += 1;
+			}
+		}
+		return sum / count;
+	}
+
+	public static List<double[]> toPrimitives(List<NumericalFeatureVector> featureVectors) {
+		List<double[]> returnValues = new ArrayList<>();
+
+		for (int i = 0; i < featureVectors.size(); i++)
+			returnValues.add(featureVectors.get(i).getVectorClone());
+
+		return returnValues;
 	}
 
 	public static void addClassAttribute(List<NumericalFeatureVector> featureVectors, List<String> labels, String classAttribute) {
