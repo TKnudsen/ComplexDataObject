@@ -7,6 +7,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorTools;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.preprocessing.features.numericalData.INumericalFeatureVectorProcessor;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
@@ -54,23 +55,11 @@ public class MinMaxNormalization implements INumericalFeatureVectorProcessor {
 			for (int i = 0; i < fv.getDimensions(); i++) {
 				NumericalFeature feature = fv.getFeature(i);
 				if (globalMinMax)
-					feature.setFeatureValue(normalize(globalMin, globalMax, fv.get(i)));
+					feature.setFeatureValue(MathFunctions.linearScale(globalMin, globalMax, fv.get(i)));
 				else
-					feature.setFeatureValue(normalize(min, max, fv.get(i)));
+					feature.setFeatureValue(MathFunctions.linearScale(min, max, fv.get(i)));
 			}
 		}
-	}
-
-	private double normalize(double min, double max, double value) {
-		if (!Double.isNaN(value))
-			if (max != min)
-				return (value - min) / (max - min);
-			else if (max != 0)
-				return (value - min) / (max);
-			else
-				return 1.0;
-		else
-			return Double.NaN;
 	}
 
 	@Override

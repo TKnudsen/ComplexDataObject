@@ -28,7 +28,7 @@ public class MathFunctions {
 	 * @param value
 	 * @return
 	 */
-	public double linearScale(double min, double max, double value) {
+	public static double linearScale(double min, double max, double value) {
 		if (!Double.isNaN(value))
 			if (max != min)
 				return (value - min) / (max - min);
