@@ -179,57 +179,6 @@ public abstract class ParserTools implements Serializable {
 		return rows;
 	}
 
-	// /**
-	// * Determines the attribute type of a given instance and attribute.
-	// *
-	// * @param instances
-	// * @param attribute
-	// * @return
-	// */
-	// public static AttributeType getAttributeType(Instances instances,
-	// Attribute attribute) {
-	// AttributeType type;
-	// if (attribute.isNumeric()) {
-	// // determine if attribute is numeric or ordinal
-	// if
-	// (hasFloatingPointValues(instances.attributeToDoubleArray(index(instances,
-	// attribute))))
-	// type = AttributeType.NUMERIC;
-	// else
-	// type = AttributeType.ORDINAL;
-	// } else {
-	// // get list of attribute values
-	// List<String> attValues = new ArrayList<>();
-	// for (int j = 0; j < attribute.numValues(); j++)
-	// attValues.add(attribute.value(j));
-	//
-	// // determine if attribute is categorical or binary
-	// if (attValues.size() == 2) {
-	// for (int i = 0; i < attValues.size(); i++)
-	// attValues.add(attValues.remove(i).toLowerCase());
-	//
-	// if (attValues.contains("no") && attValues.contains("yes") ||
-	// attValues.contains("false") && attValues.contains("true") ||
-	// attValues.contains("0") && attValues.contains("1"))
-	// type = AttributeType.BINARY;
-	// else
-	// type = AttributeType.CATEGORICAL;
-	// }
-	//
-	// else
-	// type = AttributeType.CATEGORICAL;
-	// }
-	// return type;
-	// }
-	//
-	// private static int index(Instances instances, Attribute att) {
-	// for (int i = 0; i < instances.numAttributes(); i++)
-	// if (instances.attribute(i).equals(att))
-	// return i;
-	// throw new IndexOutOfBoundsException("Attribut nicht vorhanden! Oder:
-	// equals checken ;-)");
-	// }
-
 	public static boolean hasFloatingPointValues(double[] values) {
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] != Math.floor(values[i]))

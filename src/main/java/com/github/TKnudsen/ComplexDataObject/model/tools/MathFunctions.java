@@ -70,4 +70,23 @@ public class MathFunctions {
 
 		return retValue;
 	}
+
+	/**
+	 * rounds a given value w.r.t a given number of decimals.
+	 * 
+	 * @param value
+	 * @param decimals
+	 * @return
+	 */
+	public static double round(double value, int decimals) {
+		if (Double.isNaN(value))
+			return value;
+		
+		double pow = Math.pow(10, decimals);
+		double d = value * pow;
+		d = Math.round(d);
+		d /= pow;
+		
+		return d;
+	}
 }

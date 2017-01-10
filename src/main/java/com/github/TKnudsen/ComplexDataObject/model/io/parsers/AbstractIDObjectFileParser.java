@@ -14,7 +14,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 public abstract class AbstractIDObjectFileParser<O extends IDObject> implements IDObjectParser<O>, ISelfDescription {
 
 	protected String tokenizerToken;
-	private String missingValueIdentifier;
+	protected String missingValueIdentifier;
 
 	public AbstractIDObjectFileParser(String tokenizerToken, String missingValueIdentifier) {
 		this.tokenizerToken = tokenizerToken;
