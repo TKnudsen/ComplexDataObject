@@ -113,8 +113,38 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @return
+	 * @deprecated use
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs) {
+		int length = fvs.get(0).getDimensions();
+		List<Attribute> attrs = new ArrayList<Attribute>(length);
+		for (int i = 0; i < length; i++) {
+			Attribute a = null;
+			if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
+				a = new Attribute(i + 1 + "");
+			else
+				a = new Attribute(i + 1 + "", (List<String>) null);
+			attrs.add(a);
+		}
+
+		Instances data = new Instances(fvs.get(0).getClass().getName(), (ArrayList<Attribute>) attrs, fvs.size());
+		addInstances(fvs, data);
+		return data;
+	}
+
+	/**
+	 * 
+	 * @param fvs
+	 * @param stringToNominal
+	 *            decides whether string values are represented as nominal
+	 *            values (with a concrete alphabet of observations)
+	 * @return
+	 */
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
+		// TODO
+
+		System.exit(-1);
+
 		int length = fvs.get(0).getDimensions();
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
@@ -144,6 +174,7 @@ public class WekaConversion {
 					String str = (String) fv.getVectorRepresentation().get(i).getFeatureValue();
 					ins.setValue(i, str);
 				}
+				// TODO check whether WEKA automatically maps string to nominal.
 			}
 		}
 	}
