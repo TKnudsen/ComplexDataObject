@@ -7,7 +7,9 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.INumericFeatureVectorDescriptor;
+import com.github.TKnudsen.ComplexDataObject.model.preprocessing.IDataProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 
 /**
@@ -23,11 +25,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -71,7 +73,7 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				if ((x-cropBorders) % sampling == 0)
+				if ((x - cropBorders) % sampling == 0)
 					features.add(new NumericalFeature("Luminance column " + x, lum));
 			}
 
@@ -81,7 +83,7 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				if ((y-cropBorders) % sampling == 0)
+				if ((y - cropBorders) % sampling == 0)
 					features.add(new NumericalFeature("Luminance row " + y, lum));
 			}
 
@@ -152,4 +154,8 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 		this.cropBorders = cropBorders;
 	}
 
+	@Override
+	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+		return null;
+	}
 }

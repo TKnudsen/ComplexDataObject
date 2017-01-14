@@ -7,6 +7,7 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.INumericFeatureVectorDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 
@@ -21,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -103,4 +104,8 @@ public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDesc
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
 	}
 
+	@Override
+	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+		return null;
+	}
 }

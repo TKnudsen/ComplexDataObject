@@ -8,6 +8,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.IMixedDataFeatureVectorDescriptor;
 
 /**
@@ -21,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.model.descriptors.IMixedDataFeature
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -71,5 +72,10 @@ public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVe
 	@Override
 	public String getDescription() {
 		return "Creates MixedDataFeatureVector out of a given list of ComplexDataObjects. Tries to transform all attributes.";
+	}
+
+	@Override
+	public List<IDescriptor<ComplexDataObject, Object, MixedDataFeatureVector>> getAlternativeParameterizations(int count) {
+		return null;
 	}
 }

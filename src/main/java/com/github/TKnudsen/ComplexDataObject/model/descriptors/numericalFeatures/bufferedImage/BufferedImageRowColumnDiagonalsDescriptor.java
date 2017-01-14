@@ -7,6 +7,7 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.descriptors.INumericFeatureVectorDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 
@@ -23,11 +24,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -72,7 +73,7 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				if ((x-cropBorders) % sampling == 0)
+				if ((x - cropBorders) % sampling == 0)
 					features.add(new NumericalFeature("Luminance column " + x, lum));
 			}
 
@@ -83,7 +84,7 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
 					lum += luminance;
 				}
-				if ((y-cropBorders) % sampling == 0)
+				if ((y - cropBorders) % sampling == 0)
 					features.add(new NumericalFeature("Luminance row " + y, lum));
 			}
 
@@ -240,5 +241,10 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			throw new IllegalArgumentException("parameter must be >= 0");
 
 		this.cropBorders = cropBorders;
+	}
+
+	@Override
+	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+		return null;
 	}
 }

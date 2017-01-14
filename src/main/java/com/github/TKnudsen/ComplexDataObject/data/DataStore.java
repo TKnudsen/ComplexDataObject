@@ -204,7 +204,7 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 	 *            elements of the data store. Master is specific to the data
 	 *            modeling context, e.g., a real-world object and it's feature
 	 *            vector.
-	 * @return the element of the DataStore with a master object equals the
+	 * @return the element(s) of the DataStore with a master object equals the
 	 *         given master object.
 	 */
 	public List<T> getDataByMaster(IDObject master) {

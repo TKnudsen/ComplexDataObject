@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * @author Juergen Bernard
  * @version 1.02
  */
-public interface IDescriptor<I extends IDObject, O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription {
+public interface IDescriptor<I extends IDObject, O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription, IParameterSupport<I, O, X, IDescriptor<I, O, X>> {
 
 	public List<X> transform(I input);
 

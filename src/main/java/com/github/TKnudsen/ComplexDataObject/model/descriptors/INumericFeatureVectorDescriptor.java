@@ -14,11 +14,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public interface INumericFeatureVectorDescriptor<I extends IDObject> extends IDescriptor<I, Double, NumericalFeatureVector> {
 
