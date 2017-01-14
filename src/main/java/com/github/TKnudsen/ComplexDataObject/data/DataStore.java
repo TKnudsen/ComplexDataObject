@@ -24,10 +24,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2016
+ * Copyright: Copyright (c) 2012-2017
  * </p>
  * 
  * @author Juergen Bernard
+ * @version 1.01
  */
 public class DataStore<T extends IDObject> implements IDObject, ISelfDescription, Iterable<T> {
 
@@ -196,7 +197,17 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 		return dataList;
 	}
 
-	public List<T> getDataByMaster(T master) {
+	/**
+	 * 
+	 * @param master
+	 *            some IDObject which is probably the master of one of the
+	 *            elements of the data store. Master is specific to the data
+	 *            modeling context, e.g., a real-world object and it's feature
+	 *            vector.
+	 * @return the element of the DataStore with a master object equals the
+	 *         given master object.
+	 */
+	public List<T> getDataByMaster(IDObject master) {
 		List<T> data = new ArrayList<>();
 		for (T e : dataList)
 			if (e instanceof IMasterProvider)
