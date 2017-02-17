@@ -14,6 +14,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
+import java_cup.symbol;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -142,7 +143,7 @@ public class WekaConversion {
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
 		// TODO
-
+		System.out.println("WekaConversion.getInstances: unimplemented method. there is a difference between strings and nominals in WEKA which has to be considered in future");
 		System.exit(-1);
 
 		int length = fvs.get(0).getDimensions();
