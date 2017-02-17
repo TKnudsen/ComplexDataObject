@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,5 +50,21 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 	@Override
 	public void addFeature(String featureName, Object value, FeatureType type) {
 		addFeature(new MixedDataFeature(featureName, value, type));
+	}
+
+	@Override
+	public MixedDataFeatureVector clone() {
+		List<MixedDataFeature> features = new ArrayList<>();
+		for (MixedDataFeature f : featuresList)
+			features.add(f.clone());
+
+		MixedDataFeatureVector clone = new MixedDataFeatureVector(features);
+
+		// attributes and meta information
+		clone.setMaster(getMaster());
+		for (String s : attributes.keySet())
+			clone.add(s, get(s));
+
+		return clone;
 	}
 }

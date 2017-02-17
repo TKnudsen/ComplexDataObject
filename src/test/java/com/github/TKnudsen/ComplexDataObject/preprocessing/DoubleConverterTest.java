@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.preprocessing.complexDataObject.DoubleConverter;
+import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DoubleConverter;
 import com.github.TKnudsen.ComplexDataObject.model.tools.ComplexDataObjectFactory;
 
 public class DoubleConverterTest {

@@ -64,7 +64,7 @@ public class MixedDataFeature extends Feature<Object> {
 	}
 
 	@Override
-	public Feature<Object> clone() {
+	public MixedDataFeature clone() {
 		return new MixedDataFeature(featureName, featureValue, featureType);
 	}
 }

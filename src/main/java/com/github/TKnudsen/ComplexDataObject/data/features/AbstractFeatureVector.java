@@ -59,6 +59,9 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		generalizeFromMap();
 	}
 
+	@Override
+	public abstract AbstractFeatureVector<O, F> clone();
+
 	protected void createFeatureNamesMap() {
 		featuresMap = null;
 
