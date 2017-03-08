@@ -1,5 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.util.List;
+
 /**
  * <p>
  * Title: MathFunctions
@@ -81,12 +83,56 @@ public class MathFunctions {
 	public static double round(double value, int decimals) {
 		if (Double.isNaN(value))
 			return value;
-		
+
 		double pow = Math.pow(10, decimals);
 		double d = value * pow;
 		d = Math.round(d);
 		d /= pow;
-		
+
 		return d;
+	}
+
+	/**
+	 * Calculates the mean value for a given series of values. Ignores
+	 * Double.NAN
+	 * 
+	 * @param values
+	 * @return mean value
+	 */
+	public static double getMean(double values[]) {
+		if (values == null)
+			return Double.NaN;
+
+		double sum = 0;
+		double count = 0;
+		for (double d : values)
+			if (!Double.isNaN(d)) {
+				sum += d;
+				count++;
+			}
+
+		return sum / count;
+	}
+
+	/**
+	 * Calculates the mean value for a given series of values. Ignores
+	 * Double.NAN
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMean(List<Double> values) {
+		if (values == null)
+			return Double.NaN;
+
+		double sum = 0;
+		double count = 0;
+		for (double d : values)
+			if (!Double.isNaN(d)) {
+				sum += d;
+				count++;
+			}
+
+		return sum / count;
 	}
 }
