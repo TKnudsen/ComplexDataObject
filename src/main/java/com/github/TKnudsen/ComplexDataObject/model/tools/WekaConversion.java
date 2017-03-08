@@ -14,7 +14,6 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
-import java_cup.symbol;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;

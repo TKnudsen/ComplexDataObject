@@ -62,7 +62,7 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 
 		// attributes and meta information
 		clone.setMaster(getMaster());
-		for (String s : attributes.keySet())
+		for (String s : getAttributes().keySet())
 			clone.add(s, get(s));
 
 		return clone;

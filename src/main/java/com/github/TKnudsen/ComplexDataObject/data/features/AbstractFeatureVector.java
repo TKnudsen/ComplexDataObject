@@ -223,6 +223,10 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return Collections.unmodifiableList(featuresList);
 	}
 
+	/**
+	 * Features always describes the individual features of the vector. In
+	 * contrast, getAttributes() retrieves the metadata.
+	 */
 	@Override
 	public Set<String> getFeatureKeySet() {
 		if (getFeaturesMap() == null)
