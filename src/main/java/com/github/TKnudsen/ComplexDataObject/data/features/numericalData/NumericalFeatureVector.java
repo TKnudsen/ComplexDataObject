@@ -90,7 +90,7 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 
 		// attributes and meta information
 		clone.setMaster(getMaster());
-		for (String s : getAttributes().keySet())
+		for (String s : attributes.keySet())
 			clone.add(s, get(s));
 
 		return clone;

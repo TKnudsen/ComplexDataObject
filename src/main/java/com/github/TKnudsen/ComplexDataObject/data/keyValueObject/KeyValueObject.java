@@ -166,12 +166,4 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 	private long getRandomLong() {
 		return UUID.randomUUID().getMostSignificantBits();
 	}
-
-	/**
-	 * important for JSON export.
-	 * @return
-	 */
-	public SortedMap<String, V> getAttributes() {
-		return attributes;
-	}
 }

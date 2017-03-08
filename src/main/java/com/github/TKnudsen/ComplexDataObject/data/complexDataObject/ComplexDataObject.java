@@ -53,8 +53,8 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	public String toStringInLine() {
 		String output = "";
-		for (String key : getAttributes().keySet())
-			output += (key + getAttributes().get(key).toString() + "/t");
+		for (String key : attributes.keySet())
+			output += (key + attributes.get(key).toString() + "/t");
 		return output;
 	}
 

@@ -1,11 +1,10 @@
-package com.github.TKnudsen.ComplexDataObject.model.io.writers.json;
+package com.github.TKnudsen.ComplexDataObject.model.io.json;
 
 import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
@@ -27,10 +26,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 public class JSONWriter {
 
 	public static String writeToString(ComplexDataObject complexDataObject) {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-		mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES,true);
-		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 		String stringRepresentation;
 		try {
@@ -43,11 +39,8 @@ public class JSONWriter {
 	}
 
 	public static void writeToFile(ComplexDataObject complexDataObject, String file) {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-		mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES,true);
-		mapper.configure(SerializationFeature.INDENT_OUTPUT,true);
-		
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
 		try {
 			mapper.writeValue(new File(file), complexDataObject);
 		} catch (IOException e) {

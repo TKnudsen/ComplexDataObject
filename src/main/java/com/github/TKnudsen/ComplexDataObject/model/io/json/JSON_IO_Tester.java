@@ -1,12 +1,10 @@
-package com.github.TKnudsen.ComplexDataObject.model.io.test;
+package com.github.TKnudsen.ComplexDataObject.model.io.json;
 
 import java.io.IOException;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.io.loaders.json.JSONLoader;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.writers.json.JSONWriter;
 
 /**
  * <p>
@@ -28,7 +26,7 @@ public class JSON_IO_Tester {
 
 	public static void main(String[] args) {
 
-		// create complex data objects
+		// create complex data object(s)
 		List<ComplexDataObject> titanicData = null;
 		TitanicParser p = new TitanicParser("", true);
 		try {
