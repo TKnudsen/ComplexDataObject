@@ -2,11 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
@@ -42,7 +43,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	protected List<F> featuresList;
 
-	protected Map<String, F> featuresMap;
+	protected SortedMap<String, F> featuresMap;
 
 	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
@@ -53,7 +54,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		generalizeFromArray(features);
 	}
 
-	public AbstractFeatureVector(Map<String, F> featuresMap) {
+	public AbstractFeatureVector(SortedMap<String, F> featuresMap) {
 		this.featuresMap = featuresMap;
 
 		generalizeFromMap();
@@ -68,7 +69,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList == null)
 			return;
 
-		featuresMap = new HashMap<>();
+		featuresMap = new TreeMap<>();
 
 		for (int i = 0; i < featuresList.size(); i++)
 			if (featuresList.get(i) != null && featuresList.get(i).getFeatureName() != null)
@@ -163,10 +164,9 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return null;
 	}
 
-	@Override
 	/**
-	 * Expensive variant of adding a feature into the three internal data
-	 * representations. First checks whether a feature is already contained.
+	 * Expensive variant of adding a feature into the internal data
+	 * representations.
 	 */
 	public void addFeature(F feature) {
 		if (feature == null)
@@ -174,15 +174,19 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 		if (featuresList == null)
 			featuresList = new ArrayList<>();
-		if (featuresList.contains(feature))
-			return;
+		if (featuresMap == null)
+			featuresMap = new TreeMap<>();
 
-		if (featuresMap != null) {
-			if (!featuresMap.containsKey(feature.getFeatureName()))
-				featuresMap.put(feature.getFeatureName(), feature);
-			else
-				throw new IllegalArgumentException("FeatureVector: name conflict, features with identical name");
-		}
+		if (!featuresList.contains(feature))
+			for (int i = 0; i < featuresList.size(); i++)
+				if (featuresList.get(i).getFeatureName().equals(feature.getFeatureName())) {
+					featuresList.set(i, feature);
+					featuresMap.put(feature.getFeatureName(), feature);
+					return;
+				}
+
+		featuresList.add(feature);
+		featuresMap.put(feature.getFeatureName(), feature);
 	}
 
 	@Override
@@ -206,14 +210,18 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public F removeFeature(String featureName) {
-		F feature = getFeature(featureName);
+		F feature = featuresMap.remove(featureName);
 
-		if (feature != null)
-			if (featuresList != null)
+		if (featuresList != null)
+			if (feature != null) {
 				featuresList.remove(feature);
-
-		if (featuresMap != null)
-			featuresMap.remove(feature.getFeatureName());
+				return feature;
+			} else
+				for (F f : featuresList)
+					if (f.getFeatureName().equals(featureName)) {
+						featuresList.remove(f);
+						return f;
+					}
 
 		return feature;
 	}

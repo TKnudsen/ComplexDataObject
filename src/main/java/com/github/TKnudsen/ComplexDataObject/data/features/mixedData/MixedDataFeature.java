@@ -55,6 +55,9 @@ public class MixedDataFeature extends Feature<Object> {
 			this.featureValue = featureValue;
 			return true;
 		}
+
+		// ugly. but better than keeping an old value instead
+		this.featureValue = null;
 		return false;
 	}
 

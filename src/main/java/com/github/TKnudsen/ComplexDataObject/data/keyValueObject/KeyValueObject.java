@@ -90,7 +90,7 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 		keys.addAll(other.keySet());
 
 		for (String string : keys)
-			if (!get(string).equals(other.get(string)))
+			if (!getAttribute(string).equals(other.getAttribute(string)))
 				return false;
 
 		return true;
@@ -102,7 +102,7 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 	}
 
 	@Override
-	public V get(String attribute) {
+	public V getAttribute(String attribute) {
 		return attributes.get(attribute);
 	}
 
@@ -130,7 +130,7 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 	}
 
 	@Override
-	public V remove(String attribute) {
+	public V removeAttribute(String attribute) {
 		if (attributes.get(attribute) != null)
 			return attributes.remove(attribute);
 		return null;

@@ -32,8 +32,8 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 		// then remove attribute and re-create attribute in the container
 		Map<ComplexDataObject, Double> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
-			if (cdo.get(attribute) != null) {
-				Double d = doubleParser.apply(cdo.get(attribute));
+			if (cdo.getAttribute(attribute) != null) {
+				Double d = doubleParser.apply(cdo.getAttribute(attribute));
 				values.put(cdo, d);
 			} else
 				values.put(cdo, Double.NaN);
@@ -51,8 +51,8 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 			throw new IllegalArgumentException("AttributeNumerificationProcessor requires attribute definition first.");
 
 		for (ComplexDataObject cdo : data) {
-			if (cdo.get(attribute) != null) {
-				Double d = doubleParser.apply(cdo.get(attribute));
+			if (cdo.getAttribute(attribute) != null) {
+				Double d = doubleParser.apply(cdo.getAttribute(attribute));
 				cdo.add(attribute, d);
 			} else
 				cdo.add(attribute, Double.NaN);

@@ -26,6 +26,6 @@ public class DoubleConverterTest {
 		DoubleConverter doubleConverter = new DoubleConverter("B", "B'", ',', '.');
 		doubleConverter.process(complexDataContainer);
 
-		complexDataContainer.forEach(dataObject -> assertThat(dataObject.get("B'")).isOfAnyClassIn(Double.class));
+		complexDataContainer.forEach(dataObject -> assertThat(dataObject.getAttribute("B'")).isOfAnyClassIn(Double.class));
 	}
 }

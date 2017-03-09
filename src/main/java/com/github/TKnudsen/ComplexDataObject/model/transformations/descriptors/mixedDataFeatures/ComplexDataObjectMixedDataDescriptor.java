@@ -3,7 +3,10 @@ package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
+import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategoryTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureTools;
@@ -38,13 +41,16 @@ public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVe
 		List<MixedDataFeature> features = new ArrayList<>();
 
 		for (String string : complexDataObject) {
-			Object value = complexDataObject.get(string);
+			Object value = complexDataObject.getAttribute(string);
 
 			try {
 				FeatureType featureType = MixedDataFeatureTools.guessFeatureType(value);
 				features.add(new MixedDataFeature(string, value, featureType));
 			} catch (IllegalArgumentException e) {
-
+				if (value != null && value instanceof FuzzyBooleanCategory) {
+					String v = FuzzyBooleanCategoryTools.convertToCategorical((FuzzyBooleanCategory) value);
+					features.add(new MixedDataFeature(string, v, FeatureType.STRING));
+				}
 			}
 		}
 
@@ -59,6 +65,17 @@ public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVe
 		List<MixedDataFeatureVector> mixedDataFeatureVectors = new ArrayList<>();
 
 		for (ComplexDataObject object : complexDataObjects) {
+			mixedDataFeatureVectors.addAll(transform(object));
+		}
+
+		return mixedDataFeatureVectors;
+	}
+
+	public List<MixedDataFeatureVector> transform(ComplexDataContainer container) {
+
+		List<MixedDataFeatureVector> mixedDataFeatureVectors = new ArrayList<>();
+
+		for (ComplexDataObject object : container) {
 			mixedDataFeatureVectors.addAll(transform(object));
 		}
 

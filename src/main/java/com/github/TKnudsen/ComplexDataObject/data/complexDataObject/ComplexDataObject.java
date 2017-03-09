@@ -63,8 +63,8 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 		if (name != null)
 			return name;
 
-		if (get("Name") != null)
-			return get("Name").toString();
+		if (getAttribute("Name") != null)
+			return getAttribute("Name").toString();
 
 		return "no name available";
 	}
@@ -93,7 +93,7 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	public List<String> getAttributes(Class<?> classType) {
 		List<String> properties = new ArrayList<>();
 		for (String property : attributes.keySet())
-			if (get(property) != null && get(property) != null && get(property).getClass().equals(classType))
+			if (getAttribute(property) != null && getAttribute(property) != null && getAttribute(property).getClass().equals(classType))
 				if (!properties.contains(property))
 					properties.add(property);
 		return properties;

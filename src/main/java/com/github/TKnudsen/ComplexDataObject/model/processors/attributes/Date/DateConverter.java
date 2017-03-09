@@ -33,8 +33,8 @@ public class DateConverter implements IComplexDataObjectProcessor {
 		// then remove attribute and re-create attribute in the container
 		Map<ComplexDataObject, Date> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
-			if (cdo.get(attribute) != null) {
-				Date d = dateParser.apply(cdo.get(attribute));
+			if (cdo.getAttribute(attribute) != null) {
+				Date d = dateParser.apply(cdo.getAttribute(attribute));
 				values.put(cdo, d);
 			} else
 				values.put(cdo, null);
@@ -52,8 +52,8 @@ public class DateConverter implements IComplexDataObjectProcessor {
 			throw new IllegalArgumentException("DateConverter requires attribute definition first.");
 
 		for (ComplexDataObject cdo : data) {
-			if (cdo.get(attribute) != null) {
-				Date d = dateParser.apply(cdo.get(attribute));
+			if (cdo.getAttribute(attribute) != null) {
+				Date d = dateParser.apply(cdo.getAttribute(attribute));
 				cdo.add(attribute, d);
 			} else
 				cdo.add(attribute, null);

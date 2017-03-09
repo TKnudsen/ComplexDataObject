@@ -57,8 +57,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			IKeyValueProvider<?> keyValueProvider = (IKeyValueProvider<?>) object;
 			for (String string : keyValueProvider.keySet())
 				if (string instanceof String)
-					if (!dataSchema.contains(string) && keyValueProvider.get(string) != null)
-						dataSchema.add(string, keyValueProvider.get(string).getClass());
+					if (!dataSchema.contains(string) && keyValueProvider.getAttribute(string) != null)
+						dataSchema.add(string, keyValueProvider.getAttribute(string).getClass());
 		}
 	}
 
@@ -88,7 +88,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		Iterator<T> objectIterator = iterator();
 		while (objectIterator.hasNext()) {
 			T next = objectIterator.next();
-			if (next.get(attribute) == null)
+			if (next.getAttribute(attribute) == null)
 				next.add(attribute, defaultValue);
 		}
 
@@ -131,7 +131,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		Iterator<T> iterator = iterator();
 		while (iterator.hasNext()) {
 			T o = iterator.next();
-			o.remove(attribute);
+			o.removeAttribute(attribute);
 		}
 
 		return dataSchema.remove(attribute);
@@ -182,7 +182,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		while (iterator.hasNext()) {
 			T o = iterator.next();
 			if (o instanceof IKeyValueProvider)
-				ent.put(o.getID(), o.get(attribute));
+				ent.put(o.getID(), o.getAttribute(attribute));
 		}
 
 		this.attributeValues.put(attribute, ent);

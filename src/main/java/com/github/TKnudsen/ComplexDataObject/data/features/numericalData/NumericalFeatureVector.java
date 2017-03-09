@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
@@ -21,11 +21,11 @@ import de.javagl.nd.tuples.d.DoubleTuple;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2017
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public class NumericalFeatureVector extends AbstractFeatureVector<Double, NumericalFeature> implements DoubleTuple {
@@ -38,8 +38,8 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 		super(features);
 	}
 
-	public NumericalFeatureVector(Map<String, NumericalFeature> featuresMap) {
-		super((Map<String, NumericalFeature>) featuresMap);
+	public NumericalFeatureVector(SortedMap<String, NumericalFeature> featuresMap) {
+		super(featuresMap);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 		// attributes and meta information
 		clone.setMaster(getMaster());
 		for (String s : attributes.keySet())
-			clone.add(s, get(s));
+			clone.add(s, getAttribute(s));
 
 		return clone;
 	}

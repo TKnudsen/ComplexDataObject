@@ -9,21 +9,22 @@ import java.util.Set;
  * </p>
  * 
  * <p>
- * Description: interface for objects containing key-value pairs.
+ * Description: interface for objects containing key-value pairs. Keys are
+ * referred to attributes to avoid confusion with other types of identifiers.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.07
+ * @version 1.08
  */
 public interface IKeyValueProvider<V extends Object> extends IDObject {
 
 	public void add(String attribute, V value);
 
-	public V get(String attribute);
+	public V getAttribute(String attribute);
 
 	public Class<?> getType(String attribute);
 
@@ -31,7 +32,7 @@ public interface IKeyValueProvider<V extends Object> extends IDObject {
 
 	public Map<String, Class<?>> getTypes();
 
-	public V remove(String attribute);
+	public V removeAttribute(String attribute);
 
 	public int hashCode();
 

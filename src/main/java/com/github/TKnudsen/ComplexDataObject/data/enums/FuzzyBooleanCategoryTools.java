@@ -39,4 +39,26 @@ public class FuzzyBooleanCategoryTools {
 			return null;
 		}
 	}
+
+	public static String convertToCategorical(FuzzyBooleanCategory fuzzyBoolean) {
+		if (fuzzyBoolean == null)
+			return null;
+
+		switch (fuzzyBoolean) {
+		case YES:
+			return "yes";
+		case NO:
+			return "no";
+		case LIKELY:
+			return "likely";
+		case UNLIKELY:
+			return "unlikely";
+		case UNCLEAR:
+			return "unclear";
+		case NO_INFORMATION:
+			return "no information";
+		default:
+			return "no information";
+		}
+	}
 }

@@ -24,7 +24,7 @@ public class ComplexDataObjectTools {
 
 		ComplexDataObject newObject = new ComplexDataObject(object.getName(), object.getDescription());
 		for (String string : object) {
-			newObject.add(string, object.get(string));
+			newObject.add(string, object.getAttribute(string));
 		}
 
 		return newObject;
@@ -42,9 +42,9 @@ public class ComplexDataObjectTools {
 
 		for (ComplexDataObject object : objects) {
 			for (String attribute : object.keySet()) {
-				if (mergedObject.get(attribute) != null)
-					System.out.println("overwriting attribute " + attribute + "(" + object.get(attribute) + "->" + mergedObject.get(attribute) + ")");
-				mergedObject.add(attribute, object.get(attribute));
+				if (mergedObject.getAttribute(attribute) != null)
+					System.out.println("overwriting attribute " + attribute + "(" + object.getAttribute(attribute) + "->" + mergedObject.getAttribute(attribute) + ")");
+				mergedObject.add(attribute, object.getAttribute(attribute));
 			}
 
 			if (object.getName() != null)

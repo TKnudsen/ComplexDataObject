@@ -57,7 +57,7 @@ public class DummyVariableConverter implements IComplexDataObjectProcessor {
 
 		for (ComplexDataObject complexDataObject : container) {
 
-			Object values = complexDataObject.get(attribute);
+			Object values = complexDataObject.getAttribute(attribute);
 
 			if (values != null && values instanceof List) {
 
@@ -74,7 +74,7 @@ public class DummyVariableConverter implements IComplexDataObjectProcessor {
 				}
 
 				// remove the old list attribute from (each) data object
-				complexDataObject.remove(attribute);
+				complexDataObject.removeAttribute(attribute);
 			}
 		}
 

@@ -61,7 +61,7 @@ public class BigDecimalConverter implements IComplexDataObjectProcessor {
 			BigDecimal bd = BigDecimal.ZERO;
 
 			try {
-				bd = (BigDecimal) decimalFormat.parse(complexDataObject.get(attribute).toString());
+				bd = (BigDecimal) decimalFormat.parse(complexDataObject.getAttribute(attribute).toString());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

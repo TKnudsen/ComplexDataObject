@@ -36,11 +36,11 @@ public class RemovingValues<T extends Object> implements IComplexDataObjectProce
 	public void process(List<ComplexDataObject> data) {
 		for (ComplexDataObject complexDataObject : data) {
 
-			Object value = complexDataObject.get(attribute);
+			Object value = complexDataObject.getAttribute(attribute);
 
 			if (value != null && valuesToRemove.contains(value)) {
 
-				complexDataObject.remove(attribute);
+				complexDataObject.removeAttribute(attribute);
 			}
 		}
 	}

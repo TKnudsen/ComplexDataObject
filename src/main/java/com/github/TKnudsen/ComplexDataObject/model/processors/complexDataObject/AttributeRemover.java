@@ -38,7 +38,7 @@ public class AttributeRemover implements IComplexDataObjectProcessor {
 	@Override
 	public void process(List<ComplexDataObject> data) {
 		for (ComplexDataObject object : data)
-			object.remove(attributeString);
+			object.removeAttribute(attributeString);
 	}
 
 	public String getAttributeString() {

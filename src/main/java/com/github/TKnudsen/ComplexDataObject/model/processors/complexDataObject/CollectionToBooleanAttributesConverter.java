@@ -42,7 +42,7 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 		Iterator<ComplexDataObject> iterator = container.iterator();
 		while (iterator.hasNext()) {
 			ComplexDataObject next = iterator.next();
-			Object object = next.get(attributeString);
+			Object object = next.getAttribute(attributeString);
 			if (object instanceof Collection<?>) {
 				Collection<?> collection = (Collection<?>) object;
 				for (Object element : collection)
@@ -59,7 +59,7 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 		iterator = container.iterator();
 		while (iterator.hasNext()) {
 			ComplexDataObject next = iterator.next();
-			Object object = next.get(attributeString);
+			Object object = next.getAttribute(attributeString);
 			Collection<?> collection = null;
 			if (object != null && object instanceof Collection<?>)
 				collection = (Collection<?>) object;

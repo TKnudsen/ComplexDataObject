@@ -54,12 +54,12 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 		if (complexDataObject == null)
 			return null;
 
-		if (complexDataObject.get(bufferedImageAttributeName) == null)
+		if (complexDataObject.getAttribute(bufferedImageAttributeName) == null)
 			return null;
 
-		Object object = complexDataObject.get(bufferedImageAttributeName);
+		Object object = complexDataObject.getAttribute(bufferedImageAttributeName);
 		if (object instanceof BufferedImage) {
-			BufferedImage image = (BufferedImage) complexDataObject.get(bufferedImageAttributeName);
+			BufferedImage image = (BufferedImage) complexDataObject.getAttribute(bufferedImageAttributeName);
 
 			List<NumericalFeature> features = new ArrayList<>();
 
@@ -181,8 +181,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 			NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
 			featureVector.setMaster(complexDataObject);
-			if (complexDataObject.get("Label") != null)
-				featureVector.add("Label", complexDataObject.get("Label"));
+			if (complexDataObject.getAttribute("Label") != null)
+				featureVector.add("Label", complexDataObject.getAttribute("Label"));
 
 			featureVectors.add(featureVector);
 			return featureVectors;

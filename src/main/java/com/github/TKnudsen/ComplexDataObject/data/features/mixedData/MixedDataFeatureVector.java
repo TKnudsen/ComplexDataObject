@@ -2,9 +2,10 @@ package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
@@ -36,7 +37,7 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 		super(features);
 	}
 
-	public MixedDataFeatureVector(Map<String, MixedDataFeature> featuresMap) {
+	public MixedDataFeatureVector(SortedMap<String, MixedDataFeature> featuresMap) {
 		super(featuresMap);
 	}
 
@@ -63,8 +64,16 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 		// attributes and meta information
 		clone.setMaster(getMaster());
 		for (String s : attributes.keySet())
-			clone.add(s, get(s));
+			clone.add(s, getAttribute(s));
 
 		return clone;
+	}
+
+	@Override
+	public String toString() {
+		String output = "";
+		for (Feature<?> f : featuresList)
+			output += (f.getFeatureName() + ": " + f.getValue().toString() + "\n");
+		return output;
 	}
 }

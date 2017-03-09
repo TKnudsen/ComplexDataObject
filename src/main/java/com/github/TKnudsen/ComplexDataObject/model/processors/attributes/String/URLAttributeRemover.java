@@ -33,8 +33,8 @@ public class URLAttributeRemover implements IComplexDataObjectProcessor {
 		double values = 0;
 
 		for (ComplexDataObject o : container)
-			if (o.get(attribute) != null)
-				if (isURL(o.get(attribute).toString())) {
+			if (o.getAttribute(attribute) != null)
+				if (isURL(o.getAttribute(attribute).toString())) {
 					urls++;
 					values++;
 				} else
@@ -53,15 +53,15 @@ public class URLAttributeRemover implements IComplexDataObjectProcessor {
 
 		double urls = 0;
 		for (ComplexDataObject o : data)
-			if (o.get(attribute) != null)
-				if (isURL(o.get(attribute).toString()))
+			if (o.getAttribute(attribute) != null)
+				if (isURL(o.getAttribute(attribute).toString()))
 					urls++;
 
 		urls /= (double) data.size();
 
 		if (urls >= removalThreshold)
 			for (ComplexDataObject o : data)
-				o.remove(attribute);
+				o.removeAttribute(attribute);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.numericalFeatures;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

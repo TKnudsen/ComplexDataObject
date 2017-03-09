@@ -42,7 +42,7 @@ public class NullAttributeValueObjectRemover implements IComplexDataObjectProces
 
 		for (Iterator<ComplexDataObject> iterator = container.iterator(); iterator.hasNext();) {
 			ComplexDataObject complexDataObject = iterator.next();
-			Object value = complexDataObject.get(attribute);
+			Object value = complexDataObject.getAttribute(attribute);
 			if (value == null)
 				removes.add(complexDataObject);
 		}

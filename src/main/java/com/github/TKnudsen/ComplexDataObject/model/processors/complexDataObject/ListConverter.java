@@ -36,7 +36,7 @@ public class ListConverter implements IComplexDataObjectProcessor {
 		for (ComplexDataObject complexDataObject : data) {
 
 			// Load the old value
-			Object oldValue = complexDataObject.get(attribute);
+			Object oldValue = complexDataObject.getAttribute(attribute);
 
 			// Split the old value and store if not null
 			if (oldValue != null) {

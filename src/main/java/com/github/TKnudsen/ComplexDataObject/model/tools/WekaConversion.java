@@ -10,6 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -84,7 +85,7 @@ public class WekaConversion {
 				String attName = attNames.next();
 				Attribute attribute = attributeMap.get(attName);
 
-				Object value = cdo.get(attName);
+				Object value = cdo.getAttribute(attName);
 				if (container.isNumeric(attName)) {
 					if (value != null)
 						instance.setValue(attribute, ((Number) value).doubleValue());
@@ -135,6 +136,32 @@ public class WekaConversion {
 	/**
 	 * 
 	 * @param fvs
+	 * @return
+	 * @deprecated use
+	 */
+	public static <O extends Object, F extends Feature<O>, FV extends AbstractFeatureVector<O, F>> Instances getInstances(FeatureContainer<O, ?, FV> featureContainer) {
+
+		// FeatureContainer<O, ?, FV> featureContainer = new
+		// FeatureContainer<>(fvs);
+
+		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
+		for (String featureName : featureContainer.getFeatureNames()) {
+			Attribute a = null;
+			if (featureContainer.isNumeric(featureName))
+				a = new Attribute(featureName);
+			else
+				a = new Attribute(featureName, (List<String>) null);
+			attrs.add(a);
+		}
+
+		Instances instances = new Instances("asdf", (ArrayList<Attribute>) attrs, featureContainer.size());
+		addInstances(featureContainer, instances);
+		return instances;
+	}
+
+	/**
+	 * 
+	 * @param fvs
 	 * @param stringToNominal
 	 *            decides whether string values are represented as nominal
 	 *            values (with a concrete alphabet of observations)
@@ -162,17 +189,67 @@ public class WekaConversion {
 	}
 
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
+		if (fvs == null || fvs.size() == 0)
+			return;
+
+		int dim = fvs.get(0).getVectorRepresentation().size();
 		for (FV fv : fvs) {
 			int length = fv.getVectorRepresentation().size();
+			if (dim != length)
+				throw new IllegalArgumentException("List of input FV has different features.");
+
 			data.add(new DenseInstance(length));
 			Instance ins = data.get(data.size() - 1);
 
+			List<? extends Feature<O>> vectorRepresentation = fv.getVectorRepresentation();
 			for (int i = 0; i < length; i++) {
-				if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.DOUBLE)
-					ins.setValue(i, (Double) fv.getVectorRepresentation().get(i).getFeatureValue());
-				else if (fv.getVectorRepresentation().get(i).getFeatureType() == FeatureType.STRING) {
-					String str = (String) fv.getVectorRepresentation().get(i).getFeatureValue();
-					ins.setValue(i, str);
+				if (vectorRepresentation.get(i).getFeatureType() == FeatureType.DOUBLE)
+					ins.setValue(i, (Double) vectorRepresentation.get(i).getFeatureValue());
+				else if (vectorRepresentation.get(i).getFeatureType() == FeatureType.STRING) {
+					String str = vectorRepresentation.get(i).getFeatureValue().toString();
+					try {
+						ins.setValue(i, str.toString());
+					} catch (Exception e) {
+						ins.setValue(i, "");
+					}
+				} else if (vectorRepresentation.get(i).getFeatureType() == FeatureType.BOOLEAN) {
+					Boolean b = (Boolean) vectorRepresentation.get(i).getFeatureValue();
+					ins.setValue(i, b.toString());
+				} else {
+					System.out.println("");
+				}
+				// TODO check whether WEKA automatically maps string to nominal.
+			}
+		}
+	}
+
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(FeatureContainer<O, ?, FV> featureContainer, Instances instances) {
+		if (featureContainer == null || featureContainer.size() == 0)
+			return;
+
+		for (FV fv : featureContainer) {
+
+			instances.add(new DenseInstance(fv.getDimensions()));
+			Instance ins = instances.get(instances.size() - 1);
+
+			for (String featureName : featureContainer.getFeatureNames()) {
+				Feature<?> feature = fv.getFeature(featureName);
+				Attribute attribute = instances.attribute(featureName);
+				if (feature.getFeatureType() == FeatureType.DOUBLE) {
+					Number n = (Number) feature.getFeatureValue();
+					ins.setValue(attribute, n.doubleValue());
+				} else if (feature.getFeatureType() == FeatureType.STRING) {
+					String string = feature.getFeatureValue().toString();
+					try {
+						ins.setValue(attribute, string);
+					} catch (Exception e) {
+						ins.setValue(attribute, "");
+					}
+				} else if (feature.getFeatureType() == FeatureType.BOOLEAN) {
+					Boolean b = (Boolean) feature.getFeatureValue();
+					ins.setValue(attribute, b.toString());
+				} else {
+					System.out.println("");
 				}
 				// TODO check whether WEKA automatically maps string to nominal.
 			}
@@ -203,10 +280,10 @@ public class WekaConversion {
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
-			if (fvs.get(i).get(classAttribute) instanceof String)
-				labels.add((String) fvs.get(i).get(classAttribute));
+			if (fvs.get(i).getAttribute(classAttribute) instanceof String)
+				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else
-				labels.add(fvs.get(i).get(classAttribute).toString());
+				labels.add(fvs.get(i).getAttribute(classAttribute).toString());
 
 		Instances insances = getInstances(fvs);
 
@@ -235,10 +312,10 @@ public class WekaConversion {
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
-			if (fvs.get(i).get(classAttribute) instanceof String)
-				labels.add((String) fvs.get(i).get(classAttribute));
+			if (fvs.get(i).getAttribute(classAttribute) instanceof String)
+				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else
-				labels.add(fvs.get(i).get(classAttribute).toString());
+				labels.add(fvs.get(i).getAttribute(classAttribute).toString());
 
 		Instances insances = getInstances(fvs);
 

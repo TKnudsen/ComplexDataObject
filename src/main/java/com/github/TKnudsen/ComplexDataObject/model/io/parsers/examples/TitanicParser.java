@@ -174,7 +174,7 @@ public class TitanicParser implements ComplexDataObjectParser {
 					throw new IllegalArgumentException("null argument exception");
 			}
 
-			if (Double.isNaN((Double) complexDataObject.get("AGE")))
+			if (Double.isNaN((Double) complexDataObject.getAttribute("AGE")))
 				continue;
 
 			data.add(complexDataObject);
@@ -189,12 +189,12 @@ public class TitanicParser implements ComplexDataObjectParser {
 
 	private void removeMetaDataEntities(List<ComplexDataObject> data, String property, Object entity) {
 		for (ComplexDataObject container : data)
-			if (container.get(property) != null && container.get(property) != null)
+			if (container.getAttribute(property) != null && container.getAttribute(property) != null)
 				if (entity.getClass().equals(Double.class) && Double.isNaN((double) entity)) {
-					if (container.get(property).getClass().equals(Double.class) && Double.isNaN((double) container.get(property)))
-						container.remove(property);
-				} else if (container.get(property).equals(entity))
-					container.remove(property);
+					if (container.getAttribute(property).getClass().equals(Double.class) && Double.isNaN((double) container.getAttribute(property)))
+						container.removeAttribute(property);
+				} else if (container.getAttribute(property).equals(entity))
+					container.removeAttribute(property);
 	}
 
 	private List<List<String>> parse4ColumnVariant(String hauptTabellenFile) throws IOException {
@@ -287,12 +287,12 @@ public class TitanicParser implements ComplexDataObjectParser {
 	private void enrichFareAttibute(List<ComplexDataObject> data) {
 		for (ComplexDataObject container : data) {
 
-			if (container.get("FARE") != null && container.get("FARE") != null) {
+			if (container.getAttribute("FARE") != null && container.getAttribute("FARE") != null) {
 				double v = 0;
 				try {
-					v = (double) container.get("FARE");
+					v = (double) container.getAttribute("FARE");
 				} catch (Exception e) {
-					System.out.println(container.get("FARE"));
+					System.out.println(container.getAttribute("FARE"));
 				}
 				if (Double.isNaN(v))
 					continue;

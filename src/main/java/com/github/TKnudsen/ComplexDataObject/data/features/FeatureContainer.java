@@ -14,15 +14,15 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  *
  * <p>
  * Description: Stores and manages collections of Feature Vectors. A
- * FeatureSchema manages the keys/attributes of the collection.
+ * FeatureSchema manages the features of the collection.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.03
  */
 public class FeatureContainer<O extends Object, F extends Feature<O>, T extends AbstractFeatureVector<O, F>> implements Iterable<T> {
 
@@ -54,18 +54,18 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	private void extendDataSchema(T object) {
 		for (String feature : object.getFeatureKeySet())
 			if (!featureSchema.contains(feature))
-				featureSchema.add(feature, object.getFeature(feature).getClass(), object.getFeature(feature).getFeatureType());
+				featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(), object.getFeature(feature).getFeatureType());
 	}
 
 	/**
-	 * Introduces or updates a new attribute.
+	 * Introduces or updates a new feature.
 	 *
 	 * @param featureName
-	 *            the attribute name
+	 *            the feature name
 	 * @param type
 	 *            the expected data type.
 	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
+	 *            the default value in case the feature is missing from a data
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
@@ -85,14 +85,14 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	}
 
 	/**
-	 * Introduces or updates a new attribute.
+	 * Introduces or updates a feature.
 	 *
 	 * @param featureName
-	 *            the attribute name
+	 *            the feature name
 	 * @param type
 	 *            the expected data type.
 	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
+	 *            the default value in case the feature is missing from a data
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
@@ -126,9 +126,9 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		if (!featureVectorMap.containsKey(id))
 			return false;
 
-		for (String attribute : featureValues.keySet()) {
-			if (featureValues.get(attribute) != null)
-				featureValues.get(attribute).remove(id);
+		for (String featureName : featureValues.keySet()) {
+			if (featureValues.get(featureName) != null)
+				featureValues.get(featureName).remove(id);
 		}
 
 		featureVectorMap.remove(id);
@@ -137,17 +137,17 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	}
 
 	/**
-	 * Removes an attribute from the container and the set of objects.
+	 * Removes a feature from the container and the set of objects.
 	 *
 	 * @param featureName
-	 *            the attribute name.
+	 *            the feature name.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema remove(String featureName) {
 		Iterator<T> iterator = iterator();
 		while (iterator.hasNext()) {
 			T o = iterator.next();
-			o.remove(featureName);
+			o.removeFeature(featureName);
 		}
 
 		return featureSchema.remove(featureName);
@@ -164,8 +164,8 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		return false;
 	}
 
-	public Boolean isBoolean(String attribute) {
-		if (Boolean.class.isAssignableFrom(featureSchema.getType(attribute)))
+	public Boolean isBoolean(String feature) {
+		if (Boolean.class.isAssignableFrom(featureSchema.getType(feature)))
 			return true;
 		return false;
 	}

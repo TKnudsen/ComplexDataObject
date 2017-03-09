@@ -87,27 +87,27 @@ public class DoubleConverter implements IComplexDataObjectProcessor {
 		for (ComplexDataObject complexDataObject : container) {
 			Double d = Double.NaN;
 
-			if (complexDataObject.get(attribute) == null)
+			if (complexDataObject.getAttribute(attribute) == null)
 				d = Double.NaN;
-			else if (missingValueIndicators != null && missingValueIndicators.contains(complexDataObject.get(attribute).toString()))
+			else if (missingValueIndicators != null && missingValueIndicators.contains(complexDataObject.getAttribute(attribute).toString()))
 				d = Double.NaN;
 			else if (format != null)
 				try {
-					Number number = format.parse(complexDataObject.get(attribute).toString());
+					Number number = format.parse(complexDataObject.getAttribute(attribute).toString());
 					d = number.doubleValue();
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
 			else if (decimalFormat != null) {
 				try {
-					Number number = decimalFormat.parse(complexDataObject.get(attribute).toString());
+					Number number = decimalFormat.parse(complexDataObject.getAttribute(attribute).toString());
 					d = number.doubleValue();
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			} else
 				try {
-					d = Double.parseDouble(complexDataObject.get(attribute).toString());
+					d = Double.parseDouble(complexDataObject.getAttribute(attribute).toString());
 					complexDataObject.add(attribute, d);
 				} catch (Exception e) {
 					e.printStackTrace();
