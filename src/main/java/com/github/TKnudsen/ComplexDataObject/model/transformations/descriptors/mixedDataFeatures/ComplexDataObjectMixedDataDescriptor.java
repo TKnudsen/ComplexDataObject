@@ -54,7 +54,9 @@ public class ComplexDataObjectMixedDataDescriptor implements IMixedDataFeatureVe
 			}
 		}
 
-		mixedDataFeatureVectors.add(new MixedDataFeatureVector(features));
+		MixedDataFeatureVector fv = new MixedDataFeatureVector(features);
+		fv.setMaster(complexDataObject);
+		mixedDataFeatureVectors.add(fv);
 
 		return mixedDataFeatureVectors;
 	}
