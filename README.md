@@ -12,7 +12,7 @@ Maven coordinates:
 <dependency>
   <groupId>com.github.tknudsen</groupId>
   <artifactId>complex-data-object</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.4</version>
 </dependency>
 ```
 
@@ -22,6 +22,6 @@ Current snapshot:
 <dependency>
   <groupId>com.github.tknudsen</groupId>
   <artifactId>complex-data-object</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>0.1.5-SNAPSHOT</version>
 </dependency>
 ```
