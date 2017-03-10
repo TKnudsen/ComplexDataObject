@@ -20,11 +20,11 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
 
