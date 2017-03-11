@@ -13,11 +13,11 @@ import java.util.List;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class NumericalFeatureVectorFactory {
 
@@ -30,5 +30,20 @@ public class NumericalFeatureVectorFactory {
 			features.add(new NumericalFeature("[" + i + "]", vector[i]));
 
 		return new NumericalFeatureVector(features);
+	}
+
+	public static NumericalFeatureVector createNumericalFeatureVector(double[] vector, String name, String description) {
+		if (vector == null)
+			return null;
+
+		List<NumericalFeature> features = new ArrayList<>();
+		for (int i = 0; i < vector.length; i++)
+			features.add(new NumericalFeature("[" + i + "]", vector[i]));
+
+		NumericalFeatureVector numericalFeatureVector = new NumericalFeatureVector(features);
+		numericalFeatureVector.setName(name);
+		numericalFeatureVector.setDescription(description);
+
+		return numericalFeatureVector;
 	}
 }
