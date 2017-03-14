@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorTools;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
@@ -38,17 +39,21 @@ public class MinMaxNormalization implements INumericalFeatureVectorProcessor {
 
 	@Override
 	public void process(List<NumericalFeatureVector> data) {
+		process(new NumericalFeatureVectorContainer(data));
+	}
 
+	@Override
+	public void process(NumericalFeatureVectorContainer container) {
 		double globalMin = Double.POSITIVE_INFINITY;
 		double globalMax = Double.NEGATIVE_INFINITY;
 		if (globalMinMax) {
-			for (NumericalFeatureVector fv : data) {
+			for (NumericalFeatureVector fv : container) {
 				globalMin = Math.min(globalMin, NumericalFeatureVectorTools.getMin(fv));
 				globalMax = Math.max(globalMax, NumericalFeatureVectorTools.getMax(fv));
 			}
 		}
 
-		for (NumericalFeatureVector fv : data) {
+		for (NumericalFeatureVector fv : container) {
 			double min = NumericalFeatureVectorTools.getMin(fv);
 			double max = NumericalFeatureVectorTools.getMax(fv);
 			for (int i = 0; i < fv.getDimensions(); i++) {

@@ -47,7 +47,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
-		this.featuresMap = null;
+
+		generalizeFromList();
 	}
 
 	public AbstractFeatureVector(F[] features) {
@@ -89,6 +90,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 		for (F feature : featuresArray) {
 			featuresList.add(feature);
+			featuresMap.put(feature.getFeatureName(), feature);
 			// refactoring. lazy implementation to save computation time
 			// if (feature != null && feature.getFeatureName() != null)
 			// featuresMap.put(feature.getFeatureName(), feature);
@@ -104,6 +106,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		featuresList = new ArrayList<>();
 		for (String s : featuresMap.keySet())
 			featuresList.add(featuresMap.get(s));
+	}
+
+	protected void generalizeFromList() {
+		featuresMap = new TreeMap<>();
+
+		for (F feature : featuresList)
+			featuresMap.put(feature.getFeatureName(), feature);
 	}
 
 	/**
