@@ -24,6 +24,13 @@ public class GaussianIntegerWeightingFunction implements IIntegerWeightingKernel
 	private Integer reference = 0;
 	private Double variance;
 
+	/**
+	 * for serialization
+	 */
+	public GaussianIntegerWeightingFunction() {
+		this.variance = 1.0;
+	}
+
 	public GaussianIntegerWeightingFunction(Double variance) {
 		this.variance = variance;
 	}
@@ -78,4 +85,17 @@ public class GaussianIntegerWeightingFunction implements IIntegerWeightingKernel
 	public void setInterval(Integer interval) {
 		this.interval = interval;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof GaussianIntegerWeightingFunction))
+			return false;
+
+		GaussianIntegerWeightingFunction other = (GaussianIntegerWeightingFunction) o;
+
+		return other.interval == interval && other.reference == reference && other.variance == variance;
+	}
+
 }
