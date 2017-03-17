@@ -23,7 +23,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
  * @author Juergen Bernard
  * @TODO: define visual variable data structure
  */
-public abstract class VisualMapping<T extends IDObject, M extends Object> implements Function<T, M> {
+public abstract class VisualMappingFunction<T extends IDObject, M extends Object> implements Function<T, M> {
 
 	protected Map<T, M> mappingLookup = new HashMap<T, M>();
 
