@@ -12,12 +12,12 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
  * </p>
  * 
  * <p>
- * Description: provides the basic functionality for mapping abstract data into
+ * Description: provides the basic functionality for mapping abstract data to
  * the visual space.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2017
  * </p>
  * 
  * @author Juergen Bernard
