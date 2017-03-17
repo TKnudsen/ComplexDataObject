@@ -117,6 +117,9 @@ public class WekaConversion {
 	 * @deprecated use
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs) {
+		if (fvs == null || fvs.size() == 0)
+			return null;
+
 		int length = fvs.get(0).getDimensions();
 		List<Attribute> attrs = new ArrayList<Attribute>(length);
 		for (int i = 0; i < length; i++) {
@@ -312,14 +315,16 @@ public class WekaConversion {
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
-			if (fvs.get(i).getAttribute(classAttribute) instanceof String)
+			if (fvs.get(i).getAttribute(classAttribute) == null)
+				throw new IllegalArgumentException("WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
+			else if (fvs.get(i).getAttribute(classAttribute) instanceof String)
 				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else
 				labels.add(fvs.get(i).getAttribute(classAttribute).toString());
 
 		Instances insances = getInstances(fvs);
 
-		if (weights != null && weights.size() == insances.size())
+		if (insances != null && weights != null && weights.size() == insances.size())
 			addWeightsToInstances(insances, weights);
 
 		return addLabelsToInstances(insances, labels);
@@ -399,6 +404,9 @@ public class WekaConversion {
 	}
 
 	private static Instances addLabelsToInstances(Instances instances, List<String> labels) {
+		if (instances == null)
+			return null;
+
 		Instances inst2 = addLabelAttributeToInstance(instances, labels);
 
 		for (int i = 0; i < labels.size(); i++)
