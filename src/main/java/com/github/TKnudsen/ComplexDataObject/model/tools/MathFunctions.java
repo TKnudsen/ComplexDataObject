@@ -93,6 +93,34 @@ public class MathFunctions {
 	}
 
 	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMin(List<Double> values) {
+		if (values == null)
+			return Double.NaN;
+
+		double min = Double.POSITIVE_INFINITY - 1;
+
+		boolean onlyNaN = true;
+		for (Double d : values)
+			if (Double.isNaN(d))
+				continue;
+			else {
+				min = Math.min(min, d);
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return min;
+	}
+
+	/**
 	 * Calculates the mean value for a given series of values. Ignores
 	 * Double.NAN
 	 * 
@@ -134,5 +162,33 @@ public class MathFunctions {
 			}
 
 		return sum / count;
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMax(List<Double> values) {
+		if (values == null)
+			return Double.NaN;
+
+		double max = Double.NEGATIVE_INFINITY + 1;
+
+		boolean onlyNaN = true;
+		for (Double d : values)
+			if (Double.isNaN(d))
+				continue;
+			else {
+				max = Math.max(max, d);
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return max;
 	}
 }
