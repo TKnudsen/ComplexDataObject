@@ -191,4 +191,64 @@ public class MathFunctions {
 
 		return max;
 	}
+
+	/**
+	 * calculates the variance of a double array.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getVariance(double values[]) {
+		double sumOfSquares = 0;
+
+		if (values == null)
+			return sumOfSquares;
+
+		double mean = getMean(values);
+
+		for (int i = 0; i < values.length; i++)
+			sumOfSquares += Math.pow((values[i] - mean), 2);
+
+		return sumOfSquares / (double) values.length;
+	}
+
+	/**
+	 * calculates the standard deviation (SD, sDev) of a double array.
+	 * 
+	 * @param valules
+	 * @return
+	 */
+	public static double getStandardDeviation(double valules[]) {
+		double sumOfSquares = 0;
+
+		if (valules == null)
+			return sumOfSquares;
+
+		double mean = getMean(valules);
+
+		for (int i = 0; i < valules.length; i++)
+			sumOfSquares += Math.pow((valules[i] - mean), 2);
+
+		return Math.sqrt(sumOfSquares / (double) valules.length);
+	}
+
+	/**
+	 * calculates the standard deviation (SD, sDev) of a double array.
+	 * 
+	 * @param valules
+	 * @return
+	 */
+	public static double getStandardDeviation(List<Double> valules) {
+		double sumOfSquares = 0;
+
+		if (valules == null)
+			return sumOfSquares;
+
+		double mean = getMean(valules);
+
+		for (int i = 0; i < valules.size(); i++)
+			sumOfSquares += Math.pow((valules.get(i) - mean), 2);
+
+		return Math.sqrt(sumOfSquares / (double) valules.size());
+	}
 }
