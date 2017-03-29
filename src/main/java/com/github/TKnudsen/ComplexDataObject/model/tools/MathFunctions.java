@@ -213,6 +213,26 @@ public class MathFunctions {
 	}
 
 	/**
+	 * calculates the variance of a double array.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getVariance(List<Double> values) {
+		double sumOfSquares = 0;
+
+		if (values == null)
+			return sumOfSquares;
+
+		double mean = getMean(values);
+
+		for (int i = 0; i < values.size(); i++)
+			sumOfSquares += Math.pow((values.get(i) - mean), 2);
+
+		return sumOfSquares / (double) values.size();
+	}
+
+	/**
 	 * calculates the standard deviation (SD, sDev) of a double array.
 	 * 
 	 * @param valules
