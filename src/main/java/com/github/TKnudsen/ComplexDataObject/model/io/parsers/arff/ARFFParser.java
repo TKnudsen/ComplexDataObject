@@ -91,7 +91,6 @@ public class ARFFParser implements ComplexDataObjectParser {
 			data.add(complexDataObject);
 		}
 		return data;
-
 	}
 
 	public static Instances parseARFF(String arffFile) {

@@ -80,9 +80,14 @@ public class WekaWriterTools {
 	 * @throws IOException
 	 */
 	public static void writeToFile(Instances instances, String fileName) throws IOException {
+		if (fileName == null)
+			throw new IllegalArgumentException("WekaWriterTools.writeToFile: file was null.");
+
+		File file = new File(fileName);
+
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(instances);
-		saver.setFile(new File(fileName));
+		saver.setFile(file);
 		saver.writeBatch();
 	}
 }

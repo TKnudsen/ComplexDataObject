@@ -75,9 +75,10 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	@Override
 	public String getDescription() {
-		if (description == null)
-			return toString();
-		return description;
+		if (description != null)
+			return description;
+
+		return "no description";
 	}
 
 	public void setDescription(String description) {

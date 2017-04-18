@@ -1,8 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * <p>
@@ -22,18 +24,19 @@ import java.util.Date;
  */
 public class DateParser implements IObjectParser<Date> {
 
-	private static SimpleDateFormat ISO0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-	private static SimpleDateFormat ISO1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static SimpleDateFormat IS02 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	private static SimpleDateFormat IS03 = new SimpleDateFormat("yyyy-MM-dd HH");
-	private static SimpleDateFormat IS04 = new SimpleDateFormat("yyyy-MM-dd");
-	private static SimpleDateFormat IS05 = new SimpleDateFormat("yyyy-MM");
-	private static SimpleDateFormat IS06 = new SimpleDateFormat("dd.MM.yyyy");
-	private static SimpleDateFormat IS06b = new SimpleDateFormat("dd_MM_yyyy");
-	private static SimpleDateFormat IS07 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-	private static SimpleDateFormat IS08 = new SimpleDateFormat("MM.dd.yyyy");
-	private static SimpleDateFormat IS09a = new SimpleDateFormat("dd/MM/yyyy");
-	private static SimpleDateFormat IS09b = new SimpleDateFormat("dd\\MM\\yyyy");
+	private static DateFormat ISO0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+	private static DateFormat ISO1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat IS02 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static DateFormat IS03 = new SimpleDateFormat("yyyy-MM-dd HH");
+	private static DateFormat IS04 = new SimpleDateFormat("yyyy-MM-dd");
+	private static DateFormat IS05 = new SimpleDateFormat("yyyy-MM");
+	private static DateFormat IS06 = new SimpleDateFormat("dd.MM.yyyy");
+	private static DateFormat IS06b = new SimpleDateFormat("dd_MM_yyyy");
+	private static DateFormat IS07 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+	private static DateFormat IS08 = new SimpleDateFormat("MM.dd.yyyy");
+	private static DateFormat IS09a = new SimpleDateFormat("dd/MM/yyyy");
+	private static DateFormat IS09b = new SimpleDateFormat("dd\\MM\\yyyy");
+	private static SimpleDateFormat zzz = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 	@Override
 	public synchronized Date apply(Object inputObject) {
@@ -133,9 +136,18 @@ public class DateParser implements IObjectParser<Date> {
 				synchronized (IS05) {
 					date = IS05.parse(replacedT);
 				}
-			} catch (ParseException pe8) {
+			} catch (ParseException parseException) {
 			}
+		else {
+			try {
+				// Thu Apr 13 00:00:00 CEST 2017
+				synchronized (zzz) {
+					date = zzz.parse(String.valueOf(inputObject));
+				}
+			} catch (ParseException parseException) {
+			}
+		}
+
 		return date;
 	}
-
 }
