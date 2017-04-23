@@ -23,6 +23,9 @@ public class DoubleParser implements IObjectParser<Double> {
 	public Double apply(Object object) {
 		String stringValue = String.valueOf(object).toLowerCase();
 
+		if (stringValue.endsWith(";"))
+			stringValue = stringValue.substring(0, stringValue.length() - 1);
+
 		stringValue = stringValue.trim();
 		stringValue = stringValue.replace(",", ".");
 		stringValue = stringValue.replace("%", "");
