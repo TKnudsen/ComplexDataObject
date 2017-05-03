@@ -49,7 +49,7 @@ public class EuclideanDistanceMeasure implements INumericalFeatureVectorDistance
 	public String getDescription() {
 		return "Euclidean's Distance Measure for NumericalFeatureVectors";
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
