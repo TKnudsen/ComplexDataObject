@@ -14,7 +14,7 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 
 	private String attribute;
 
-	private DoubleParser doubleParser = new DoubleParser();
+	private final DoubleParser doubleParser = new DoubleParser();
 
 	public AttributeNumerificationProcessor() {
 		this.attribute = null;
