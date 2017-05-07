@@ -30,6 +30,8 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 
 	private String attributeString;
 
+	private boolean useFuzzyBoolean = false;
+
 	public CollectionToBooleanAttributesConverter(String attributeString) {
 		this.attributeString = attributeString;
 	}
@@ -51,9 +53,12 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 			}
 		}
 
-		// 2) create new FuzzyBoolenCategory attributes
+		// 2) create new (Fuzzy) Boolean category attributes
 		for (String string : observations)
-			container.addAttribute(attributeString + "_" + string, FuzzyBooleanCategory.class, FuzzyBooleanCategory.NO_INFORMATION);
+			if (useFuzzyBoolean)
+				container.addAttribute(attributeString + "_" + string, FuzzyBooleanCategory.class, FuzzyBooleanCategory.NO_INFORMATION);
+			else
+				container.addAttribute(attributeString + "_" + string, Boolean.class, null);
 
 		// 3) add entries for the objects
 		iterator = container.iterator();
@@ -64,14 +69,24 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 			if (object != null && object instanceof Collection<?>)
 				collection = (Collection<?>) object;
 
-			for (String string : observations) {
-				if (collection == null)
-					next.add(attributeString + "_" + string, FuzzyBooleanCategory.NO_INFORMATION);
-				else if (collection != null && collection.contains(string))
-					next.add(attributeString + "_" + string, FuzzyBooleanCategory.YES);
-				else
-					next.add(attributeString + "_" + string, FuzzyBooleanCategory.NO);
-			}
+			if (useFuzzyBoolean)
+				for (String string : observations) {
+					if (collection == null)
+						next.add(attributeString + "_" + string, FuzzyBooleanCategory.NO_INFORMATION);
+					else if (collection != null && collection.contains(string))
+						next.add(attributeString + "_" + string, FuzzyBooleanCategory.YES);
+					else
+						next.add(attributeString + "_" + string, FuzzyBooleanCategory.NO);
+				}
+			else
+				for (String string : observations) {
+					if (collection == null)
+						next.add(attributeString + "_" + string, null);
+					else if (collection != null && collection.contains(string))
+						next.add(attributeString + "_" + string, true);
+					else
+						next.add(attributeString + "_" + string, false);
+				}
 		}
 	}
 
@@ -92,5 +107,13 @@ public class CollectionToBooleanAttributesConverter implements IComplexDataObjec
 	@Override
 	public DataProcessingCategory getPreprocessingCategory() {
 		return DataProcessingCategory.SECONDARY_DATA_PROVIDER;
+	}
+
+	public boolean isUseFuzzyBoolean() {
+		return useFuzzyBoolean;
+	}
+
+	public void setUseFuzzyBoolean(boolean useFuzzyBoolean) {
+		this.useFuzzyBoolean = useFuzzyBoolean;
 	}
 }
