@@ -29,8 +29,8 @@ public class MultiDimensionalScalingTester {
 
 		List<NumericalFeatureVector> fvs = new ArrayList<>();
 
-		double[] vect1 = new double[] { 1.0, 1.0, 0.0 };
-		double[] vect2 = new double[] { 1.0, 0.98, 0.0 };
+		double[] vect1 = new double[] { 2.0, 1.0, 0.0 };
+		double[] vect2 = new double[] { 2.0, 0.98, 0.0 };
 		double[] vect3 = new double[] { 0.0, 1.0, 1.0 };
 		double[] vect4 = new double[] { 0.0, 1.0, 0.98 };
 		double[] vect5 = new double[] { 0.0, 1.0, 0.0 };

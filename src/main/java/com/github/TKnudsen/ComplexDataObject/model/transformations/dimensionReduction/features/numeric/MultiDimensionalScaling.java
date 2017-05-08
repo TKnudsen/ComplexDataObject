@@ -15,6 +15,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.INumericalFeatureVectorDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
@@ -50,7 +51,7 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 	/**
 	 * Euclidean distance metric for double[]
 	 */
-	private EuclideanDistance ed = new EuclideanDistance();
+	private final EuclideanDistance ed = new EuclideanDistance();
 
 	/**
 	 * distance matrix, internally used for the low-dimensional manifold
@@ -100,6 +101,8 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 
 		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size() || distanceMatrix[0].length != inputObjects.size())
 			throw new IllegalArgumentException("Multidimensional Scaling: wrong input.");
+
+		distanceMatrix = provideConsistDistanceMatrix(distanceMatrix);
 
 		// initialize points of the low-dimensional embedding
 		List<double[]> lowDimensionalPoints = initializeLowDimensionalPoints(outputDimensionality, inputObjects.size());
@@ -206,6 +209,33 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 				distanceMatrix[x][y] = distance;
 				distanceMatrix[y][x] = distance;
 			}
+		}
+
+		return distanceMatrix;
+	}
+
+	/**
+	 * 
+	 */
+	private double[][] provideConsistDistanceMatrix(double[][] distanceMatrix) {
+		if (distanceMatrix == null || distanceMatrix.length != distanceMatrix[0].length)
+			throw new IllegalArgumentException("Multidimensional Scaling.provideConsistDistanceMatrix: given distance matrix inconsistent.");
+
+		double min = Double.POSITIVE_INFINITY;
+		double max = Double.NEGATIVE_INFINITY;
+		for (int i = 0; i < distanceMatrix.length; i++) {
+			min = Math.min(min, MathFunctions.getMin(distanceMatrix[i]));
+			max = Math.max(max, MathFunctions.getMax(distanceMatrix[i]));
+		}
+
+		if (min < 0.0 || max > 1.0) {
+			double[][] newDistanceMatrix = new double[distanceMatrix.length][distanceMatrix[0].length];
+
+			for (int i = 0; i < distanceMatrix.length; i++)
+				for (int j = 0; j < distanceMatrix[i].length; j++)
+					newDistanceMatrix[i][j] = MathFunctions.linearScale(min, max, distanceMatrix[i][j], false);
+
+			return newDistanceMatrix;
 		}
 
 		return distanceMatrix;

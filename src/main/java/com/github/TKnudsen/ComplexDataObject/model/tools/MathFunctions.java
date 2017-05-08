@@ -121,6 +121,64 @@ public class MathFunctions {
 	}
 
 	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMin(double[] values) {
+		if (values == null)
+			return Double.NaN;
+
+		double min = Double.POSITIVE_INFINITY - 1;
+
+		boolean onlyNaN = true;
+		for (double d : values)
+			if (Double.isNaN(d))
+				continue;
+			else {
+				min = Math.min(min, d);
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return min;
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMin(Number[] values) {
+		if (values == null)
+			return Double.NaN;
+
+		double min = Double.POSITIVE_INFINITY - 1;
+
+		boolean onlyNaN = true;
+		for (Number n : values)
+			if (n == null)
+				continue;
+			else if (Double.isNaN(n.doubleValue()))
+				continue;
+			else {
+				min = Math.min(min, n.doubleValue());
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return min;
+	}
+
+	/**
 	 * Calculates the mean value for a given series of values. Ignores
 	 * Double.NAN
 	 * 
@@ -183,6 +241,64 @@ public class MathFunctions {
 				continue;
 			else {
 				max = Math.max(max, d);
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return max;
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMax(double[] values) {
+		if (values == null)
+			return Double.NaN;
+
+		double max = Double.NEGATIVE_INFINITY + 1;
+
+		boolean onlyNaN = true;
+		for (double d : values)
+			if (Double.isNaN(d))
+				continue;
+			else {
+				max = Math.max(max, d);
+				onlyNaN = false;
+			}
+
+		if (onlyNaN)
+			return Double.NaN;
+
+		return max;
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores
+	 * Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMax(Number[] values) {
+		if (values == null)
+			return Double.NaN;
+
+		double max = Double.NEGATIVE_INFINITY + 1;
+
+		boolean onlyNaN = true;
+		for (Number n : values)
+			if (n == null)
+				continue;
+			else if (Double.isNaN(n.doubleValue()))
+				continue;
+			else {
+				max = Math.max(max, n.doubleValue());
 				onlyNaN = false;
 			}
 
