@@ -7,8 +7,24 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorFactory;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
 
-public class MDSTester {
+/**
+ * <p>
+ * Title: MultiDimensionalScalingTester
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2017
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.0
+ */
 
+public class MultiDimensionalScalingTester {
 	public static void main(String[] args) {
 
 		List<NumericalFeatureVector> fvs = new ArrayList<>();
@@ -30,7 +46,20 @@ public class MDSTester {
 			System.out.println();
 		}
 
+		// V1: with features in the constructor
 		MultiDimensionalScaling mds = new MultiDimensionalScaling(new EuclideanDistanceMeasure(), 2);
+
+		// // V2 with a distance matrix in the constructor
+		// EuclideanDistanceMeasure dm = new EuclideanDistanceMeasure();
+		// double[][] distanceMatrix = new double[fvs.size()][fvs.size()];
+		// for (int i = 0; i < fvs.size(); i++)
+		// for (int j = 0; j < fvs.size(); j++)
+		// distanceMatrix[i][j] = dm.getDistance(fvs.get(i), fvs.get(j));
+		// MultiDimensionalScaling mds = new MultiDimensionalScaling(distanceMatrix, 1);
+
+		// ...and the story goes on...
+		mds.setMaxIterations(50);
+		mds.setPrintProgress(true);
 		List<NumericalFeatureVector> transformed = mds.transform(fvs);
 
 		for (NumericalFeatureVector fv : transformed) {

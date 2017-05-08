@@ -78,13 +78,12 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 		this.outputDimensionality = outputDimensionality;
 	}
 
-	public MultiDimensionalScaling(double[][] distanceMatrix, int outputDimensionality, int maxIterations, double stopStressFactor) {
+	public MultiDimensionalScaling(double[][] distanceMatrix, int outputDimensionality) {
 		if (distanceMatrix == null || distanceMatrix.length == 0 || distanceMatrix.length != distanceMatrix[0].length)
 			throw new IllegalArgumentException("Multidimensional Scaling: distance matrix is ill-defined");
 
 		this.distanceMatrix = distanceMatrix;
 		this.outputDimensionality = outputDimensionality;
-		this.maxIterations = maxIterations;
 	}
 
 	@Override
@@ -98,6 +97,9 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 
 		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size() || distanceMatrix[0].length != inputObjects.size())
 			calculateDistanceMatrix(inputObjects);
+
+		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size() || distanceMatrix[0].length != inputObjects.size())
+			throw new IllegalArgumentException("Multidimensional Scaling: wrong input.");
 
 		// initialize points of the low-dimensional embedding
 		List<double[]> lowDimensionalPoints = initializeLowDimensionalPoints(outputDimensionality, inputObjects.size());
@@ -118,8 +120,6 @@ public class MultiDimensionalScaling implements IDimensionReduction {
 				for (int d = 0; d < outputDimensionality; d++) {
 					for (int j = 0; j < lowDimensionalPoints.size(); j++) {
 						if (j == i)
-							continue;
-						if (distanceMatrix[i][j] == 0)
 							continue;
 						newPointCoordinates[d] += lowDimensionalPoints.get(i)[d] + (pointDistances[i][j] - distanceMatrix[i][j]) * (lowDimensionalPoints.get(j)[d] - lowDimensionalPoints.get(i)[d]);
 					}
