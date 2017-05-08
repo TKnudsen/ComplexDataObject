@@ -1,15 +1,16 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.numeric;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
 import weka.attributeSelection.PrincipalComponents;
 import weka.core.Instance;
@@ -36,18 +37,41 @@ import weka.core.Instances;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017 Jürgen Bernard,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.01
  */
-public class PrincipalComponentAnalysis implements IDataTransformation<NumericalFeatureVector, NumericalFeatureVector> {
+public class PrincipalComponentAnalysis implements IDimensionReduction {
 
+	/**
+	 * whether or not the PCA model will normalize the data at start
+	 */
 	private boolean normalize = true;
+
+	/**
+	 * parameter that can be used as a criterion of convergence. Principal
+	 * components are built until the minimum remaining variance is achieved.
+	 * Example: let's say 60% of the variance shall be preserved for a given
+	 * data set. then d principal components are needed to achieve at least 60%
+	 * variance preservation.
+	 */
 	private double minimumRemainingVariance = Double.NaN;
+
+	/**
+	 * standard termination criterion. PCA stops when the first
+	 * *outputDimensions* are calculated.
+	 */
 	private int outputDimensions = 2;
+
+	/**
+	 * whether of not feature are 'back-projected' into the original space.
+	 */
 	private boolean transformThroughPCASpaceBackToOriginalSpace = false;
+
+	private Map<NumericalFeatureVector, NumericalFeatureVector> mapping;
 
 	public PrincipalComponentAnalysis(boolean normalize, int outputDimensions) {
 		this.normalize = normalize;
@@ -119,6 +143,8 @@ public class PrincipalComponentAnalysis implements IDataTransformation<Numerical
 		if (pca == null)
 			initPCA();
 
+		mapping = new HashMap<>();
+
 		Instances instances = WekaConversion.getInstances(inputObjects);
 		try {
 			pca.buildEvaluator(instances);
@@ -134,6 +160,8 @@ public class PrincipalComponentAnalysis implements IDataTransformation<Numerical
 
 				outputFeatureVector.setMaster(inputObjects.get(i));
 				returnFVs.add(outputFeatureVector);
+
+				mapping.put(inputObjects.get(i), outputFeatureVector);
 			}
 
 			return returnFVs;
@@ -191,5 +219,10 @@ public class PrincipalComponentAnalysis implements IDataTransformation<Numerical
 
 	public void setTransformThroughPCASpaceBackToOriginalSpace(boolean transformThroughPCASpaceBackToOriginalSpace) {
 		this.transformThroughPCASpaceBackToOriginalSpace = transformThroughPCASpaceBackToOriginalSpace;
+	}
+
+	@Override
+	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping() {
+		return mapping;
 	}
 }
