@@ -30,6 +30,10 @@ import de.javagl.nd.tuples.d.DoubleTuple;
 
 public class NumericalFeatureVector extends AbstractFeatureVector<Double, NumericalFeature> implements DoubleTuple {
 
+	private NumericalFeatureVector() {
+		super();
+	}
+	
 	public NumericalFeatureVector(List<NumericalFeature> features) {
 		super(features);
 	}
@@ -115,4 +119,6 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 	public void addFeature(String featureName, Double value, FeatureType type) {
 		addFeature(new NumericalFeature(featureName, value));
 	}
+	
+	
 }

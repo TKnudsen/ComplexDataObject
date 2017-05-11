@@ -23,5 +23,6 @@ public class ObjectMapperFactory {
 		complexDataObjectObjectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 		complexDataObjectObjectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
 		complexDataObjectObjectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		
 	}
 }

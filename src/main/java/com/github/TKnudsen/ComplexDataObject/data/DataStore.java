@@ -119,6 +119,7 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 		if (dataObject instanceof IKeyValueProvider) {
 			IKeyValueProvider<?> keyValueStore = (IKeyValueProvider<?>) dataObject;
 			Map<String, Class<?>> types = keyValueStore.getTypes();
+			if(types!=null)
 			for (String s : types.keySet())
 				attributes.add(s);
 		}

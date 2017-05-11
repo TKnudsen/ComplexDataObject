@@ -27,6 +27,12 @@ public class NumericalFeature extends Feature<Double> {
 	 */
 	private static final long serialVersionUID = 7244765037515290604L;
 
+	
+	@SuppressWarnings("unused")
+	private NumericalFeature() {
+		super( FeatureType.DOUBLE);
+	}
+	
 	public NumericalFeature(String featureName, Double featureValue) {
 		super(featureName, featureValue, FeatureType.DOUBLE);
 	}
@@ -46,4 +52,6 @@ public class NumericalFeature extends Feature<Double> {
 	public NumericalFeature clone() {
 		return new NumericalFeature(featureName, featureValue);
 	}
+	
+	
 }

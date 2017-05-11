@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
 /**
  * <p>
@@ -43,6 +44,31 @@ public class JSONWriter {
 
 		try {
 			mapper.writeValue(new File(file), complexDataObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return;
+	}
+
+	public static String writeToString(NumericalFeatureVector fv) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		String stringRepresentation;
+		try {
+			stringRepresentation = mapper.writeValueAsString(fv);
+			return stringRepresentation;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void writeToFile(NumericalFeatureVector fv, String file) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		try {
+			mapper.writeValue(new File(file), fv);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

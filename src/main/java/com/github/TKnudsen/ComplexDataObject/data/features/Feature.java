@@ -3,6 +3,9 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 /**
  * <p>
  * Title: Feature
@@ -20,7 +23,6 @@ import java.util.Map;
  * @author Juergen Bernard
  * @version 1.0
  */
-
 public abstract class Feature<V extends Object> implements Comparable<Feature<V>>, Map.Entry<String, V>, Serializable {
 
 	/**
@@ -32,11 +34,13 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	 * The name/key/identifier/attribute/column of the feature. Needs to be
 	 * comparable.
 	 */
+
 	protected String featureName;
 
 	/**
 	 * The value of the feature
 	 */
+
 	protected V featureValue;
 
 	/**
@@ -44,6 +48,11 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	 */
 	protected FeatureType featureType = FeatureType.DOUBLE;
 
+	
+	protected Feature(FeatureType featureType) {
+		this.featureType = featureType;
+	}
+	
 	/**
 	 *
 	 * @param featureName
@@ -151,4 +160,6 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 		this.setFeatureValue(arg0);
 		return arg0;
 	}
+	
+	
 }

@@ -45,6 +45,11 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	protected SortedMap<String, F> featuresMap;
 
+	protected AbstractFeatureVector() {
+		featuresList = new ArrayList<>();
+		createFeatureNamesMap();
+	}
+	
 	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
 
@@ -331,4 +336,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 		return featuresMap;
 	}
+	
+	
 }

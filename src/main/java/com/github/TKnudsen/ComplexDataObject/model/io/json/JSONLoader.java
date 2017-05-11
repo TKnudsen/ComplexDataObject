@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
 /**
  * <p>
@@ -51,4 +52,33 @@ public class JSONLoader {
 
 		return null;
 	}
+
+	public static NumericalFeatureVector loadNumericalFeatureVectorFromString(String json) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		NumericalFeatureVector numericalFeatureVector;
+		try {
+			numericalFeatureVector = mapper.readValue(json, NumericalFeatureVector.class);
+			return numericalFeatureVector;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static NumericalFeatureVector loadNumericalFeatureVectorFromFile(String file) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		NumericalFeatureVector numericalFeatureVector;
+		try {
+			numericalFeatureVector = mapper.readValue(new File(file), NumericalFeatureVector.class);
+			return numericalFeatureVector;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }

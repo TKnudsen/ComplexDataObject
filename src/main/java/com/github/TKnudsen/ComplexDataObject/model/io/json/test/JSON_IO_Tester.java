@@ -1,9 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.json.test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.io.json.JSONLoader;
 import com.github.TKnudsen.ComplexDataObject.model.io.json.JSONWriter;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
@@ -50,5 +53,38 @@ public class JSON_IO_Tester {
 		System.out.println(loadConfigsFromString);
 		ComplexDataObject loadConfigsFromFile = JSONLoader.loadFromFile(file);
 		System.out.println(loadConfigsFromFile);
+		
+		
+		
+		List<NumericalFeature> features = new ArrayList<>();
+		
+		features.add(new NumericalFeature("1", (double) 1));
+		features.add(new NumericalFeature("2", (double) 2));
+		features.add(new NumericalFeature("3", (double) 3));
+		features.add(new NumericalFeature("4", (double) 4));
+		
+		NumericalFeatureVector nfv = new NumericalFeatureVector(features );
+		
+		nfv.add("testA", "a");
+		nfv.add("testB", "b");
+		nfv.add("testC", "c");
+		
+		
+		System.out.println(nfv);
+		
+		// write
+		String fileNFV = "testNFV.json";
+		String JSONStringNFV = JSONWriter.writeToString(nfv);
+		JSONWriter.writeToFile(nfv, fileNFV);
+		System.out.println(JSONStringNFV);
+
+		// load
+		NumericalFeatureVector loadConfigsFromStringNFV = JSONLoader.loadNumericalFeatureVectorFromString(JSONStringNFV);
+		System.out.println(loadConfigsFromStringNFV);
+		NumericalFeatureVector loadConfigsFromFileNFV = JSONLoader.loadNumericalFeatureVectorFromFile(fileNFV);
+		System.out.println(loadConfigsFromFileNFV);
+		
+		
+		
 	}
 }
