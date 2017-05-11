@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * <p>
@@ -90,6 +91,16 @@ public class MathFunctions {
 		d /= pow;
 
 		return d;
+	}
+
+	/**
+	 * Returns a random long using Random.nextLong();
+	 * 
+	 * @return
+	 */
+	public static long randomLong() {
+		Random random = new Random();
+		return random.nextLong();
 	}
 
 	/**
