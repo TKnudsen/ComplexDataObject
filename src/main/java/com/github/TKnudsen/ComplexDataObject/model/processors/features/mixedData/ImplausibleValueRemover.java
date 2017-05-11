@@ -42,7 +42,7 @@ public class ImplausibleValueRemover<T extends Object> implements IMixedDataFeat
 			if (object.getFeature(featureName) != null) {
 				MixedDataFeature feature = object.getFeature(featureName);
 				if (implausibleValues.contains(feature.getFeatureValue()))
-					feature.setValue(neutralElement);
+					feature.setFeatureValue(neutralElement);
 			}
 	}
 

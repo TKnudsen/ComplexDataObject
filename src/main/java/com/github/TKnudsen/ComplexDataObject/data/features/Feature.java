@@ -1,10 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.io.Serializable;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  * <p>
@@ -23,7 +19,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author Juergen Bernard
  * @version 1.0
  */
-public abstract class Feature<V extends Object> implements Comparable<Feature<V>>, Map.Entry<String, V>, Serializable {
+public abstract class Feature<V extends Object> implements Comparable<Feature<V>>, Serializable {
 
 	/**
 	 *
@@ -48,11 +44,10 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	 */
 	protected FeatureType featureType = FeatureType.DOUBLE;
 
-	
 	protected Feature(FeatureType featureType) {
 		this.featureType = featureType;
 	}
-	
+
 	/**
 	 *
 	 * @param featureName
@@ -97,10 +92,10 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	@SuppressWarnings("unchecked")
 	@Override
 	public int compareTo(Feature<V> o) {
-		int c = featureName.compareTo(o.getKey());
-		if (c == 0 && featureValue instanceof Comparable<?> && o.getValue() instanceof Comparable<?>)
+		int c = featureName.compareTo(o.getFeatureName());
+		if (c == 0 && featureValue instanceof Comparable<?> && o.getFeatureValue() instanceof Comparable<?>)
 			return ((Comparable<Feature<?>>) featureValue).compareTo((Feature<?>) o.getFeatureValue());
-		return featureName.compareTo(o.getKey());
+		return featureName.compareTo(o.getFeatureName());
 	}
 
 	@Override
@@ -144,22 +139,4 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	public String toString() {
 		return "Feature " + featureName + ": " + featureValue + " (" + featureType.name() + ") ";
 	}
-
-	@Override
-	public String getKey() {
-		return getFeatureName();
-	}
-
-	@Override
-	public V getValue() {
-		return getFeatureValue();
-	}
-
-	@Override
-	public V setValue(V arg0) {
-		this.setFeatureValue(arg0);
-		return arg0;
-	}
-	
-	
 }

@@ -73,7 +73,8 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 	public String toString() {
 		String output = "";
 		for (Feature<?> f : featuresList)
-			output += (f.getFeatureName() + ": " + f.getValue().toString() + "\n");
+			if (f != null && f.getFeatureValue() != null)
+				output += (f.getFeatureName() + ": " + f.getFeatureValue().toString() + "\n");
 		return output;
 	}
 }

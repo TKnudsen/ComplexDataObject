@@ -1,7 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
-import java.text.DecimalFormat;
-
 /**
  * <p>
  * Title: StringUtils
