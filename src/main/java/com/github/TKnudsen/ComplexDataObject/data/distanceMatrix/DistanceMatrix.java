@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class DistanceMatrix<T extends IDObject> implements IDistanceMeasure<T> {
 
@@ -43,6 +43,9 @@ public class DistanceMatrix<T extends IDObject> implements IDistanceMeasure<T> {
 	private double max;
 
 	public DistanceMatrix(List<T> objects, IDistanceMeasure<T> distanceMeasure) {
+		if (distanceMeasure == null)
+			throw new IllegalArgumentException("DistanceMatrix: given distance measures was null");
+
 		this.objects = objects;
 		this.distanceMeasure = distanceMeasure;
 
