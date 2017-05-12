@@ -4,6 +4,22 @@ import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
-public interface IFeatureVectorProcessor<O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> extends IDataProcessor<FV> {
+/**
+ * <p>
+ * Title: IFeatureVectorProcessor
+ * </p>
+ *
+ * <p>
+ * Description:
+ * </p>
+ *
+ * <p>
+ * Copyright: Copyright (c) 2016-2017
+ * </p>
+ *
+ * @author Juergen Bernard
+ * @version 1.03
+ */
+public interface IFeatureVectorProcessor<FV extends AbstractFeatureVector<?, ? extends Feature<?>>> extends IDataProcessor<FV> {
 
 }

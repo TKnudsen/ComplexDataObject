@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.test;
+package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
 import java.io.IOException;
 import java.util.List;
@@ -8,6 +8,10 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicPa
 
 public class TitanicDataSetParserTester {
 	public static void main(String[] args) {
+		System.out.println(parseTitanicDataSet());
+	}
+
+	public static List<ComplexDataObject> parseTitanicDataSet() {
 		List<ComplexDataObject> titanicData = null;
 
 		TitanicParser p = new TitanicParser("", true);
@@ -16,6 +20,7 @@ public class TitanicDataSetParserTester {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(titanicData);
+
+		return titanicData;
 	}
 }

@@ -4,7 +4,23 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureVectorProcessor;
 
-public interface INumericalFeatureVectorProcessor extends IFeatureVectorProcessor<Double, NumericalFeatureVector> {
+/**
+ * <p>
+ * Title: INumericalFeatureVectorProcessor
+ * </p>
+ *
+ * <p>
+ * Description:
+ * </p>
+ *
+ * <p>
+ * Copyright: Copyright (c) 2016-2017
+ * </p>
+ *
+ * @author Juergen Bernard
+ * @version 1.02
+ */
+public interface INumericalFeatureVectorProcessor extends IFeatureVectorProcessor<NumericalFeatureVector> {
 
 	public void process(NumericalFeatureVectorContainer container);
 }

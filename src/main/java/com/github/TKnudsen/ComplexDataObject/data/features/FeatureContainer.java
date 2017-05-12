@@ -24,9 +24,9 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * @author Juergen Bernard
  * @version 1.03
  */
-public class FeatureContainer<O extends Object, F extends Feature<O>, T extends AbstractFeatureVector<O, F>> implements Iterable<T> {
+public class FeatureContainer<FV extends AbstractFeatureVector<?, ?>> implements Iterable<FV> {
 
-	private Map<Long, T> featureVectorMap = new HashMap<Long, T>();
+	private Map<Long, FV> featureVectorMap = new HashMap<Long, FV>();
 
 	protected Map<String, Map<Long, Object>> featureValues = new HashMap<String, Map<Long, Object>>();
 
@@ -36,22 +36,22 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		this.featureSchema = featureSchema;
 	}
 
-	public FeatureContainer(Map<Long, T> featureVectorMap) {
+	public FeatureContainer(Map<Long, FV> featureVectorMap) {
 		this.featureVectorMap = featureVectorMap;
 		featureSchema = new FeatureSchema();
 		for (Long ID : featureVectorMap.keySet())
 			extendDataSchema(featureVectorMap.get(ID));
 	}
 
-	public FeatureContainer(Iterable<T> objects) {
+	public FeatureContainer(Iterable<FV> objects) {
 		featureSchema = new FeatureSchema();
-		for (T object : objects) {
+		for (FV object : objects) {
 			featureVectorMap.put(object.getID(), object);
 			extendDataSchema(object);
 		}
 	}
 
-	private void extendDataSchema(T object) {
+	private void extendDataSchema(FV object) {
 		for (String feature : object.getFeatureKeySet())
 			if (!featureSchema.contains(feature))
 				featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(), object.getFeature(feature).getFeatureType());
@@ -69,14 +69,14 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public FeatureSchema addFeature(F feature) {
+	public FeatureSchema addFeature(Feature<?> feature) {
 		featureValues = new HashMap<String, Map<Long, Object>>();
 
 		featureSchema.add(feature.getFeatureName(), feature.getFeatureValue().getClass(), feature.getFeatureType());
 
-		Iterator<T> objectIterator = iterator();
+		Iterator<FV> objectIterator = iterator();
 		while (objectIterator.hasNext()) {
-			T next = objectIterator.next();
+			FV next = objectIterator.next();
 			if (next.getFeature(feature.getFeatureName()) == null)
 				next.addFeature(feature.getFeatureName(), null, feature.getFeatureType());
 		}
@@ -96,14 +96,14 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	 *            object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public FeatureSchema addFeature(String featureName, Class<F> featureClass, FeatureType featureType) {
+	public FeatureSchema addFeature(String featureName, Class<Feature<?>> featureClass, FeatureType featureType) {
 		featureValues = new HashMap<String, Map<Long, Object>>();
 
 		featureSchema.add(featureName, featureClass, featureType);
 
-		Iterator<T> objectIterator = iterator();
+		Iterator<FV> objectIterator = iterator();
 		while (objectIterator.hasNext()) {
-			T next = objectIterator.next();
+			FV next = objectIterator.next();
 			if (next.getFeature(featureName) == null)
 				next.addFeature(featureName, null, featureType);
 		}
@@ -118,7 +118,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	 * @param featureVector
 	 * @return
 	 */
-	public boolean remove(T featureVector) {
+	public boolean remove(FV featureVector) {
 		if (featureVector == null)
 			return false;
 
@@ -144,9 +144,9 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema remove(String featureName) {
-		Iterator<T> iterator = iterator();
+		Iterator<FV> iterator = iterator();
 		while (iterator.hasNext()) {
-			T o = iterator.next();
+			FV o = iterator.next();
 			o.removeFeature(featureName);
 		}
 
@@ -154,7 +154,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<FV> iterator() {
 		return featureVectorMap.values().iterator();
 	}
 
@@ -181,7 +181,7 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 		return featureValues.get(featureName);
 	}
 
-	public boolean contains(T featureVector) {
+	public boolean contains(FV featureVector) {
 		if (featureVectorMap.containsKey(featureVector.getID()))
 			return true;
 		return false;
@@ -190,9 +190,9 @@ public class FeatureContainer<O extends Object, F extends Feature<O>, T extends 
 	private void calculateEntities(String featureName) {
 		Map<Long, Object> ent = new HashMap<Long, Object>();
 
-		Iterator<T> iterator = iterator();
+		Iterator<FV> iterator = iterator();
 		while (iterator.hasNext()) {
-			T o = iterator.next();
+			FV o = iterator.next();
 			if (o instanceof IKeyValueProvider)
 				ent.put(o.getID(), o.getFeature(featureName));
 		}

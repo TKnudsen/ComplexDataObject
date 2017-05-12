@@ -145,7 +145,7 @@ public class PrincipalComponentAnalysis implements IDimensionReduction {
 
 		mapping = new HashMap<>();
 
-		Instances instances = WekaConversion.getInstances(inputObjects);
+		Instances instances = WekaConversion.getInstances(inputObjects, false);
 		try {
 			pca.buildEvaluator(instances);
 			Instances transformedData = pca.transformedData(instances);

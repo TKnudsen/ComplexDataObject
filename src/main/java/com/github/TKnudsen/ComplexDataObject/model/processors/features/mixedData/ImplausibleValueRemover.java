@@ -79,5 +79,4 @@ public class ImplausibleValueRemover<T extends Object> implements IMixedDataFeat
 	public void setNeutralElement(T neutralElement) {
 		this.neutralElement = neutralElement;
 	}
-
 }

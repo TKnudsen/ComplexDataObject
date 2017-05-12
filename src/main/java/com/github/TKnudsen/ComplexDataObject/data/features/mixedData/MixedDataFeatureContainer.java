@@ -15,13 +15,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
-public class MixedDataFeatureContainer extends FeatureContainer<Object, MixedDataFeature, MixedDataFeatureVector> {
+public class MixedDataFeatureContainer extends FeatureContainer<MixedDataFeatureVector> {
 
 	public MixedDataFeatureContainer(FeatureSchema featureSchema) {
 		super(featureSchema);

@@ -19,9 +19,9 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
-public class NumericalFeatureVectorContainer extends FeatureContainer<Double, NumericalFeature, NumericalFeatureVector> {
+public class NumericalFeatureVectorContainer extends FeatureContainer<NumericalFeatureVector> {
 
 	public NumericalFeatureVectorContainer(FeatureSchema featureSchema) {
 		super(featureSchema);

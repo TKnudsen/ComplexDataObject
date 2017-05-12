@@ -33,7 +33,7 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 	private NumericalFeatureVector() {
 		super();
 	}
-	
+
 	public NumericalFeatureVector(List<NumericalFeature> features) {
 		super(features);
 	}
@@ -119,6 +119,4 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 	public void addFeature(String featureName, Double value, FeatureType type) {
 		addFeature(new NumericalFeature(featureName, value));
 	}
-	
-	
 }

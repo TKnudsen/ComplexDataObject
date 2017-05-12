@@ -18,9 +18,9 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureV
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public interface IMixedDataFeatureVectorProcessor extends IFeatureVectorProcessor<Object, MixedDataFeatureVector> {
+public interface IMixedDataFeatureVectorProcessor extends IFeatureVectorProcessor<MixedDataFeatureVector> {
 
 	public void process(MixedDataFeatureContainer container);
 }

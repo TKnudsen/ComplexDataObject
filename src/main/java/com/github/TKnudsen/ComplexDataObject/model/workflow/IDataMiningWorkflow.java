@@ -36,5 +36,5 @@ public interface IDataMiningWorkflow<O extends IDObject, F extends Object, FV ex
 
 	public void setDistanceMeasure(IDistanceMeasure<FV> distanceMeasure);
 
-	public void addFeatureProcessor(IFeatureVectorProcessor<F, FV> featureProcessor);
+	public void addFeatureProcessor(IFeatureVectorProcessor<FV> featureProcessor);
 }

@@ -49,7 +49,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		featuresList = new ArrayList<>();
 		createFeatureNamesMap();
 	}
-	
+
 	public AbstractFeatureVector(List<F> features) {
 		this.featuresList = features;
 
@@ -203,7 +203,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		featuresMap.put(feature.getFeatureName(), feature);
 	}
 
-	@Override
 	/**
 	 * Sets a feature at a given index. Does not handle index exceptions.
 	 * 
@@ -222,7 +221,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		}
 	}
 
-	@Override
 	public F removeFeature(String featureName) {
 		F feature = featuresMap.remove(featureName);
 
@@ -238,6 +236,22 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 					}
 
 		return feature;
+	}
+
+	/**
+	 * removes a feature at a given index position.
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public F removeFeature(int index) {
+		if (featuresList != null)
+			if (featuresList.size() > index) {
+				F removed = featuresList.remove(index);
+				featuresMap.remove(removed);
+				return removed;
+			}
+		return null;
 	}
 
 	@Override
@@ -336,6 +350,5 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 		return featuresMap;
 	}
-	
-	
+
 }
