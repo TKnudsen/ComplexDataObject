@@ -6,7 +6,7 @@
 
 	<groupId>com.github.tknudsen</groupId>
 	<artifactId>complex-data-object</artifactId>
-	<version>0.1.7-SNAPSHOT</version>
+	<version>0.1.7</version>
 
 	<name>ComplexDataObject</name>
 	<description>A library that models real-world objects in Java, referred to as ComplexDataObjects. Other features: IO and preprocessing of ComplexDataObjects.</description>
@@ -118,7 +118,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.6.1</version>
 				<configuration>
 					<source>${maven-compiler-plugin.source}</source>
 					<target>${maven-compiler-plugin.target}</target>
