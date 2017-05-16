@@ -24,5 +24,4 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 public interface IDistanceMeasure<T> extends ToDoubleBiFunction<T, T>, ISelfDescription {
 
 	public double getDistance(T o1, T o2);
-
 }
