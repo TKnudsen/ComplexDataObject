@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 	protected SortedMap<String, V> attributes = new TreeMap<String, V>();
 
 	public KeyValueObject() {
-		this.ID = getRandomLong();
+		this.ID = MathFunctions.randomLong();
 	}
 
 	public KeyValueObject(long ID) {
@@ -156,14 +157,5 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 		String output = "";
 		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
 		return output;
-	}
-
-	/**
-	 * Little helper for the generation of a unique identifier.
-	 * 
-	 * @return unique ID
-	 */
-	private long getRandomLong() {
-		return UUID.randomUUID().getMostSignificantBits();
 	}
 }

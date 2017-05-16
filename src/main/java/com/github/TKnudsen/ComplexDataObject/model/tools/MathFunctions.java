@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * <p>
@@ -99,8 +100,10 @@ public class MathFunctions {
 	 * @return
 	 */
 	public static long randomLong() {
-		Random random = new Random();
-		return random.nextLong();
+		return UUID.randomUUID().getMostSignificantBits();
+
+		// Random random = new Random();
+		// return random.nextLong();
 	}
 
 	/**
