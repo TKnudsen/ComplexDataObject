@@ -2,6 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVecto
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
-public interface INumericalFeatureVectorDistanceMeasure extends IFeatureVectorDistanceMeasure<Double, NumericalFeatureVector> {
+public interface INumericalFeatureVectorDistanceMeasure extends IFeatureVectorDistanceMeasure<NumericalFeatureVector> {
 
 }

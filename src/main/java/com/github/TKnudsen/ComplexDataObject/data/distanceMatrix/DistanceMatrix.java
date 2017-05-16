@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
@@ -21,14 +20,9 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public class DistanceMatrix<T extends IDObject> implements IDistanceMeasure<T> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5675807947932674823L;
+public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	// constructor properties
 	private List<T> objects;
@@ -103,5 +97,15 @@ public class DistanceMatrix<T extends IDObject> implements IDistanceMeasure<T> {
 			return distanceMeasure.getDistance(o1, o2);
 
 		return distanceMatrix[index1][index2];
+	}
+
+	@Override
+	public double applyAsDouble(T t, T u) {
+		return getDistance(t, u);
+	}
+
+	@Override
+	public double[][] getDistanceMatrix() {
+		return distanceMatrix;
 	}
 }

@@ -1,8 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure;
 
-import java.io.Serializable;
+import java.util.function.ToDoubleBiFunction;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
@@ -11,21 +10,19 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * <p>
- * Description: Generic interface for all data object distance measures.
- * Similarity is rather complex, so defining an abstract concept is quite
- * challenging.
+ * Description: Basic interface modeling distances between two objects of
+ * identical type.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2013-2016
+ * Copyright: Copyright (c) 2017
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.01
  */
-public interface IDistanceMeasure<T extends IDObject> extends Serializable, ISelfDescription {
-
-	public abstract String toString();
+public interface IDistanceMeasure<T> extends ToDoubleBiFunction<T, T>, ISelfDescription {
 
 	public double getDistance(T o1, T o2);
+
 }

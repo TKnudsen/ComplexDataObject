@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVecto
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDistanceMeasure;
 
 /**
  * <p>
@@ -19,6 +19,6 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * 
  * @author Juergen Bernard
  */
-public interface IFeatureVectorDistanceMeasure<O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> extends IDistanceMeasure<FV> {
+public interface IFeatureVectorDistanceMeasure<FV extends AbstractFeatureVector<?, ? extends Feature<?>>> extends IIDObjectDistanceMeasure<FV> {
 
 }

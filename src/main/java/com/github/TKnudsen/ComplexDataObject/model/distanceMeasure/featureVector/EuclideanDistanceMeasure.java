@@ -15,12 +15,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2016
+ * Copyright: Copyright (c) 2012-2017
  * </p>
  * 
  * @author Juergen Bernard
  */
-public class EuclideanDistanceMeasure implements INumericalFeatureVectorDistanceMeasure {
+public class EuclideanDistanceMeasure extends NumericalFeatureVectorDistanceMeasure {
 
 	/**
 	 * 
@@ -47,7 +47,7 @@ public class EuclideanDistanceMeasure implements INumericalFeatureVectorDistance
 
 	@Override
 	public String getDescription() {
-		return "Euclidean's Distance Measure for NumericalFeatureVectors";
+		return "Euclidean distance deasure for NumericalFeatureVectors";
 	}
 
 	@Override
