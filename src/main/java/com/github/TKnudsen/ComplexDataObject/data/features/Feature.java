@@ -2,6 +2,9 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.io.Serializable;
 
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
+
 /**
  * <p>
  * Title: Feature
@@ -13,13 +16,13 @@ import java.io.Serializable;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
-public abstract class Feature<V extends Object> implements Comparable<Feature<V>>, Serializable {
+public abstract class Feature<V extends Object> implements IDObject, Comparable<Feature<V>>, Serializable {
 
 	/**
 	 *
@@ -27,10 +30,14 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	private static final long serialVersionUID = 921823756506274008L;
 
 	/**
+	 * ID of the feature.
+	 */
+	protected long ID;
+
+	/**
 	 * The name/key/identifier/attribute/column of the feature. Needs to be
 	 * comparable.
 	 */
-
 	protected String featureName;
 
 	/**
@@ -44,8 +51,14 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	 */
 	protected FeatureType featureType = FeatureType.DOUBLE;
 
+	/**
+	 * Simple constructor
+	 * 
+	 * @param featureType
+	 */
 	protected Feature(FeatureType featureType) {
 		this.featureType = featureType;
+		this.ID = MathFunctions.randomLong();
 	}
 
 	/**
@@ -61,6 +74,8 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 		this.featureName = featureName;
 		this.featureValue = featureValue;
 		this.featureType = featureType;
+
+		this.ID = MathFunctions.randomLong();
 	}
 
 	public String getFeatureName() {
@@ -138,5 +153,10 @@ public abstract class Feature<V extends Object> implements Comparable<Feature<V>
 	@Override
 	public String toString() {
 		return "Feature " + featureName + ": " + featureValue + " (" + featureType.name() + ") ";
+	}
+
+	@Override
+	public long getID() {
+		return ID;
 	}
 }
