@@ -1,5 +1,21 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double;
 
+/**
+ * <p>
+ * Title: EuclideanDistanceMeasure
+ * </p>
+ * 
+ * <p>
+ * Description: 
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2017
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public class EuclideanDistanceMeasure extends DoubleDistanceMeasure {
 
 	/**

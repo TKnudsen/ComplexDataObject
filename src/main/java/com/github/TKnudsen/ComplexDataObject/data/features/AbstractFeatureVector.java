@@ -351,4 +351,22 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return featuresMap;
 	}
 
+	/**
+	 * retrieves all features of a given FeatureType. Example: all
+	 * MixedDataFeatures.
+	 * 
+	 * @param featureType
+	 * @return
+	 */
+	public List<Feature<?>> getFeaturesByType(FeatureType featureType) {
+		List<Feature<?>> list = new ArrayList<>();
+
+		for (Feature<?> feature : featuresList)
+			if (feature != null)
+				if (feature.getFeatureType().equals(featureType))
+					list.add(feature);
+
+		return list;
+	}
+
 }
