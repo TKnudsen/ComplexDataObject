@@ -77,4 +77,22 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 				output += (f.getFeatureName() + ": " + f.getFeatureValue().toString() + "\n");
 		return output;
 	}
+
+	/**
+	 * retrieves the featureNames of a given FeatureType.
+	 * 
+	 * @param featureType
+	 * @return
+	 */
+	public Iterable<String> getFeatureNames(FeatureType featureType) {
+		List<String> featureNames = new ArrayList<>();
+
+		for (Feature<?> f : featuresList)
+			if (f != null)
+				if (f.getFeatureType() != null)
+					if (f.getFeatureType().equals(featureType))
+						featureNames.add(f.getFeatureName());
+
+		return new ArrayList<>(featureNames);
+	}
 }
