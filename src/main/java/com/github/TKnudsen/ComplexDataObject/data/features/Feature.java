@@ -51,6 +51,8 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 	 */
 	protected FeatureType featureType = FeatureType.DOUBLE;
 
+	protected int hashCode;
+
 	/**
 	 * Simple constructor
 	 * 
@@ -59,6 +61,8 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 	protected Feature(FeatureType featureType) {
 		this.featureType = featureType;
 		this.ID = MathFunctions.randomLong();
+
+		resetHashCode();
 	}
 
 	/**
@@ -76,6 +80,12 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 		this.featureType = featureType;
 
 		this.ID = MathFunctions.randomLong();
+
+		resetHashCode();
+	}
+
+	protected void resetHashCode() {
+		hashCode = -1;
 	}
 
 	public String getFeatureName() {
@@ -84,6 +94,8 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 
 	public void setFeatureName(String featureName) {
 		this.featureName = featureName;
+
+		resetHashCode();
 	}
 
 	public V getFeatureValue() {
@@ -92,6 +104,9 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 
 	public boolean setFeatureValue(V featureValue) {
 		this.featureValue = featureValue;
+
+		resetHashCode();
+
 		return true;
 	}
 
@@ -138,13 +153,22 @@ public abstract class Feature<V extends Object> implements IDObject, Comparable<
 
 	@Override
 	public int hashCode() {
-		int result = 1;
+		if (hashCode != -1)
+			return hashCode;
 
-		result = 29 * result + featureName.hashCode();
-		if (featureValue != null && !Double.isNaN(featureValue.hashCode()))
-			result = 29 * result + featureValue.hashCode();
+		hashCode = 1;
 
-		return result;
+		if (featureName == null)
+			hashCode = 23 * hashCode;
+		else
+			hashCode = 29 * hashCode + featureName.hashCode();
+
+		if (featureValue == null)
+			hashCode = 23 * hashCode;
+		else
+			hashCode = 29 * hashCode + featureValue.hashCode();
+
+		return hashCode;
 	}
 
 	@Override
