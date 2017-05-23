@@ -1,6 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double;
 
-import org.apache.commons.math3.ml.distance.DistanceMeasure;
+import java.io.Serializable;
 
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
@@ -18,21 +18,19 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]>, DistanceMeasure {
+public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]>, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2559705521219780141L;
 
-	@Override
 	public double compute(double[] a, double[] b) {
 		return getDistance(a, b);
 	}
 
-	@Override
 	public double applyAsDouble(double[] t, double[] u) {
 		return getDistance(t, u);
 	}
