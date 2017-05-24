@@ -210,14 +210,14 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	 * @param feature
 	 */
 	public void setFeature(int index, F feature) {
+		F featureToBeReplaced = null;
+
 		if (featuresList != null)
-			featuresList.set(index, feature);
+			featureToBeReplaced = featuresList.set(index, feature);
 
 		if (featuresMap != null) {
-			if (!featuresMap.containsKey(feature.getFeatureName()))
-				featuresMap.put(feature.getFeatureName(), feature);
-			else
-				throw new IllegalArgumentException("FeatureVector: name conflict, features with identical name");
+			featuresMap.remove(featureToBeReplaced);
+			featuresMap.put(feature.getFeatureName(), feature);
 		}
 	}
 
