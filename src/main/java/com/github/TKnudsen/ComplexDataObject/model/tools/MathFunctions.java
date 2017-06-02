@@ -1,7 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>
@@ -99,7 +99,9 @@ public class MathFunctions {
 	 * @return
 	 */
 	public static long randomLong() {
-		return UUID.randomUUID().getMostSignificantBits();
+		// return UUID.randomUUID().getMostSignificantBits();
+
+		return ThreadLocalRandom.current().nextLong();
 
 		// Random random = new Random();
 		// return random.nextLong();
