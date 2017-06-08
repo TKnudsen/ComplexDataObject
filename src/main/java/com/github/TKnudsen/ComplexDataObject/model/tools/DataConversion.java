@@ -1,8 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -69,6 +72,68 @@ public class DataConversion {
 	}
 
 	/**
+	 * Converts an array to a List.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static <T> List<T> arrayToList(T[] values) {
+		return new ArrayList<T>(Arrays.asList(values));
+	}
+
+	/**
+	 * Converts a given Collection to an array.
+	 * 
+	 * @param collection
+	 * @param classType
+	 * @return
+	 */
+	public static <T> T[] collectionToArray(Collection<T> collection, Class<T> classType) {
+		List<T> list = collectionToList(collection);
+		return listToArray(list, classType);
+	}
+
+	/**
+	 * converts a given Collection into a List.
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	public static <T> List<T> collectionToList(Collection<T> collection) {
+		List<T> list;
+		if (collection instanceof List)
+			list = (List<T>) collection;
+		else
+			list = new ArrayList<T>(collection);
+		return list;
+	}
+
+	/**
+	 * Converts a Set into a List.
+	 * 
+	 * @param set
+	 * @return
+	 */
+	public static <T> List<T> setToList(Set<T> set) {
+		List<T> list = new ArrayList<>();
+		list.addAll(set);
+		return list;
+	}
+
+	/**
+	 * abstracts a List of concrete Doubles to Numbers
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static List<Number> numberListFromDoubleList(List<Double> values) {
+		List<Number> numbers = new ArrayList<>();
+		for (Double d : values)
+			numbers.add(d);
+		return numbers;
+	}
+
+	/**
 	 * Converts a given List to an array.
 	 * 
 	 * @param list
@@ -87,7 +152,7 @@ public class DataConversion {
 		for (int i = 0; i < list.size(); ++i) {
 			array[i] = list.get(i);
 		}
-		
+
 		return array;
 	}
 }
