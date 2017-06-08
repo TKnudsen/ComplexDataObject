@@ -10,7 +10,7 @@ public class NormalizationRoutineFactory {
 		if (normalizationType.equals(NormalizationType.normalizeMinMax))
 			normalizer = new MinMaxNormalization();
 		else if (normalizationType.equals(NormalizationType.normalizeMinMaxGlobal))
-			normalizer = new MinMaxNormalization(true);
+			normalizer = new MinMaxNormalization();
 		else if (normalizationType.equals(NormalizationType.normalizeMinMaxBinWise))
 			normalizer = new MinMaxNormalization();
 		else if (normalizationType.equals(NormalizationType.offsetTranslation))
