@@ -67,7 +67,7 @@ public class EntryWithComparableKey<K extends Comparable<K>, V> implements Compa
 			try {
 				@SuppressWarnings("unchecked")
 				EntryWithComparableKey<K, V> p = (EntryWithComparableKey<K, V>) o;
-				return p.getValue().equals(getValue());
+				return p.getValue().equals(getValue()) && p.getKey().equals(getKey());
 			} catch (Exception e) {
 				return false;
 			}

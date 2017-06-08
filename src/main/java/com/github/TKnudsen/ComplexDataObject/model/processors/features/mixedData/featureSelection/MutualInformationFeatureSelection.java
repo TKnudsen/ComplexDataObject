@@ -54,6 +54,7 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 	private double[] calculateLabelMI() {
 		MixedDataFeatureVector fv0 = labeledFVs.get(0);
 		double[] mutualInformation = new double[fv0.sizeOfFeatures()];
+		// map containing a list of the feature values of each vector for every feature
 		Map<Integer, List<Double>> featureMap = new HashMap<>();
 		for (int i = 0; i < fv0.sizeOfFeatures(); i++) {
 			if (fv0.getFeature(i).getFeatureType() == FeatureType.DOUBLE) {
