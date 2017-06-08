@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.IMixedDataFeatureVectorProcessor;
-
-import javafx.util.Pair;
 
 /**
  * @author Christian Ritter
@@ -28,8 +27,7 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 
 	private int nrFeatures;
 
-	public MutualInformationFeatureSelection(List<MixedDataFeatureVector> labeledFVs, List<String> labels,
-			int nrOfFeaturesToSelect) {
+	public MutualInformationFeatureSelection(List<MixedDataFeatureVector> labeledFVs, List<String> labels, int nrOfFeaturesToSelect) {
 		if (labeledFVs == null || labels == null || labeledFVs.size() == 0) {
 			throw new IllegalArgumentException("List must not be null or of size 0");
 		}
@@ -41,8 +39,7 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 		this.nrFeatures = nrOfFeaturesToSelect;
 	}
 
-	public MutualInformationFeatureSelection(List<MixedDataFeatureVector> labeledFVs, String labelAttributeName,
-			int nrOfFeatureToSelect) {
+	public MutualInformationFeatureSelection(List<MixedDataFeatureVector> labeledFVs, String labelAttributeName, int nrOfFeatureToSelect) {
 		if (labeledFVs == null || labeledFVs.size() == 0) {
 			throw new IllegalArgumentException("List must not be null or of size 0");
 		}
@@ -105,9 +102,9 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 		for (int i = 0; i < probabilities.size(); i++) {
 			Map<Double, Double> pi = probabilities.get(i);
 			List<Double> fi = featureMap.get(i);
-			Map<Pair<Double, Double>, Double> prob = new HashMap<>();
+			Map<EntryWithComparableKey<Double, Double>, Double> prob = new HashMap<>();
 			for (int k = 0; k < fi.size(); k++) {
-				Pair<Double, Double> p = new Pair<>(fi.get(k), numLabels.get(k));
+				EntryWithComparableKey<Double, Double> p = new EntryWithComparableKey<>(fi.get(k), numLabels.get(k));
 				if (prob.get(p) == null) {
 					prob.put(p, v);
 				} else {
@@ -117,7 +114,7 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 			double mi = 0;
 			for (double y : labelProbs.keySet()) {
 				for (double x : pi.keySet()) {
-					Double p = prob.get(new Pair<>(x, y));
+					Double p = prob.get(new EntryWithComparableKey<>(x, y));
 					if (p != null)
 						mi += p * Math.log(p / pi.get(x) / labelProbs.get(y));
 				}

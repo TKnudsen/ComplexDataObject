@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,5 +66,28 @@ public class DataConversion {
 	 */
 	public static List<Double> doublePrimitivesToList(double[] values) {
 		return Arrays.asList(DataConversion.doublePrimitivesToArray(values));
+	}
+
+	/**
+	 * Converts a given List to an array.
+	 * 
+	 * @param list
+	 * @param classType
+	 * @return
+	 */
+	public static <T> T[] listToArray(List<T> list, Class<T> classType) {
+		if (list == null)
+			return null;
+		if (classType == null)
+			throw new IllegalArgumentException("DataConversion.listToArray: class information missing.");
+
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(classType, list.size());
+
+		for (int i = 0; i < list.size(); ++i) {
+			array[i] = list.get(i);
+		}
+		
+		return array;
 	}
 }
