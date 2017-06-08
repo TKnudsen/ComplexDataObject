@@ -434,19 +434,18 @@ public class WekaConversion {
 
 		return distinctList;
 	}
-	
+
 	public static Instances replaceLabelAttributeInInstances(Instances instances, List<String> labels) {
 		List<String> distinctLabels = distinctListCreator(labels);
 
 		Attribute classAtt = new Attribute("class", distinctLabels);
 
-		instances.replaceAttributeAt(classAtt, instances.numAttributes()- 1);
+		instances.replaceAttributeAt(classAtt, instances.numAttributes() - 1);
 		instances.setClass(classAtt);
 		instances.setClassIndex(instances.numAttributes() - 1);
 
 		return instances;
 	}
-
 
 	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void fillInstanceByIndex(Instance instance, FV fv, int targetLength) {
 		if (fv == null)

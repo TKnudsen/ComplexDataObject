@@ -216,7 +216,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 			featureToBeReplaced = featuresList.set(index, feature);
 
 		if (featuresMap != null) {
-			featuresMap.remove(featureToBeReplaced);
+			featuresMap.remove(featureToBeReplaced.getFeatureName());
 			featuresMap.put(feature.getFeatureName(), feature);
 		}
 	}
