@@ -22,7 +22,7 @@ import java.util.Set;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class DataConversion {
 
@@ -33,6 +33,9 @@ public class DataConversion {
 	 * @return
 	 */
 	public static double[] toPrimitives(List<Double> values) {
+		if (values == null)
+			 return null;
+				
 		return values.stream().mapToDouble(Double::doubleValue).toArray();
 
 		// if (values == null)
