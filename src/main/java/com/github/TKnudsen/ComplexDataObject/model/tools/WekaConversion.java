@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -77,8 +78,7 @@ public class WekaConversion {
 			attributeMap.put(string, a);
 		}
 
-		Instances instances = new Instances("ComplexDataContainer " + container.toString(),
-				(ArrayList<Attribute>) attrs, container.size());
+		Instances instances = new Instances("ComplexDataContainer " + container.toString(), (ArrayList<Attribute>) attrs, container.size());
 
 		// create instance objects
 		for (ComplexDataObject cdo : container) {
@@ -125,8 +125,7 @@ public class WekaConversion {
 	 * @return
 	 * @deprecated use
 	 */
-	public static <O extends Object, F extends Feature<O>, FV extends AbstractFeatureVector<O, F>> Instances getInstances(
-			FeatureContainer<FV> featureContainer) {
+	public static <O extends Object, F extends Feature<O>, FV extends AbstractFeatureVector<O, F>> Instances getInstances(FeatureContainer<FV> featureContainer) {
 
 		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
 		for (String featureName : featureContainer.getFeatureNames()) {
@@ -149,11 +148,9 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	public static <O extends Object, F extends Feature<O>, FV extends AbstractFeatureVector<O, F>> Instances getInstances(
-			FeatureContainer<FV> featureContainer, boolean stringToNominal) {
+	public static <O extends Object, F extends Feature<O>, FV extends AbstractFeatureVector<O, F>> Instances getInstances(FeatureContainer<FV> featureContainer, boolean stringToNominal) {
 
-		List<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer),
-				stringToNominal);
+		List<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer), stringToNominal);
 
 		// List<Attribute> attrs = new
 		// ArrayList<Attribute>(featureContainer.getFeatureNames().size());
@@ -181,8 +178,13 @@ public class WekaConversion {
 	 *            values (with a concrete alphabet of observations)
 	 * @return
 	 */
-	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(
-			List<FV> fvs, boolean stringToNominal) {
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
+		if (fvs == null)
+			throw new NullPointerException();
+
+		if (fvs.size() == 0)
+			return null;
+
 		List<Attribute> attrs = createAttributes(fvs, stringToNominal);
 
 		Instances data = new Instances(fvs.get(0).getClass().getName(), (ArrayList<Attribute>) attrs, fvs.size());
@@ -199,10 +201,12 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> List<Attribute> createAttributes(
-			List<FV> fvs, boolean stringToNominal) {
+	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> List<Attribute> createAttributes(List<FV> fvs, boolean stringToNominal) {
 		if (fvs == null)
 			return null;
+
+		if (fvs.size() == 0)
+			return new ArrayList<>();
 
 		int length = fvs.get(0).getDimensions();
 		List<Attribute> attributes = new ArrayList<Attribute>(length);
@@ -235,8 +239,7 @@ public class WekaConversion {
 		return attributes;
 	}
 
-	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(
-			List<FV> fvs, Instances data) {
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(List<FV> fvs, Instances data) {
 		if (fvs == null || fvs.size() == 0)
 			return;
 
@@ -253,8 +256,7 @@ public class WekaConversion {
 		}
 	}
 
-	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(
-			FeatureContainer<FV> featureContainer, Instances instances) {
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void addInstances(FeatureContainer<FV> featureContainer, Instances instances) {
 		if (featureContainer == null || featureContainer.size() == 0)
 			return;
 
@@ -298,10 +300,8 @@ public class WekaConversion {
 	 * @param classAttribute
 	 * @return
 	 */
-	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(
-			List<FV> fvs, String classAttribute) {
-
-		return getLabeledInstances(fvs, null, classAttribute);
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, String classAttribute, boolean stringToNominal) {
+		return getLabeledInstances(fvs, null, classAttribute, stringToNominal);
 	}
 
 	/**
@@ -312,19 +312,17 @@ public class WekaConversion {
 	 * @param classAttribute
 	 * @return
 	 */
-	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(
-			List<FV> fvs, List<Double> weights, String classAttribute) {
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute, boolean stringToNominal) {
 		List<String> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).getAttribute(classAttribute) == null)
-				throw new IllegalArgumentException(
-						"WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
+				throw new IllegalArgumentException("WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
 			else if (fvs.get(i).getAttribute(classAttribute) instanceof String)
 				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else
 				labels.add(fvs.get(i).getAttribute(classAttribute).toString());
 
-		Instances insances = getInstances(fvs, false);
+		Instances insances = getInstances(fvs, stringToNominal);
 
 		if (insances != null && weights != null && weights.size() == insances.size())
 			addWeightsToInstances(insances, weights);
@@ -371,8 +369,7 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels,
-			boolean stringToNominal) {
+	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels, boolean stringToNominal) {
 		Instances insances = getInstances(mfvs, stringToNominal);
 
 		return addNumericLabelsToInstances(insances, numLabels);
@@ -399,7 +396,7 @@ public class WekaConversion {
 	}
 
 	public static Instances addLabelAttributeToInstance(Instances instances, List<String> labels) {
-		List<String> distinctLabels = distinctListCreator(labels);
+		List<String> distinctLabels = new ArrayList<>(new LinkedHashSet<>(labels));
 
 		Attribute classAtt = new Attribute("class", distinctLabels);
 
@@ -434,26 +431,17 @@ public class WekaConversion {
 	}
 
 	/**
-	 * Improve this piece of code!
+	 * creates the alphabet of String elements.
 	 * 
 	 * @param list
 	 * @return
 	 */
 	public static List<String> distinctListCreator(List<String> list) {
-		List<String> distinctList = new ArrayList<String>();
-
-		if (list == null)
-			return distinctList;
-
-		for (String str : list)
-			if (!distinctList.contains(str))
-				distinctList.add(str);
-
-		return distinctList;
+		return new ArrayList<>(new LinkedHashSet<>(list));
 	}
 
 	public static Instances replaceLabelAttributeInInstances(Instances instances, List<String> labels) {
-		List<String> distinctLabels = distinctListCreator(labels);
+		List<String> distinctLabels = new ArrayList<>(new LinkedHashSet<>(labels));
 
 		Attribute classAtt = new Attribute("class", distinctLabels);
 
@@ -464,14 +452,12 @@ public class WekaConversion {
 		return instances;
 	}
 
-	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void fillInstanceByIndex(
-			Instance instance, FV fv, int targetLength) {
+	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> void fillInstanceByIndex(Instance instance, FV fv, int targetLength) {
 		if (fv == null)
 			return;
 
 		if (fv.getDimensions() != targetLength)
-			throw new IllegalArgumentException(
-					"WekaConversion: length of given featurevector does not match target instance feature length");
+			throw new IllegalArgumentException("WekaConversion: length of given featurevector does not match target instance feature length");
 
 		List<? extends Feature<O>> features = fv.getVectorRepresentation();
 
