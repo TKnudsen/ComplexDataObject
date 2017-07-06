@@ -25,12 +25,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	// constructor properties
-	private List<T> objects;
-	private IDistanceMeasure<T> distanceMeasure;
+	protected List<T> objects;
+	protected IDistanceMeasure<T> distanceMeasure;
 
 	// storage, indexing
-	private double[][] distanceMatrix = null;
-	private Map<T, Integer> objectIndex;
+	protected double[][] distanceMatrix = null;
+	protected Map<T, Integer> objectIndex;
 
 	// statistics
 	private double min;
@@ -42,12 +42,19 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 		this.objects = objects;
 		this.distanceMeasure = distanceMeasure;
-
-		initialize();
 	}
 
-	private void initialize() {
-		distanceMatrix = new double[objects.size()][objects.size()];
+	protected void initializeObjectIndex() {
+		// create index
+		objectIndex = new HashMap<>();
+		for (int i = 0; i < objects.size(); i++)
+			objectIndex.put(objects.get(i), i);
+	}
+
+	protected void initializeDistanceMatrix() {
+		initializeObjectIndex();
+
+		distanceMatrix = new double[objectIndex.size()][objectIndex.size()];
 
 		for (int x = 0; x < distanceMatrix.length; x++)
 			for (int y = 0; y < distanceMatrix[x].length; y++)
@@ -56,26 +63,54 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		min = Double.POSITIVE_INFINITY;
 		max = Double.NEGATIVE_INFINITY;
 
-		// create index
-		objectIndex = new HashMap<>();
-		for (int i = 0; i < distanceMatrix.length; i++)
-			objectIndex.put(objects.get(i), i);
+		// create distance matrix - optimized for inheriting index-based access
+		for (T t1 : objectIndex.keySet())
+			for (T t2 : objectIndex.keySet()) {
+				double distance = distanceMeasure.getDistance(t1, t2);
 
-		// create distance matrix
-		for (int i = 0; i < objects.size() - 1; i++)
-			for (int j = i; j < objects.size(); j++) {
-				double d1 = distanceMeasure.getDistance(objects.get(i), objects.get(j));
-				double d2 = distanceMeasure.getDistance(objects.get(j), objects.get(i));
+				distanceMatrix[getObjectIndex(t1)][getObjectIndex(t2)] = distance;
 
-				distanceMatrix[i][j] = d1;
-				distanceMatrix[j][i] = d2;
-
-				min = Math.min(min, d1);
-				min = Math.min(min, d2);
-
-				max = Math.min(max, d1);
-				max = Math.min(max, d2);
+				min = Math.min(min, distance);
+				max = Math.max(max, distance);
 			}
+
+		// // create distance matrix - would be at least as good as the upper
+		// // variant. but does not generalize for inheriting classes
+		// for (int i = 0; i < objectIndex.size() - 1; i++)
+		// for (int j = i; j < objectIndex.size(); j++) {
+		// double d1 = distanceMeasure.getDistance(objects.get(i),
+		// objects.get(j));
+		// double d2 = distanceMeasure.getDistance(objects.get(j),
+		// objects.get(i));
+		//
+		// distanceMatrix[i][j] = d1;
+		// distanceMatrix[j][i] = d2;
+		//
+		// min = Math.min(min, d1);
+		// min = Math.min(min, d2);
+		//
+		// max = Math.max(max, d1);
+		// max = Math.max(max, d2);
+		// }
+	}
+
+	protected Integer getObjectIndex(T object) {
+		if (objectIndex == null)
+			initializeDistanceMatrix();
+
+		return objectIndex.get(object);
+	}
+
+	@Override
+	public double getDistance(T o1, T o2) {
+		Integer index1 = getObjectIndex(o1);
+		Integer index2 = getObjectIndex(o2);
+
+		// better let it burn. it is a bad design if these indices would be null
+		// if (index1 == null || index2 == null)
+		// return distanceMeasure.getDistance(o1, o2);
+
+		return getDistanceMatrix()[index1][index2];
 	}
 
 	@Override
@@ -89,23 +124,15 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public double getDistance(T o1, T o2) {
-		Integer index1 = objectIndex.get(o1);
-		Integer index2 = objectIndex.get(o2);
-
-		if (index1 == null || index2 == null)
-			return distanceMeasure.getDistance(o1, o2);
-
-		return distanceMatrix[index1][index2];
-	}
-
-	@Override
 	public double applyAsDouble(T t, T u) {
 		return getDistance(t, u);
 	}
 
 	@Override
 	public double[][] getDistanceMatrix() {
+		if (distanceMatrix == null)
+			initializeDistanceMatrix();
+
 		return distanceMatrix;
 	}
 }
