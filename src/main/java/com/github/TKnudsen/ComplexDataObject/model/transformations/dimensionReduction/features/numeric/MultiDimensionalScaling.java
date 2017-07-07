@@ -40,7 +40,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class MultiDimensionalScaling implements IDimensionReduction {
+public class MultiDimensionalScaling implements IDimensionalityReduction {
 
 	/**
 	 * either a distance matrix is provided with the constructor, or the

@@ -5,7 +5,23 @@ import java.util.Map;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
-public interface IDimensionReduction extends IDataTransformation<NumericalFeatureVector, NumericalFeatureVector> {
+/**
+ * <p>
+ * Title: IDimensionalityReduction
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2012-2017 Jürgen Bernard,
+ * https://github.com/TKnudsen/ComplexDataObject
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.02
+ */
+public interface IDimensionalityReduction extends IDataTransformation<NumericalFeatureVector, NumericalFeatureVector> {
 
 	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping();
 }

@@ -44,7 +44,7 @@ import weka.core.Instances;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class PrincipalComponentAnalysis implements IDimensionReduction {
+public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 
 	/**
 	 * whether or not the PCA model will normalize the data at start
