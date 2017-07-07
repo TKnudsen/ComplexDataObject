@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -282,7 +283,7 @@ public class WekaConversion {
 	}
 
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
-		List<String> labels = new ArrayList<>();
+		List<Object> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).getAttribute(classAttribute) instanceof String)
 				labels.add((String) fvs.get(i).getAttribute(classAttribute));
@@ -313,7 +314,7 @@ public class WekaConversion {
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute, boolean stringToNominal) {
-		List<String> labels = new ArrayList<>();
+		List<Object> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).getAttribute(classAttribute) == null)
 				throw new IllegalArgumentException("WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
@@ -355,7 +356,7 @@ public class WekaConversion {
 
 	}
 
-	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<String> labels) {
+	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<? extends Object> labels) {
 		Instances insances = getInstances(fvs, false);
 
 		return addLabelsToInstances(insances, labels);
@@ -395,10 +396,26 @@ public class WekaConversion {
 
 	}
 
-	public static Instances addLabelAttributeToInstance(Instances instances, List<String> labels) {
-		List<String> distinctLabels = new ArrayList<>(new LinkedHashSet<>(labels));
+	public static Instances addLabelAttributeToInstance(Instances instances, List<? extends Object> labels) {
+		if (labels == null)
+			throw new NullPointerException("WekaConversion: labels to be added are null");
 
-		Attribute classAtt = new Attribute("class", distinctLabels);
+		if (labels.size() == 0)
+			return instances;
+
+		Attribute classAtt;
+
+		if (labels.get(0) instanceof String) {
+			Set<String> set = new LinkedHashSet<>();
+			for (Object o : labels)
+				set.add(o.toString());
+			List<String> distinctLabels = new ArrayList<>(set);
+
+			classAtt = new Attribute("class", distinctLabels);
+
+		} else {
+			classAtt = new Attribute("class");
+		}
 
 		instances.insertAttributeAt(classAtt, instances.numAttributes());
 		instances.setClass(classAtt);
@@ -418,14 +435,14 @@ public class WekaConversion {
 
 	}
 
-	private static Instances addLabelsToInstances(Instances instances, List<String> labels) {
+	private static Instances addLabelsToInstances(Instances instances, List<? extends Object> labels) {
 		if (instances == null)
 			return null;
 
 		Instances inst2 = addLabelAttributeToInstance(instances, labels);
 
 		for (int i = 0; i < labels.size(); i++)
-			inst2.instance(i).setClassValue(labels.get(i));
+			inst2.instance(i).setClassValue(labels.get(i).toString());
 
 		return inst2;
 	}

@@ -93,4 +93,68 @@ public class NumericalFeatureVectorTools {
 			features.get(i).add(attributeName, labels.get(i));
 	}
 
+	/**
+	 * creates a matrix-like representation with the number of feature vectors
+	 * in the first dimension and the dimensionality of the feature vectors in
+	 * the second dimension.
+	 * 
+	 * @param fvs
+	 * @return
+	 */
+	public static double[][] createMatrixRepresentation(List<NumericalFeatureVector> fvs) {
+		if (fvs == null)
+			throw new NullPointerException("NumericalFeatureVectorTools: feature vectors must not be null");
+
+		if (fvs.size() == 0)
+			throw new IllegalArgumentException("NumericalFeatureVectorTools: feature vectors size was 0");
+
+		double[][] values = new double[fvs.size()][fvs.get(0).getDimensions()];
+		for (int i = 0; i < fvs.size(); i++)
+			values[i] = fvs.get(i).getVectorClone();
+
+		return values;
+	}
+
+	/**
+	 * creates a vector with the information of one feature from the
+	 * FeatureVectors, addressed by the index.
+	 * 
+	 * @param fvs
+	 * @param index
+	 * @return
+	 */
+	public static double[] retrieveVariable(List<NumericalFeatureVector> fvs, int index) {
+		if (fvs == null)
+			throw new NullPointerException("NumericalFeatureVectorTools: feature vectors must not be null");
+
+		if (fvs.size() == 0)
+			throw new IllegalArgumentException("NumericalFeatureVectorTools: feature vectors size was 0");
+
+		double[] values = new double[fvs.size()];
+		for (int i = 0; i < fvs.size(); i++)
+			values[i] = fvs.get(i).get(index);
+
+		return values;
+	}
+
+	public static double[] retrieveNumericalAttribute(List<NumericalFeatureVector> fvs, String classAttribute) {
+		if (fvs == null)
+			throw new NullPointerException("LDA: feature vectors must not be null");
+
+		if (fvs.size() == 0)
+			throw new IllegalArgumentException("LDA: feature vectors size was 0");
+
+		double[] values = new double[fvs.size()];
+		for (int i = 0; i < fvs.size(); i++) {
+			if (fvs.get(i).getAttribute(classAttribute) != null)
+				if (fvs.get(i).getAttribute(classAttribute) instanceof Number) {
+					values[i] = ((Number) fvs.get(i).getAttribute(classAttribute)).doubleValue();
+					continue;
+				}
+			values[i] = Double.NaN;
+		}
+
+		return values;
+	}
+
 }
