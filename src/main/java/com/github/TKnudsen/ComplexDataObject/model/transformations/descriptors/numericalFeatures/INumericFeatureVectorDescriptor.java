@@ -1,7 +1,8 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.numericalFeatures;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 
 /**
  * <p>

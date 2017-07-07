@@ -10,7 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.INumericFeatureVectorDescriptor;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.numericalFeatures.INumericFeatureVectorDescriptor;
 
 /**
  * <p>
