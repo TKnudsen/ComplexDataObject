@@ -19,9 +19,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public interface IDimensionalityReduction extends IDataTransformation<NumericalFeatureVector, NumericalFeatureVector> {
 
+	public int getOutputDimensionality();
+	
 	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping();
 }

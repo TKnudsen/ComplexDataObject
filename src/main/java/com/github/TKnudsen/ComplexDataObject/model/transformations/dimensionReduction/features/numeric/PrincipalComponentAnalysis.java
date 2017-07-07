@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -44,7 +43,7 @@ import weka.core.Instances;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class PrincipalComponentAnalysis implements IDimensionalityReduction {
+public class PrincipalComponentAnalysis extends DimensionalityReduction {
 
 	/**
 	 * whether or not the PCA model will normalize the data at start
@@ -61,27 +60,19 @@ public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 	private double minimumRemainingVariance = Double.NaN;
 
 	/**
-	 * standard termination criterion. PCA stops when the first
-	 * *outputDimensions* are calculated.
-	 */
-	private int outputDimensions = 2;
-
-	/**
 	 * whether of not feature are 'back-projected' into the original space.
 	 */
 	private boolean transformThroughPCASpaceBackToOriginalSpace = false;
 
-	private Map<NumericalFeatureVector, NumericalFeatureVector> mapping;
-
-	public PrincipalComponentAnalysis(boolean normalize, int outputDimensions) {
+	public PrincipalComponentAnalysis(boolean normalize, int outputDimensionality) {
 		this.normalize = normalize;
-		this.outputDimensions = outputDimensions;
+		this.outputDimensionality = outputDimensionality;
 	}
 
-	public PrincipalComponentAnalysis(boolean normalize, double minimumRemainingVariance, int outputDimensions) {
+	public PrincipalComponentAnalysis(boolean normalize, double minimumRemainingVariance, int outputDimensionality) {
 		this.normalize = normalize;
 		this.minimumRemainingVariance = minimumRemainingVariance;
-		this.outputDimensions = outputDimensions;
+		this.outputDimensionality = outputDimensionality;
 	}
 
 	private weka.attributeSelection.PrincipalComponents pca;
@@ -100,7 +91,7 @@ public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 		if (transformThroughPCASpaceBackToOriginalSpace)
 			parameters.add("-O");
 
-		if (outputDimensions > 0) {
+		if (outputDimensionality > 0) {
 			parameters.add("-A");
 			parameters.add("" + -1);
 		}
@@ -177,7 +168,7 @@ public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 		double[] values = transformed.toDoubleArray();
 
 		List<NumericalFeature> features = new ArrayList<>();
-		for (int d = 0; d < Math.min(values.length, outputDimensions); d++)
+		for (int d = 0; d < Math.min(values.length, outputDimensionality); d++)
 			features.add(new NumericalFeature("Dim " + d, values[d]));
 
 		NumericalFeatureVector outputFeatureVector = new NumericalFeatureVector(features);
@@ -187,14 +178,6 @@ public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 	@Override
 	public DataTransformationCategory getDataTransformationCategory() {
 		return DataTransformationCategory.DIMENSION_REDUCTION;
-	}
-
-	public int getOutputDimensions() {
-		return outputDimensions;
-	}
-
-	public void setOutputDimensions(int outputDimensions) {
-		this.outputDimensions = outputDimensions;
 	}
 
 	public double getMinimumRemainingVariance() {
@@ -219,10 +202,5 @@ public class PrincipalComponentAnalysis implements IDimensionalityReduction {
 
 	public void setTransformThroughPCASpaceBackToOriginalSpace(boolean transformThroughPCASpaceBackToOriginalSpace) {
 		this.transformThroughPCASpaceBackToOriginalSpace = transformThroughPCASpaceBackToOriginalSpace;
-	}
-
-	@Override
-	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping() {
-		return mapping;
 	}
 }

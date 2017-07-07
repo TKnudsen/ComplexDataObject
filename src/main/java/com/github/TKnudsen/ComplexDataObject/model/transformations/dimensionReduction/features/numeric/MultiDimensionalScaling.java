@@ -5,16 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorFactory;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.INumericalFeatureVectorDistanceMeasure;
-import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
@@ -26,27 +23,21 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * Description: Multi-dimensional Scaling (MDS) is a non-linear dimension
  * reduction algorithm proposed by Joseph B. KRUSKAL in 1964:
  * "Multidimensional scaling by optimizing goodness of fit to a nonmetric hypothesis"
- * In Psychometrika 29, 1 (1964), 1ï¿½27.
+ * In Psychometrika 29, 1 (1964).
  * 
  * The principal idea is to iteratively optimize the low-dimensional (often 2D)
  * positions of objects with respect to pairwise distances in the original space
  * and a stress-minimization function.
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Jï¿½rgen Bernard,
+ * Copyright: Copyright (c) 2012-2017 Jürgen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.01
  */
-public class MultiDimensionalScaling implements IDimensionalityReduction {
-
-	/**
-	 * either a distance matrix is provided with the constructor, or the
-	 * distance matrix will be calculated "online".
-	 */
-	private INumericalFeatureVectorDistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
+public class MultiDimensionalScaling extends DimensionalityReduction {
 
 	/**
 	 * Euclidean distance metric for double[]
@@ -62,14 +53,7 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 	// TODO integrate alternative termination criterion
 	private int maxIterations = 1000;
 
-	private boolean printProgress = false;
-
-	/**
-	 * the dimensionality of the manifold to be learned
-	 */
-	private int outputDimensionality;
-
-	private Map<NumericalFeatureVector, NumericalFeatureVector> mapping;
+	protected boolean printProgress = false;
 
 	public MultiDimensionalScaling(INumericalFeatureVectorDistanceMeasure distanceMeasure, int outputDimensionality) {
 		if (distanceMeasure == null)
@@ -102,12 +86,10 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 	public List<NumericalFeatureVector> transform(List<NumericalFeatureVector> inputObjects) {
 		mapping = new HashMap<>();
 
-		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size()
-				|| distanceMatrix[0].length != inputObjects.size())
+		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size() || distanceMatrix[0].length != inputObjects.size())
 			calculateDistanceMatrix(inputObjects);
 
-		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size()
-				|| distanceMatrix[0].length != inputObjects.size())
+		if (distanceMatrix == null || distanceMatrix.length != inputObjects.size() || distanceMatrix[0].length != inputObjects.size())
 			throw new IllegalArgumentException("Multidimensional Scaling: wrong input.");
 
 		distanceMatrix = provideConsistDistanceMatrix(distanceMatrix);
@@ -121,8 +103,7 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 			// calculate Kruskal's stress for every pair of objects
 			if (printProgress) {
 				double stress = calculateStress(distanceMatrix, pointDistances);
-				System.out.println(
-						"Multidimensional Scaling - iteration " + (iteration + 1) + ": Kruskal's stress = " + stress);
+				System.out.println("Multidimensional Scaling - iteration " + (iteration + 1) + ": Kruskal's stress = " + stress);
 			}
 
 			// optimize low-dimensional embedding
@@ -133,9 +114,7 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 					for (int j = 0; j < lowDimensionalPoints.size(); j++) {
 						if (j == i)
 							continue;
-						newPointCoordinates[d] += lowDimensionalPoints.get(i)[d]
-								+ (pointDistances[i][j] - distanceMatrix[i][j])
-										* (lowDimensionalPoints.get(j)[d] - lowDimensionalPoints.get(i)[d]);
+						newPointCoordinates[d] += lowDimensionalPoints.get(i)[d] + (pointDistances[i][j] - distanceMatrix[i][j]) * (lowDimensionalPoints.get(j)[d] - lowDimensionalPoints.get(i)[d]);
 					}
 					newPointCoordinates[d] /= (lowDimensionalPoints.size() - 1);
 				}
@@ -151,8 +130,7 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 		List<NumericalFeatureVector> output = new ArrayList<>();
 
 		for (int i = 0; i < inputObjects.size(); i++) {
-			NumericalFeatureVector fv = NumericalFeatureVectorFactory.createNumericalFeatureVector(
-					lowDimensionalPoints.get(i), inputObjects.get(i).getName(), inputObjects.get(i).getDescription());
+			NumericalFeatureVector fv = NumericalFeatureVectorFactory.createNumericalFeatureVector(lowDimensionalPoints.get(i), inputObjects.get(i).getName(), inputObjects.get(i).getDescription());
 			Iterator<String> attributeIterator = inputObjects.get(i).iterator();
 			while (attributeIterator.hasNext()) {
 				String attribute = attributeIterator.next();
@@ -231,8 +209,7 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 	 */
 	private double[][] provideConsistDistanceMatrix(double[][] distanceMatrix) {
 		if (distanceMatrix == null || distanceMatrix.length != distanceMatrix[0].length)
-			throw new IllegalArgumentException(
-					"Multidimensional Scaling.provideConsistDistanceMatrix: given distance matrix inconsistent.");
+			throw new IllegalArgumentException("Multidimensional Scaling.provideConsistDistanceMatrix: given distance matrix inconsistent.");
 
 		double min = Double.POSITIVE_INFINITY;
 		double max = Double.NEGATIVE_INFINITY;
@@ -273,24 +250,6 @@ public class MultiDimensionalScaling implements IDimensionalityReduction {
 		}
 
 		return lowDimensionalPoints;
-	}
-
-	@Override
-	public DataTransformationCategory getDataTransformationCategory() {
-		return DataTransformationCategory.DIMENSION_REDUCTION;
-	}
-
-	@Override
-	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping() {
-		return mapping;
-	}
-
-	public int getOutputDimensionality() {
-		return outputDimensionality;
-	}
-
-	public void setOutputDimensionality(int outputDimensionality) {
-		this.outputDimensionality = outputDimensionality;
 	}
 
 	public int getMaxIterations() {
