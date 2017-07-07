@@ -66,6 +66,8 @@ public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<Compl
 				if (feature instanceof Number)
 					features.add(new NumericalFeature(next, ((Number) input.getAttribute(next)).doubleValue()));
 			}
+
+			i++;
 		}
 
 		return Arrays.asList(new NumericalFeatureVector[] { featureVector });

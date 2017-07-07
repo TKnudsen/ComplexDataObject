@@ -22,6 +22,14 @@ import java.util.List;
 public class NumericalFeatureVectorFactory {
 
 	public static NumericalFeatureVector createNumericalFeatureVector(double[] vector) {
+		return createNumericalFeatureVector(vector, "", "");
+	}
+
+	public static NumericalFeatureVector createNumericalFeatureVector(Double[] vector) {
+		return createNumericalFeatureVector(vector, "", "");
+	}
+
+	public static NumericalFeatureVector createNumericalFeatureVector(double[] vector, String name, String description) {
 		if (vector == null)
 			return null;
 
@@ -29,10 +37,14 @@ public class NumericalFeatureVectorFactory {
 		for (int i = 0; i < vector.length; i++)
 			features.add(new NumericalFeature("[" + i + "]", vector[i]));
 
-		return new NumericalFeatureVector(features);
+		NumericalFeatureVector numericalFeatureVector = new NumericalFeatureVector(features);
+		numericalFeatureVector.setName(name);
+		numericalFeatureVector.setDescription(description);
+
+		return numericalFeatureVector;
 	}
 
-	public static NumericalFeatureVector createNumericalFeatureVector(double[] vector, String name, String description) {
+	public static NumericalFeatureVector createNumericalFeatureVector(Double[] vector, String name, String description) {
 		if (vector == null)
 			return null;
 
