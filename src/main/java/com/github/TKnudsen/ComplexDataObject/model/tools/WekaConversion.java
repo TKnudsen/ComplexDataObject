@@ -282,6 +282,14 @@ public class WekaConversion {
 		}
 	}
 
+	/**
+	 * 
+	 * @param fvs
+	 * @param classAttribute
+	 *            attribute in the features with the class information. Note:
+	 *            the Weka class attribute will be 'class', though.
+	 * @return
+	 */
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
 		List<Object> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
@@ -292,7 +300,7 @@ public class WekaConversion {
 
 		Instances insances = getInstances(fvs, false);
 
-		return addLabelsToInstances(insances, labels);
+		return addLabelsToInstances(insances, "class", labels);
 	}
 
 	/**
@@ -311,6 +319,8 @@ public class WekaConversion {
 	 * @param fvs
 	 * @param weights
 	 * @param classAttribute
+	 *            attribute in the features with the class information. Note:
+	 *            the Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute, boolean stringToNominal) {
@@ -328,7 +338,7 @@ public class WekaConversion {
 		if (insances != null && weights != null && weights.size() == insances.size())
 			addWeightsToInstances(insances, weights);
 
-		return addLabelsToInstances(insances, labels);
+		return addLabelsToInstances(insances, "class", labels);
 	}
 
 	/**
@@ -356,10 +366,10 @@ public class WekaConversion {
 
 	}
 
-	public static Instances getLabeledInstances(List<NumericalFeatureVector> fvs, List<? extends Object> labels) {
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<? extends Object> labels) {
 		Instances insances = getInstances(fvs, false);
 
-		return addLabelsToInstances(insances, labels);
+		return addLabelsToInstances(insances, "class", labels);
 	}
 
 	/**
@@ -396,25 +406,34 @@ public class WekaConversion {
 
 	}
 
-	public static Instances addLabelAttributeToInstance(Instances instances, List<? extends Object> labels) {
-		if (labels == null)
-			throw new NullPointerException("WekaConversion: labels to be added are null");
-
-		if (labels.size() == 0)
-			return instances;
+	/**
+	 * adds a label/class attribute to an instances object. if the list of given
+	 * objects does not have the behavior of valid (categorical) class labels
+	 * the class attribute is generate without any further characterization.
+	 * 
+	 * @param instances
+	 * @param attributeName
+	 * @param labels
+	 * @return
+	 */
+	public static Instances addLabelAttributeToInstance(Instances instances, String attributeName, List<? extends Object> labels) {
 
 		Attribute classAtt;
 
-		if (labels.get(0) instanceof String) {
-			Set<String> set = new LinkedHashSet<>();
-			for (Object o : labels)
-				set.add(o.toString());
-			List<String> distinctLabels = new ArrayList<>(set);
+		if (labels != null && labels.size() > 0)
+			if (labels.get(0) instanceof String) {
+				Set<String> set = new LinkedHashSet<>();
+				for (Object o : labels)
+					set.add(o.toString());
+				List<String> distinctLabels = new ArrayList<>(set);
 
-			classAtt = new Attribute("class", distinctLabels);
+				classAtt = new Attribute(attributeName, distinctLabels);
 
-		} else {
-			classAtt = new Attribute("class");
+			} else {
+				classAtt = new Attribute(attributeName);
+			}
+		else {
+			classAtt = new Attribute(attributeName);
 		}
 
 		instances.insertAttributeAt(classAtt, instances.numAttributes());
@@ -435,11 +454,11 @@ public class WekaConversion {
 
 	}
 
-	private static Instances addLabelsToInstances(Instances instances, List<? extends Object> labels) {
+	private static Instances addLabelsToInstances(Instances instances, String attributeName, List<? extends Object> labels) {
 		if (instances == null)
 			return null;
 
-		Instances inst2 = addLabelAttributeToInstance(instances, labels);
+		Instances inst2 = addLabelAttributeToInstance(instances, attributeName, labels);
 
 		for (int i = 0; i < labels.size(); i++)
 			inst2.instance(i).setClassValue(labels.get(i).toString());
