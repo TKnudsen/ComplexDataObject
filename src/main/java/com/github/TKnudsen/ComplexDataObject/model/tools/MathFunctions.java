@@ -73,7 +73,7 @@ public class MathFunctions {
 
 		return retValue;
 	}
-
+	
 	/**
 	 * rounds a given value w.r.t a given number of decimals.
 	 * 
