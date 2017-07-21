@@ -3,10 +3,8 @@ package com.github.TKnudsen.ComplexDataObject.model.processors.features.numerica
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorContainer;
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorTools;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
