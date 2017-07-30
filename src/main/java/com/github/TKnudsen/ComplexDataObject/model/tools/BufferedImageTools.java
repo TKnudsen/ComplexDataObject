@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
@@ -111,5 +113,45 @@ public class BufferedImageTools {
 		g2.dispose();
 
 		return bufferedImage;
+	}
+
+	/**
+	 * resizes a bufferedImage to the given size properties.
+	 * 
+	 * @param source
+	 * @param targetWidth
+	 * @param targetHeight
+	 * @return
+	 */
+	public static BufferedImage resize(BufferedImage source, int targetWidth, int targetHeight) {
+		Image tmp = source.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+	    BufferedImage output = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+	    Graphics2D g2d = output.createGraphics();
+	    g2d.drawImage(tmp, 0, 0, null);
+	    g2d.dispose();
+
+	    return output;
+	}
+
+	/**
+	 * rescales a bufferedImage with the given properties.
+	 * 
+	 * @param source
+	 * @param targetWidth
+	 * @param targetHeight
+	 * @return
+	 */
+	public static BufferedImage rescale(BufferedImage source, double factorX, double factorY) {
+		int w = source.getWidth();
+		int h = source.getHeight();
+
+		BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(factorX, factorY);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		output = scaleOp.filter(source, output);
+
+		return output;
 	}
 }

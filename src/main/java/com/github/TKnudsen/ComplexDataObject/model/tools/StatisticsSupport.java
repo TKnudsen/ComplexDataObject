@@ -65,8 +65,8 @@ public class StatisticsSupport extends DescriptiveStatistics {
 	 * 
 	 * @param values
 	 */
-	public StatisticsSupport(Collection<Number> values) {
-		Iterator<Number> iterator = values.iterator();
+	public StatisticsSupport(Collection<? extends Number> values) {
+		Iterator<? extends Number> iterator = values.iterator();
 		while (iterator.hasNext()) {
 			Number n = iterator.next();
 			if (n != null) {
