@@ -248,7 +248,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList != null)
 			if (featuresList.size() > index) {
 				F removed = featuresList.remove(index);
-				featuresMap.remove(removed);
+				featuresMap.remove(removed.getFeatureName());
 				return removed;
 			}
 		return null;

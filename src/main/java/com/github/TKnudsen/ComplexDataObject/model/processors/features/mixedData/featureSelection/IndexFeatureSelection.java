@@ -18,6 +18,8 @@ public class IndexFeatureSelection implements IMixedDataFeatureVectorProcessor {
 
 	public IndexFeatureSelection(List<Integer> indizesToRemove) {
 		this.indizesToRemove = indizesToRemove;
+		Collections.sort(this.indizesToRemove);
+		Collections.reverse(this.indizesToRemove);
 	}
 
 	@Override
@@ -32,12 +34,9 @@ public class IndexFeatureSelection implements IMixedDataFeatureVectorProcessor {
 
 	@Override
 	public void process(MixedDataFeatureContainer container) {
-		Collections.sort(indizesToRemove);
 		for (MixedDataFeatureVector fv : container) {
-			int count = 0;
 			for (Integer i : indizesToRemove) {
-				fv.removeFeature(i - count);
-				count++;
+				fv.removeFeature(i);
 			}
 		}
 	}
