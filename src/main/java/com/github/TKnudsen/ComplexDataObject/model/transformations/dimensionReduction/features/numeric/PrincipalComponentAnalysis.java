@@ -36,7 +36,7 @@ import weka.core.Instances;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017 Jürgen Bernard,
+ * Copyright: Copyright (c) 2017 Jï¿½rgen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
@@ -80,7 +80,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 	private void initPCA() {
 		List<String> parameters = new ArrayList<>();
 
-		if (normalize)
+		if (!normalize)
 			parameters.add("-D");
 
 		if (!Double.isNaN(minimumRemainingVariance) && minimumRemainingVariance > 0.0 && minimumRemainingVariance <= 1.0) {
@@ -93,7 +93,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 
 		if (outputDimensionality > 0) {
 			parameters.add("-A");
-			parameters.add("" + -1);
+			parameters.add("" + outputDimensionality);
 		}
 
 		String[] opts = new String[parameters.size()];
@@ -140,7 +140,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		try {
 			pca.buildEvaluator(instances);
 			Instances transformedData = pca.transformedData(instances);
-			System.out.println(transformedData);
+//			System.out.println(transformedData);
 
 			// build new feature vectors
 			List<NumericalFeatureVector> returnFVs = new ArrayList<>();
@@ -168,7 +168,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		double[] values = transformed.toDoubleArray();
 
 		List<NumericalFeature> features = new ArrayList<>();
-		for (int d = 0; d < Math.min(values.length, outputDimensionality); d++)
+		for (int d = 0; d < values.length; d++)
 			features.add(new NumericalFeature("Dim " + d, values[d]));
 
 		NumericalFeatureVector outputFeatureVector = new NumericalFeatureVector(features);
