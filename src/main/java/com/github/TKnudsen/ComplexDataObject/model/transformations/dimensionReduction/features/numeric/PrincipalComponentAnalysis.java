@@ -109,24 +109,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 
 	@Override
 	public List<NumericalFeatureVector> transform(NumericalFeatureVector input) {
-		if (pca == null)
-			return null;
-
-		Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(input)), false);
-		Iterator<Instance> iterator = instances.iterator();
-		if (iterator.hasNext()) {
-			try {
-				Instance transformed = pca.convertInstance(iterator.next());
-				NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
-
-				outputFeatureVector.setMaster(input);
-				return new ArrayList<>(Arrays.asList(outputFeatureVector));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return null;
+		throw new IllegalArgumentException("PCA has to be run with a list of feature vectors.");
 	}
 
 	@Override
@@ -140,7 +123,6 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		try {
 			pca.buildEvaluator(instances);
 			Instances transformedData = pca.transformedData(instances);
-//			System.out.println(transformedData);
 
 			// build new feature vectors
 			List<NumericalFeatureVector> returnFVs = new ArrayList<>();
@@ -159,6 +141,27 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public NumericalFeatureVector transformWithExistingModel(NumericalFeatureVector input) {
+		if (pca == null)
+			return null;
+
+		Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(input)), false);
+		Iterator<Instance> iterator = instances.iterator();
+		if (iterator.hasNext()) {
+			try {
+				Instance transformed = pca.convertInstance(iterator.next());
+				NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
+
+				outputFeatureVector.setMaster(input);
+				return outputFeatureVector;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return null;
