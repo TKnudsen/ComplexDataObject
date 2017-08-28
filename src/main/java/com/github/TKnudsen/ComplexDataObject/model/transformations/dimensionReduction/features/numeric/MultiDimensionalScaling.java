@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.math3.ml.distance.EuclideanDistance;
-
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorFactory;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.EuclideanDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.INumericalFeatureVectorDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
@@ -35,14 +35,14 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class MultiDimensionalScaling extends DimensionalityReduction {
 
 	/**
 	 * Euclidean distance metric for double[]
 	 */
-	private final EuclideanDistance ed = new EuclideanDistance();
+	private final DoubleDistanceMeasure doubleDistanceMeasure = new EuclideanDistanceMeasure();
 
 	/**
 	 * distance matrix, internally used for the low-dimensional manifold
@@ -195,7 +195,7 @@ public class MultiDimensionalScaling extends DimensionalityReduction {
 		for (int x = 0; x < lowDimensionalPoints.size(); x++) {
 			distanceMatrix[x][x] = 0;
 			for (int y = 0; y < x; y++) {
-				double distance = ed.compute(lowDimensionalPoints.get(x), lowDimensionalPoints.get(y));
+				double distance = doubleDistanceMeasure.getDistance(lowDimensionalPoints.get(x), lowDimensionalPoints.get(y));
 				distanceMatrix[x][y] = distance;
 				distanceMatrix[y][x] = distance;
 			}
