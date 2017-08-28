@@ -17,9 +17,23 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 
 	public double[][] getDistanceMatrix();
+
+	/**
+	 * allows operations like normalization with no additional effort
+	 * 
+	 * @return
+	 */
+	public double getMinDistance();
+
+	/**
+	 * allows operations like normalization with no additional effort
+	 * 
+	 * @return
+	 */
+	public double getMaxDistance();
 }
