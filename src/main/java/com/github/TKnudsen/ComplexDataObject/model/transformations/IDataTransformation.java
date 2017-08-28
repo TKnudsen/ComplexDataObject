@@ -23,8 +23,22 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  */
 public interface IDataTransformation<I extends IDObject, O extends IDObject> {
 
+	/**
+	 * mapping from a (high-dimensional) space into another (low-dimensional)
+	 * space. NO calculation of transformation model.
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public List<O> transform(I input);
 
+	/**
+	 * * mapping from a (high-dimensional) space into another (low-dimensional)
+	 * space. NO calculation of transformation model.
+	 * 
+	 * @param inputObjects
+	 * @return
+	 */
 	public List<O> transform(List<I> inputObjects);
 
 	public DataTransformationCategory getDataTransformationCategory();

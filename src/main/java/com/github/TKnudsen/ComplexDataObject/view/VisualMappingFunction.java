@@ -29,8 +29,10 @@ public abstract class VisualMappingFunction<T, M extends Object> implements Func
 
 	@Override
 	public M apply(T t) {
-		if (mappingLookup.get(t) == null)
-			mappingLookup.put(t, calculateMapping(t));
+		if (mappingLookup.get(t) == null) {
+			M mapping = calculateMapping(t);
+			mappingLookup.put(t, mapping);
+		}
 		return mappingLookup.get(t);
 	}
 }

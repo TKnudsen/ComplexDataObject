@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -72,6 +73,15 @@ public class NumericalFeatureVectorTools {
 			}
 		}
 		return sum / count;
+	}
+
+	public static List<double[]> toPrimitives(Set<NumericalFeatureVector> featureVectors) {
+		List<double[]> returnValues = new ArrayList<>();
+
+		for (NumericalFeatureVector fv : featureVectors)
+			returnValues.add(fv.getVectorClone());
+
+		return returnValues;
 	}
 
 	public static List<double[]> toPrimitives(List<NumericalFeatureVector> featureVectors) {

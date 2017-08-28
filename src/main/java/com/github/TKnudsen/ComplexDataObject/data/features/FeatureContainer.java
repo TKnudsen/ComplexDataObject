@@ -54,7 +54,13 @@ public class FeatureContainer<FV extends AbstractFeatureVector<?, ?>> implements
 	private void extendDataSchema(FV object) {
 		for (String feature : object.getFeatureKeySet())
 			if (!featureSchema.contains(feature))
-				featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(), object.getFeature(feature).getFeatureType());
+				if (feature == null || object.getFeature(feature) == null || object.getFeature(feature).getFeatureValue() == null)
+					throw new IllegalArgumentException("FeatureContainer: feature in object was associated with null");
+				else
+					featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(), object.getFeature(feature).getFeatureType());
+
+		// TODO maybe add type information to Feature class itself (currently an
+		// enum)
 	}
 
 	/**

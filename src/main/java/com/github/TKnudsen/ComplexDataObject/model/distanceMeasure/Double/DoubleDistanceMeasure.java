@@ -18,7 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]>, Serializable {
 
@@ -27,6 +27,7 @@ public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]
 	 */
 	private static final long serialVersionUID = -2559705521219780141L;
 
+	@Deprecated
 	public double compute(double[] a, double[] b) {
 		return getDistance(a, b);
 	}
