@@ -83,7 +83,8 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		if (!normalize)
 			parameters.add("-D");
 
-		if (!Double.isNaN(minimumRemainingVariance) && minimumRemainingVariance > 0.0 && minimumRemainingVariance <= 1.0) {
+		if (!Double.isNaN(minimumRemainingVariance) && minimumRemainingVariance > 0.0
+				&& minimumRemainingVariance <= 1.0) {
 			parameters.add("-R");
 			parameters.add("" + minimumRemainingVariance);
 		}
@@ -150,7 +151,8 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		if (pca == null)
 			return null;
 
-		Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(input)), false);
+		Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(input)),
+				false);
 		Iterator<Instance> iterator = instances.iterator();
 		if (iterator.hasNext()) {
 			try {
@@ -165,6 +167,23 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction {
 		}
 
 		return null;
+	}
+
+	public List<NumericalFeatureVector> transformWithExistingModel(List<NumericalFeatureVector> inputObjects) {
+		if (pca == null)
+			return null;
+
+		// build new feature vectors
+		List<NumericalFeatureVector> returnFVs = new ArrayList<>();
+		for (NumericalFeatureVector fv : inputObjects) {
+
+			NumericalFeatureVector outputFeatureVector = transformWithExistingModel(fv);
+
+			outputFeatureVector.setMaster(fv);
+			returnFVs.add(outputFeatureVector);
+		}
+
+		return returnFVs;
 	}
 
 	private NumericalFeatureVector createNumericalFeatureVector(Instance transformed) {
