@@ -30,7 +30,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * and a stress-minimization function.
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Jürgen Bernard,
+ * Copyright: Copyright (c) 2012-2017 Jï¿½rgen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 

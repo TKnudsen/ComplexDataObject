@@ -70,7 +70,38 @@ public class MinMaxNormalization implements IMixedDataFeatureVectorProcessor {
 
 	@Override
 	public void process(List<MixedDataFeatureVector> data) {
-		process(new MixedDataFeatureContainer(data));
+//		process(new MixedDataFeatureContainer(data));
+		// retrieve numerical dimensions, store min and max
+				Map<String, Double> minValues = new HashMap<>();
+				Map<String, Double> maxValues = new HashMap<>();
+
+				for (MixedDataFeatureVector fv : data)
+					for (String featureName : fv.getFeatureKeySet()) {
+						if (!fv.getFeature(featureName).getFeatureType().equals(FeatureType.DOUBLE))
+							continue;
+						if (minValues.get(featureName) == null)
+							minValues.put(featureName, Double.POSITIVE_INFINITY);
+						if (maxValues.get(featureName) == null)
+							maxValues.put(featureName, Double.NEGATIVE_INFINITY);
+
+						MixedDataFeature feature = fv.getFeature(featureName);
+						Number n = (Number) feature.getFeatureValue();
+						if (Double.isNaN(n.doubleValue()))
+							continue;
+
+						minValues.put(featureName, Math.min(minValues.get(featureName), n.doubleValue()));
+						maxValues.put(featureName, Math.max(maxValues.get(featureName), n.doubleValue()));
+					}
+
+				for (MixedDataFeatureVector fv : data)
+					for (String featureName : fv.getFeatureKeySet()) {
+						if (!fv.getFeature(featureName).getFeatureType().equals(FeatureType.DOUBLE))
+							continue;
+
+						MixedDataFeature feature = fv.getFeature(featureName);
+						Number n = (Number) feature.getFeatureValue();
+						feature.setFeatureValue(MathFunctions.linearScale(minValues.get(featureName), maxValues.get(featureName), n.doubleValue()));
+					}
 	}
 
 	@Override
