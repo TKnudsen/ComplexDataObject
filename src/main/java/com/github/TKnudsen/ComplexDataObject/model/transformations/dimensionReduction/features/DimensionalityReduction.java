@@ -1,10 +1,11 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.numeric;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features;
 
 import java.util.Map;
 
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.INumericalFeatureVectorDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 
 /**
@@ -17,26 +18,26 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * generalizable data structures.
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Jürgen Bernard,
+ * Copyright: Copyright (c) 2012-2017 Jï¿½rgen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.02
  */
-public abstract class DimensionalityReduction implements IDimensionalityReduction {
+public abstract class DimensionalityReduction<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> implements IDimensionalityReduction<O, X> {
 
 	/**
 	 * used by many routines to calculate pairwise distances
 	 */
-	protected INumericalFeatureVectorDistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
+	protected IDistanceMeasure<X> distanceMeasure;
 
 	/**
 	 * the dimensionality of the manifold to be learned
 	 */
 	protected int outputDimensionality;
 
-	protected Map<NumericalFeatureVector, NumericalFeatureVector> mapping;
+	protected Map<X, NumericalFeatureVector> mapping;
 
 	@Override
 	public DataTransformationCategory getDataTransformationCategory() {
@@ -44,7 +45,7 @@ public abstract class DimensionalityReduction implements IDimensionalityReductio
 	}
 
 	@Override
-	public Map<NumericalFeatureVector, NumericalFeatureVector> getMapping() {
+	public Map<X, NumericalFeatureVector> getMapping() {
 		return mapping;
 	}
 

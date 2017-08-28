@@ -20,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
@@ -33,8 +33,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	protected Map<T, Integer> objectIndex;
 
 	// statistics
-	private double min;
-	private double max;
+	protected double min;
+	protected double max;
 
 	public DistanceMatrix(List<T> objects, IDistanceMeasure<T> distanceMeasure) {
 		if (distanceMeasure == null)
@@ -42,6 +42,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 		this.objects = objects;
 		this.distanceMeasure = distanceMeasure;
+
+		initializeDistanceMatrix();
 	}
 
 	protected void initializeObjectIndex() {
@@ -95,8 +97,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	protected Integer getObjectIndex(T object) {
-		if (objectIndex == null)
-			initializeDistanceMatrix();
+//		if (objectIndex == null)
+//			initializeDistanceMatrix();
 
 		return objectIndex.get(object);
 	}
@@ -134,5 +136,19 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 			initializeDistanceMatrix();
 
 		return distanceMatrix;
+	}
+
+	public int size() {
+		return objects.size();
+	}
+
+	@Override
+	public double getMinDistance() {
+		return min;
+	}
+
+	@Override
+	public double getMaxDistance() {
+		return max;
 	}
 }

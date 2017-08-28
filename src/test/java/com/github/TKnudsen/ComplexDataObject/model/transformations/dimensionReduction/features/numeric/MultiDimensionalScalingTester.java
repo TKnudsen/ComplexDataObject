@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorFactory;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.MultiDimensionalScaling;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class MultiDimensionalScalingTester {
 		}
 
 		// V1: with features in the constructor
-		MultiDimensionalScaling mds = new MultiDimensionalScaling(new EuclideanDistanceMeasure(), 2);
+		MultiDimensionalScaling<Double, NumericalFeatureVector> mds = new MultiDimensionalScaling<>(new EuclideanDistanceMeasure(), 2);
 
 		// // V2 with a distance matrix in the constructor
 		// EuclideanDistanceMeasure dm = new EuclideanDistanceMeasure();

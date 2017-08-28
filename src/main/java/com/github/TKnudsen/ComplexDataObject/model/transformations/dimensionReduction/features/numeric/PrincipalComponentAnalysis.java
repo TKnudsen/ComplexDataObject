@@ -10,6 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.DimensionalityReduction;
 
 import weka.attributeSelection.PrincipalComponents;
 import weka.core.Instance;
@@ -43,7 +44,7 @@ import weka.core.Instances;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class PrincipalComponentAnalysis extends DimensionalityReduction {
+public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, NumericalFeatureVector> {
 
 	/**
 	 * whether or not the PCA model will normalize the data at start
