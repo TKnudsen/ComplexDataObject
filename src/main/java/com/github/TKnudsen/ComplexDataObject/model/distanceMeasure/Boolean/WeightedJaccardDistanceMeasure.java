@@ -17,10 +17,10 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
  * Copyright: (c) 2016-2017 Juergen Bernard
  * </p>
  * 
- * @author Christian Ritter, Jürgen Bernard
+ * @author Christian Ritter, Jï¿½rgen Bernard
  * @version 1.01
  */
-public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<boolean[]> {
+public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Boolean[]> {
 
 	private List<Double> weights;
 
@@ -29,7 +29,7 @@ public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<bool
 	}
 
 	@Override
-	public double getDistance(boolean[] o1, boolean[] o2) {
+	public double getDistance(Boolean[] o1, Boolean[] o2) {
 		// check if arrays have same length
 		if (o1.length != o2.length || o1.length != getWeights().size()) {
 			try {

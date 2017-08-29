@@ -20,14 +20,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * @author Juergen Bernard
  * @version 1.01
  */
-public abstract class BooleanDistanceMeasure implements IDistanceMeasure<boolean[]>, Serializable {
+public abstract class BooleanDistanceMeasure implements IDistanceMeasure<Boolean[]>, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4443250297148475131L;
 
-	public double applyAsDouble(boolean[] t, boolean[] u) {
+	public double applyAsDouble(Boolean[] t, Boolean[] u) {
 		return getDistance(t, u);
 	}
 }
