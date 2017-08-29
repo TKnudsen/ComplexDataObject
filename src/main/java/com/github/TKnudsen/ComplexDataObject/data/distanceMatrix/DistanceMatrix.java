@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.data.distanceMatrix;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,12 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	protected Map<T, Integer> objectIndex;
 
 	// statistics
-	protected double min;
-	protected double max;
+	private double min;
+	private double max;
+
+	// elements associated to statistics
+	private List<T> closestElements = new ArrayList<>(2);
+	private List<T> farestElements = new ArrayList<>(2);
 
 	public DistanceMatrix(List<T> objects, IDistanceMeasure<T> distanceMeasure) {
 		if (distanceMeasure == null)
@@ -62,8 +67,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 			for (int y = 0; y < distanceMatrix[x].length; y++)
 				distanceMatrix[x][y] = Double.NaN;
 
-		min = Double.POSITIVE_INFINITY;
-		max = Double.NEGATIVE_INFINITY;
+		updateMinDistance(Double.POSITIVE_INFINITY, null, null);
+		updateMaxDistance(Double.NEGATIVE_INFINITY, null, null);
 
 		// create distance matrix - optimized for inheriting index-based access
 		for (T t1 : objectIndex.keySet())
@@ -72,8 +77,16 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 				distanceMatrix[getObjectIndex(t1)][getObjectIndex(t2)] = distance;
 
-				min = Math.min(min, distance);
-				max = Math.max(max, distance);
+				if (getMin() > distance) {
+					updateMinDistance(distance, t1, t2);
+				}
+
+				if (getMax() < distance) {
+					updateMaxDistance(distance, t1, t2);
+				}
+
+				// min = Math.min(min, distance);
+				// max = Math.max(max, distance);
 			}
 
 		// // create distance matrix - would be at least as good as the upper
@@ -97,8 +110,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	protected Integer getObjectIndex(T object) {
-//		if (objectIndex == null)
-//			initializeDistanceMatrix();
+		// if (objectIndex == null)
+		// initializeDistanceMatrix();
 
 		return objectIndex.get(object);
 	}
@@ -144,11 +157,59 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	@Override
 	public double getMinDistance() {
-		return min;
+		return getMin();
 	}
 
 	@Override
 	public double getMaxDistance() {
+		return getMax();
+	}
+
+	public List<T> getClosestElements() {
+		return closestElements;
+	}
+
+	public void setClosestElements(List<T> closestElements) {
+		this.closestElements = closestElements;
+	}
+
+	public List<T> getFarestElements() {
+		return farestElements;
+	}
+
+	public void setFarestElements(List<T> farestElements) {
+		this.farestElements = farestElements;
+	}
+
+	public double getMin() {
+		return min;
+	}
+
+	/**
+	 * sets the minimum distance between two elements. these elements are also
+	 * queried.
+	 * 
+	 * @param min
+	 * @param t1
+	 * @param t2
+	 */
+	public void updateMinDistance(double min, T t1, T t2) {
+		this.min = min;
+
+		closestElements.clear();
+		closestElements.add(t1);
+		closestElements.add(t2);
+	}
+
+	public double getMax() {
 		return max;
+	}
+
+	public void updateMaxDistance(double max, T t1, T t2) {
+		this.max = max;
+
+		farestElements.clear();
+		farestElements.add(t1);
+		farestElements.add(t2);
 	}
 }
