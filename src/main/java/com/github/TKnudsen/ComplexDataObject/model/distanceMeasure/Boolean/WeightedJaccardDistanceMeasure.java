@@ -29,6 +29,11 @@ public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Bool
 	}
 
 	@Override
+	public String getDescription() {
+		return "Calculates weighted Jaccard distance.";
+	}
+
+	@Override
 	public double getDistance(Boolean[] o1, Boolean[] o2) {
 		// check if arrays have same length
 		if (o1.length != o2.length || o1.length != getWeights().size()) {
@@ -66,11 +71,6 @@ public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Bool
 	@Override
 	public String getName() {
 		return "WeightedJaccard";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Calculates weighted Jaccard distance.";
 	}
 
 	@Override
