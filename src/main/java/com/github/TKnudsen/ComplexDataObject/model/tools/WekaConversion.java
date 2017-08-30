@@ -181,7 +181,7 @@ public class WekaConversion {
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
 		if (fvs == null)
-			throw new NullPointerException();
+			return null;
 
 		if (fvs.size() == 0)
 			return null;

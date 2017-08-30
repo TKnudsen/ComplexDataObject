@@ -26,11 +26,11 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
@@ -318,18 +318,24 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public int hashCode() {
-		int hash = 1;
+		return super.hashCode();
 
-		if (master != null)
-			hash = 37 * hash + master.hashCode();
+		// TODO reconsider hashing of features, especially since the feature set
+		// can change over time. In addition hashing as done below slowed down
+		// the process.
 
-		if (featuresList == null)
-			hash = 37 * hash;
-		else
-			for (F feature : featuresList)
-				hash = 37 * hash + feature.hashCode();
-
-		return hash;
+		// int hash = 1;
+		//
+		// if (master != null)
+		// hash = 37 * hash + master.hashCode();
+		//
+		// if (featuresList == null)
+		// hash = 37 * hash;
+		// else
+		// for (F feature : featuresList)
+		// hash = 37 * hash + feature.hashCode();
+		//
+		// return hash;
 	}
 
 	@Override
