@@ -27,10 +27,14 @@ public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Bool
 	public WeightedJaccardDistanceMeasure(List<Double> weights) {
 		super(weights);
 	}
+	
+	public WeightedJaccardDistanceMeasure(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
 
 	@Override
 	public String getDescription() {
-		return "Calculates weighted Jaccard distance.";
+		return "Calculates weighted Jaccard distance, i.e. the complementary of the intersection over union of two sets.";
 	}
 
 	@Override
@@ -45,27 +49,24 @@ public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Bool
 			return Double.NaN;
 		}
 
-		double a = 0;
-		double b = 0;
-		double c = 0;
+		double union = 0;
+		double xor = 0;
 
 		int length = o1.length;
 
-		// similarity measure: a / (a + b + c)
-		// 1 - (a / (a + b + c)) is the corresponding distance measure
 		for (int i = 0; i < length; i++) {
-			if (o1[i] && o2[i])
-				a = a + getWeights().get(i);
-			if (!o1[i] && o2[i])
-				b = b + getWeights().get(i);
-			if (o1[i] && !o2[i])
-				c = c + getWeights().get(i);
+			if (o1[i] == null || o2[i] == null)
+				union += (1 - getNullValue()) * getWeights().get(i);
+			else if (o1[i] && o2[i])
+				union += getWeights().get(i);
+			else if (!o1[i] && o2[i] || o1[i] && !o2[i])
+				xor += getWeights().get(i);
 		}
 
-		if ((a + b + c) == 0)
+		if ((union + xor) == 0)
 			return 0;
 
-		return 1 - (a / (a + b + c));
+		return 1 - (union / (union + xor));
 	}
 
 	@Override

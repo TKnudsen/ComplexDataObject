@@ -26,6 +26,10 @@ public class WeightedMeanManhattanDistanceMeasure extends WeightedDistanceMeasur
 		super(weights);
 	}
 
+	public WeightedMeanManhattanDistanceMeasure(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
+
 	@Override
 	public String getDescription() {
 		return "WeightedMeanManhattanDistanceMeasure";
@@ -43,26 +47,21 @@ public class WeightedMeanManhattanDistanceMeasure extends WeightedDistanceMeasur
 			return Double.NaN;
 		}
 
-		double a = 0;
-		double b = 0;
-		double c = 0;
-		double d = 0;
+		double equal = 0;
+		double unequal = 0;
 
 		int length = o1.length;
 
-		// distance measure: (b + c) / (a + b + c + d)
 		for (int i = 0; i < length; i++) {
-			if (o1[i] && o2[i])
-				a = a + getWeights().get(i);
-			if (!o1[i] && o2[i])
-				b = b + getWeights().get(i);
-			if (o1[i] && !o2[i])
-				c = c + getWeights().get(i);
-			if (!o1[i] && !o2[i])
-				d = d + getWeights().get(i);
+			if (o1[i] == null || o2[i] == null)
+				unequal += getNullValue() * getWeights().get(i);
+			else if (o1[i].equals(o2[i]))
+				equal += getWeights().get(i);
+			else
+				unequal += getWeights().get(i);
 		}
 
-		return (b + c) / (a + b + c + d);
+		return unequal / (equal + unequal);
 	}
 
 	@Override

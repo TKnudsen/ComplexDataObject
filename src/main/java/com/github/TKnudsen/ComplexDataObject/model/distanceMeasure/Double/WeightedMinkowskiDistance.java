@@ -28,8 +28,12 @@ public class WeightedMinkowskiDistance extends WeightedDistanceMeasure<double[]>
 		this(weights, 2.0);
 	}
 
-	public WeightedMinkowskiDistance(List<Double> weights, double exponent) {
-		super(weights);
+	public WeightedMinkowskiDistance(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
+
+	public WeightedMinkowskiDistance(List<Double> weights, double nullValue, double exponent) {
+		super(weights, nullValue);
 		this.exponent = exponent;
 	}
 
@@ -54,7 +58,10 @@ public class WeightedMinkowskiDistance extends WeightedDistanceMeasure<double[]>
 		double result = 0;
 
 		for (int i = 0; i < length; i++) {
-			result = result + getWeights().get(i) * Math.pow(Math.abs((o1[i] - o2[i])), exponent);
+			if (!Double.isNaN(o1[i] + o2[i]))
+				result += getWeights().get(i) * Math.pow(Math.abs((o1[i] - o2[i])), exponent);
+			else
+				result += getNullValue() * getWeights().get(i);
 		}
 
 		return Math.pow(result, 1 / exponent);

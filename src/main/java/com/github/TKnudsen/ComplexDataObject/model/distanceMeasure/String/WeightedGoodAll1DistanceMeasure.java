@@ -73,6 +73,13 @@ public class WeightedGoodAll1DistanceMeasure extends WeightedDistanceMeasure<Str
 					sumPSquares = sumPSquares + ps;
 
 				step = 1 - sumPSquares;
+			} else if (o1[i] == null || o2[i] == null) {
+				double sumPSquares = 0;
+
+				for (double ps : pSquares.get(i).values())
+					sumPSquares = sumPSquares + ps;
+
+				step = 1 - (1 - getNullValue()) * sumPSquares;
 			}
 			similarity += internalWeights[i] * step;
 		}

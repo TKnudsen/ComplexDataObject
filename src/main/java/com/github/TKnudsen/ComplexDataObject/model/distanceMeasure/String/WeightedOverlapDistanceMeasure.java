@@ -58,10 +58,11 @@ public class WeightedOverlapDistanceMeasure extends WeightedDistanceMeasure<Stri
 		}
 
 		for (int i = 0; i < o1.length; i++) {
-			similarity = similarity + internalWeights[i] * ((o1[i].equals(o2[i])) ? 1 : 0);
+			if (o1[i] == null || o2[i] == null)
+				similarity += internalWeights[i] * (1 - getNullValue());
+			else
+				similarity += internalWeights[i] * ((o1[i].equals(o2[i])) ? 1 : 0);
 		}
-		if (Double.isNaN(1 - similarity))
-			System.out.println("yo");
 		return 1 - similarity;
 	}
 

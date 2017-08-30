@@ -26,6 +26,10 @@ public class WeightedEuclideanDistanceMeasure extends WeightedDistanceMeasure<do
 		super(weights);
 	}
 
+	public WeightedEuclideanDistanceMeasure(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
+
 	@Override
 	public String getDescription() {
 		return "Calculated the weighted Euclidean distance.";
@@ -49,7 +53,7 @@ public class WeightedEuclideanDistanceMeasure extends WeightedDistanceMeasure<do
 			if (!Double.isNaN(o1[i] + o2[i]))
 				result += getWeights().get(i) * Math.pow((o1[i] - o2[i]), 2);
 			else
-				result += 0.5 * getWeights().get(i);
+				result += getNullValue() * getWeights().get(i);
 		}
 
 		return Math.sqrt(result);
