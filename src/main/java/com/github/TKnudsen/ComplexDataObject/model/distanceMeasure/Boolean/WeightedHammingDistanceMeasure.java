@@ -26,6 +26,10 @@ public class WeightedHammingDistanceMeasure extends WeightedDistanceMeasure<Bool
 		super(weights);
 	}
 
+	public WeightedHammingDistanceMeasure(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
+
 	@Override
 	public String getDescription() {
 		return "WeightedHammingDistanceMeasure";
@@ -57,8 +61,12 @@ public class WeightedHammingDistanceMeasure extends WeightedDistanceMeasure<Bool
 
 		// sum b_i + c_i
 		for (int i = 0; i < length; i++) {
-			int xoredValues = (o1[i] ^ o2[i]) ? 1 : 0;
-			result = result + internalWeights[i] * xoredValues;
+			double xoredValues;
+			if (o1[i] == null || o2[i] == null)
+				xoredValues = getNullValue();
+			else
+				xoredValues = (o1[i] ^ o2[i]) ? 1.0 : 0.0;
+			result += internalWeights[i] * xoredValues;
 		}
 
 		return result;

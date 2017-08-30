@@ -26,6 +26,10 @@ public class WeightedEuclidDistanceMeasure extends WeightedDistanceMeasure<Boole
 		super(weights);
 	}
 
+	public WeightedEuclidDistanceMeasure(List<Double> weights, double nullValue) {
+		super(weights, nullValue);
+	}
+
 	@Override
 	public String getDescription() {
 		return "WeightedEuclidDistanceMeasure";
@@ -46,8 +50,12 @@ public class WeightedEuclidDistanceMeasure extends WeightedDistanceMeasure<Boole
 		double result = 0;
 
 		for (int i = 0; i < length; i++) {
-			int xoredValues = (o1[i] ^ o2[i]) ? 1 : 0;
-			result = result + getWeights().get(i) * xoredValues;
+			double xoredValues;
+			if (o1[i] == null || o2[i] == null)
+				xoredValues = getNullValue();
+			else
+				xoredValues = (o1[i] ^ o2[i]) ? 1.0 : 0.0;
+			result += getWeights().get(i) * xoredValues;
 		}
 
 		return Math.sqrt(result);
