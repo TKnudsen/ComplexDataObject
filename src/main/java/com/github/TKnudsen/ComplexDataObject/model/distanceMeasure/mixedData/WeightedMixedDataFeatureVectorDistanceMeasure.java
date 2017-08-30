@@ -34,9 +34,21 @@ public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDista
 		this(null, doubleDistanceMeasure, booleanDistanceMeasure, stringDistanceMeasure);
 	}
 
+	public WeightedMixedDataFeatureVectorDistanceMeasure(WeightedDistanceMeasure<double[]> doubleDistanceMeasure, WeightedDistanceMeasure<Boolean[]> booleanDistanceMeasure, WeightedDistanceMeasure<String[]> stringDistanceMeasure, double nullValue) {
+		this(null, doubleDistanceMeasure, booleanDistanceMeasure, stringDistanceMeasure, nullValue);
+	}
+
 	public WeightedMixedDataFeatureVectorDistanceMeasure(List<Double> weights, WeightedDistanceMeasure<double[]> doubleDistanceMeasure, WeightedDistanceMeasure<Boolean[]> booleanDistanceMeasure,
 			WeightedDistanceMeasure<String[]> stringDistanceMeasure) {
 		super(weights);
+		this.doubleDistanceMeasure = doubleDistanceMeasure;
+		this.booleanDistanceMeasure = booleanDistanceMeasure;
+		this.stringDistanceMeasure = stringDistanceMeasure;
+	}
+
+	public WeightedMixedDataFeatureVectorDistanceMeasure(List<Double> weights, WeightedDistanceMeasure<double[]> doubleDistanceMeasure, WeightedDistanceMeasure<Boolean[]> booleanDistanceMeasure,
+			WeightedDistanceMeasure<String[]> stringDistanceMeasure, double nullValue) {
+		super(weights, nullValue);
 		this.doubleDistanceMeasure = doubleDistanceMeasure;
 		this.booleanDistanceMeasure = booleanDistanceMeasure;
 		this.stringDistanceMeasure = stringDistanceMeasure;
@@ -57,6 +69,7 @@ public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDista
 		double numWeight = doubleWeights != null ? doubleWeights.stream().reduce(0.0, ((x, y) -> x + y)) : 1.0;
 		double catWeight = stringWeights != null ? stringWeights.stream().reduce(0.0, ((x, y) -> x + y)) : 1.0;
 		double binWeight = booleanWeights != null ? booleanWeights.stream().reduce(0.0, ((x, y) -> x + y)) : 1.0;
+		double sumWeight = numWeight + catWeight + binWeight;
 
 		double[] darr1 = o1.getVectorRepresentation().stream().filter(x -> x.getFeatureType() == FeatureType.DOUBLE).map(x -> (Double) x.getFeatureValue()).mapToDouble(Double::doubleValue).toArray();
 		double[] darr2 = o2.getVectorRepresentation().stream().filter(x -> x.getFeatureType() == FeatureType.DOUBLE).map(x -> (Double) x.getFeatureValue()).mapToDouble(Double::doubleValue).toArray();
@@ -68,18 +81,21 @@ public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDista
 		double dVal = doubleDistanceMeasure.getDistance(darr1, darr2);
 		double sVal = stringDistanceMeasure.getDistance(sarr1, sarr2);
 		double bVal = booleanDistanceMeasure.getDistance(barr1, barr2);
-		
+
+		if (!Double.isNaN(dVal))
+			dVal = getNullValue();
+		if (!Double.isNaN(sVal))
+			sVal = getNullValue();
+		if (!Double.isNaN(bVal))
+			bVal = getNullValue();
+
 		if (getWeights() != null && getWeights().size() == 3) {
 			dVal *= getWeights().get(0);
 			bVal *= getWeights().get(1);
 			sVal *= getWeights().get(2);
 		}
-		
-		if (!Double.isNaN(dVal)) {
-			return (numWeight * dVal + catWeight * sVal + binWeight * bVal);
-		} else {
-			return catWeight * sVal + binWeight * bVal;
-		}
+
+		return (numWeight / sumWeight * dVal + catWeight / sumWeight * sVal + binWeight / sumWeight * bVal);
 	}
 
 	/**
