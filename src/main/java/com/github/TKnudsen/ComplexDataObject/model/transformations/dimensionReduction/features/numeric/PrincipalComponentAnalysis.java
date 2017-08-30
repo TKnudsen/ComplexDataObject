@@ -226,4 +226,10 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 	public void setTransformThroughPCASpaceBackToOriginalSpace(boolean transformThroughPCASpaceBackToOriginalSpace) {
 		this.transformThroughPCASpaceBackToOriginalSpace = transformThroughPCASpaceBackToOriginalSpace;
 	}
+
+	@Override
+	public void calculateDimensionalityReduction() {
+		// TODO Auto-generated method stub
+		
+	}
 }

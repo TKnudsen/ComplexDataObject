@@ -40,7 +40,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.Euclid
  * @author Juergen Bernard, Christian Ritter
  * @version 1.03
  */
-public class MultiDimensionalScaling<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends DimensionalityReduction<O, X> {
+public class MDS<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends DimensionalityReduction<O, X> {
 
 	/**
 	 * Euclidean distance metric for double[]
@@ -52,7 +52,12 @@ public class MultiDimensionalScaling<O, X extends AbstractFeatureVector<O, ? ext
 	 * optimization
 	 */
 	private IDistanceMatrix<X> distanceMatrix;
-	
+
+	/**
+	 * feature vectors for the model creation and dimensionality reduction
+	 */
+	private List<X> featureVectors;
+
 	private double dmMin;
 	private double dmMax;
 
@@ -60,27 +65,34 @@ public class MultiDimensionalScaling<O, X extends AbstractFeatureVector<O, ? ext
 	private int maxIterations = 1000;
 
 	protected boolean printProgress = false;
-	
+
 	private double normMinMax(double val) {
-		return (val - dmMin) / (dmMax - dmMin);
+		return (val - getDmMin()) / (dmMax - getDmMin());
 	}
 
-	public MultiDimensionalScaling(IDistanceMeasure<X> distanceMeasure, int outputDimensionality) {
+	public MDS(List<X> featureVectors, IDistanceMeasure<X> distanceMeasure, int outputDimensionality) {
 		if (distanceMeasure == null)
 			throw new IllegalArgumentException("Distance measure was null");
 
 		this.distanceMeasure = distanceMeasure;
+		this.featureVectors = featureVectors;
+
 		this.outputDimensionality = outputDimensionality;
 	}
 
-	public MultiDimensionalScaling(IDistanceMatrix<X> distanceMatrix, int outputDimensionality) {
+	public MDS(IDistanceMatrix<X> distanceMatrix, int outputDimensionality) {
 		if (distanceMatrix == null)
 			throw new IllegalArgumentException("Multidimensional Scaling: distance matrix is null");
 
 		this.distanceMatrix = distanceMatrix;
+		this.featureVectors = distanceMatrix.getElements();
+
 		this.outputDimensionality = outputDimensionality;
 	}
 
+	/**
+	 * provides a low-dimensional representation of X
+	 */
 	@Override
 	public List<NumericalFeatureVector> transform(X input) {
 		if (mapping != null && mapping.get(input) != null)
@@ -92,65 +104,20 @@ public class MultiDimensionalScaling<O, X extends AbstractFeatureVector<O, ? ext
 		}
 	}
 
+	/**
+	 * provides a low-dimensional representation of X
+	 */
 	@Override
 	public List<NumericalFeatureVector> transform(List<X> inputObjects) {
-		mapping = new HashMap<>();
-
-		if (distanceMatrix == null)
-			calculateDistanceMatrix(inputObjects);
-
-		if (distanceMatrix == null)
-			throw new IllegalArgumentException("Multidimensional Scaling: wrong input.");
-
-		dmMin = distanceMatrix.getMinDistance();
-		dmMax = distanceMatrix.getMaxDistance();
-		
-		// initialize points of the low-dimensional embedding
-		List<double[]> lowDimensionalPoints = initializeLowDimensionalPoints(outputDimensionality, inputObjects.size());
-
-		for (int iteration = 0; iteration < maxIterations; iteration++) {
-			double[][] pointDistances = calculatePointDistances(lowDimensionalPoints);
-
-			// calculate Kruskal's stress for every pair of objects
-			if (printProgress) {
-				double stress = calculateStress(distanceMatrix, pointDistances, inputObjects);
-				System.out.println("Multidimensional Scaling - iteration " + (iteration + 1) + ": Kruskal's stress = " + stress);
-			}
-
-			// optimize low-dimensional embedding
-			double[][] newPoints = new double[lowDimensionalPoints.size()][outputDimensionality];
-			for (int i = 0; i < lowDimensionalPoints.size(); i++) {
-				double[] newPointCoordinates = new double[outputDimensionality];
-				for (int d = 0; d < outputDimensionality; d++) {
-					for (int j = 0; j < lowDimensionalPoints.size(); j++) {
-						if (j == i)
-							continue;
-						newPointCoordinates[d] += lowDimensionalPoints.get(i)[d] + (pointDistances[i][j] - normMinMax(distanceMatrix.getDistance(inputObjects.get(i), inputObjects.get(j)))) * (lowDimensionalPoints.get(j)[d] - lowDimensionalPoints.get(i)[d]);
-					}
-					newPointCoordinates[d] /= (lowDimensionalPoints.size() - 1);
-				}
-				newPoints[i] = newPointCoordinates;
-			}
-
-			// assign the new coordinates
-			for (int i = 0; i < lowDimensionalPoints.size(); i++)
-				for (int j = 0; j < lowDimensionalPoints.size(); j++)
-					lowDimensionalPoints.set(i, newPoints[i]);
-		}
+		if (mapping == null)
+			throw new NullPointerException("MDS: model not calculated yet.");
 
 		List<NumericalFeatureVector> output = new ArrayList<>();
-
-		for (int i = 0; i < inputObjects.size(); i++) {
-			NumericalFeatureVector fv = NumericalFeatureVectorFactory.createNumericalFeatureVector(lowDimensionalPoints.get(i), inputObjects.get(i).getName(), inputObjects.get(i).getDescription());
-			Iterator<String> attributeIterator = inputObjects.get(i).iterator();
-			while (attributeIterator.hasNext()) {
-				String attribute = attributeIterator.next();
-				fv.add(attribute, inputObjects.get(i).getAttribute(attribute));
-			}
-
-			mapping.put(inputObjects.get(i), fv);
-			output.add(fv);
-		}
+		for (X x : inputObjects)
+			if (mapping.containsKey(x))
+				output.add(mapping.get(x));
+			else
+				System.err.println("MDS: feature vector identified that was not used to calculate MDS. Mapping not supported yed. Ignore.");
 
 		return output;
 	}
@@ -241,5 +208,76 @@ public class MultiDimensionalScaling<O, X extends AbstractFeatureVector<O, ? ext
 
 	public void setPrintProgress(boolean printProgress) {
 		this.printProgress = printProgress;
+	}
+
+	@Override
+	public void calculateDimensionalityReduction() {
+		if (featureVectors == null)
+			throw new NullPointerException("MDS: feature vectors null");
+
+		mapping = new HashMap<>();
+
+		if (distanceMatrix == null)
+			calculateDistanceMatrix(featureVectors);
+
+		if (distanceMatrix == null)
+			throw new IllegalArgumentException("MDS: wrong input.");
+
+		dmMin = distanceMatrix.getMinDistance();
+		dmMax = distanceMatrix.getMaxDistance();
+
+		// initialize points of the low-dimensional embedding
+		List<double[]> lowDimensionalPoints = initializeLowDimensionalPoints(outputDimensionality, featureVectors.size());
+
+		for (int iteration = 0; iteration < maxIterations; iteration++) {
+			double[][] pointDistances = calculatePointDistances(lowDimensionalPoints);
+
+			// calculate Kruskal's stress for every pair of objects
+			if (printProgress) {
+				double stress = calculateStress(distanceMatrix, pointDistances, featureVectors);
+				// System.out.println("MDS: iteration " + (iteration + 1) + ":
+				// Kruskal's stress = " + stress);
+			}
+
+			// optimize low-dimensional embedding
+			double[][] newPoints = new double[lowDimensionalPoints.size()][outputDimensionality];
+			for (int i = 0; i < lowDimensionalPoints.size(); i++) {
+				double[] newPointCoordinates = new double[outputDimensionality];
+				for (int d = 0; d < outputDimensionality; d++) {
+					for (int j = 0; j < lowDimensionalPoints.size(); j++) {
+						if (j == i)
+							continue;
+						newPointCoordinates[d] += lowDimensionalPoints.get(i)[d]
+								+ (pointDistances[i][j] - normMinMax(distanceMatrix.getDistance(featureVectors.get(i), featureVectors.get(j)))) * (lowDimensionalPoints.get(j)[d] - lowDimensionalPoints.get(i)[d]);
+					}
+					newPointCoordinates[d] /= (lowDimensionalPoints.size() - 1);
+				}
+				newPoints[i] = newPointCoordinates;
+			}
+
+			// assign the new coordinates
+			for (int i = 0; i < lowDimensionalPoints.size(); i++)
+				for (int j = 0; j < lowDimensionalPoints.size(); j++)
+					lowDimensionalPoints.set(i, newPoints[i]);
+		}
+
+		for (int i = 0; i < featureVectors.size(); i++) {
+			NumericalFeatureVector fv = NumericalFeatureVectorFactory.createNumericalFeatureVector(lowDimensionalPoints.get(i), featureVectors.get(i).getName(), featureVectors.get(i).getDescription());
+			Iterator<String> attributeIterator = featureVectors.get(i).iterator();
+			while (attributeIterator.hasNext()) {
+				String attribute = attributeIterator.next();
+				fv.add(attribute, featureVectors.get(i).getAttribute(attribute));
+			}
+
+			mapping.put(featureVectors.get(i), fv);
+		}
+	}
+
+	public double getDmMin() {
+		return dmMin;
+	}
+
+	public void setDmMin(double dmMin) {
+		this.dmMin = dmMin;
 	}
 }

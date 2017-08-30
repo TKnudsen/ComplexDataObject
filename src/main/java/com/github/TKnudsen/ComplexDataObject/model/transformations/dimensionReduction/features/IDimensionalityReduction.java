@@ -27,5 +27,7 @@ public interface IDimensionalityReduction<O, X extends AbstractFeatureVector<O, 
 
 	public int getOutputDimensionality();
 
+	public void calculateDimensionalityReduction();
+
 	public Map<X, NumericalFeatureVector> getMapping();
 }

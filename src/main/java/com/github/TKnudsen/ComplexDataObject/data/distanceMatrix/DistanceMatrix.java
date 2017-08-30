@@ -21,12 +21,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	// constructor properties
-	protected List<T> objects;
+	private List<T> objects;
 	protected IDistanceMeasure<T> distanceMeasure;
 
 	// storage, indexing
@@ -211,5 +211,10 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		farestElements.clear();
 		farestElements.add(t1);
 		farestElements.add(t2);
+	}
+
+	@Override
+	public List<T> getElements() {
+		return objects;
 	}
 }
