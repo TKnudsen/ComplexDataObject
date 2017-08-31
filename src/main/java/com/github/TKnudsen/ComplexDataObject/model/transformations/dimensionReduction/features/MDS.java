@@ -117,7 +117,7 @@ public class MDS<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> ex
 			if (mapping.containsKey(x))
 				output.add(mapping.get(x));
 			else
-				System.err.println("MDS: feature vector identified that was not used to calculate MDS. Mapping not supported yed. Ignore.");
+				System.err.println("MDS: feature vector identified that was not used to calculate MDS. Mapping not supported yet. Ignore.");
 
 		return output;
 	}

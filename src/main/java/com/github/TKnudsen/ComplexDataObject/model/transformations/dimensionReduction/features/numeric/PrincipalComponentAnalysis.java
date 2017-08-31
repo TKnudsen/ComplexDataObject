@@ -22,23 +22,19 @@ import weka.core.Instances;
  * </p>
  * 
  * <p>
- * Description: Principal component analysis using WEKA's PrincipalComponents
- * algorithm. Default parameters:
+ * Description: Principal component analysis using WEKA's PrincipalComponents algorithm. Default parameters:
  * 
  * -D Don't normalize input data.
  * 
- * -R Retain enough PC attributes to account for this proportion of variance in
- * the original data. (default = 0.95)
+ * -R Retain enough PC attributes to account for this proportion of variance in the original data. (default = 0.95)
  * 
  * -O Transform through the PC space and back to the original space.
  * 
- * -A Maximum number of attributes to include in transformed attribute names.
- * (-1 = include all)
+ * -A Maximum number of attributes to include in transformed attribute names. (-1 = include all)
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017 J�rgen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
+ * Copyright: Copyright (c) 2017 J�rgen Bernard, https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
@@ -49,28 +45,31 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 	/**
 	 * whether or not the PCA model will normalize the data at start
 	 */
-	private boolean normalize = true;
+	private boolean normalize;
 
 	/**
-	 * parameter that can be used as a criterion of convergence. Principal
-	 * components are built until the minimum remaining variance is achieved.
-	 * Example: let's say 60% of the variance shall be preserved for a given
-	 * data set. then d principal components are needed to achieve at least 60%
-	 * variance preservation.
+	 * parameter that can be used as a criterion of convergence. Principal components are built until the minimum remaining variance is achieved. Example: let's say 60% of the variance shall be preserved for a given data set. then d principal
+	 * components are needed to achieve at least 60% variance preservation.
 	 */
-	private double minimumRemainingVariance = Double.NaN;
+	private double minimumRemainingVariance;
 
 	/**
 	 * whether of not feature are 'back-projected' into the original space.
 	 */
 	private boolean transformThroughPCASpaceBackToOriginalSpace = false;
 
-	public PrincipalComponentAnalysis(boolean normalize, int outputDimensionality) {
-		this.normalize = normalize;
-		this.outputDimensionality = outputDimensionality;
+	private List<NumericalFeatureVector> featureVectors;
+
+	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, int outputDimensionality) {
+		this(featureVectors, true, Double.NaN, outputDimensionality);
 	}
 
-	public PrincipalComponentAnalysis(boolean normalize, double minimumRemainingVariance, int outputDimensionality) {
+	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, boolean normalize, int outputDimensionality) {
+		this(featureVectors, normalize, Double.NaN, outputDimensionality);
+	}
+
+	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, boolean normalize, double minimumRemainingVariance, int outputDimensionality) {
+		this.featureVectors = featureVectors;
 		this.normalize = normalize;
 		this.minimumRemainingVariance = minimumRemainingVariance;
 		this.outputDimensionality = outputDimensionality;
@@ -84,8 +83,7 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 		if (!normalize)
 			parameters.add("-D");
 
-		if (!Double.isNaN(minimumRemainingVariance) && minimumRemainingVariance > 0.0
-				&& minimumRemainingVariance <= 1.0) {
+		if (!Double.isNaN(minimumRemainingVariance) && minimumRemainingVariance > 0.0 && minimumRemainingVariance <= 1.0) {
 			parameters.add("-R");
 			parameters.add("" + minimumRemainingVariance);
 		}
@@ -109,82 +107,49 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 		}
 	}
 
+	/**
+	 * provides a low-dimensional representation of X
+	 */
 	@Override
 	public List<NumericalFeatureVector> transform(NumericalFeatureVector input) {
-		throw new IllegalArgumentException("PCA has to be run with a list of feature vectors.");
+		if (mapping != null && mapping.get(input) != null)
+			return Arrays.asList(new NumericalFeatureVector[] { mapping.get(input) });
+		else {
+			List<NumericalFeatureVector> lst = new ArrayList<>();
+			lst.add(input);
+			return transform(lst);
+		}
 	}
 
+	/**
+	 * provides a low-dimensional representation of X
+	 */
 	@Override
 	public List<NumericalFeatureVector> transform(List<NumericalFeatureVector> inputObjects) {
-		if (pca == null)
-			initPCA();
+		if (mapping == null || pca == null)
+			throw new NullPointerException("PCA: model not calculated yet.");
 
-		mapping = new HashMap<>();
+		List<NumericalFeatureVector> output = new ArrayList<>();
+		for (NumericalFeatureVector fv : inputObjects)
+			if (mapping.containsKey(fv))
+				output.add(mapping.get(fv));
+			else {
+				Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(fv)), false);
+				Iterator<Instance> iterator = instances.iterator();
+				if (iterator.hasNext()) {
+					try {
+						Instance transformed = pca.convertInstance(iterator.next());
+						NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
 
-		Instances instances = WekaConversion.getInstances(inputObjects, false);
-		try {
-			pca.buildEvaluator(instances);
-			Instances transformedData = pca.transformedData(instances);
-
-			// build new feature vectors
-			List<NumericalFeatureVector> returnFVs = new ArrayList<>();
-			for (int i = 0; i < transformedData.size(); i++) {
-				Instance transformed = transformedData.get(i);
-
-				NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
-
-				outputFeatureVector.setMaster(inputObjects.get(i));
-				returnFVs.add(outputFeatureVector);
-
-				mapping.put(inputObjects.get(i), outputFeatureVector);
+						outputFeatureVector.setMaster(fv);
+						output.add(outputFeatureVector);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 
-			return returnFVs;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public NumericalFeatureVector transformWithExistingModel(NumericalFeatureVector input) {
-		if (pca == null)
-			return null;
-
-		Instances instances = WekaConversion.getInstances(new ArrayList<NumericalFeatureVector>(Arrays.asList(input)),
-				false);
-		Iterator<Instance> iterator = instances.iterator();
-		if (iterator.hasNext()) {
-			try {
-				Instance transformed = pca.convertInstance(iterator.next());
-				NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
-
-				outputFeatureVector.setMaster(input);
-				return outputFeatureVector;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return null;
-	}
-
-	public List<NumericalFeatureVector> transformWithExistingModel(List<NumericalFeatureVector> inputObjects) {
-		if (pca == null)
-			return null;
-
-		// build new feature vectors
-		List<NumericalFeatureVector> returnFVs = new ArrayList<>();
-		for (NumericalFeatureVector fv : inputObjects) {
-
-			NumericalFeatureVector outputFeatureVector = transformWithExistingModel(fv);
-
-			outputFeatureVector.setMaster(fv);
-			returnFVs.add(outputFeatureVector);
-		}
-
-		return returnFVs;
+		return output;
 	}
 
 	private NumericalFeatureVector createNumericalFeatureVector(Instance transformed) {
@@ -229,7 +194,32 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 
 	@Override
 	public void calculateDimensionalityReduction() {
-		// TODO Auto-generated method stub
-		
+		if (featureVectors == null)
+			throw new NullPointerException("PCA: feature vectors null");
+
+		initPCA();
+
+		mapping = new HashMap<>();
+
+		Instances instances = WekaConversion.getInstances(featureVectors, false);
+		try {
+			pca.buildEvaluator(instances);
+			Instances transformedData = pca.transformedData(instances);
+
+			// build new feature vectors
+			List<NumericalFeatureVector> returnFVs = new ArrayList<>();
+			for (int i = 0; i < transformedData.size(); i++) {
+				Instance transformed = transformedData.get(i);
+
+				NumericalFeatureVector outputFeatureVector = createNumericalFeatureVector(transformed);
+
+				outputFeatureVector.setMaster(featureVectors.get(i));
+				returnFVs.add(outputFeatureVector);
+
+				mapping.put(featureVectors.get(i), outputFeatureVector);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
