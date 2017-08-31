@@ -67,6 +67,10 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 			return false;
 		}
 		final KeyValueObject<?> other = (KeyValueObject<?>) obj;
+
+		// if (this.ID != other.getID())
+		// return false;
+
 		return this.hashCode() == other.hashCode() ? true : false;
 	}
 
