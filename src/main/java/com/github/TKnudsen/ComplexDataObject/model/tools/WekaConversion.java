@@ -31,8 +31,7 @@ import weka.core.Instances;
  * </p>
  *
  * <p>
- * Description: helper tools that ease the use of WEKA data structures, i.e.,
- * Instances and Instance objects.
+ * Description: helper tools that ease the use of WEKA data structures, i.e., Instances and Instance objects.
  * </p>
  *
  * <p>
@@ -175,8 +174,7 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @param stringToNominal
-	 *            decides whether string values are represented as nominal
-	 *            values (with a concrete alphabet of observations)
+	 *            decides whether string values are represented as nominal values (with a concrete alphabet of observations)
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
@@ -286,8 +284,7 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @param classAttribute
-	 *            attribute in the features with the class information. Note:
-	 *            the Weka class attribute will be 'class', though.
+	 *            attribute in the features with the class information. Note: the Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
@@ -319,8 +316,7 @@ public class WekaConversion {
 	 * @param fvs
 	 * @param weights
 	 * @param classAttribute
-	 *            attribute in the features with the class information. Note:
-	 *            the Weka class attribute will be 'class', though.
+	 *            attribute in the features with the class information. Note: the Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getLabeledInstances(List<FV> fvs, List<Double> weights, String classAttribute, boolean stringToNominal) {
@@ -372,6 +368,12 @@ public class WekaConversion {
 		return addLabelsToInstances(insances, "class", labels);
 	}
 
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getRegressionValueInstances(List<FV> fvs, List<Double> values) {
+		Instances insances = getInstances(fvs, false);
+
+		return addRegressionValuesToInstances(insances, "class", values);
+	}
+
 	/**
 	 * what is this good for?!
 	 * 
@@ -407,9 +409,7 @@ public class WekaConversion {
 	}
 
 	/**
-	 * adds a label/class attribute to an instances object. if the list of given
-	 * objects does not have the behavior of valid (categorical) class labels
-	 * the class attribute is generate without any further characterization.
+	 * adds a label/class attribute to an instances object. if the list of given objects does not have the behavior of valid (categorical) class labels the class attribute is generate without any further characterization.
 	 * 
 	 * @param instances
 	 * @param attributeName
@@ -443,6 +443,18 @@ public class WekaConversion {
 		return instances;
 	}
 
+	public static Instances addRegressionValueAttributeToInstance(Instances instances, String attributeName) {
+
+		Attribute classAtt;
+		classAtt = new Attribute(attributeName);
+
+		instances.insertAttributeAt(classAtt, instances.numAttributes());
+		instances.setClass(classAtt);
+		instances.setClassIndex(instances.numAttributes() - 1);
+
+		return instances;
+	}
+
 	public static Instances addNumericLabelAttributeToInstance(Instances insances) {
 		Attribute classAtt = new Attribute("num");
 
@@ -462,6 +474,18 @@ public class WekaConversion {
 
 		for (int i = 0; i < labels.size(); i++)
 			inst2.instance(i).setClassValue(labels.get(i).toString());
+
+		return inst2;
+	}
+
+	private static Instances addRegressionValuesToInstances(Instances instances, String attributeName, List<Double> values) {
+		if (instances == null)
+			return null;
+
+		Instances inst2 = addRegressionValueAttributeToInstance(instances, attributeName);
+
+		for (int i = 0; i < values.size(); i++)
+			inst2.instance(i).setClassValue(values.get(i));
 
 		return inst2;
 	}
