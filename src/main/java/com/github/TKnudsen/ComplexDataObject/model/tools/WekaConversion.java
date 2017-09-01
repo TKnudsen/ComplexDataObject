@@ -178,13 +178,21 @@ public class WekaConversion {
 	 * @return
 	 */
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal) {
+		return getInstances(fvs, stringToNominal, null);
+	}
+
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getInstances(List<FV> fvs, boolean stringToNominal, Map<String, Set<String>> featureAlphabet) {
 		if (fvs == null)
 			return null;
 
 		if (fvs.size() == 0)
 			return null;
 
-		List<Attribute> attrs = createAttributes(fvs, stringToNominal);
+		List<Attribute> attrs;
+		if (featureAlphabet == null)
+			attrs = createAttributes(fvs, stringToNominal);
+		else
+			attrs = createAttributes(fvs, featureAlphabet);
 
 		Instances data = new Instances(fvs.get(0).getClass().getName(), (ArrayList<Attribute>) attrs, fvs.size());
 
@@ -231,6 +239,33 @@ public class WekaConversion {
 								alphabet.add(feature.getFeatureValue().toString());
 						}
 				a = new Attribute(i + 1 + "", new ArrayList<>(alphabet));
+			}
+			attributes.add(a);
+		}
+
+		return attributes;
+	}
+	
+	private static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> List<Attribute> createAttributes(List<FV> fvs, Map<String, Set<String>> featureAlphabet) {
+		if (fvs == null)
+			return null;
+
+		if (fvs.size() == 0)
+			return new ArrayList<>();
+
+		int length = fvs.get(0).getDimensions();
+		List<Attribute> attributes = new ArrayList<Attribute>(length);
+
+		for (int i = 0; i < length; i++) {
+			Attribute a = null;
+			if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
+				a = new Attribute(i + 1 + "");
+			else if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.BOOLEAN))
+				a = new Attribute(i + 1 + "");
+			else if (!featureAlphabet.containsKey(fvs.get(0).getFeature(i).getFeatureName()))
+				a = new Attribute(i + 1 + "", (List<String>) null);
+			else {
+				a = new Attribute(i + 1 + "", new ArrayList<>(featureAlphabet.get(fvs.get(0).getFeature(i).getFeatureName())));
 			}
 			attributes.add(a);
 		}
@@ -370,6 +405,12 @@ public class WekaConversion {
 
 	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getRegressionValueInstances(List<FV> fvs, List<Double> values) {
 		Instances insances = getInstances(fvs, false);
+
+		return addRegressionValuesToInstances(insances, "class", values);
+	}
+
+	public static <O extends Object, FV extends AbstractFeatureVector<O, ? extends Feature<O>>> Instances getRegressionValueInstances(List<FV> fvs, List<Double> values, Map<String, Set<String>> featureAlphabet) {
+		Instances insances = getInstances(fvs, true, featureAlphabet);
 
 		return addRegressionValuesToInstances(insances, "class", values);
 	}
