@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * generalizable data structures.
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 J�rgen Bernard,
+ * Copyright: Copyright (c) 2012-2017 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 

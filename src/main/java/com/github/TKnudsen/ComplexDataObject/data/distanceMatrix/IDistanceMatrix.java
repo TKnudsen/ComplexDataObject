@@ -19,7 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 
@@ -40,4 +40,8 @@ public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 	 * @return
 	 */
 	public double getMaxDistance();
+
+	public List<T> getClosestElements();
+
+	public List<T> getFarestElements();
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorFactory;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector.EuclideanDistanceMeasure;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.MDS;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction.MDS;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -234,7 +234,7 @@ public class MDS<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> ex
 
 			// calculate Kruskal's stress for every pair of objects
 			if (printProgress) {
-				double stress = calculateStress(distanceMatrix, pointDistances, featureVectors);
+//				double stress = calculateStress(distanceMatrix, pointDistances, featureVectors);
 				// System.out.println("MDS: iteration " + (iteration + 1) + ":
 				// Kruskal's stress = " + stress);
 			}

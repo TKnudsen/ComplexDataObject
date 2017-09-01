@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction;
 
 import java.util.Map;
 

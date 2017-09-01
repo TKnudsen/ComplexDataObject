@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.numeric;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,6 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionReduction.features.DimensionalityReduction;
 
 import weka.attributeSelection.PrincipalComponents;
 import weka.core.Instance;
@@ -40,7 +39,7 @@ import weka.core.Instances;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, NumericalFeatureVector> {
+public class PCA extends DimensionalityReduction<Double, NumericalFeatureVector> {
 
 	/**
 	 * whether or not the PCA model will normalize the data at start
@@ -60,15 +59,15 @@ public class PrincipalComponentAnalysis extends DimensionalityReduction<Double, 
 
 	private List<NumericalFeatureVector> featureVectors;
 
-	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, int outputDimensionality) {
+	public PCA(List<NumericalFeatureVector> featureVectors, int outputDimensionality) {
 		this(featureVectors, true, Double.NaN, outputDimensionality);
 	}
 
-	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, boolean normalize, int outputDimensionality) {
+	public PCA(List<NumericalFeatureVector> featureVectors, boolean normalize, int outputDimensionality) {
 		this(featureVectors, normalize, Double.NaN, outputDimensionality);
 	}
 
-	public PrincipalComponentAnalysis(List<NumericalFeatureVector> featureVectors, boolean normalize, double minimumRemainingVariance, int outputDimensionality) {
+	public PCA(List<NumericalFeatureVector> featureVectors, boolean normalize, double minimumRemainingVariance, int outputDimensionality) {
 		this.featureVectors = featureVectors;
 		this.normalize = normalize;
 		this.minimumRemainingVariance = minimumRemainingVariance;

@@ -84,29 +84,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 				if (getMax() < distance) {
 					updateMaxDistance(distance, t1, t2);
 				}
-
-				// min = Math.min(min, distance);
-				// max = Math.max(max, distance);
 			}
-
-		// // create distance matrix - would be at least as good as the upper
-		// // variant. but does not generalize for inheriting classes
-		// for (int i = 0; i < objectIndex.size() - 1; i++)
-		// for (int j = i; j < objectIndex.size(); j++) {
-		// double d1 = distanceMeasure.getDistance(objects.get(i),
-		// objects.get(j));
-		// double d2 = distanceMeasure.getDistance(objects.get(j),
-		// objects.get(i));
-		//
-		// distanceMatrix[i][j] = d1;
-		// distanceMatrix[j][i] = d2;
-		//
-		// min = Math.min(min, d1);
-		// min = Math.min(min, d2);
-		//
-		// max = Math.max(max, d1);
-		// max = Math.max(max, d2);
-		// }
 	}
 
 	protected Integer getObjectIndex(T object) {
@@ -165,20 +143,14 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		return getMax();
 	}
 
+	@Override
 	public List<T> getClosestElements() {
 		return closestElements;
 	}
 
-	public void setClosestElements(List<T> closestElements) {
-		this.closestElements = closestElements;
-	}
-
+	@Override
 	public List<T> getFarestElements() {
 		return farestElements;
-	}
-
-	public void setFarestElements(List<T> farestElements) {
-		this.farestElements = farestElements;
 	}
 
 	public double getMin() {
@@ -193,7 +165,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	 * @param t1
 	 * @param t2
 	 */
-	public void updateMinDistance(double min, T t1, T t2) {
+	public final void updateMinDistance(double min, T t1, T t2) {
 		this.min = min;
 
 		closestElements.clear();
@@ -205,7 +177,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		return max;
 	}
 
-	public void updateMaxDistance(double max, T t1, T t2) {
+	public final void updateMaxDistance(double max, T t1, T t2) {
 		this.max = max;
 
 		farestElements.clear();
