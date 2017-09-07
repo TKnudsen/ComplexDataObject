@@ -16,12 +16,13 @@ import java.awt.Color;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public enum DataTransformationCategory {
 
+	// TODO re-assign colors
 	DIMENSION_REDUCTION("Dimension Reduction", new Color(0x49, 0x85, 0x93), new Color(0x30, 0xA5, 0xBF)), DESCRIPTOR("Feature Extraction", new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b)), FEATURE_EXTRACTION("Feature Extraction",
-			new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b)), DATA_CLEANING("Data Cleaning", new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b));
+			new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b)), DATA_CLEANING("Data Cleaning", new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b)), SEGMENTATION("Segmentation", new Color(0x6b, 0x99, 0x78), new Color(0x60, 0xbf, 0x7b));
 
 	private String name;
 	private Color color;

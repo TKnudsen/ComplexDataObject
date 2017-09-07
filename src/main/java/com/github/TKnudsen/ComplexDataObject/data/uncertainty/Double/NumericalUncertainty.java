@@ -19,14 +19,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3587900480075316787L;
 
 	private Double min;
 	private Double max;
@@ -39,7 +34,7 @@ public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
 
 	private void initialize(Collection<? extends Double> values) {
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
-		
+
 		this.min = statisticsSupport.getMin();
 		this.max = statisticsSupport.getMax();
 		this.representant = statisticsSupport.getMedian();
