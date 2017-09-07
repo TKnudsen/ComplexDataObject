@@ -51,6 +51,9 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 		String rep = null;
 		Double repRatio = 0.0;
 
+		if (valueDistribution == null)
+			return null;
+
 		for (String value : valueDistribution.keySet())
 			if (valueDistribution.get(value) > repRatio) {
 				rep = value;
