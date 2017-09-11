@@ -16,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * Description:
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 J�rgen Bernard,
+ * Copyright: Copyright (c) 2012-2017 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
