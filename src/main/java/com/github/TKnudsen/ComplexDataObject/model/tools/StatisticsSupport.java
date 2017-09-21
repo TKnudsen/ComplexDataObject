@@ -54,10 +54,10 @@ public class StatisticsSupport extends DescriptiveStatistics {
 	 * 
 	 * @param vector
 	 */
-	public StatisticsSupport(double[] vector) {
+	public StatisticsSupport(Number[] vector) {
 		for (int i = 0; i < vector.length; i++)
-			if (!Double.isNaN(vector[i]))
-				addValue(vector[i]);
+			if (!Double.isNaN(vector[i].doubleValue()))
+				addValue(vector[i].doubleValue());
 	}
 
 	/**
