@@ -63,6 +63,17 @@ public class StatisticsSupport extends DescriptiveStatistics {
 	/**
 	 * NANs are removed!
 	 * 
+	 * @param vector
+	 */
+	public StatisticsSupport(double[] vector) {
+		for (int i = 0; i < vector.length; i++)
+			if (!Double.isNaN(vector[i]))
+				addValue(vector[i]);
+	}
+
+	/**
+	 * NANs are removed!
+	 * 
 	 * @param values
 	 */
 	public StatisticsSupport(Collection<? extends Number> values) {
