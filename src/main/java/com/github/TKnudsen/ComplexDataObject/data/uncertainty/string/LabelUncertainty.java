@@ -19,7 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualit
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 public class LabelUncertainty implements IUncertaintyQualitative<String> {
 
@@ -73,7 +73,7 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 		return valueDistribution;
 	}
 
-	public Set<String> getValueSet() {
+	public Set<String> getLabelSet() {
 		return valueDistribution.keySet();
 	}
 }
