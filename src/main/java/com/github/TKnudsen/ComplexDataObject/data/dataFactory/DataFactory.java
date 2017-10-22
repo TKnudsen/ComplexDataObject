@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.data.examples;
+package com.github.TKnudsen.ComplexDataObject.data.dataFactory;
 
 import java.io.IOException;
 import java.util.List;
