@@ -37,6 +37,8 @@ public class NumericalFeature extends Feature<Double> {
 
 	@Override
 	public String toString() {
+		if (featureName != null)
+			return featureName + ", " + featureValue + " (" + featureType.name() + ") ";
 		return featureValue + " (" + featureType.name() + ") ";
 	}
 
