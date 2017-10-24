@@ -75,7 +75,7 @@ public class DimensionalityReductionTools {
 				continue;
 
 			for (int i = 0; i < vector.length; i++) {
-				if (valuesPerDimension.size() < i)
+				if (valuesPerDimension.size() <= i)
 					valuesPerDimension.add(new ArrayList<>());
 
 				valuesPerDimension.get(i).add(vector[i]);
