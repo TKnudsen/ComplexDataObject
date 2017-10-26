@@ -35,7 +35,7 @@ import com.google.common.primitives.Doubles;
  * Copyright: Copyright (c) 2012-2017
  * </p>
  * 
- * @author Jürgen Bernard
+ * @author Juergen Bernard
  *
  */
 public class StatisticsSupport extends DescriptiveStatistics {
