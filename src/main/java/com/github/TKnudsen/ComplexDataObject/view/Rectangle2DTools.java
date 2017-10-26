@@ -23,14 +23,15 @@ public class Rectangle2DTools {
 		if (rectangle == null || xCount <= 0 || yCount <= 0 || betweenSpaceOffset < 0 || rectangle.getWidth() < xCount + betweenSpaceOffset * (xCount - 1) || rectangle.getHeight() < yCount + betweenSpaceOffset * (yCount - 1))
 			return null;
 
-		
+		betweenSpaceOffset = 3;
+
 		Rectangle2D[][] rectangleArray = new Rectangle2D[xCount][yCount];
 
-		double ySpace = rectangle.getHeight() - ((yCount-1) * betweenSpaceOffset);
-		double xSpace = rectangle.getWidth() - ((xCount-1) * betweenSpaceOffset);
+		double ySpace = rectangle.getHeight() - ((yCount - 1) * betweenSpaceOffset);
+		double xSpace = rectangle.getWidth() - ((xCount - 1) * betweenSpaceOffset);
 
-		double height =Math.floor(ySpace / yCount);
-		double width = Math.floor(xSpace / xCount);
+		double height = ySpace / yCount;
+		double width = xSpace / xCount;
 
 		for (int x = 0; x < xCount; x++) {
 			for (int y = 0; y < yCount; y++) {
