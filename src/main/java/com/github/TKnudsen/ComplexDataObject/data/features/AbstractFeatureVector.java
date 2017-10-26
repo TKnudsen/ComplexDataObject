@@ -317,11 +317,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-
-	@Override
 	public String toString() {
 		String string = this.getName() + ", " + this.getID() + ", dim: " + getDimensions() + "\t";
 
