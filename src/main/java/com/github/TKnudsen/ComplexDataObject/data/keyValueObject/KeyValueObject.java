@@ -55,7 +55,7 @@ public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, I
 
 	@Override
 	public int hashCode() {
-		return (int) ID;
+		return Long.hashCode(ID);
 	}
 
 	@Override
