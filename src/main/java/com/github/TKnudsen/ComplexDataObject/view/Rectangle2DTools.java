@@ -23,7 +23,6 @@ public class Rectangle2DTools {
 		if (rectangle == null || xCount <= 0 || yCount <= 0 || betweenSpaceOffset < 0 || rectangle.getWidth() < xCount + betweenSpaceOffset * (xCount - 1) || rectangle.getHeight() < yCount + betweenSpaceOffset * (yCount - 1))
 			return null;
 
-		betweenSpaceOffset = 2;
 		
 		Rectangle2D[][] rectangleArray = new Rectangle2D[xCount][yCount];
 
