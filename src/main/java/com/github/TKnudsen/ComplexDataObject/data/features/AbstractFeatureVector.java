@@ -319,23 +319,6 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	@Override
 	public int hashCode() {
 		return super.hashCode();
-
-		// TODO reconsider hashing of features, especially since the feature set
-		// can change over time. In addition hashing as done below slowed down
-		// the process.
-
-		// int hash = 1;
-		//
-		// if (master != null)
-		// hash = 37 * hash + master.hashCode();
-		//
-		// if (featuresList == null)
-		// hash = 37 * hash;
-		// else
-		// for (F feature : featuresList)
-		// hash = 37 * hash + feature.hashCode();
-		//
-		// return hash;
 	}
 
 	@Override
