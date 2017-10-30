@@ -88,7 +88,7 @@ public abstract class DimensionalityReduction<O, X extends AbstractFeatureVector
 				output.add(mapping.get(x));
 			else {
 				output.add(null);
-				System.err.println("DimensionalityRedutcion: feature vector identified that was not used for model building. null value added.");
+				System.err.println("DimensionalityRedutcion: input object identified that was not used for model building. null value added.");
 			}
 
 		return output;
