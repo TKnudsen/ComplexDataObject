@@ -3,6 +3,8 @@ package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.javagl.nd.tuples.d.DoubleTuple;
+
 /**
  * <p>
  * Title: NumericalFeatureVectorFactory
@@ -57,5 +59,17 @@ public class NumericalFeatureVectorFactory {
 		numericalFeatureVector.setDescription(description);
 
 		return numericalFeatureVector;
+	}
+
+	public static NumericalFeatureVector createNumericalFeatureVector(DoubleTuple doubleTuple, String name, String description) {
+		if (doubleTuple == null)
+			return null;
+
+		double[] vector = new double[doubleTuple.getSize()];
+
+		for (int i = 0; i < doubleTuple.getSize(); i++)
+			vector[i] = doubleTuple.get(i);
+
+		return createNumericalFeatureVector(vector, name, description);
 	}
 }
