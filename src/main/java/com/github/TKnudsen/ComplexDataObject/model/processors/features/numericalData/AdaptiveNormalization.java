@@ -38,7 +38,7 @@ public class AdaptiveNormalization implements INumericalFeatureVectorProcessor {
 
 	@Override
 	public void process(List<NumericalFeatureVector> data) {
-
+		process(new NumericalFeatureVectorContainer(data));
 	}
 
 	@Override

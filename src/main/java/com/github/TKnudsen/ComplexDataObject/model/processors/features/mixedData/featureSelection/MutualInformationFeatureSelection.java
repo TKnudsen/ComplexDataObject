@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.featureSelection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +196,26 @@ public class MutualInformationFeatureSelection implements IMixedDataFeatureVecto
 
 	public void setDiscretization(int discretization) {
 		this.discretization = discretization;
+	}
+
+	public List<String> getSortedFeatureNames() {
+		double[] labelMI = null;
+		labelMI = calculateLabelMI();
+
+		int[] sorted = weka.core.Utils.stableSort(labelMI);
+		List<Integer> sortedList = new ArrayList<>();
+		List<String> sortedFs = new ArrayList<>();
+		for (int i : sorted) {
+			sortedList.add(i);
+		}
+		Collections.reverse(sortedList);
+		
+		MixedDataFeatureVector sample = labeledFVs.get(0);
+
+		for (int i = 0; i < sortedList.size(); i++) {
+			sortedFs.add(sample.getFeature(sortedList.indexOf(i)).getFeatureName());
+		}
+		return sortedFs;
 	}
 
 }
