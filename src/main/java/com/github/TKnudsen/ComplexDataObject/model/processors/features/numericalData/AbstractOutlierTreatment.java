@@ -44,8 +44,8 @@ public abstract class AbstractOutlierTreatment implements INumericalFeatureVecto
 			Map<Long, Object> valueMap = container.getFeatureValues(featureName);
 			List<Double> values = new ArrayList<>(valueMap.size());
 			for (Object value : valueMap.values()) {
-				if (value instanceof Double)
-					values.add((Double) value);
+				if (value instanceof NumericalFeature)
+					values.add(((NumericalFeature) value).getFeatureValue());
 			}
 			Entry<Double, Double> bounds = calculateBounds(values);
 			newMinValues.put(featureName, bounds.getKey());
