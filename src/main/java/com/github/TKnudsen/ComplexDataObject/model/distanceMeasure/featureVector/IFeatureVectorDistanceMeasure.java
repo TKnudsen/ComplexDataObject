@@ -14,10 +14,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDist
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2017
  * </p>
  * 
  * @author Juergen Bernard
+ * @version 1.01
  */
 public interface IFeatureVectorDistanceMeasure<FV extends AbstractFeatureVector<?, ? extends Feature<?>>> extends IIDObjectDistanceMeasure<FV> {
 

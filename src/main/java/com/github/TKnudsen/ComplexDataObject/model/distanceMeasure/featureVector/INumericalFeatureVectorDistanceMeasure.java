@@ -2,6 +2,22 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVecto
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
+/**
+ * <p>
+ * Title: INumericalFeatureVectorDistanceMeasure
+ * </p>
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2016-2017
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.01
+ */
 public interface INumericalFeatureVectorDistanceMeasure extends IFeatureVectorDistanceMeasure<NumericalFeatureVector> {
 
 }
