@@ -27,15 +27,15 @@ import java.util.Set;
 public class DataConversion {
 
 	/**
-	 * convertss a list of Double objects to an array of double primitives.
+	 * converts a list of Double objects to an array of double primitives.
 	 * 
 	 * @param values
 	 * @return
 	 */
 	public static double[] toPrimitives(List<Double> values) {
 		if (values == null)
-			 return null;
-				
+			return null;
+
 		return values.stream().mapToDouble(Double::doubleValue).toArray();
 
 		// if (values == null)
@@ -47,6 +47,19 @@ public class DataConversion {
 		// ret[i] = values.get(i).doubleValue();
 		//
 		// return ret;
+	}
+
+	/**
+	 * converts a list of Integers to an array of int primitives.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static int[] toIntPrimitives(List<Integer> values) {
+		if (values == null)
+			return null;
+
+		return values.stream().mapToInt(Integer::intValue).toArray();
 	}
 
 	/**

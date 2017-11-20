@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.MixedDataFeatureVectorFeatureSubsetDistanceMeasure;
 
