@@ -61,10 +61,8 @@ public class SimpsonsIndex {
 			totalNumber += distribution[i];
 		}
 
-		if (totalNumber == 0)
+		if (totalNumber < 2)
 			return 0.0;
-		else if (totalNumber * (totalNumber - 1) == 0)
-			return 1.0;
 		else
 			return numbers / (double) (totalNumber * (totalNumber - 1));
 	}
