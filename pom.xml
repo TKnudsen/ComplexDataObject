@@ -45,6 +45,7 @@
 	</distributionManagement>
 
 	<properties>
+		<project.build.sourceEncoding>cp1250</project.build.sourceEncoding>
 		<maven-compiler-plugin.source>1.8</maven-compiler-plugin.source>
 		<maven-compiler-plugin.target>1.8</maven-compiler-plugin.target>
 		<assertj.version>2.3.0</assertj.version>
