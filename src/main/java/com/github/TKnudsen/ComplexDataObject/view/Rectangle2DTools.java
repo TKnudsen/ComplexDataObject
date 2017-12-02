@@ -16,6 +16,7 @@ import java.awt.geom.Rectangle2D;
  * </p>
  * 
  * @author Juergen Bernard
+ * @version 0.0.2
  */
 public class Rectangle2DTools {
 
@@ -33,11 +34,13 @@ public class Rectangle2DTools {
 
 		for (int x = 0; x < xCount; x++) {
 			for (int y = 0; y < yCount; y++) {
-				double xPosition = rectangle.getX() + x * width + (x - 1) * betweenSpaceOffset;
-				double yPosition = rectangle.getY() + y * height + (y - 1) * betweenSpaceOffset;
+				// bug fixed. position calculation was on ... (x-1)... earlier,
+				// thus the whole arangement was shifted leftwards by
+				// betweenSpaceOffset
+				double xPosition = rectangle.getX() + x * width + x * betweenSpaceOffset;
+				double yPosition = rectangle.getY() + y * height + y * betweenSpaceOffset;
 
 				rectangleArray[x][y] = new Rectangle2D.Double(xPosition, yPosition, width, height);
-
 			}
 		}
 
@@ -47,6 +50,5 @@ public class Rectangle2DTools {
 	public static Rectangle2D[][] createRectangleMatrix(Rectangle2D rectangle, int xCount, int yCount, int betweenSpaceOffset) {
 
 		return createRectangleMatrix(rectangle, xCount, yCount, (double) betweenSpaceOffset);
-
 	}
 }
