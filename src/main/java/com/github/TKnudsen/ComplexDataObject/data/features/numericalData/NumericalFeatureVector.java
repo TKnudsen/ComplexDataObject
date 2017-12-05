@@ -98,8 +98,8 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 			clone.add(s, getAttribute(s));
 
 		// name and description
-		clone.setName(new String(getName()));
-		clone.setDescription(new String(getDescription()));
+		clone.setName(getName());
+		clone.setDescription(getDescription());
 
 		return clone;
 	}
