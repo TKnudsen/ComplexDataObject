@@ -11,15 +11,17 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualit
  * </p>
  * 
  * <p>
- * Description: data model for uncertainties of string data.
+ * Description: data model for uncertainties of string data. In general, high
+ * values mean high uncertainty. This is incontrast to probability distributions
+ * where high values mean high probabilities.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class LabelUncertainty implements IUncertaintyQualitative<String> {
 
@@ -47,15 +49,21 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 			this.representant = calculateRepresentant();
 	}
 
+	/**
+	 * The most meaningful representant is the value with the LEAST uncertainty.
+	 * This notion is inverse to probability distributions (!).
+	 * 
+	 * @return
+	 */
 	private String calculateRepresentant() {
 		String rep = null;
-		Double repRatio = 0.0;
+		Double repRatio = Double.POSITIVE_INFINITY;
 
 		if (valueDistribution == null)
 			return null;
 
 		for (String value : valueDistribution.keySet())
-			if (valueDistribution.get(value) > repRatio) {
+			if (valueDistribution.get(value) < repRatio) {
 				rep = value;
 				repRatio = valueDistribution.get(value);
 			}
