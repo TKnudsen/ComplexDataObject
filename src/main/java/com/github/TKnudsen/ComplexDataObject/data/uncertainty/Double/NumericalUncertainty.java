@@ -42,7 +42,7 @@ public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
 	}
 
 	@Override
-	public Double getRepresentant() {
+	public Double getMostCertainRepresentant() {
 		return representant;
 	}
 

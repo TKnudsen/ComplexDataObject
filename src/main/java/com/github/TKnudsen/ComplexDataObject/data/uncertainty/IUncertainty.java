@@ -10,13 +10,13 @@ package com.github.TKnudsen.ComplexDataObject.data.uncertainty;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public interface IUncertainty<T> {
 
-	public T getRepresentant();
+	public T getMostCertainRepresentant();
 }

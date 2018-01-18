@@ -46,7 +46,7 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 		this.representant = representant;
 
 		if (representant == null)
-			this.representant = calculateRepresentant();
+			this.representant = calculateMostCertainRepresentant();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 	 * 
 	 * @return
 	 */
-	private String calculateRepresentant() {
+	private String calculateMostCertainRepresentant() {
 		String rep = null;
 		Double repRatio = Double.POSITIVE_INFINITY;
 
@@ -72,7 +72,7 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 	}
 
 	@Override
-	public String getRepresentant() {
+	public String getMostCertainRepresentant() {
 		return representant;
 	}
 
