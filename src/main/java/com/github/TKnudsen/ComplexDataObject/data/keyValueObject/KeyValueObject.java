@@ -29,7 +29,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * @version 1.01
  */
 
-public class KeyValueObject<V extends Object> implements IKeyValueProvider<V>, Iterable<String> {
+public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String> {
 
 	protected long ID;
 

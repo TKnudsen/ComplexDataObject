@@ -2,7 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.model.processors;
 
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
@@ -21,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * @author Juergen Bernard
  * @version 1.05
  */
-public interface IDataProcessor<D extends IDObject> {
+public interface IDataProcessor<D> {
 
 	public void process(List<D> data);
 

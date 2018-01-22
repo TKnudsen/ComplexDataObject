@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
@@ -27,8 +25,10 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * 
  * @author Juergen Bernard
  * @version 1.02
+ * 
+ * TODO_GENERICS Parameter "O" is not used any more
  */
-public abstract class DimensionalityReduction<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> implements IDimensionalityReduction<O, X> {
+public abstract class DimensionalityReduction<O, X> implements IDimensionalityReduction<O, X> {
 
 	/**
 	 * used by many routines to calculate pairwise distances

@@ -19,6 +19,8 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureV
  * 
  * @author Juergen Bernard
  * @version 1.03
+ * 
+ * TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */
 public interface IMixedDataFeatureVectorProcessor extends IFeatureVectorProcessor<MixedDataFeatureVector> {
 

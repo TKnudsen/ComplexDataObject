@@ -16,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  *
  * @param <T>
  */
-public class RemovingValues<T extends Object> implements IComplexDataObjectProcessor {
+public class RemovingValues<T> implements IComplexDataObjectProcessor {
 
 	private String attribute;
 	private Set<T> valuesToRemove;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
@@ -24,7 +25,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * @author Juergen Bernard
  * @version 1.03
  */
-public class FeatureContainer<FV extends AbstractFeatureVector<?, ?>> implements Iterable<FV> {
+public class FeatureContainer<FV extends IFeatureVectorObject<?, ?>> implements Iterable<FV> {
 
 	private Map<Long, FV> featureVectorMap = new HashMap<Long, FV>();
 
