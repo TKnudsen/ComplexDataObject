@@ -48,7 +48,7 @@ public class DummyVariableConverter implements IComplexDataObjectProcessor {
 			uniqueValuesIdentifier.setDataContainer(container);
 		}
 
-		Set<? extends Object> uniqueValues = uniqueValuesIdentifier.getUniqueValues();
+		Set<?> uniqueValues = uniqueValuesIdentifier.getUniqueValues();
 
 		// Add the to-be-created dummy variables to the data schema
 		for (Object val : uniqueValues) {

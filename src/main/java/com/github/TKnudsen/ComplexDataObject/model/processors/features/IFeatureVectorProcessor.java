@@ -1,7 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
@@ -19,7 +17,9 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
  *
  * @author Juergen Bernard
  * @version 1.03
+ * 
+ * TODO_GENERICS Equivalent to IDataProcessor - may become obsolete
  */
-public interface IFeatureVectorProcessor<FV extends AbstractFeatureVector<?, ? extends Feature<?>>> extends IDataProcessor<FV> {
+public interface IFeatureVectorProcessor<FV> extends IDataProcessor<FV> {
 
 }

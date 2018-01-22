@@ -1,7 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.numericalFeatures;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 
 /**
@@ -21,6 +20,6 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
  * @author Juergen Bernard
  * @version 1.03
  */
-public interface INumericFeatureVectorDescriptor<I extends IDObject> extends IDescriptor<I, Double, NumericalFeatureVector> {
+public interface INumericFeatureVectorDescriptor<I> extends IDescriptor<I, Double, NumericalFeatureVector> {
 
 }

@@ -19,11 +19,13 @@ import java.util.List;
  * 
  * @author Juergen Bernard
  * @version 1.02
+ * 
+ * TODO_GENERICS No longer specific for FeatureVectorContainer. May become obsolete, or replaced by general "Iterable to List" method"
  */
 
 public class FeatureVectorContainerTools {
 
-	public static <T extends AbstractFeatureVector<?, ?>> List<T> getObjectList(FeatureContainer<T> container) {
+	public static <T> List<T> getObjectList(Iterable<T> container) {
 		List<T> list = new ArrayList<>();
 
 		Iterator<T> iterator = container.iterator();

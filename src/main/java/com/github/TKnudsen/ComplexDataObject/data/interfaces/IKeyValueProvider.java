@@ -20,7 +20,7 @@ import java.util.Set;
  * @author Juergen Bernard
  * @version 1.08
  */
-public interface IKeyValueProvider<V extends Object> extends IDObject {
+public interface IKeyValueProvider<V> extends IDObject {
 
 	public void add(String attribute, V value);
 

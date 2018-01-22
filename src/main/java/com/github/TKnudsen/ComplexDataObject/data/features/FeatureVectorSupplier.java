@@ -18,8 +18,10 @@ import java.util.List;
  * 
  * @author Juergen Bernard
  * @version 1.01
+ * 
+ * TODO_GENERICS Should not be necessary. Can be replaced by Supplier<List<FV>>
  */
-public class FeatureVectorSupplier<FV extends AbstractFeatureVector<?, ?>> implements IFeatureVectorSupplier<FV> {
+public class FeatureVectorSupplier<FV> implements IFeatureVectorSupplier<FV> {
 
 	private List<FV> featureVectors;
 

@@ -2,8 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionali
 
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
@@ -22,8 +20,10 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * 
  * @author Juergen Bernard
  * @version 1.03
+ * 
+ * TODO_GENERICS Parameter "O" is not used any more
  */
-public interface IDimensionalityReduction<O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends IDataTransformation<X, NumericalFeatureVector> {
+public interface IDimensionalityReduction<O, X> extends IDataTransformation<X, NumericalFeatureVector> {
 
 	public int getOutputDimensionality();
 
