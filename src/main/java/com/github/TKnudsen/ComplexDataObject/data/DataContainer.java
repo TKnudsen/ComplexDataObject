@@ -56,9 +56,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		if (object instanceof IKeyValueProvider) {
 			IKeyValueProvider<?> keyValueProvider = (IKeyValueProvider<?>) object;
 			for (String string : keyValueProvider.keySet())
-				if (string instanceof String)
-					if (!dataSchema.contains(string) && keyValueProvider.getAttribute(string) != null)
-						dataSchema.add(string, keyValueProvider.getAttribute(string).getClass());
+				if (!dataSchema.contains(string) && keyValueProvider.getAttribute(string) != null)
+					dataSchema.add(string, keyValueProvider.getAttribute(string).getClass());
 		}
 	}
 

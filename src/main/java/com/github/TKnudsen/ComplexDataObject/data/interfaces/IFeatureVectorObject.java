@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * @version 1.0
  */
 
-public interface IFeatureVectorObject<O extends Object, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {
+public interface IFeatureVectorObject<O, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {
 
 	public F getFeature(int index);
 

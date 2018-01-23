@@ -21,8 +21,10 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
  * 
  * @author Juergen Bernard
  * @version 1.02
+ * 
+ * TODO_GENERICS No longer specific for IDObject
  */
-public interface IIDObjectDistanceMeasure<T extends IDObject> extends IDistanceMeasure<T>, Serializable {
+public interface IIDObjectDistanceMeasure<T> extends IDistanceMeasure<T>, Serializable {
 
 	public abstract String toString();
 }

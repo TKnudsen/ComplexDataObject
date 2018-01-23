@@ -1,7 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.featureVector;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDistanceMeasure;
 
 /**
@@ -19,7 +17,9 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDist
  * 
  * @author Juergen Bernard
  * @version 1.01
+ * 
+ * TODO_GENERICS: Equivalent to IIDObjectDistanceMeasure
  */
-public interface IFeatureVectorDistanceMeasure<FV extends AbstractFeatureVector<?, ? extends Feature<?>>> extends IIDObjectDistanceMeasure<FV> {
+public interface IFeatureVectorDistanceMeasure<FV> extends IIDObjectDistanceMeasure<FV> {
 
 }

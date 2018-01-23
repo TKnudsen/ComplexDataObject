@@ -22,7 +22,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * @author Juergen Bernard
  * @version 1.02
  */
-public abstract class Feature<V extends Object> implements IDObject, Comparable<Feature<V>>, Serializable {
+public abstract class Feature<V> implements IDObject, Comparable<Feature<V>>, Serializable {
 
 	/**
 	 *

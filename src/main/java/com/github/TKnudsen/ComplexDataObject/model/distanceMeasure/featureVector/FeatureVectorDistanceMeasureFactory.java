@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.MixedDataFeatureVectorFeatureSubsetDistanceMeasure;
 
 /**
@@ -27,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.Mix
  */
 public class FeatureVectorDistanceMeasureFactory {
 
-	public static <FV extends AbstractFeatureVector<?, ?>> IFeatureVectorDistanceMeasure<FV> createDistanceMeasure(Collection<FV> featureVectors) {
+	public static <FV extends IFeatureVectorObject<?, ?>> IFeatureVectorDistanceMeasure<FV> createDistanceMeasure(Collection<FV> featureVectors) {
 		if (featureVectors == null || featureVectors.size() == 0)
 			return null;
 
