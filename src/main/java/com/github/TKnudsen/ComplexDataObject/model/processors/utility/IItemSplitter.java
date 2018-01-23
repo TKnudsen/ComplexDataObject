@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface IItemSplitter {
 	
-	public List<? extends Object> split(Object toSplit);
+	public List<?> split(Object toSplit);
 }

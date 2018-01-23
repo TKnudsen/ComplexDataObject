@@ -1,8 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
@@ -23,5 +20,5 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * @author Juergen Bernard
  * @version 1.03
  */
-public interface IDescriptor<I extends IDObject, O, X extends AbstractFeatureVector<O, ? extends Feature<O>>> extends ISelfDescription, IParameterSupport<I, O, X, IDescriptor<I, O, X>>, IDataTransformation<I, X> {
+public interface IDescriptor<I, O, X> extends ISelfDescription, IParameterSupport<I, O, X, IDescriptor<I, O, X>>, IDataTransformation<I, X> {
 }

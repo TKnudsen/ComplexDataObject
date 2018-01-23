@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  */
 public class FeatureTools {
 
-	public static Feature createDefaultFeature(String featureName, FeatureType featureType) {
+	public static Feature<?> createDefaultFeature(String featureName, FeatureType featureType) {
 		switch (featureType) {
 		case DOUBLE:
 			return new NumericalFeature(featureName, Double.NaN);

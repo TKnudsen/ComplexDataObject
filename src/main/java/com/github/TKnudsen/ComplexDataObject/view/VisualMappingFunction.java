@@ -21,7 +21,7 @@ import java.util.function.Function;
  * @author Juergen Bernard
  * @TODO: define visual variable data structure
  */
-public abstract class VisualMappingFunction<T, M extends Object> implements Function<T, M> {
+public abstract class VisualMappingFunction<T, M> implements Function<T, M> {
 
 	protected Map<T, M> mappingLookup = new HashMap<T, M>();
 

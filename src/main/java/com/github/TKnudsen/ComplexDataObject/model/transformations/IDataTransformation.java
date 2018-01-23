@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * @author Juergen Bernard
  * @version 1.01
  */
-public interface IDataTransformation<I extends IDObject, O extends IDObject> {
+public interface IDataTransformation<I, O> {
 
 	/**
 	 * mapping from a (high-dimensional) space into another (low-dimensional)

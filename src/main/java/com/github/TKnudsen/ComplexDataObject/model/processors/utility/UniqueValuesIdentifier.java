@@ -38,7 +38,7 @@ public class UniqueValuesIdentifier extends AbstractUniqueValuesIdentifier {
 				
 				// cast it to a collection, because we want to iterate over the list
 				if(itemList instanceof List<?>){
-					List<? extends Object> values = (List<?>) itemList;
+					List<?> values = (List<?>) itemList;
 					
 					for(Object value : values){
 						uniqueValues.add(value);

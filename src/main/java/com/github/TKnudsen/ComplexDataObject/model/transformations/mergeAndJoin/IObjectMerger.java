@@ -17,7 +17,7 @@ package com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin
  * @author Juergen Bernard
  * @version 1.01
  */
-public interface IObjectMerger<O extends Object> {
+public interface IObjectMerger<O> {
 
 	public O merge(O object1, O object2);
 }

@@ -17,6 +17,8 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  * 
  * @author Juergen Bernard
  * @version 1.01
+ * 
+ * TODO_GENERICS Equivalent to IDistanceMeasure for NumericalFeatureVector
  */
 public interface INumericalFeatureVectorDistanceMeasure extends IFeatureVectorDistanceMeasure<NumericalFeatureVector> {
 

@@ -18,7 +18,9 @@ import java.util.function.Supplier;
  * 
  * @author Juergen Bernard
  * @version 1.01
+ * 
+ * TODO_GENERICS No longer specific for feature vectors, may become obsolete or a "ListSupplier"
  */
-public interface IFeatureVectorSupplier<FV extends AbstractFeatureVector<?, ?>> extends Supplier<List<FV>> {
+public interface IFeatureVectorSupplier<FV> extends Supplier<List<FV>> {
 
 }
