@@ -2,8 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure;
 
 import java.io.Serializable;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-
 /**
  * <p>
  * Title: IIDObjectDistanceMeasure

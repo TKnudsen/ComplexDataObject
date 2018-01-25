@@ -2,7 +2,6 @@ package com.github.TKnudsen.ComplexDataObject.model.transformations;
 
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 
 /**
