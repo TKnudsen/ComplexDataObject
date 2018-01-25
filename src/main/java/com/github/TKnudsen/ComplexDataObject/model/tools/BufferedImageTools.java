@@ -11,8 +11,12 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 /**
  * <p>
@@ -24,11 +28,11 @@ import java.util.List;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class BufferedImageTools {
 
@@ -125,13 +129,13 @@ public class BufferedImageTools {
 	 */
 	public static BufferedImage resize(BufferedImage source, int targetWidth, int targetHeight) {
 		Image tmp = source.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
-	    BufferedImage output = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage output = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
 
-	    Graphics2D g2d = output.createGraphics();
-	    g2d.drawImage(tmp, 0, 0, null);
-	    g2d.dispose();
+		Graphics2D g2d = output.createGraphics();
+		g2d.drawImage(tmp, 0, 0, null);
+		g2d.dispose();
 
-	    return output;
+		return output;
 	}
 
 	/**
@@ -153,5 +157,40 @@ public class BufferedImageTools {
 		output = scaleOp.filter(source, output);
 
 		return output;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static BufferedImage loadBufferedImage(File file) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return img;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static BufferedImage loadImage(String file) {
+		File imageFile = new File(file);
+		BufferedImage bufferedImage = null;
+
+		if (imageFile.exists()) {
+			try {
+				bufferedImage = loadBufferedImage(imageFile);
+			} catch (IndexOutOfBoundsException iobe) {
+				iobe.printStackTrace();
+			}
+		}
+
+		return bufferedImage;
 	}
 }
