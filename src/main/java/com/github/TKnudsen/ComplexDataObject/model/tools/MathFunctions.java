@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public class MathFunctions {
@@ -44,8 +44,8 @@ public class MathFunctions {
 	}
 
 	/**
-	 * scales a value w.r.t. a given minimum and maximum value. A boolean can be
-	 * set to limit the return value between [0...1].
+	 * scales a value w.r.t. a given minimum and maximum value. A boolean can be set
+	 * to limit the return value between [0...1].
 	 * 
 	 * @param min
 	 * @param max
@@ -73,7 +73,7 @@ public class MathFunctions {
 
 		return retValue;
 	}
-	
+
 	/**
 	 * rounds a given value w.r.t a given number of decimals.
 	 * 
@@ -108,8 +108,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
@@ -122,7 +121,7 @@ public class MathFunctions {
 
 		boolean onlyNaN = true;
 		for (Double d : values)
-			if (Double.isNaN(d))
+			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				min = Math.min(min, d);
@@ -136,8 +135,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
@@ -149,8 +147,8 @@ public class MathFunctions {
 		double min = Double.POSITIVE_INFINITY - 1;
 
 		boolean onlyNaN = true;
-		for (double d : values)
-			if (Double.isNaN(d))
+		for (Double d : values)
+			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				min = Math.min(min, d);
@@ -164,8 +162,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
@@ -194,8 +191,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the mean value for a given series of values. Ignores
-	 * Double.NAN
+	 * Calculates the mean value for a given series of values. Ignores Double.NAN
 	 * 
 	 * @param values
 	 * @return mean value
@@ -206,8 +202,8 @@ public class MathFunctions {
 
 		double sum = 0;
 		double count = 0;
-		for (double d : values)
-			if (!Double.isNaN(d)) {
+		for (Double d : values)
+			if (d != null && !Double.isNaN(d)) {
 				sum += d;
 				count++;
 			}
@@ -216,8 +212,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the mean value for a given series of values. Ignores
-	 * Double.NAN
+	 * Calculates the mean value for a given series of values. Ignores Double.NAN
 	 * 
 	 * @param values
 	 * @return
@@ -228,8 +223,8 @@ public class MathFunctions {
 
 		double sum = 0;
 		double count = 0;
-		for (double d : values)
-			if (!Double.isNaN(d)) {
+		for (Double d : values)
+			if (d != null && !Double.isNaN(d)) {
 				sum += d;
 				count++;
 			}
@@ -238,8 +233,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
@@ -252,7 +246,7 @@ public class MathFunctions {
 
 		boolean onlyNaN = true;
 		for (Double d : values)
-			if (Double.isNaN(d))
+			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				max = Math.max(max, d);
@@ -266,8 +260,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
@@ -279,8 +272,8 @@ public class MathFunctions {
 		double max = Double.NEGATIVE_INFINITY + 1;
 
 		boolean onlyNaN = true;
-		for (double d : values)
-			if (Double.isNaN(d))
+		for (Double d : values)
+			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				max = Math.max(max, d);
@@ -294,8 +287,7 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores
-	 * Double.NAN.
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
