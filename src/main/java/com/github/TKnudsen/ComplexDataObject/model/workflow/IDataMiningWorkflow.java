@@ -26,10 +26,10 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
  * @author Juergen Bernard
  * @version 1.03
  */
-public interface IDataMiningWorkflow<O extends IDObject, F, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, PP extends IDataProcessor<? super O>, DESC extends IDescriptor<? super O, F, FV>>
+public interface IDataMiningWorkflow<O extends IDObject, F, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, DESC extends IDescriptor<? super O, F, FV>>
 		extends Function<List<O>, List<FV>> {
 
-	public void addPreProcessor(PP processor);
+	public void addPreProcessor(IDataProcessor<O> preProcessor);
 
 	public void setDescriptor(DESC descriptor);
 
