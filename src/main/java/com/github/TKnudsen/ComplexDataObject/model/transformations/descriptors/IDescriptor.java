@@ -20,6 +20,5 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * @author Juergen Bernard
  * @version 1.04
  */
-public interface IDescriptor<I, O>
-		extends IDataTransformation<I, O>, IParameterSupport<I, O, IDescriptor<I, O>>, ISelfDescription {
+public interface IDescriptor<I, O> extends IDataTransformation<I, O>, IParameterSupport<I, O>, ISelfDescription {
 }
