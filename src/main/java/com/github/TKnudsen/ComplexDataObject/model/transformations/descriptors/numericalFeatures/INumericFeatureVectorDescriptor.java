@@ -14,12 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public interface INumericFeatureVectorDescriptor<I> extends IDescriptor<I, Double, NumericalFeatureVector> {
+public interface INumericFeatureVectorDescriptor<I> extends IDescriptor<I, NumericalFeatureVector> {
 
 }
