@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedDat
 
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureVectorProcessor;
+import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
  * <p>
@@ -14,15 +14,16 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureV
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  * 
- * TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
+ *          TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor
+ *          and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */
-public interface IMixedDataFeatureVectorProcessor extends IFeatureVectorProcessor<MixedDataFeatureVector> {
+public interface IMixedDataFeatureVectorProcessor extends IDataProcessor<MixedDataFeatureVector> {
 
 	public void process(MixedDataFeatureContainer container);
 }
