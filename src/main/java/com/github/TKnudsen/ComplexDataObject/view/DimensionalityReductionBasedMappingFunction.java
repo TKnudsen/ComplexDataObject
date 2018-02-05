@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalit
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
@@ -33,9 +33,11 @@ public class DimensionalityReductionBasedMappingFunction extends PositionMapping
 
 	Map<NumericalFeatureVector, Double[]> mapping;
 
-	private IDimensionalityReduction<Double, NumericalFeatureVector> dimensionalityReduction;
+	private IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction;
 
-	public DimensionalityReductionBasedMappingFunction(IDimensionalityReduction<Double, NumericalFeatureVector> dimensionalityReductionResult, List<NumericalFeatureVector> featureVectors) {
+	public DimensionalityReductionBasedMappingFunction(
+			IDimensionalityReduction<NumericalFeatureVector> dimensionalityReductionResult,
+			List<NumericalFeatureVector> featureVectors) {
 
 		this.dimensionalityReduction = dimensionalityReductionResult;
 
@@ -60,7 +62,7 @@ public class DimensionalityReductionBasedMappingFunction extends PositionMapping
 		return mapping.get(t);
 	}
 
-	public IDimensionalityReduction<Double, NumericalFeatureVector> getDimensionalityReduction() {
+	public IDimensionalityReduction<NumericalFeatureVector> getDimensionalityReduction() {
 		return dimensionalityReduction;
 	}
 }

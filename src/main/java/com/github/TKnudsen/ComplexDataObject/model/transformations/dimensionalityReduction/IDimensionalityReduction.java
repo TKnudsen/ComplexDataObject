@@ -14,16 +14,15 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * Description:
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Juergen Bernard,
+ * Copyright: Copyright (c) 2012-2018 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  * 
- * TODO_GENERICS Parameter "O" is not used any more
  */
-public interface IDimensionalityReduction<O, X> extends IDataTransformation<X, NumericalFeatureVector> {
+public interface IDimensionalityReduction<X> extends IDataTransformation<X, NumericalFeatureVector> {
 
 	public int getOutputDimensionality();
 

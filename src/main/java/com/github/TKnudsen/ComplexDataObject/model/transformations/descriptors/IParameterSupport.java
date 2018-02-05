@@ -20,9 +20,6 @@ import java.util.List;
  * @author Juergen Bernard
  * @version 1.04
  * 
- *          TODO_GENERICS Pretty sure that some of the parameters are not really
- *          required, but the IParameterSupport/IDescriptor relationship is not
- *          trivial...
  */
 public interface IParameterSupport<I, O> {
 
