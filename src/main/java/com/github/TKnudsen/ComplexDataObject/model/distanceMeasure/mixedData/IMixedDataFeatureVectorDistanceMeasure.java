@@ -1,7 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
  * <p>
@@ -13,12 +13,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IIDObjectDist
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public interface IMixedDataFeatureVectorDistanceMeasure extends IIDObjectDistanceMeasure<MixedDataFeatureVector> {
+public interface IMixedDataFeatureVectorDistanceMeasure extends IDistanceMeasure<MixedDataFeatureVector> {
 
 }
