@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.processors.features.numerica
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorContainer;
-import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureVectorProcessor;
+import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
  * <p>
@@ -14,15 +14,16 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.features.IFeatureV
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  * 
- * TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
+ *          TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor
+ *          and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */
-public interface INumericalFeatureVectorProcessor extends IFeatureVectorProcessor<NumericalFeatureVector> {
+public interface INumericalFeatureVectorProcessor extends IDataProcessor<NumericalFeatureVector> {
 
 	public void process(NumericalFeatureVectorContainer container);
 }
