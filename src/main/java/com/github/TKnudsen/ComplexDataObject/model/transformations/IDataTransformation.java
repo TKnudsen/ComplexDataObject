@@ -23,8 +23,8 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 public interface IDataTransformation<I, O> {
 
 	/**
-	 * mapping from a (high-dimensional) space into another (low-dimensional)
-	 * space. NO calculation of transformation model.
+	 * mapping from a (high-dimensional) space into another (low-dimensional) space.
+	 * NO calculation of transformation model.
 	 * 
 	 * @param input
 	 * @return
