@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
  * @author Juergen Bernard
  * @version 1.01
  */
-public class MixedDataFeatureVectorFeatureSubsetDistanceMeasure implements IMixedDataFeatureVectorDistanceMeasure {
+public class MixedDataFeatureVectorFeatureSubsetDistanceMeasure implements IDistanceMeasure<MixedDataFeatureVector> {
 
 	/**
 	 * 

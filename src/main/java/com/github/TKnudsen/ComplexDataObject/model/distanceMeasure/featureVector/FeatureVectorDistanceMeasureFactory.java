@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.MixedDataFeatureVectorFeatureSubsetDistanceMeasure;
 
 /**
@@ -19,15 +20,16 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.Mix
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class FeatureVectorDistanceMeasureFactory {
 
-	public static <FV extends IFeatureVectorObject<?, ?>> IFeatureVectorDistanceMeasure<FV> createDistanceMeasure(Collection<FV> featureVectors) {
+	public static <FV extends IFeatureVectorObject<?, ?>> IDistanceMeasure<FV> createDistanceMeasure(
+			Collection<FV> featureVectors) {
 		if (featureVectors == null || featureVectors.size() == 0)
 			return null;
 
@@ -35,9 +37,10 @@ public class FeatureVectorDistanceMeasureFactory {
 		if (iterator.hasNext()) {
 			FV next = iterator.next();
 			if (next instanceof NumericalFeatureVector)
-				return (IFeatureVectorDistanceMeasure<FV>) new EuclideanDistanceMeasure();
+				return (IDistanceMeasure<FV>) new EuclideanDistanceMeasure();
 			else
-				return (IFeatureVectorDistanceMeasure<FV>) new MixedDataFeatureVectorFeatureSubsetDistanceMeasure(new ArrayList<>(next.getFeatureKeySet()));
+				return (IDistanceMeasure<FV>) new MixedDataFeatureVectorFeatureSubsetDistanceMeasure(
+						new ArrayList<>(next.getFeatureKeySet()));
 		}
 
 		return null;
