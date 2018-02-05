@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.featureExtraction;
 
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
 /**
@@ -13,14 +14,13 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  * 
- * TODO_GENERICS Now equivalent to IDataTransformation
  */
-public interface IFeatureExtractor<I, F> extends IDataTransformation<I, F> {
+public interface IFeatureExtractor<I, F extends Feature<?>> extends IDataTransformation<I, F> {
 
 }
