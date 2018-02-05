@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
  * <p>
@@ -15,12 +16,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017
+ * Copyright: Copyright (c) 2012-2018
  * </p>
  * 
  * @author Juergen Bernard
+ * @version 1.04
  */
-public class EuclideanDistanceMeasure extends NumericalFeatureVectorDistanceMeasure {
+public class EuclideanDistanceMeasure implements IDistanceMeasure<NumericalFeatureVector> {
 
 	/**
 	 * 
@@ -38,6 +40,11 @@ public class EuclideanDistanceMeasure extends NumericalFeatureVectorDistanceMeas
 		d = Math.sqrt(d);
 
 		return d;
+	}
+
+	@Override
+	public double applyAsDouble(NumericalFeatureVector t, NumericalFeatureVector u) {
+		return getDistance(t, u);
 	}
 
 	@Override
