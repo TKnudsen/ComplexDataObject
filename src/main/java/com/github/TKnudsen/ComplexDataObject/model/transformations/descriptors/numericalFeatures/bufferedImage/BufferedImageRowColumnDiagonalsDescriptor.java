@@ -134,7 +134,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 				if (lengthAkt > lengthMin)
 					if (x % (sampling) == 0)
-						features.add(new NumericalFeature("Luminance, diagonal NE, start (" + x + ", " + (height - 1) + ")", lum));
+						features.add(new NumericalFeature(
+								"Luminance, diagonal NE, start (" + x + ", " + (height - 1) + ")", lum));
 			}
 
 			// starting south, direction north west
@@ -154,7 +155,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 				if (lengthAkt > lengthMin)
 					if (x % (sampling) == 0)
-						features.add(new NumericalFeature("Luminance, diagonal NW, start (" + x + ", " + (height - 1) + ")", lum));
+						features.add(new NumericalFeature(
+								"Luminance, diagonal NW, start (" + x + ", " + (height - 1) + ")", lum));
 			}
 
 			// starting east, direction north west
@@ -174,7 +176,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 
 				if (lengthAkt > lengthMin)
 					if (y % (sampling) == 0)
-						features.add(new NumericalFeature("Luminance, diagonal NW, start (" + (width - 1) + ", " + y + ")", lum));
+						features.add(new NumericalFeature(
+								"Luminance, diagonal NW, start (" + (width - 1) + ", " + y + ")", lum));
 			}
 
 			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
@@ -245,7 +248,7 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 	}
 
 	@Override
-	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+	public List<IDescriptor<ComplexDataObject, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

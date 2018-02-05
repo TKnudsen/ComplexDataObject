@@ -14,16 +14,17 @@ import java.util.List;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  * 
- * TODO_GENERICS Pretty sure that some of the parameters are not really required, but 
- * the IParameterSupport/IDescriptor relationship is not trivial... 
+ *          TODO_GENERICS Pretty sure that some of the parameters are not really
+ *          required, but the IParameterSupport/IDescriptor relationship is not
+ *          trivial...
  */
-public interface IParameterSupport<I, O, X, D extends IDescriptor<I, O, X>> {
+public interface IParameterSupport<I, O, D extends IDescriptor<I, O>> {
 
 	public List<D> getAlternativeParameterizations(int count);
 }

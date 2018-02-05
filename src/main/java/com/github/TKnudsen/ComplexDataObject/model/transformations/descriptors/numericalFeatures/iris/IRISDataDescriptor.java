@@ -23,11 +23,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -42,7 +42,7 @@ public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<Compl
 	}
 
 	@Override
-	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+	public List<IDescriptor<ComplexDataObject, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

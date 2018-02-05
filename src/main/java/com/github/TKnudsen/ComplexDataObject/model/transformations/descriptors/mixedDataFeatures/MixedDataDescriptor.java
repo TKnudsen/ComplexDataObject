@@ -95,7 +95,7 @@ public class MixedDataDescriptor implements IMixedDataFeatureVectorDescriptor<Co
 	}
 
 	@Override
-	public List<IDescriptor<ComplexDataObject, Object, MixedDataFeatureVector>> getAlternativeParameterizations(int count) {
+	public List<IDescriptor<ComplexDataObject, MixedDataFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

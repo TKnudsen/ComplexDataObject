@@ -23,11 +23,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -106,7 +106,7 @@ public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDesc
 	}
 
 	@Override
-	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+	public List<IDescriptor<ComplexDataObject, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

@@ -54,8 +54,7 @@ public class StatisticalFeaturesExtractorDescriptor<T extends IDObject> implemen
 	}
 
 	@Override
-	public List<IDescriptor<T, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
-		// TODO Auto-generated method stub
+	public List<IDescriptor<T, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

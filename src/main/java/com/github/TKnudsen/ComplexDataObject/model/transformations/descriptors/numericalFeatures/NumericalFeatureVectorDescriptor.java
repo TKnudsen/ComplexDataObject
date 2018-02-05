@@ -84,7 +84,7 @@ public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDe
 	}
 
 	@Override
-	public List<IDescriptor<ComplexDataObject, Double, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
+	public List<IDescriptor<ComplexDataObject, NumericalFeatureVector>> getAlternativeParameterizations(int count) {
 		return null;
 	}
 

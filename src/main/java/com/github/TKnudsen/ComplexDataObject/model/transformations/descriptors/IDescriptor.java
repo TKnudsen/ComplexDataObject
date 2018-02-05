@@ -14,11 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public interface IDescriptor<I, O, X> extends ISelfDescription, IParameterSupport<I, O, X, IDescriptor<I, O, X>>, IDataTransformation<I, X> {
+public interface IDescriptor<I, O>
+		extends IDataTransformation<I, O>, IParameterSupport<I, O, IDescriptor<I, O>>, ISelfDescription {
 }
