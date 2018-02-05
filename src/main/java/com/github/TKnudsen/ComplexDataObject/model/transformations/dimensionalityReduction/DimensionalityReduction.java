@@ -19,16 +19,14 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * generalizable data structures.
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Juergen Bernard,
+ * Copyright: Copyright (c) 2012-2018 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
- * 
- * TODO_GENERICS Parameter "O" is not used any more
+ * @version 1.03
  */
-public abstract class DimensionalityReduction<O, X> implements IDimensionalityReduction<O, X> {
+public abstract class DimensionalityReduction<X> implements IDimensionalityReduction<X> {
 
 	/**
 	 * used by many routines to calculate pairwise distances
@@ -60,7 +58,8 @@ public abstract class DimensionalityReduction<O, X> implements IDimensionalityRe
 		if (mapping.get(inputObject) != null)
 			return Arrays.asList(new NumericalFeatureVector[] { mapping.get(inputObject) });
 
-		System.err.println("DimensionalityRedutcion: feature vector identified that was not used for model building. null value added.");
+		System.err.println(
+				"DimensionalityRedutcion: feature vector identified that was not used for model building. null value added.");
 
 		List<X> lst = new ArrayList<>();
 		lst.add(inputObject);
@@ -68,8 +67,8 @@ public abstract class DimensionalityReduction<O, X> implements IDimensionalityRe
 	}
 
 	/**
-	 * Uses the model to tranform given data to the mapped space. Does not build
-	 * a new model!
+	 * Uses the model to tranform given data to the mapped space. Does not build a
+	 * new model!
 	 */
 	@Override
 	public List<NumericalFeatureVector> transform(List<X> inputObjects) {
@@ -88,7 +87,8 @@ public abstract class DimensionalityReduction<O, X> implements IDimensionalityRe
 				output.add(mapping.get(x));
 			else {
 				output.add(null);
-				System.err.println("DimensionalityRedutcion: input object identified that was not used for model building. null value added.");
+				System.err.println(
+						"DimensionalityRedutcion: input object identified that was not used for model building. null value added.");
 			}
 
 		return output;
