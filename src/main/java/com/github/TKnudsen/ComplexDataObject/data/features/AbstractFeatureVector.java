@@ -26,13 +26,14 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object> implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
+public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object>
+		implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
 
 	private String name;
 
@@ -148,7 +149,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 					featureNames.add(entry.getFeatureName());
 
 		if (!errorString.equals(""))
-			throw new IllegalArgumentException("FeatureVector - duplicate Features: " + errorString.substring(0, errorString.length() - 2));
+			throw new IllegalArgumentException(
+					"FeatureVector - duplicate Features: " + errorString.substring(0, errorString.length() - 2));
 	}
 
 	private boolean checkFeatureNameConsistency() {
@@ -178,8 +180,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	/**
-	 * Expensive variant of adding a feature into the internal data
-	 * representations.
+	 * Expensive variant of adding a feature into the internal data representations.
 	 */
 	public void addFeature(F feature) {
 		if (feature == null)
@@ -259,8 +260,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	/**
-	 * Features always describes the individual features of the vector. In
-	 * contrast, getAttributes() retrieves the metadata.
+	 * Features always describes the individual features of the vector. In contrast,
+	 * getAttributes() retrieves the metadata.
 	 */
 	@Override
 	public Set<String> getFeatureKeySet() {
