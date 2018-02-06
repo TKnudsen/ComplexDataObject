@@ -5,7 +5,6 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
@@ -26,12 +25,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
  * @author Juergen Bernard
  * @version 1.03
  */
-public interface IDataMiningWorkflow<O extends IDObject, F, FV extends AbstractFeatureVector<F, ? extends Feature<F>>, DESC extends IDescriptor<? super O, FV>>
+public interface IDataMiningWorkflow<O, F, FV extends AbstractFeatureVector<F, ? extends Feature<F>>>
 		extends Function<List<O>, List<FV>> {
 
 	public void addPreProcessor(IDataProcessor<O> preProcessor);
 
-	public void setDescriptor(DESC descriptor);
+	public void setDescriptor(IDescriptor<O, FV> descriptor);
 
 	public IDistanceMeasure<FV> getDistanceMeasure();
 
