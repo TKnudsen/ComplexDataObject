@@ -17,11 +17,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 
 public interface IFeatureVectorObject<O, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {
@@ -45,4 +45,12 @@ public interface IFeatureVectorObject<O, F extends Feature<O>> extends IDObject,
 	public Set<String> getFeatureKeySet();
 
 	public int sizeOfFeatures();
+
+	/**
+	 * convenient function that is sometimes required when working with FVs without
+	 * modifying them
+	 * 
+	 * @return
+	 */
+	public IFeatureVectorObject<O, F> clone();
 }
