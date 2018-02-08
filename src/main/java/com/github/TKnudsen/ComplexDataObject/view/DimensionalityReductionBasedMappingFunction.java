@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction.DimensionalityReductionTools;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction.IDimensionalityReduction;
 
 /**
@@ -31,8 +32,6 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalit
  */
 public class DimensionalityReductionBasedMappingFunction extends PositionMappingFunction<NumericalFeatureVector> {
 
-	Map<NumericalFeatureVector, Double[]> mapping;
-
 	private IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction;
 
 	public DimensionalityReductionBasedMappingFunction(
@@ -41,25 +40,49 @@ public class DimensionalityReductionBasedMappingFunction extends PositionMapping
 
 		this.dimensionalityReduction = dimensionalityReductionResult;
 
-		mapping = new LinkedHashMap<>();
+		Map<NumericalFeatureVector, NumericalFeatureVector> FVmapping = this.dimensionalityReduction.getMapping();
+
+		// clone output to avoid data editing in original instances
+		Map<NumericalFeatureVector, NumericalFeatureVector> FVmappingClone = new LinkedHashMap<>();
+		for (NumericalFeatureVector fv : FVmapping.keySet())
+			FVmappingClone.put(fv, FVmapping.get(fv).clone());
+		DimensionalityReductionTools.normalizeMapping(FVmappingClone);
+
+		// create mapping from high-dimensional FV to coordinates
+		mappingLookup = new LinkedHashMap<>();
 
 		for (NumericalFeatureVector fv : featureVectors) {
-			List<NumericalFeatureVector> transform = dimensionalityReductionResult.transform(fv);
-			if (transform != null && transform.size() != 0) {
-				NumericalFeatureVector transformed = transform.get(0);
-				if (transformed != null) {
-					Double[] array = DataConversion.doublePrimitivesToArray(transformed.getVector());
-					mapping.put(fv, array);
-				} else
-					mapping.put(fv, null);
-			} else
-				mapping.put(fv, null);
+			NumericalFeatureVector normalizedOutputFV = FVmappingClone.get(fv);
+
+			if (normalizedOutputFV != null) {
+				Double[] array = DataConversion.doublePrimitivesToArray(normalizedOutputFV.getVector());
+				mappingLookup.put(fv, array);
+			} else {
+				System.err.println(
+						"DimensionalityReductionBasedMappingFunction: required FV was not part of the dimensionality reduction routine.");
+				mappingLookup.put(fv, null);
+			}
+
+			// the following was before the coordinates were normalized.
+
+			// List<NumericalFeatureVector> transform =
+			// dimensionalityReductionResult.transform(fv);
+			// if (transform != null && transform.size() != 0) {
+			// NumericalFeatureVector transformed = transform.get(0);
+			// if (transformed != null) {
+			// Double[] array =
+			// DataConversion.doublePrimitivesToArray(transformed.getVector());
+			// mapping.put(fv, array);
+			// } else
+			// mapping.put(fv, null);
+			// } else
+			// mapping.put(fv, null);
 		}
 	}
 
 	@Override
 	protected Double[] calculateMapping(NumericalFeatureVector t) {
-		return mapping.get(t);
+		return mappingLookup.get(t);
 	}
 
 	public IDimensionalityReduction<NumericalFeatureVector> getDimensionalityReduction() {

@@ -19,12 +19,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * results (mappings from highDim to lowDim).
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017 Juergen Bernard,
+ * Copyright: Copyright (c) 2012-2018 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class DimensionalityReductionTools {
 
@@ -59,8 +59,8 @@ public class DimensionalityReductionTools {
 	}
 
 	/**
-	 * statistics information for every output dimension. Used, e.g., to define
-	 * axes in a scatterplot.
+	 * statistics information for every output dimension. Used, e.g., to define axes
+	 * in a scatterplot.
 	 * 
 	 * @param mapping
 	 * @return
@@ -87,6 +87,30 @@ public class DimensionalityReductionTools {
 			statistics.add(new StatisticsSupport(valuesPerDimension.get(i)));
 
 		return statistics;
+	}
+
+	/**
+	 * normalizes the (low-dimensional) output of a mapping into 2D. uses a global
+	 * min and max across all dimensions to preserve linearity.
+	 * 
+	 * @param mapping
+	 */
+	public static void normalizeMapping(Map<NumericalFeatureVector, NumericalFeatureVector> mapping) {
+		// normalize feature vectors
+		double max = Double.NEGATIVE_INFINITY;
+		double min = Double.POSITIVE_INFINITY;
+
+		for (NumericalFeatureVector fv : mapping.values()) {
+			for (int d = 0; d < fv.getDimensions(); d++) {
+				min = Math.min(min, fv.getFeature(d).getFeatureValue());
+				max = Math.max(max, fv.getFeature(d).getFeatureValue());
+			}
+		}
+
+		double delta = max - min;
+		for (NumericalFeatureVector fv : mapping.values())
+			for (int d = 0; d < fv.getDimensions(); d++)
+				fv.getFeature(d).setFeatureValue((fv.getFeature(d).getFeatureValue() - min) / delta);
 	}
 
 }
