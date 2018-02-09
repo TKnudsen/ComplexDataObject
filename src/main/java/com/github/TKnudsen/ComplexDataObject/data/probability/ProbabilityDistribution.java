@@ -1,6 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.data.probability;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,9 +18,12 @@ import java.util.Set;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class ProbabilityDistribution<I> {
+
+	private static double EPSILON = 1e-8;
+
 	private Map<I, Double> probabilityDistribution;
 
 	private I mostLikelyItem;
@@ -47,7 +49,7 @@ public class ProbabilityDistribution<I> {
 		}
 
 		Double winning = 0.0;
-		BigDecimal sum = new BigDecimal(0.0);
+		double sum = 0.0;
 
 		for (I value : probabilityDistribution.keySet()) {
 			if (probabilityDistribution.get(value) > winning) {
@@ -55,11 +57,11 @@ public class ProbabilityDistribution<I> {
 				winning = probabilityDistribution.get(value);
 			}
 
-			sum = sum.add(new BigDecimal(probabilityDistribution.get(value)));
+			sum += probabilityDistribution.get(value);
 		}
 
-		if (sum.compareTo(new BigDecimal(0.999999999999999)) < 0 && sum.compareTo(new BigDecimal(1.00000000000001)) > 0)
-			throw new IllegalArgumentException("ProbabilityDistribution: given set of probabilites was null");
+		if (Math.abs(sum - 1.0) > EPSILON)
+			throw new IllegalArgumentException("ProbabilityDistribution: sum of given set of probabilites was != 100%");
 	}
 
 	public Double getProbability(I item) {
