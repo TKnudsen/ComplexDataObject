@@ -1,11 +1,11 @@
-package com.github.TKnudsen.ComplexDataObject.view;
+package com.github.TKnudsen.ComplexDataObject.view.visualMapping.position;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.view.visualMapping.VisualMappingFunction;
 
 /**
  * <p>
- * Title: PositionMappingFunction
+ * Title: CoordinatesMappingFunction
  * </p>
  * 
  * <p>
@@ -14,11 +14,11 @@ import com.github.TKnudsen.ComplexDataObject.view.visualMapping.VisualMappingFun
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
  */
-public abstract class PositionMappingFunction<I extends IDObject> extends VisualMappingFunction<I, Double[]> {
+public abstract class CoordinatesMappingFunction<I extends IDObject> extends VisualMappingFunction<I, Double[]> {
 
 }

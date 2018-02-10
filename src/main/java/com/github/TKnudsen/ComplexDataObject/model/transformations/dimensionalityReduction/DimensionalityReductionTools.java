@@ -91,7 +91,8 @@ public class DimensionalityReductionTools {
 
 	/**
 	 * normalizes the (low-dimensional) output of a mapping into 2D. uses a global
-	 * min and max across all dimensions to preserve linearity.
+	 * min and max across all dimensions to preserve linearity. Modifies the given
+	 * output mapping.
 	 * 
 	 * @param mapping
 	 */

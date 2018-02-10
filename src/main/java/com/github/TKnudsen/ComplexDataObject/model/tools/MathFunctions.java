@@ -9,15 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * <p>
- * Description: little helpers when calculating trivial math stuff.
+ * Description: little helpers when calculating math stuff.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.07
  */
 
 public class MathFunctions {
@@ -32,15 +32,7 @@ public class MathFunctions {
 	 * @return
 	 */
 	public static double linearScale(double min, double max, double value) {
-		if (!Double.isNaN(value))
-			if (max != min)
-				return (value - min) / (max - min);
-			else if (max != 0)
-				return (value - min) / (max);
-			else
-				return 1.0;
-		else
-			return Double.NaN;
+		return linearScale(min, max, value, false);
 	}
 
 	/**
@@ -72,6 +64,34 @@ public class MathFunctions {
 		}
 
 		return retValue;
+	}
+
+	/**
+	 * logarithmic scale. applies a hack for input values between 0 and 1. should be
+	 * validated.
+	 * 
+	 * @param min
+	 * @param max
+	 * @param value
+	 * @param limitToInterval
+	 * @return
+	 */
+	public static double logarithmicScale(double min, double max, double value, boolean limitToInterval) {
+		min += 1;
+		max += 1;
+		value += 1;
+		if (min != 0)
+			min = Math.log(min);
+		if (max != 0)
+			max = Math.log(max);
+		if (value != 0)
+			if (value < 0)
+				value = -Math.log(-value);
+			else
+				value = Math.log(value);
+
+		// -> [0,1]
+		return linearScale(min, max, value, limitToInterval);
 	}
 
 	/**

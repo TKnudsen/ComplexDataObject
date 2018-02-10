@@ -35,4 +35,8 @@ public abstract class VisualMappingFunction<T, M> implements Function<T, M> {
 		}
 		return mappingLookup.get(t);
 	}
+
+	protected void resetMappingLookup() {
+		mappingLookup = new HashMap<T, M>();
+	}
 }

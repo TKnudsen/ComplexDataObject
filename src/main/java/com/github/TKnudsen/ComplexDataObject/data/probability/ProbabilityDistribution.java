@@ -1,6 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.data.probability;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -62,6 +64,24 @@ public class ProbabilityDistribution<I> {
 
 		if (Math.abs(sum - 1.0) > EPSILON)
 			throw new IllegalArgumentException("ProbabilityDistribution: sum of given set of probabilites was != 100%");
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		Iterator<Entry<I, Double>> iterator = probabilityDistribution.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<I, Double> probability = iterator.next();
+			sb.append(probability.getKey());
+			sb.append('=').append('"');
+			sb.append(probability.getValue());
+			sb.append('"');
+			if (iterator.hasNext())
+				sb.append(',').append(' ');
+		}
+
+		return sb.toString();
 	}
 
 	public Double getProbability(I item) {

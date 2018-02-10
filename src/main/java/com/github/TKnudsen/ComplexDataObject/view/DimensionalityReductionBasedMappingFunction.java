@@ -8,6 +8,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction.DimensionalityReductionTools;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction.IDimensionalityReduction;
+import com.github.TKnudsen.ComplexDataObject.view.visualMapping.position.CoordinatesMappingFunction;
 
 /**
  * <p>
@@ -30,7 +31,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalit
  * 
  * @author Juergen Bernard
  */
-public class DimensionalityReductionBasedMappingFunction extends PositionMappingFunction<NumericalFeatureVector> {
+public class DimensionalityReductionBasedMappingFunction extends CoordinatesMappingFunction<NumericalFeatureVector> {
 
 	private IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction;
 
