@@ -1,10 +1,10 @@
-package com.github.TKnudsen.ComplexDataObject.view.visualMapping.position;
+package com.github.TKnudsen.ComplexDataObject.view.visualMappings.position;
 
 import com.github.TKnudsen.ComplexDataObject.model.functions.scaling.LinearScalingFunction;
 import com.github.TKnudsen.ComplexDataObject.model.functions.scaling.LogarithmicScalingFunction;
 import com.github.TKnudsen.ComplexDataObject.model.functions.scaling.ScalingFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
-import com.github.TKnudsen.ComplexDataObject.view.visualMapping.VisualMappingFunction;
+import com.github.TKnudsen.ComplexDataObject.view.visualMappings.VisualMappingFunction;
 
 /**
  * <p>

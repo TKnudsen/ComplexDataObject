@@ -1,8 +1,8 @@
-package com.github.TKnudsen.ComplexDataObject.view.visualMapping.color;
+package com.github.TKnudsen.ComplexDataObject.view.visualMappings.color;
 
 import java.awt.Color;
 
-import com.github.TKnudsen.ComplexDataObject.view.visualMapping.VisualMappingFunction;
+import com.github.TKnudsen.ComplexDataObject.view.visualMappings.VisualMappingFunction;
 
 /**
  * <p>
