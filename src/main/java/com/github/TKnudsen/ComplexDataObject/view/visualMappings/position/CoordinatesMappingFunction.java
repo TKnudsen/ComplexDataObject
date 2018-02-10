@@ -1,7 +1,7 @@
-package com.github.TKnudsen.ComplexDataObject.view.visualMapping.position;
+package com.github.TKnudsen.ComplexDataObject.view.visualMappings.position;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-import com.github.TKnudsen.ComplexDataObject.view.visualMapping.VisualMappingFunction;
+import com.github.TKnudsen.ComplexDataObject.view.visualMappings.VisualMappingFunction;
 
 /**
  * <p>

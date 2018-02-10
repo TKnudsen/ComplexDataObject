@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.view.visualMapping;
+package com.github.TKnudsen.ComplexDataObject.view.visualMappings;
 
 import java.util.HashMap;
 import java.util.Map;
