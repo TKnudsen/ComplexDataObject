@@ -1,6 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.string;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualitative;
@@ -69,6 +71,24 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 			}
 
 		return rep;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		Iterator<Entry<String, Double>> iterator = valueDistribution.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Double> probability = iterator.next();
+			sb.append(probability.getKey());
+			sb.append('=').append('"');
+			sb.append(probability.getValue());
+			sb.append('"');
+			if (iterator.hasNext())
+				sb.append(',').append(' ');
+		}
+
+		return sb.toString();
 	}
 
 	@Override
