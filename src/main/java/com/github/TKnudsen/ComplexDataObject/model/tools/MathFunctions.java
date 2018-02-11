@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +20,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Juergen Bernard
  * @version 1.07
  */
-
 public class MathFunctions {
 
 	/**
@@ -413,5 +413,39 @@ public class MathFunctions {
 			sumOfSquares += Math.pow((valules.get(i) - mean), 2);
 
 		return Math.sqrt(sumOfSquares / (double) valules.size());
+	}
+
+	/**
+	 * simple Double.NaN checker.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static boolean containsNaN(Collection<Number> values) {
+		if (values == null)
+			return false;
+
+		for (Number n : values)
+			if (Double.isNaN(n.doubleValue()))
+				return true;
+
+		return false;
+	}
+
+	/**
+	 * simple Double.NaN checker.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static boolean containsNaN(Number[] values) {
+		if (values == null)
+			return false;
+
+		for (Number n : values)
+			if (Double.isNaN(n.doubleValue()))
+				return true;
+
+		return false;
 	}
 }
