@@ -23,7 +23,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.01
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
