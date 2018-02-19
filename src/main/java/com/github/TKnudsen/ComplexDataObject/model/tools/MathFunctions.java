@@ -416,6 +416,25 @@ public class MathFunctions {
 	}
 
 	/**
+	 * sums up a series of Double values.
+	 * 
+	 * @param values
+	 * @param ignoreNAN
+	 * @return
+	 */
+	public static Double getSum(Collection<Double> values, boolean ignoreNAN) {
+		Double sum = 0.0;
+
+		for (Double d : values)
+			if (Double.isNaN(d) && !ignoreNAN)
+				continue;
+			else
+				sum += d;
+
+		return sum;
+	}
+
+	/**
 	 * simple Double.NaN checker.
 	 * 
 	 * @param values

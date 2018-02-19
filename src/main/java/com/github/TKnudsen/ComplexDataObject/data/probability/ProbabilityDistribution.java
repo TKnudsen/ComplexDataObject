@@ -1,9 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data.probability;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
@@ -24,7 +27,7 @@ import java.util.Set;
  */
 public class ProbabilityDistribution<I> {
 
-	private static double EPSILON = 1e-8;
+	public static double EPSILON = 1e-8;
 
 	private Map<I, Double> probabilityDistribution;
 
@@ -63,7 +66,20 @@ public class ProbabilityDistribution<I> {
 		}
 
 		if (Math.abs(sum - 1.0) > EPSILON)
-			throw new IllegalArgumentException("ProbabilityDistribution: sum of given set of probabilites was != 100%");
+			throw new IllegalArgumentException(
+					"ProbabilityDistribution: sum of given set of probabilites was != 100% (" + sum + ")");
+	}
+
+	public static boolean checkProbabilitySumMatchesHundredPercent(Collection<Double> probabilities, double epsilon,
+			boolean print) {
+		double sum = MathFunctions.getSum(probabilities, false);
+
+		if (Math.abs(sum - 1.0) > EPSILON) {
+			System.err.println("ProbabilityDistribution: sum of given set of probabilites was != 100% (" + sum + ")");
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
