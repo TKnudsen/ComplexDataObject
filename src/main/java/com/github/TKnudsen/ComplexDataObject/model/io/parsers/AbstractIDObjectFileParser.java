@@ -22,14 +22,42 @@ public abstract class AbstractIDObjectFileParser<O extends IDObject> implements 
 	}
 
 	/**
-	 * reads a given file and returns a List of Strings each representing a line
-	 * of the file.
+	 * reads a given file and returns a List of Strings each representing a line of
+	 * the file.
 	 * 
 	 * @param file
 	 * @return
 	 * @throws IOException
 	 */
 	protected List<String> readLines(String file) throws IOException, FileNotFoundException {
+		return readLinesOfFile(file);
+	}
+
+	public String getTokenizerToken() {
+		return tokenizerToken;
+	}
+
+	public void setTokenizerToken(String tokenizerToken) {
+		this.tokenizerToken = tokenizerToken;
+	}
+
+	public String getMissingValueIdentifier() {
+		return missingValueIdentifier;
+	}
+
+	public void setMissingValueIdentifier(String missingValueIdentifier) {
+		this.missingValueIdentifier = missingValueIdentifier;
+	}
+
+	/**
+	 * reads a given file and returns a List of Strings each representing a line of
+	 * the file.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<String> readLinesOfFile(String file) throws IOException, FileNotFoundException {
 		List<String> rows = new ArrayList<String>();
 		File fileObject = new File(file);
 		BufferedReader reader = null;
@@ -51,19 +79,4 @@ public abstract class AbstractIDObjectFileParser<O extends IDObject> implements 
 		return rows;
 	}
 
-	public String getTokenizerToken() {
-		return tokenizerToken;
-	}
-
-	public void setTokenizerToken(String tokenizerToken) {
-		this.tokenizerToken = tokenizerToken;
-	}
-
-	public String getMissingValueIdentifier() {
-		return missingValueIdentifier;
-	}
-
-	public void setMissingValueIdentifier(String missingValueIdentifier) {
-		this.missingValueIdentifier = missingValueIdentifier;
-	}
 }
