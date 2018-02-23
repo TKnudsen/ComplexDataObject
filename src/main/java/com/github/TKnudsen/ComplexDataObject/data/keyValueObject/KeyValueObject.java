@@ -22,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String> {
@@ -46,6 +46,8 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	public KeyValueObject(Long ID) {
 		if (ID == null)
 			throw new IllegalArgumentException("ID was null");
+
+		this.ID = ID.longValue();
 	}
 
 	@Override
@@ -75,8 +77,8 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	/**
-	 * Is true if the ComplexDataObject and a given Object have identical
-	 * attributes and attribute values. ID, name and description are ignored.
+	 * Is true if the ComplexDataObject and a given Object have identical attributes
+	 * and attribute values. ID, name and description are ignored.
 	 * 
 	 * @param obj
 	 * @return
@@ -158,7 +160,8 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 			return "";
 
 		String output = "";
-		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
+		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: "
+				+ attributes.get(attribute));
 		return output;
 	}
 }
