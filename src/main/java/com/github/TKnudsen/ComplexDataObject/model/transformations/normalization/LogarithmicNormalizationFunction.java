@@ -1,13 +1,13 @@
-package com.github.TKnudsen.ComplexDataObject.model.functions.scaling;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: LogarithmicScalingFunction
+ * Title: LogarithmicNormalizationFunction
  * </p>
  * 
  * <p>
@@ -15,8 +15,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * on a given value interval [global min max] or based on a given value
  * distribution.
  * 
- * Setting new bounds is posible (even if previously calculated values will be
- * obsolete then). Reason: keeping the instance alife in value-dynamic contexts.
+ * Setting new bounds is possible (even if previously calculated values will be
+ * obsolete then). Reason: keeping the instance alive in value-dynamic contexts.
  * </p>
  * 
  * <p>
@@ -24,31 +24,31 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public class LogarithmicScalingFunction extends ScalingFunction {
+public class LogarithmicNormalizationFunction extends NormalizationFunction {
 
-	public LogarithmicScalingFunction(List<Number> values) {
+	public LogarithmicNormalizationFunction(Collection<Number> values) {
 		super(values);
 	}
 
-	public LogarithmicScalingFunction(List<Number> values, boolean limitToBounds) {
+	public LogarithmicNormalizationFunction(Collection<Number> values, boolean limitToBounds) {
 		super(values, limitToBounds);
 	}
 
-	public LogarithmicScalingFunction(StatisticsSupport statisticsSupport) {
+	public LogarithmicNormalizationFunction(StatisticsSupport statisticsSupport) {
 		super(statisticsSupport);
 	}
 
-	public LogarithmicScalingFunction(StatisticsSupport statisticsSupport, boolean limitToBounds) {
+	public LogarithmicNormalizationFunction(StatisticsSupport statisticsSupport, boolean limitToBounds) {
 		super(statisticsSupport, limitToBounds);
 	}
 
-	public LogarithmicScalingFunction(Number globalMin, Number globalMax) {
+	public LogarithmicNormalizationFunction(Number globalMin, Number globalMax) {
 		super(globalMin, globalMax);
 	}
 
-	public LogarithmicScalingFunction(Number globalMin, Number globalMax, boolean limitToBounds) {
+	public LogarithmicNormalizationFunction(Number globalMin, Number globalMax, boolean limitToBounds) {
 		super(globalMin, globalMax, limitToBounds);
 	}
 

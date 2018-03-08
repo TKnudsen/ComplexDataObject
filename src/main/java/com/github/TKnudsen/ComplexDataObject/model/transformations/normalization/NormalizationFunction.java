@@ -1,13 +1,13 @@
-package com.github.TKnudsen.ComplexDataObject.model.functions.scaling;
+package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: ScalingFunction
+ * Title: NormalizationFunction
  * </p>
  * 
  * <p>
@@ -15,10 +15,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * on a given value interval [global min max] or based on a given value
  * distribution.
  * 
- * Scaling itself will be implemented in inheriting classes.
- * 
- * Setting new bounds is posible (even if previously calculated values will be
- * obsolete then). Reason: keeping the instance alife in value-dynamic contexts.
+ * Setting new bounds is possible (even if previously calculated values will be
+ * obsolete then). Reason: keeping the instance alive in value-dynamic contexts.
  * </p>
  * 
  * <p>
@@ -26,36 +24,36 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public abstract class ScalingFunction implements Function<Number, Number> {
+public abstract class NormalizationFunction implements Function<Number, Number> {
 
 	private Number globalMin = Double.NaN;
 	private Number globalMax = Double.NaN;
 
 	private boolean limitToBounds = false;
 
-	public ScalingFunction(List<Number> values) {
+	public NormalizationFunction(Collection<Number> values) {
 		this(new StatisticsSupport(values));
 	}
 
-	public ScalingFunction(List<Number> values, boolean limitToBounds) {
+	public NormalizationFunction(Collection<Number> values, boolean limitToBounds) {
 		this(new StatisticsSupport(values), limitToBounds);
 	}
 
-	public ScalingFunction(StatisticsSupport statisticsSupport) {
+	public NormalizationFunction(StatisticsSupport statisticsSupport) {
 		this(statisticsSupport.getMin(), statisticsSupport.getMax());
 	}
 
-	public ScalingFunction(StatisticsSupport statisticsSupport, boolean limitToBounds) {
+	public NormalizationFunction(StatisticsSupport statisticsSupport, boolean limitToBounds) {
 		this(statisticsSupport.getMin(), statisticsSupport.getMax(), limitToBounds);
 	}
 
-	public ScalingFunction(Number globalMin, Number globalMax) {
+	public NormalizationFunction(Number globalMin, Number globalMax) {
 		this(globalMin, globalMax, false);
 	}
 
-	public ScalingFunction(Number globalMin, Number globalMax, boolean limitToBounds) {
+	public NormalizationFunction(Number globalMin, Number globalMax, boolean limitToBounds) {
 		this.globalMin = globalMin;
 		this.globalMax = globalMax;
 
@@ -77,10 +75,10 @@ public abstract class ScalingFunction implements Function<Number, Number> {
 		if (o == this)
 			return true;
 
-		if (!(o.getClass().isAssignableFrom(ScalingFunction.class)))
+		if (!(o.getClass().isAssignableFrom(NormalizationFunction.class)))
 			return false;
 
-		ScalingFunction other = (ScalingFunction) o;
+		NormalizationFunction other = (NormalizationFunction) o;
 
 		if (other.globalMin == globalMin && other.globalMax == globalMax)
 			return true;
