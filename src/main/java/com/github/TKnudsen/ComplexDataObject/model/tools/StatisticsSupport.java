@@ -32,13 +32,13 @@ import com.google.common.primitives.Doubles;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2017
+ * Copyright: Copyright (c) 2012-2018
  * </p>
  * 
  * @author Juergen Bernard
  *
  */
-public class StatisticsSupport extends DescriptiveStatistics {
+public class StatisticsSupport extends DescriptiveStatistics implements Iterable<Double> {
 
 	/**
 	 * 
@@ -251,6 +251,11 @@ public class StatisticsSupport extends DescriptiveStatistics {
 		double ratioObserved = (double) uniqueObservations / getValues().length;
 
 		return (ratioObserved < ratio);
+	}
+
+	@Override
+	public Iterator<Double> iterator() {
+		return Doubles.asList(getValues()).iterator();
 	}
 
 }
