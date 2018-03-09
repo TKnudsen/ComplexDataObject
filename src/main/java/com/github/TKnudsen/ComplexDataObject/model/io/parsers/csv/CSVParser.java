@@ -25,9 +25,9 @@ import weka.core.converters.CSVLoader;
  * </p>
  * 
  * <p>
- * Description: Parses ComplexDataObjects from a CSV file. Note: this parser
- * is not part of the persistence layer. In fact, it gathers new
- * ComplexDataObjects from a given file.
+ * Description: Parses ComplexDataObjects from a CSV file. Note: this parser is
+ * not part of the persistence layer. In fact, it gathers new ComplexDataObjects
+ * from a given file.
  * </p>
  * 
  * <p>
@@ -88,5 +88,15 @@ public class CSVParser implements ComplexDataObjectParser {
 
 	public String getMissingValueIndicator() {
 		return missingValueIndicator;
+	}
+
+	@Override
+	public String getName() {
+		return "CSVParser";
+	}
+
+	@Override
+	public String getDescription() {
+		return getName();
 	}
 }

@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * <p>
@@ -13,12 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public interface ComplexDataObjectParser extends IKeyValueObjectParser<Object, ComplexDataObject> {
+public interface ComplexDataObjectParser extends IKeyValueObjectParser<Object, ComplexDataObject>, ISelfDescription {
 
 }
