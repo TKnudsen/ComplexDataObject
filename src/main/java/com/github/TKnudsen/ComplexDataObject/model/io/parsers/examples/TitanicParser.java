@@ -27,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.12
+ * @version 1.13
  */
 public class TitanicParser implements ComplexDataObjectParser {
 
@@ -96,64 +96,81 @@ public class TitanicParser implements ComplexDataObjectParser {
 					if (hauptTabelle.get(i).get(spalte).equals(""))
 						entry = new AbstractMap.SimpleEntry<String, Date>(metaMapping.get(spalte).getKey(), null);
 					else
-						entry = new AbstractMap.SimpleEntry<String, Date>(metaMapping.get(spalte).getKey(), ParserTools.parseDate(hauptTabelle.get(i).get(spalte)));
+						entry = new AbstractMap.SimpleEntry<String, Date>(metaMapping.get(spalte).getKey(),
+								ParserTools.parseDate(hauptTabelle.get(i).get(spalte)));
 				else if (metaMapping.get(spalte).getValue().equals(Double.class))
-					if (spalte == 8 && (hauptTabelle.get(i).get(spalte).equals("0") || hauptTabelle.get(i).get(spalte).equals("0,0000")))
-						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(), Double.NaN);
+					if (spalte == 8 && (hauptTabelle.get(i).get(spalte).equals("0")
+							|| hauptTabelle.get(i).get(spalte).equals("0,0000")))
+						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(),
+								Double.NaN);
 					else if (hauptTabelle.get(i).get(spalte).equals(""))
-						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(), Double.NaN);
+						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(),
+								Double.NaN);
 					else if (hauptTabelle.get(i).get(spalte).equals(missingValueIndicator))
-						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(), Double.NaN);
+						entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(),
+								Double.NaN);
 					else {
 						try {
-							entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(), new Double(hauptTabelle.get(i).get(spalte).replace(",", ".")));
+							entry = new AbstractMap.SimpleEntry<String, Double>(metaMapping.get(spalte).getKey(),
+									new Double(hauptTabelle.get(i).get(spalte).replace(",", ".")));
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						}
 					}
 				else if (metaMapping.get(spalte).getValue().equals(String.class))
-					entry = new AbstractMap.SimpleEntry<String, String>(metaMapping.get(spalte).getKey(), new String(hauptTabelle.get(i).get(spalte)));
+					entry = new AbstractMap.SimpleEntry<String, String>(metaMapping.get(spalte).getKey(),
+							new String(hauptTabelle.get(i).get(spalte)));
 				else if (metaMapping.get(spalte).getValue().equals(Boolean.class)) {
 					String s = hauptTabelle.get(i).get(spalte);
 					switch (s) {
 					case "j": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "V": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "1": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "Ja": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "ja": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "yes": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(true));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(true));
 						break;
 					}
 					case "0": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(false));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(false));
 						break;
 					}
 					case "Nein": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(false));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(false));
 						break;
 					}
 					case "nein": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(false));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(false));
 						break;
 					}
 					case "no": {
-						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(), new Boolean(false));
+						entry = new AbstractMap.SimpleEntry<String, Boolean>(metaMapping.get(spalte).getKey(),
+								new Boolean(false));
 						break;
 					}
 					default:
@@ -191,7 +208,8 @@ public class TitanicParser implements ComplexDataObjectParser {
 		for (ComplexDataObject container : data)
 			if (container.getAttribute(property) != null && container.getAttribute(property) != null)
 				if (entity.getClass().equals(Double.class) && Double.isNaN((double) entity)) {
-					if (container.getAttribute(property).getClass().equals(Double.class) && Double.isNaN((double) container.getAttribute(property)))
+					if (container.getAttribute(property).getClass().equals(Double.class)
+							&& Double.isNaN((double) container.getAttribute(property)))
 						container.removeAttribute(property);
 				} else if (container.getAttribute(property).equals(entity))
 					container.removeAttribute(property);
@@ -322,5 +340,15 @@ public class TitanicParser implements ComplexDataObjectParser {
 			count++;
 		}
 		return count;
+	}
+
+	@Override
+	public String getName() {
+		return "TitanicDatasetParser";
+	}
+
+	@Override
+	public String getDescription() {
+		return getName();
 	}
 }

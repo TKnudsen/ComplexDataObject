@@ -116,4 +116,14 @@ public class ARFFParser implements ComplexDataObjectParser {
 	public String getMissingValueIndicator() {
 		return missingValueIndicator;
 	}
+
+	@Override
+	public String getName() {
+		return "ARFF Parser";
+	}
+
+	@Override
+	public String getDescription() {
+		return getName();
+	}
 }
