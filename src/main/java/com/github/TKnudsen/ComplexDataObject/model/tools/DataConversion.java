@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * <p>
  * Title: DataConversion
@@ -22,12 +24,26 @@ import java.util.Set;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.05
  */
 public class DataConversion {
 
 	/**
-	 * converts a list of Double objects to an array of double primitives.
+	 * converts a list of Doubles to an array of double primitives. May make
+	 * List<Double> become obsolete.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double[] toPrimitives(Collection<Double> values) {
+		if (values == null)
+			return null;
+
+		return values.stream().mapToDouble(Double::doubleValue).toArray();
+	}
+
+	/**
+	 * converts a list of Doubles to an array of double primitives.
 	 * 
 	 * @param values
 	 * @return
@@ -37,16 +53,19 @@ public class DataConversion {
 			return null;
 
 		return values.stream().mapToDouble(Double::doubleValue).toArray();
+	}
 
-		// if (values == null)
-		// return null;
-		//
-		// double[] ret = new double[values.size()];
-		//
-		// for (int i = 0; i < values.size(); i++)
-		// ret[i] = values.get(i).doubleValue();
-		//
-		// return ret;
+	/**
+	 * converts a array of Doubles to an array of double primitives.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double[] toPrimitives(Double[] values) {
+		if (values == null)
+			return null;
+
+		return ArrayUtils.toPrimitive(values);
 	}
 
 	/**

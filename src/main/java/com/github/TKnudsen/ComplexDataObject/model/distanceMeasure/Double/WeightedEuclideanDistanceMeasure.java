@@ -37,14 +37,8 @@ public class WeightedEuclideanDistanceMeasure extends WeightedDistanceMeasure<do
 
 	@Override
 	public double getDistance(double[] o1, double[] o2) {
-		if (o1.length != o2.length || o1.length != getWeights().size()) {
-			try {
-				throw new Exception("The Arrays have different Sizes.");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return Double.NaN;
-		}
+		if (o1.length != o2.length || o1.length != getWeights().size())
+			throw new IllegalArgumentException(getName() + ": given arrays have different length");
 
 		int length = o1.length;
 		double result = 0;

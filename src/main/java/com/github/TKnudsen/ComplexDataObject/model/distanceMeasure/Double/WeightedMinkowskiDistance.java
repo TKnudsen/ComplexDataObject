@@ -44,15 +44,8 @@ public class WeightedMinkowskiDistance extends WeightedDistanceMeasure<double[]>
 
 	@Override
 	public double getDistance(double[] o1, double[] o2) {
-		// check if arrays have same length
-		if (o1.length != o2.length || o1.length != getWeights().size()) {
-			try {
-				throw new Exception("The Arrays have different Sizes.");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return Double.NaN;
-		}
+		if (o1.length != o2.length || o1.length != getWeights().size())
+			throw new IllegalArgumentException(getName() + ": given arrays have different length");
 
 		int length = o1.length;
 		double result = 0;

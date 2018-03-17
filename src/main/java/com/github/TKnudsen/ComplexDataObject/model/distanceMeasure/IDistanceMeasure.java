@@ -15,11 +15,12 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public interface IDistanceMeasure<T> extends ToDoubleBiFunction<T, T>, ISelfDescription {
 
