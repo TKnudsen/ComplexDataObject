@@ -1,7 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.data.probability;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -23,7 +26,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class ProbabilityDistribution<I> {
 
@@ -98,6 +101,22 @@ public class ProbabilityDistribution<I> {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * provides values in a distinct order. Meaningful if several distributions are
+	 * to be compared to ensure identical order, etc.
+	 * 
+	 * @param items
+	 * @return
+	 */
+	public List<Double> values(LinkedHashSet<I> items) {
+		List<Double> list = new ArrayList<>();
+
+		for (I i : items)
+			list.add(getProbability(i));
+
+		return list;
 	}
 
 	public Double getProbability(I item) {

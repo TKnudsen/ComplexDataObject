@@ -14,11 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2018,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.05
  */
 public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]>, Serializable {
 
@@ -27,12 +28,11 @@ public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]
 	 */
 	private static final long serialVersionUID = -2559705521219780141L;
 
-	@Deprecated
-	public double compute(double[] a, double[] b) {
-		return getDistance(a, b);
-	}
-
 	public double applyAsDouble(double[] t, double[] u) {
 		return getDistance(t, u);
+	}
+
+	public double dist(double[] a, double[] b) {
+		return getDistance(a, b);
 	}
 }
