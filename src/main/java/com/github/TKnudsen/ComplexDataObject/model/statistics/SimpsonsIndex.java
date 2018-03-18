@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,9 +38,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 public class SimpsonsIndex {
 
 	/**
-	 * The value of D ranges between 0 and 1. With this index, 0 represents
-	 * infinite diversity and 1, no diversity. That is, the bigger the value of
-	 * D, the lower the diversity.
+	 * The value of D ranges between 0 and 1. With this index, 0 represents infinite
+	 * diversity and 1, no diversity. That is, the bigger the value of D, the lower
+	 * the diversity.
 	 * 
 	 * @param distribution
 	 * @return
@@ -65,6 +66,10 @@ public class SimpsonsIndex {
 			return 0.0;
 		else
 			return numbers / (double) (totalNumber * (totalNumber - 1));
+	}
+
+	public static double calculateSimpsonsIndex(Collection<Integer> distribution) {
+		return calculateSimpsonsIndex(DataConversion.toIntPrimitives(distribution));
 	}
 
 	public static double calculateSimpsonsIndex(List<Integer> distribution) {
@@ -97,9 +102,8 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value <0 will achieve the int value 1. The remaining
-	 * values will be rescaled with the same factor (linear transformation). 0
-	 * remains 0.
+	 * smallest double value <0 will achieve the int value 1. The remaining values
+	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
 	 * 
 	 * @param values
 	 * @return
@@ -113,7 +117,8 @@ public class SimpsonsIndex {
 			if (values[i] > 0)
 				minUsedToScaleValues = Math.min(minUsedToScaleValues, values[i]);
 			else if (values[i] < 0)
-				throw new IllegalArgumentException("SimpsonsDiversityIndex: transformation failed because a given values was < 0");
+				throw new IllegalArgumentException(
+						"SimpsonsDiversityIndex: transformation failed because a given values was < 0");
 
 		if (minUsedToScaleValues != Double.MAX_VALUE)
 			minUsedToScaleValues = 1 / minUsedToScaleValues;
@@ -133,9 +138,8 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value <0 will achieve the int value 1. The remaining
-	 * values will be rescaled with the same factor (linear transformation). 0
-	 * remains 0.
+	 * smallest double value <0 will achieve the int value 1. The remaining values
+	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
 	 * 
 	 * @param values
 	 * @return

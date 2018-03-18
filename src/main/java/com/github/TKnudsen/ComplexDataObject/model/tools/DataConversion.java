@@ -74,6 +74,19 @@ public class DataConversion {
 	 * @param values
 	 * @return
 	 */
+	public static int[] toIntPrimitives(Collection<Integer> values) {
+		if (values == null)
+			return null;
+
+		return values.stream().mapToInt(Integer::intValue).toArray();
+	}
+
+	/**
+	 * converts a list of Integers to an array of int primitives.
+	 * 
+	 * @param values
+	 * @return
+	 */
 	public static int[] toIntPrimitives(List<Integer> values) {
 		if (values == null)
 			return null;
