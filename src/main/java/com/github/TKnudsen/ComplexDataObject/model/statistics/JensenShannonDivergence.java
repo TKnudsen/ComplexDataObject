@@ -1,6 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.KullbackLeiblerDivergenceDistance;
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities.KullbackLeiblerDivergenceDistance;
 
 /**
  * <p>

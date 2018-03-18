@@ -3,7 +3,6 @@ package com.github.TKnudsen.ComplexDataObject.data.probability;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,7 +25,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class ProbabilityDistribution<I> {
 
@@ -104,17 +103,25 @@ public class ProbabilityDistribution<I> {
 	}
 
 	/**
-	 * provides values in a distinct order. Meaningful if several distributions are
-	 * to be compared to ensure identical order, etc.
+	 * provides values in the intrinsic order of a given set. Meaningful if several
+	 * distributions are to be compared.
+	 * 
+	 * Throws a NullPointerException if no probabilty is available for a given item.
 	 * 
 	 * @param items
 	 * @return
 	 */
-	public List<Double> values(LinkedHashSet<I> items) {
+	public List<Double> values(Set<I> items) {
 		List<Double> list = new ArrayList<>();
 
-		for (I i : items)
+		for (I i : items) {
+			Double probability = getProbability(i);
+
+			if (probability == null)
+				throw new NullPointerException("ProbabilityDistribution: probability for item " + i + " was null.");
+
 			list.add(getProbability(i));
+		}
 
 		return list;
 	}
