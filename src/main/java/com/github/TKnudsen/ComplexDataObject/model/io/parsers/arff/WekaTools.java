@@ -82,16 +82,20 @@ public class WekaTools {
 			AttributeType type = getAttributeType(instances, instances.attribute(i));
 			switch (type) {
 			case NUMERIC:
-				attributeSchema.put((Integer) i, new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Double.class));
+				attributeSchema.put((Integer) i,
+						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Double.class));
 				break;
 			case ORDINAL:
-				attributeSchema.put((Integer) i, new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Integer.class));
+				attributeSchema.put((Integer) i,
+						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Integer.class));
 				break;
 			case BINARY:
-				attributeSchema.put((Integer) i, new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Boolean.class));
+				attributeSchema.put((Integer) i,
+						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Boolean.class));
 				break;
 			case CATEGORICAL:
-				attributeSchema.put((Integer) i, new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), String.class));
+				attributeSchema.put((Integer) i,
+						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), String.class));
 				break;
 			default:
 				break;
@@ -101,7 +105,8 @@ public class WekaTools {
 		return attributeSchema;
 	}
 
-	public static Entry<String, ?> assignEntry(Map<Integer, Entry<String, Class<?>>> attributeSchema, Instance instance, int spalte, String missingValueIndicator) {
+	public static Entry<String, ?> assignEntry(Map<Integer, Entry<String, Class<?>>> attributeSchema, Instance instance,
+			int spalte, String missingValueIndicator) {
 
 		boolean missingValue = false;
 		try {
@@ -118,7 +123,8 @@ public class WekaTools {
 				entry = new SimpleEntry<String, Integer>(attributeSchema.get(spalte).getKey(), null);
 			else
 				try {
-					entry = new SimpleEntry<String, Integer>(attributeSchema.get(spalte).getKey(), Integer.parseInt(String.valueOf((int) instance.value(spalte))));
+					entry = new SimpleEntry<String, Integer>(attributeSchema.get(spalte).getKey(),
+							Integer.parseInt(String.valueOf((int) instance.value(spalte))));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
@@ -127,14 +133,17 @@ public class WekaTools {
 			if (missingValue || String.valueOf(instance.value(spalte)).equals(""))
 				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(), null);
 			else
-				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(), ParserTools.parseDate(String.valueOf(instance.value(spalte))));
+				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(),
+						ParserTools.parseDate(String.valueOf(instance.value(spalte))));
 		// Double //TODO check for Number?
 		else if (attributeSchema.get(spalte).getValue().equals(Double.class))
-			if (missingValue || String.valueOf(instance.value(spalte)).equals("") || String.valueOf(instance.value(spalte)).equals(missingValueIndicator))
+			if (missingValue || String.valueOf(instance.value(spalte)).equals("")
+					|| String.valueOf(instance.value(spalte)).equals(missingValueIndicator))
 				entry = new SimpleEntry<String, Double>(attributeSchema.get(spalte).getKey(), Double.NaN);
 			else {
 				try {
-					entry = new SimpleEntry<String, Double>(attributeSchema.get(spalte).getKey(), new Double(String.valueOf(instance.value(spalte)).replace(",", ".")));
+					entry = new SimpleEntry<String, Double>(attributeSchema.get(spalte).getKey(),
+							new Double(String.valueOf(instance.value(spalte)).replace(",", ".")));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
@@ -144,7 +153,8 @@ public class WekaTools {
 			if (missingValue)
 				entry = new SimpleEntry<String, String>(attributeSchema.get(spalte).getKey(), null);
 			else
-				entry = new SimpleEntry<String, String>(attributeSchema.get(spalte).getKey(), new String(String.valueOf(instance.stringValue(spalte))));
+				entry = new SimpleEntry<String, String>(attributeSchema.get(spalte).getKey(),
+						new String(String.valueOf(instance.stringValue(spalte))));
 		// Boolean
 		else if (attributeSchema.get(spalte).getValue().equals(Boolean.class)) {
 			if (missingValue)
@@ -231,7 +241,9 @@ public class WekaTools {
 				for (int i = 0; i < attValues.size(); i++)
 					attValues.add(attValues.remove(i).toLowerCase());
 
-				if (attValues.contains("no") && attValues.contains("yes") || attValues.contains("false") && attValues.contains("true") || attValues.contains("0") && attValues.contains("1"))
+				if (attValues.contains("no") && attValues.contains("yes")
+						|| attValues.contains("false") && attValues.contains("true")
+						|| attValues.contains("0") && attValues.contains("1"))
 					type = AttributeType.BINARY;
 				else
 					type = AttributeType.CATEGORICAL;
@@ -249,4 +261,5 @@ public class WekaTools {
 				return i;
 		throw new IndexOutOfBoundsException("Attribut nicht vorhanden! Oder: equals checken ;-)");
 	}
+
 }
