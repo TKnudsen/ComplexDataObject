@@ -24,15 +24,15 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class LinearNormalizationFunction extends NormalizationFunction {
 
-	public LinearNormalizationFunction(Collection<Number> values) {
+	public LinearNormalizationFunction(Collection<? extends Number> values) {
 		super(values);
 	}
 
-	public LinearNormalizationFunction(Collection<Number> values, boolean limitToBounds) {
+	public LinearNormalizationFunction(Collection<? extends Number> values, boolean limitToBounds) {
 		super(values, limitToBounds);
 	}
 

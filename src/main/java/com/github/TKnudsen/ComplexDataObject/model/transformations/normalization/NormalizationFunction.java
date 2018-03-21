@@ -24,7 +24,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public abstract class NormalizationFunction implements Function<Number, Number> {
 
@@ -33,11 +33,11 @@ public abstract class NormalizationFunction implements Function<Number, Number> 
 
 	private boolean limitToBounds = false;
 
-	public NormalizationFunction(Collection<Number> values) {
+	public NormalizationFunction(Collection<? extends Number> values) {
 		this(new StatisticsSupport(values));
 	}
 
-	public NormalizationFunction(Collection<Number> values, boolean limitToBounds) {
+	public NormalizationFunction(Collection<? extends Number> values, boolean limitToBounds) {
 		this(new StatisticsSupport(values), limitToBounds);
 	}
 
