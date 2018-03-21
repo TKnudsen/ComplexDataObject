@@ -181,7 +181,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 	public double getMin() {
 		return super.getMin();
 	}
-
+	
 	/**
 	 * Must be between 0 and 100
 	 * 
