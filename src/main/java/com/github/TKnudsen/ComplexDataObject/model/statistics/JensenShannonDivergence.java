@@ -33,7 +33,7 @@ public class JensenShannonDivergence {
 		for (int i = 0; i < med.length; i++)
 			med[i] = (a[i] + b[i]) / 2;
 
-		KullbackLeiblerDivergenceDistance kld = new KullbackLeiblerDivergenceDistance(false);
+		KullbackLeiblerDivergenceDistance kld = new KullbackLeiblerDivergenceDistance(true);
 
 		return (kld.dist(a, med) + kld.dist(b, med)) * 0.5;
 	}
