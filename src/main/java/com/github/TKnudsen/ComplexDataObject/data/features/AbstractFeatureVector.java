@@ -318,14 +318,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public String toString() {
-		String string = this.getName() + ", " + this.getID() + ", dim: " + getDimensions() + "\t";
+		String n = this.getName();
+		if (n == null)
+			n = this.getClass().getSimpleName();
 
-		// string += "[";
-		// for (F feature : this.getVectorRepresentation())
-		// string += feature.toString();
-		// string += "]\t";
+		n += (", " + this.getID() + ", dim: " + getDimensions() + "\t");
 
-		return string;
+		return n;
 	}
 
 	protected Map<String, F> getFeaturesMap() {
