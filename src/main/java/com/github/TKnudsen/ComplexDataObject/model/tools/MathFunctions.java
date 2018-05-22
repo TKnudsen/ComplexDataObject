@@ -133,7 +133,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMin(List<Double> values) {
+	public static double getMin(Collection<Double> values) {
 		if (values == null)
 			return Double.NaN;
 
@@ -237,7 +237,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMean(List<Double> values) {
+	public static double getMean(Collection<Double> values) {
 		if (values == null)
 			return Double.NaN;
 
@@ -258,7 +258,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMax(List<Double> values) {
+	public static double getMax(Collection<Double> values) {
 		if (values == null)
 			return Double.NaN;
 
