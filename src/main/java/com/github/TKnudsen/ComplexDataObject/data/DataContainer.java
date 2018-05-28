@@ -42,6 +42,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		dataSchema = new DataSchema();
 		for (Long ID : objectsMap.keySet())
 			extendDataSchema(objectsMap.get(ID));
+
+		for (String attribute : getAttributeNames())
+			calculateEntities(attribute);
 	}
 
 	public DataContainer(Iterable<T> objects) {
@@ -50,6 +53,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			objectsMap.put(object.getID(), object);
 			extendDataSchema(object);
 		}
+
+		for (String attribute : getAttributeNames())
+			calculateEntities(attribute);
 	}
 
 	private void extendDataSchema(T object) {
@@ -76,11 +82,6 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <A> DataSchema addAttribute(String attribute, Class<A> type, A defaultValue) {
-		// TODO t makes no sense. a new attribute is introduced here - not a new
-		// object consisting of multiple attributes
-
-		// either a new object is introduced or a new attribute.
-		attributeValues = new HashMap<String, Map<Long, Object>>();
 
 		dataSchema.add(attribute, type, defaultValue);
 
@@ -142,8 +143,10 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public Boolean isNumeric(String attribute) {
-		if (!dataSchema.contains(attribute))
+		if (!dataSchema.contains(attribute)) {
+			System.err.println("ComplexDataContainer.isNumeric(attribute): attribute does not exist.");
 			return false;
+		}
 		if (Number.class.isAssignableFrom(dataSchema.getType(attribute)))
 			return true;
 		return false;
