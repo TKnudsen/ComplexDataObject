@@ -31,8 +31,8 @@ public class DoubleParser implements IObjectParser<Double> {
 			stringValue = stringValue.substring(0, stringValue.length() - 1);
 
 		stringValue = stringValue.replace("%", "");
-		if (stringValue.contains(" "))
-			stringValue = stringValue.substring(0, stringValue.indexOf(" "));
+		while (stringValue.contains(" "))
+			stringValue = stringValue.replace(" ", "");
 
 		if (isDotForThousandsNotation(stringValue)) {
 			NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
