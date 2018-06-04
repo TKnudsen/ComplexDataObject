@@ -70,7 +70,7 @@ public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDista
 		double catWeight = stringWeights != null ? stringWeights.stream().reduce(0.0, ((x, y) -> x + y)) : 1.0;
 		double binWeight = booleanWeights != null ? booleanWeights.stream().reduce(0.0, ((x, y) -> x + y)) : 1.0;
 		double sumWeight = numWeight + catWeight + binWeight;
-
+		
 		double[] darr1 = o1.getVectorRepresentation().stream().filter(x -> x.getFeatureType() == FeatureType.DOUBLE).map(x -> (Double) x.getFeatureValue()).mapToDouble(Double::doubleValue).toArray();
 		double[] darr2 = o2.getVectorRepresentation().stream().filter(x -> x.getFeatureType() == FeatureType.DOUBLE).map(x -> (Double) x.getFeatureValue()).mapToDouble(Double::doubleValue).toArray();
 		Boolean[] barr1 = o1.getVectorRepresentation().stream().filter(x -> x.getFeatureType() == FeatureType.BOOLEAN).map(x -> (Boolean) x.getFeatureValue()).toArray(Boolean[]::new);

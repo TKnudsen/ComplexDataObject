@@ -99,10 +99,11 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		Integer index1 = getObjectIndex(o1);
 		Integer index2 = getObjectIndex(o2);
 
-		System.out.println(
-				"DistanceMatrix.getDistance: item not in the DM index, thus no lookup possible. Calculating distance..");
-		if (index1 == null || index2 == null)
+		if (index1 == null || index2 == null) {
+			System.out.println(
+					"DistanceMatrix.getDistance: item not in the DM index, thus no lookup possible. Calculating distance..");
 			return distanceMeasure.getDistance(o1, o2);
+		}
 
 		return getDistanceMatrix()[index1][index2];
 	}
