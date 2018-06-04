@@ -31,6 +31,7 @@ public class BooleanParser implements IObjectParser<Boolean> {
 		case "n":
 		case "no":
 		case "No":
+		case "NO":
 			return Boolean.FALSE;
 		case "true":
 		case "TRUE":
@@ -42,9 +43,10 @@ public class BooleanParser implements IObjectParser<Boolean> {
 		case "y":
 		case "yes":
 		case "Yes":
+		case "YES":
 			return Boolean.TRUE;
 		default:
-			System.out.println("Object" + object + " could not be parsed to Boolean");
+			System.out.println("Object " + object + " could not be parsed to Boolean");
 			return null;
 		}
 	}
