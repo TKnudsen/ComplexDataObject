@@ -24,9 +24,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
  * @version 1.0
  */
 public class JSONLoader {
+	
+	private static ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 	public static ComplexDataObject loadFromString(String json) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 		ComplexDataObject complexDataObject;
 		try {
@@ -40,7 +42,7 @@ public class JSONLoader {
 	}
 
 	public static ComplexDataObject loadFromFile(String file) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 		ComplexDataObject complexDataObject;
 		try {
@@ -54,7 +56,7 @@ public class JSONLoader {
 	}
 
 	public static NumericalFeatureVector loadNumericalFeatureVectorFromString(String json) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 		NumericalFeatureVector numericalFeatureVector;
 		try {
@@ -68,7 +70,7 @@ public class JSONLoader {
 	}
 
 	public static NumericalFeatureVector loadNumericalFeatureVectorFromFile(String file) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 		NumericalFeatureVector numericalFeatureVector;
 		try {
