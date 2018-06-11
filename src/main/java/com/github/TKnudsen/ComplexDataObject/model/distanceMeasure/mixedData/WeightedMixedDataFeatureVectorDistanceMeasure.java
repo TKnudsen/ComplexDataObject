@@ -82,11 +82,11 @@ public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDista
 		double sVal = stringDistanceMeasure.getDistance(sarr1, sarr2);
 		double bVal = booleanDistanceMeasure.getDistance(barr1, barr2);
 
-		if (!Double.isNaN(dVal))
+		if (Double.isNaN(dVal))
 			dVal = getNullValue();
-		if (!Double.isNaN(sVal))
+		if (Double.isNaN(sVal))
 			sVal = getNullValue();
-		if (!Double.isNaN(bVal))
+		if (Double.isNaN(bVal))
 			bVal = getNullValue();
 
 		if (getWeights() != null && getWeights().size() == 3) {

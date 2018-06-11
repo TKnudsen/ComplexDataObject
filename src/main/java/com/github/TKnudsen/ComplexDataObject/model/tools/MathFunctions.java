@@ -160,6 +160,18 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
+	public static double getMin(List<Double> values) {
+		Collection<Double> v = values;
+
+		return getMin(v);
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
 	public static double getMin(double[] values) {
 		if (values == null)
 			return Double.NaN;
@@ -253,6 +265,18 @@ public class MathFunctions {
 	}
 
 	/**
+	 * Calculates the mean value for a given series of values. Ignores Double.NAN
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMean(List<Double> values) {
+		Collection<Double> v = values;
+
+		return getMean(v);
+	}
+
+	/**
 	 * Calculates the min value for a given series of values. Ignores Double.NAN.
 	 * 
 	 * @param values
@@ -277,6 +301,18 @@ public class MathFunctions {
 			return Double.NaN;
 
 		return max;
+	}
+
+	/**
+	 * Calculates the min value for a given series of values. Ignores Double.NAN.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static double getMax(List<Double> values) {
+		Collection<Double> v = values;
+
+		return getMax(v);
 	}
 
 	/**
