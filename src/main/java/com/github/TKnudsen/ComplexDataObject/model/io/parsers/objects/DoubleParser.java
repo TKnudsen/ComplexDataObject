@@ -50,6 +50,16 @@ public class DoubleParser implements IObjectParser<Double> {
 		try {
 			return Double.parseDouble(stringValue);
 		} catch (Exception e) {
+			if (stringValue.contains("/")) {
+				try {
+					double d1 = Double.parseDouble(stringValue.substring(0, stringValue.indexOf("/")));
+					double d2 = Double
+							.parseDouble(stringValue.substring(stringValue.indexOf("/") + 1, stringValue.length()));
+					return d1 / d2;
+				} catch (Exception e2) {
+					return Double.NaN;
+				}
+			}
 			return Double.NaN;
 		}
 	}

@@ -58,6 +58,22 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			calculateEntities(attribute);
 	}
 
+	/**
+	 * adds a new object. updates data schema and attribute values.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public boolean add(T object) {
+		objectsMap.put(object.getID(), object);
+		extendDataSchema(object);
+
+		for (String attribute : getAttributeNames())
+			calculateEntities(attribute);
+
+		return true;
+	}
+
 	private void extendDataSchema(T object) {
 		if (object instanceof IKeyValueProvider) {
 			IKeyValueProvider<?> keyValueProvider = (IKeyValueProvider<?>) object;
