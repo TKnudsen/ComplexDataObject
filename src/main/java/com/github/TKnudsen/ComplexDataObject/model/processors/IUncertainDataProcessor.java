@@ -4,5 +4,5 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertainty;
 
 public interface IUncertainDataProcessor<D, U extends IUncertainty<?>> {
 
-	public IProcessingUncertaintyMeasure<D, U> getUncertaintyMeasure(D originalTS, D processedTS);
+	public IProcessingUncertaintyMeasure<D, U> getUncertaintyMeasure(D originalData, D processedData);
 }
