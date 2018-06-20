@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.tools.comparators;
+package com.github.TKnudsen.ComplexDataObject.model.comparators;
 
 import java.util.Comparator;
 
