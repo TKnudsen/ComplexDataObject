@@ -42,6 +42,12 @@ public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
 	}
 
 	@Override
+	public String toString() {
+		return "NumericalUncertainty. min, max, representant, variation: " + min + ", " + max + ", " + representant
+				+ ", " + variation;
+	}
+
+	@Override
 	public Double getMostCertainRepresentant() {
 		return representant;
 	}
