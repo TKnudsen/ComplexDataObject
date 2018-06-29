@@ -34,8 +34,13 @@ public class ReflectionTools {
 		if (fields == null)
 			fields = new ArrayList<>();
 
-		for (Field field : type.getDeclaredFields())
-			fields.add(field);
+		try {
+			for (Field field : type.getDeclaredFields())
+				fields.add(field);
+		} catch (Exception e) {
+			System.err.println("ReflectionTools: problems with getting the declared fields of a type:");
+			e.printStackTrace();
+		}
 
 		if (includeSuperClassFields && type.getSuperclass() != null)
 			fields = getAllFields(fields, type.getSuperclass(), includeSuperClassFields);
