@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double;
 
 import java.util.Collection;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQuantitative;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
@@ -21,7 +22,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * @author Juergen Bernard
  * @version 1.02
  */
-public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
+public class NumericalUncertainty extends ComplexDataObject implements IUncertaintyQuantitative<Double> {
 
 	private Double min;
 	private Double max;
@@ -30,6 +31,10 @@ public class NumericalUncertainty implements IUncertaintyQuantitative<Double> {
 
 	public NumericalUncertainty(Collection<? extends Double> values) {
 		initialize(values);
+	}
+	
+	public NumericalUncertainty() {
+		super();
 	}
 
 	private void initialize(Collection<? extends Double> values) {
