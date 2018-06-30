@@ -30,7 +30,7 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object>
 		implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
@@ -173,12 +173,22 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	@Override
+	public int getFeatureIndex(String featureName) {
+		for (int i = 0; i < featuresList.size(); i++)
+			if (featuresList.get(i).getFeatureName().equals(featureName))
+				return i;
+
+		return -1;
+	}
+
+	@Override
 	public F getFeature(String featureName) {
 		if (getFeaturesMap() != null)
 			return getFeaturesMap().get(featureName);
 		return null;
 	}
 
+	@Override
 	/**
 	 * Expensive variant of adding a feature into the internal data representations.
 	 */
@@ -203,13 +213,37 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		featuresMap.put(feature.getFeatureName(), feature);
 	}
 
+	@Override
+	/**
+	 * Expensive variant of adding a feature into the internal data representations.
+	 */
+	public void addFeature(int index, F feature) {
+		if (feature == null)
+			return;
+
+		if (featuresList == null)
+			featuresList = new ArrayList<>();
+		if (featuresMap == null)
+			featuresMap = new TreeMap<>();
+
+		if (!featuresList.contains(feature))
+			for (int i = 0; i < featuresList.size(); i++)
+				if (featuresList.get(i).getFeatureName().equals(feature.getFeatureName())) {
+					featuresList.remove(i--);
+				}
+
+		featuresList.add(index, feature);
+		featuresMap.put(feature.getFeatureName(), feature);
+	}
+
 	/**
 	 * Sets a feature at a given index. Does not handle index exceptions.
 	 * 
 	 * @param index
 	 * @param feature
+	 * @return the element previously at the specified position, or null.
 	 */
-	public void setFeature(int index, F feature) {
+	public F setFeature(int index, F feature) {
 		F featureToBeReplaced = null;
 
 		if (featuresList != null)
@@ -219,6 +253,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 			featuresMap.remove(featureToBeReplaced.getFeatureName());
 			featuresMap.put(feature.getFeatureName(), feature);
 		}
+
+		return featureToBeReplaced;
 	}
 
 	public F removeFeature(String featureName) {

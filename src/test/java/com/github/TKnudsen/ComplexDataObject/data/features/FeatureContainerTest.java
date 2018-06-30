@@ -28,7 +28,7 @@ public class FeatureContainerTest {
 		List<MixedDataFeatureVector> objects = new ArrayList<>();
 		objects.add(vector1);
 		objects.add(vector2);
-		FeatureContainer container = new MixedDataFeatureContainer(objects);
+		FeatureVectorContainer container = new MixedDataFeatureContainer(objects);
 
 		container.addFeature(new MixedDataFeature("TestFeature", false, FeatureType.BOOLEAN));
 		container.getFeatureValues("Feature 2");

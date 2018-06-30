@@ -10,7 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title: FeatureContainer
+ * Title: FeatureVectorContainer
  * </p>
  *
  * <p>
@@ -19,13 +19,13 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public class FeatureContainer<FV extends IFeatureVectorObject<?, ?>> implements Iterable<FV> {
+public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> implements Iterable<FV> {
 
 	private Map<Long, FV> featureVectorMap = new HashMap<Long, FV>();
 
@@ -33,18 +33,18 @@ public class FeatureContainer<FV extends IFeatureVectorObject<?, ?>> implements 
 
 	protected FeatureSchema featureSchema;
 
-	public FeatureContainer(FeatureSchema featureSchema) {
+	public FeatureVectorContainer(FeatureSchema featureSchema) {
 		this.featureSchema = featureSchema;
 	}
 
-	public FeatureContainer(Map<Long, FV> featureVectorMap) {
+	public FeatureVectorContainer(Map<Long, FV> featureVectorMap) {
 		this.featureVectorMap = featureVectorMap;
 		featureSchema = new FeatureSchema();
 		for (Long ID : featureVectorMap.keySet())
 			extendDataSchema(featureVectorMap.get(ID));
 	}
 
-	public FeatureContainer(Iterable<FV> objects) {
+	public FeatureVectorContainer(Iterable<FV> objects) {
 		featureSchema = new FeatureSchema();
 		for (FV object : objects) {
 			featureVectorMap.put(object.getID(), object);
@@ -55,10 +55,12 @@ public class FeatureContainer<FV extends IFeatureVectorObject<?, ?>> implements 
 	private void extendDataSchema(FV object) {
 		for (String feature : object.getFeatureKeySet())
 			if (!featureSchema.contains(feature))
-				if (feature == null || object.getFeature(feature) == null || object.getFeature(feature).getFeatureValue() == null)
+				if (feature == null || object.getFeature(feature) == null
+						|| object.getFeature(feature).getFeatureValue() == null)
 					throw new IllegalArgumentException("FeatureContainer: feature in object was associated with null");
 				else
-					featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(), object.getFeature(feature).getFeatureType());
+					featureSchema.add(feature, object.getFeature(feature).getFeatureValue().getClass(),
+							object.getFeature(feature).getFeatureType());
 
 		// TODO maybe add type information to Feature class itself (currently an
 		// enum)
