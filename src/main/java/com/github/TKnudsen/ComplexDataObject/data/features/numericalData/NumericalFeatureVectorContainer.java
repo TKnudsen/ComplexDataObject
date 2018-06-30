@@ -2,8 +2,8 @@ package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
  * @author Juergen Bernard
  * @version 1.02
  */
-public class NumericalFeatureVectorContainer extends FeatureContainer<NumericalFeatureVector> {
+public class NumericalFeatureVectorContainer extends FeatureVectorContainer<NumericalFeatureVector> {
 
 	public NumericalFeatureVectorContainer(FeatureSchema featureSchema) {
 		super(featureSchema);

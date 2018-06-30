@@ -29,12 +29,16 @@ public interface IFeatureVectorObject<O, F extends Feature<O>> extends IDObject,
 	public F getFeature(int index);
 
 	public F getFeature(String featureName);
+	
+	public int getFeatureIndex(String featureName);
 
 	public void addFeature(F feature);
 
 	public void addFeature(String featureName, O value, FeatureType type);
+	
+	public void addFeature(int index, F feature);
 
-	public void setFeature(int index, F feature);
+	public F setFeature(int index, F feature);
 
 	public F removeFeature(String featureName);
 

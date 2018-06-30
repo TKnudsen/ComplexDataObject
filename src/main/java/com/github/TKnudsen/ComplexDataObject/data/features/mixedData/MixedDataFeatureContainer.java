@@ -2,8 +2,8 @@ package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
 import java.util.Map;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class MixedDataFeatureContainer extends FeatureContainer<MixedDataFeatureVector> {
+public class MixedDataFeatureContainer extends FeatureVectorContainer<MixedDataFeatureVector> {
 
 	public MixedDataFeatureContainer(FeatureSchema featureSchema) {
 		super(featureSchema);

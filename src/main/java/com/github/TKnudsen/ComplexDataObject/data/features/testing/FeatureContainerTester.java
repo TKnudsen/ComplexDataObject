@@ -3,8 +3,8 @@ package com.github.TKnudsen.ComplexDataObject.data.features.testing;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
@@ -45,7 +45,7 @@ public class FeatureContainerTester {
 		List<MixedDataFeatureVector> objects = new ArrayList<>();
 		objects.add(vector1);
 		objects.add(vector2);
-		FeatureContainer container = new MixedDataFeatureContainer(objects);
+		FeatureVectorContainer container = new MixedDataFeatureContainer(objects);
 
 		container.addFeature(new MixedDataFeature("TestFeature", false, FeatureType.BOOLEAN));
 		container.getFeatureValues("Feature 1");

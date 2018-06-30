@@ -13,8 +13,8 @@ import java.util.TreeSet;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainerTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -31,7 +31,8 @@ import weka.core.Instances;
  * </p>
  *
  * <p>
- * Description: helper tools that ease the use of WEKA data structures, i.e., Instances and Instance objects.
+ * Description: helper tools that ease the use of WEKA data structures, i.e.,
+ * Instances and Instance objects.
  * </p>
  *
  * <p>
@@ -78,7 +79,8 @@ public class WekaConversion {
 			attributeMap.put(string, a);
 		}
 
-		Instances instances = new Instances("ComplexDataContainer " + container.toString(), (ArrayList<Attribute>) attrs, container.size());
+		Instances instances = new Instances("ComplexDataContainer " + container.toString(),
+				(ArrayList<Attribute>) attrs, container.size());
 
 		// create instance objects
 		for (ComplexDataObject cdo : container) {
@@ -125,7 +127,7 @@ public class WekaConversion {
 	 * @return
 	 * @deprecated use
 	 */
-	public static Instances getInstances(FeatureContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
+	public static Instances getInstances(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
 
 		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
 		for (String featureName : featureContainer.getFeatureNames()) {
@@ -148,9 +150,11 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	public static Instances getInstances(FeatureContainer<? extends IFeatureVectorObject<?, ?>> featureContainer, boolean stringToNominal) {
+	public static Instances getInstances(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
+			boolean stringToNominal) {
 
-		List<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer), stringToNominal);
+		List<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer),
+				stringToNominal);
 
 		// List<Attribute> attrs = new
 		// ArrayList<Attribute>(featureContainer.getFeatureNames().size());
@@ -174,14 +178,16 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @param stringToNominal
-	 *            decides whether string values are represented as nominal values (with a concrete alphabet of observations)
+	 *            decides whether string values are represented as nominal values
+	 *            (with a concrete alphabet of observations)
 	 * @return
 	 */
 	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal) {
 		return getInstances(fvs, stringToNominal, null);
 	}
 
-	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal, Map<String, Set<String>> featureAlphabet) {
+	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal,
+			Map<String, Set<String>> featureAlphabet) {
 		if (fvs == null)
 			return null;
 
@@ -208,7 +214,8 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal) {
+	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs,
+			boolean stringToNominal) {
 		if (fvs == null)
 			return null;
 
@@ -245,8 +252,9 @@ public class WekaConversion {
 
 		return attributes;
 	}
-	
-	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs, Map<String, Set<String>> featureAlphabet) {
+
+	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs,
+			Map<String, Set<String>> featureAlphabet) {
 		if (fvs == null)
 			return null;
 
@@ -265,7 +273,8 @@ public class WekaConversion {
 			else if (!featureAlphabet.containsKey(fvs.get(0).getFeature(i).getFeatureName()))
 				a = new Attribute(i + 1 + "", (List<String>) null);
 			else {
-				a = new Attribute(i + 1 + "", new ArrayList<>(featureAlphabet.get(fvs.get(0).getFeature(i).getFeatureName())));
+				a = new Attribute(i + 1 + "",
+						new ArrayList<>(featureAlphabet.get(fvs.get(0).getFeature(i).getFeatureName())));
 			}
 			attributes.add(a);
 		}
@@ -281,13 +290,15 @@ public class WekaConversion {
 		for (IFeatureVectorObject<?, ?> fv : fvs) {
 			int length = fv.getVectorRepresentation().size();
 			if (dim != length)
-				throw new IllegalArgumentException("List of input FV has different features.");
+				throw new IllegalArgumentException(
+						"WekaConversion.addInstances: List of input FV has different features.");
 
 			addInstance(data, fv);
 		}
 	}
 
-	public static void addInstances(Iterable<? extends IFeatureVectorObject<?, ?>> featureContainer, Instances instances) {
+	public static void addInstances(Iterable<? extends IFeatureVectorObject<?, ?>> featureContainer,
+			Instances instances) {
 		if (featureContainer == null)
 			return;
 
@@ -300,7 +311,8 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @param classAttribute
-	 *            attribute in the features with the class information. Note: the Weka class attribute will be 'class', though.
+	 *            attribute in the features with the class information. Note: the
+	 *            Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
@@ -322,7 +334,8 @@ public class WekaConversion {
 	 * @param classAttribute
 	 * @return
 	 */
-	public static Instances getLabeledInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, String classAttribute, boolean stringToNominal) {
+	public static Instances getLabeledInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, String classAttribute,
+			boolean stringToNominal) {
 		return getLabeledInstances(fvs, null, classAttribute, stringToNominal);
 	}
 
@@ -332,14 +345,17 @@ public class WekaConversion {
 	 * @param fvs
 	 * @param weights
 	 * @param classAttribute
-	 *            attribute in the features with the class information. Note: the Weka class attribute will be 'class', though.
+	 *            attribute in the features with the class information. Note: the
+	 *            Weka class attribute will be 'class', though.
 	 * @return
 	 */
-	public static Instances getLabeledInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, List<Double> weights, String classAttribute, boolean stringToNominal) {
+	public static Instances getLabeledInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, List<Double> weights,
+			String classAttribute, boolean stringToNominal) {
 		List<Object> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).getAttribute(classAttribute) == null)
-				throw new IllegalArgumentException("WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
+				throw new IllegalArgumentException(
+						"WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
 			else if (fvs.get(i).getAttribute(classAttribute) instanceof String)
 				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else
@@ -384,13 +400,15 @@ public class WekaConversion {
 		return addLabelsToInstances(insances, "class", labels);
 	}
 
-	public static Instances getRegressionValueInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, List<Double> values) {
+	public static Instances getRegressionValueInstances(List<? extends IFeatureVectorObject<?, ?>> fvs,
+			List<Double> values) {
 		Instances insances = getInstances(fvs, false);
 
 		return addRegressionValuesToInstances(insances, "class", values);
 	}
 
-	public static Instances getRegressionValueInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, List<Double> values, Map<String, Set<String>> featureAlphabet) {
+	public static Instances getRegressionValueInstances(List<? extends IFeatureVectorObject<?, ?>> fvs,
+			List<Double> values, Map<String, Set<String>> featureAlphabet) {
 		Instances insances = getInstances(fvs, true, featureAlphabet);
 
 		return addRegressionValuesToInstances(insances, "class", values);
@@ -404,7 +422,8 @@ public class WekaConversion {
 	 * @param stringToNominal
 	 * @return
 	 */
-	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels, boolean stringToNominal) {
+	public static Instances getNumericLabeledMixInstances(List<MixedDataFeatureVector> mfvs, List<Double> numLabels,
+			boolean stringToNominal) {
 		Instances insances = getInstances(mfvs, stringToNominal);
 
 		return addNumericLabelsToInstances(insances, numLabels);
@@ -431,7 +450,9 @@ public class WekaConversion {
 	}
 
 	/**
-	 * adds a label/class attribute to an instances object. if the list of given objects does not have the behavior of valid (categorical) class labels the class attribute is generate without any further characterization.
+	 * adds a label/class attribute to an instances object. if the list of given
+	 * objects does not have the behavior of valid (categorical) class labels the
+	 * class attribute is generate without any further characterization.
 	 * 
 	 * @param instances
 	 * @param attributeName
@@ -500,7 +521,8 @@ public class WekaConversion {
 		return inst2;
 	}
 
-	private static Instances addRegressionValuesToInstances(Instances instances, String attributeName, List<Double> values) {
+	private static Instances addRegressionValuesToInstances(Instances instances, String attributeName,
+			List<Double> values) {
 		if (instances == null)
 			return null;
 
@@ -533,13 +555,15 @@ public class WekaConversion {
 
 		return instances;
 	}
-	
+
 	/**
-	 * Add a weka instance to the given data set, that corresponds to the 
-	 * given feature vector
+	 * Add a weka instance to the given data set, that corresponds to the given
+	 * feature vector
 	 * 
-	 * @param instances The instances
-	 * @param fv The feature vector
+	 * @param instances
+	 *            The instances
+	 * @param fv
+	 *            The feature vector
 	 */
 	private static void addInstance(Instances instances, IFeatureVectorObject<?, ?> fv) {
 
@@ -552,17 +576,18 @@ public class WekaConversion {
 			Instance ins = instances.get(instances.size() - 1);
 			fillInstanceByIndex(ins, fv, fv.sizeOfFeatures());
 		}
-	}	
+	}
 
 	private static void fillInstanceByIndex(Instance instance, IFeatureVectorObject<?, ?> fv, int targetLength) {
 		if (fv == null)
 			return;
 
 		if (fv.sizeOfFeatures() != targetLength)
-			throw new IllegalArgumentException("WekaConversion: length of given featurevector does not match target instance feature length");
+			throw new IllegalArgumentException(
+					"WekaConversion: length of given featurevector does not match target instance feature length");
 
 		List<? extends Feature<?>> features = fv.getVectorRepresentation();
-		
+
 		for (int i = 0; i < features.size(); i++) {
 			Feature<?> f = features.get(i);
 			if (f == null || f.getFeatureValue() == null) {
@@ -570,7 +595,10 @@ public class WekaConversion {
 				continue;
 			}
 			if (f.getFeatureType() == FeatureType.DOUBLE)
-				instance.setValue(i, (Double) f.getFeatureValue());
+				if (f.getFeatureValue() instanceof Integer)
+					instance.setValue(i, ((Integer) f.getFeatureValue()).doubleValue());
+				else
+					instance.setValue(i, (Double) f.getFeatureValue());
 			else if (f.getFeatureType() == FeatureType.STRING) {
 				Object o = f.getFeatureValue();
 				instance.setValue(i, o.toString());
@@ -582,13 +610,14 @@ public class WekaConversion {
 				throw new IllegalArgumentException("WekaConversion: unsupported feature type");
 		}
 	}
-	
+
 	/**
 	 * Returns the values of all features of the given vector, assuming that
 	 * {@link #hasOnlyValidDoubleFeatureValues(IFeatureVectorObject)} returns
 	 * <code>true</code> for the given vector.
 	 * 
-	 * @param fv The feature vector
+	 * @param fv
+	 *            The feature vector
 	 * @return The double values
 	 */
 	private static double[] getDoubleFeatureValues(IFeatureVectorObject<?, ?> fv) {
@@ -597,16 +626,17 @@ public class WekaConversion {
 		for (int i = 0; i < n; i++) {
 			Feature<?> f = fv.getFeature(i);
 			Object v = f.getFeatureValue();
-			featureValues[i] = (Double)v;
+			featureValues[i] = (Double) v;
 		}
 		return featureValues;
 	}
-	
+
 	/**
-	 * Returns whether all features of the given feature vector are not <code>null</code>
-	 * and have the type "Double"
-	 *  
-	 * @param fv The feature vector
+	 * Returns whether all features of the given feature vector are not
+	 * <code>null</code> and have the type "Double"
+	 * 
+	 * @param fv
+	 *            The feature vector
 	 * @return Whether the vector contains only valid double values
 	 */
 	private static boolean hasOnlyValidDoubleFeatureValues(IFeatureVectorObject<?, ?> fv) {
