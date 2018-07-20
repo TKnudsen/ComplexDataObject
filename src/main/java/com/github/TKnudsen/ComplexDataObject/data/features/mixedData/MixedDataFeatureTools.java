@@ -12,7 +12,8 @@ public class MixedDataFeatureTools {
 
 	public static FeatureType guessFeatureType(Object feature) throws IllegalArgumentException {
 		if (feature == null)
-			throw new IllegalArgumentException("MixedDataFeatureTools.guessFeatureType: object was null - unable to guess");
+			throw new IllegalArgumentException(
+					"MixedDataFeatureTools.guessFeatureType: object was null - unable to guess");
 		if (feature instanceof Number)
 			return FeatureType.DOUBLE;
 		else if (feature instanceof Boolean)
@@ -24,12 +25,34 @@ public class MixedDataFeatureTools {
 		throw new IllegalArgumentException("MixedDataFeatureTools.guessFeatureType: undefined object type");
 	}
 
-	public static void addClassAttribute(List<MixedDataFeatureVector> featureVectors, List<String> labels, String classAttribute) {
+	public static FeatureType getFeatureType(Class<?> classType) throws IllegalArgumentException {
+		if (classType == null)
+			throw new IllegalArgumentException(
+					"MixedDataFeatureTools.guessFeatureType: object was null - unable to guess");
+		if (classType.equals(Number.class))
+			return FeatureType.DOUBLE;
+		else if (classType.equals(Double.class))
+			return FeatureType.DOUBLE;
+		else if (classType.equals(Integer.class))
+			return FeatureType.DOUBLE;
+		else if (classType.equals(Boolean.class))
+			return FeatureType.BOOLEAN;
+		else if (classType.equals(String.class))
+			return FeatureType.STRING;
+		else if (classType.equals(Character.class))
+			return FeatureType.STRING;
+		throw new IllegalArgumentException(
+				"MixedDataFeatureTools.guessFeatureType: undefined object type: " + classType);
+	}
+
+	public static void addClassAttribute(List<MixedDataFeatureVector> featureVectors, List<String> labels,
+			String classAttribute) {
 		for (int i = 0; i < featureVectors.size(); i++)
 			featureVectors.get(i).add(classAttribute, labels.get(i));
 	}
 
-	public static void addNumericAttribute(List<MixedDataFeatureVector> features, List<Double> labels, String attributeName) {
+	public static void addNumericAttribute(List<MixedDataFeatureVector> features, List<Double> labels,
+			String attributeName) {
 		for (int i = 0; i < features.size(); i++)
 			features.get(i).add(attributeName, labels.get(i));
 	}

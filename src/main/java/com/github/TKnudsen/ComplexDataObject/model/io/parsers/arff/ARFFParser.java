@@ -1,8 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +40,7 @@ public class ARFFParser implements ComplexDataObjectParser {
 
 	@Override
 	public List<ComplexDataObject> parse(String filename) throws IOException {
-		Instances instances = parseARFF(filename);
+		Instances instances = ARFFInstancesIO.loadARFF(filename);
 		if (instances == null)
 			return null;
 
@@ -93,24 +90,9 @@ public class ARFFParser implements ComplexDataObjectParser {
 		return data;
 	}
 
+	@Deprecated // use ARFFTools
 	public static Instances parseARFF(String arffFile) {
-		if (arffFile == null)
-			return null;
-
-		BufferedReader reader;
-		try {
-			FileReader fileReader = new FileReader(arffFile);
-			reader = new BufferedReader(fileReader);
-			Instances instances = new Instances(reader);
-			reader.close();
-			return instances;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return ARFFInstancesIO.loadARFF(arffFile);
 	}
 
 	public String getMissingValueIndicator() {
