@@ -19,7 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
  * 
  * <p>
  * Description: Basic transformation of BufferedImages into the numerical
- * feature space. The luminance of every pixel creates an inidividual dimemsion.
+ * feature space. The luminance of every pixel creates an individual dimension.
  * </p>
  * 
  * <p>
