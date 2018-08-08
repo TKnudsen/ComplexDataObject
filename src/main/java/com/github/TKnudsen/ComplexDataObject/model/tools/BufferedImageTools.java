@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -192,5 +193,14 @@ public class BufferedImageTools {
 		}
 
 		return bufferedImage;
+	}
+	
+	public static BufferedImage subImage(BufferedImage bufferedImage, Rectangle rectangle) {
+		if (bufferedImage == null || rectangle == null)
+			return null;
+
+		BufferedImage bi = bufferedImage.getSubimage((int) rectangle.getMinX(), (int) rectangle.getMinY(),
+				(int) rectangle.getWidth(), (int) rectangle.getHeight());
+		return bi;
 	}
 }

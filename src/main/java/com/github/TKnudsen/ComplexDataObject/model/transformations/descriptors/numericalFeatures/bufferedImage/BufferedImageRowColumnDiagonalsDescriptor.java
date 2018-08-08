@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
-import com.github.TKnudsen.ComplexDataObject.model.tools.BufferedImageTools;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.numericalFeatures.INumericFeatureVectorDescriptor;
 
@@ -25,13 +23,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
-public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
+public class BufferedImageRowColumnDiagonalsDescriptor
+		implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
 	private String bufferedImageAttributeName;
 
@@ -45,6 +44,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 	 */
 	private int cropBorders = 0;
 
+	private BufferedImageRowColumnDiagonalsRawDescriptor biDescriptor = new BufferedImageRowColumnDiagonalsRawDescriptor();
+
 	public BufferedImageRowColumnDiagonalsDescriptor(String bufferedImageAttributeName) {
 		this.bufferedImageAttributeName = bufferedImageAttributeName;
 	}
@@ -57,132 +58,14 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 		if (complexDataObject.getAttribute(bufferedImageAttributeName) == null)
 			return null;
 
+		List<NumericalFeatureVector> featureVectors = new ArrayList<>();
+
 		Object object = complexDataObject.getAttribute(bufferedImageAttributeName);
 		if (object instanceof BufferedImage) {
 			BufferedImage image = (BufferedImage) complexDataObject.getAttribute(bufferedImageAttributeName);
 
-			List<NumericalFeature> features = new ArrayList<>();
+			NumericalFeatureVector featureVector = biDescriptor.transform(image).get(0);
 
-			int width = image.getWidth();
-			int height = image.getHeight();
-
-			// columns
-			double lum = 0;
-			for (int x = cropBorders; x < width - cropBorders; x++) {
-				lum = 0;
-				for (int y = 0; y < height; y++) {
-					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
-					lum += luminance;
-				}
-				if ((x - cropBorders) % sampling == 0)
-					features.add(new NumericalFeature("Luminance column " + x, lum));
-			}
-
-			// rows
-			for (int y = cropBorders; y < height - cropBorders; y++) {
-				lum = 0;
-				for (int x = 0; x < width; x++) {
-					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
-					lum += luminance;
-				}
-				if ((y - cropBorders) % sampling == 0)
-					features.add(new NumericalFeature("Luminance row " + y, lum));
-			}
-
-			// diagonals
-			double lengthMin = Math.min(width, height) * 0.5;
-			lengthMin += cropBorders;
-
-			double lengthAkt = 0;
-			int deltaX;
-			int deltaY;
-
-			// starting west, direction north east
-			for (int y = 0; y < height; y++) {
-				// starting point for every diagonal
-				deltaX = 0;
-				deltaY = y;
-				lengthAkt = 0;
-				lum = 0;
-				while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-					lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
-					lengthAkt += 1;
-					// iterate
-					deltaX += 1;
-					deltaY -= 1;
-				}
-
-				if (lengthAkt > lengthMin)
-					if (y % (sampling) == 0)
-						features.add(new NumericalFeature("Luminance, diagonal NE, start (" + 0 + ", " + y + ")", lum));
-			}
-
-			// starting south, direction north east
-			for (int x = 1; x < width; x++) {
-				// starting point for every diagonal
-				deltaX = x;
-				deltaY = height - 1;
-				lengthAkt = 0;
-				lum = 0;
-				while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-					lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
-					lengthAkt += 1;
-					// iterate
-					deltaX += 1;
-					deltaY -= 1;
-				}
-
-				if (lengthAkt > lengthMin)
-					if (x % (sampling) == 0)
-						features.add(new NumericalFeature(
-								"Luminance, diagonal NE, start (" + x + ", " + (height - 1) + ")", lum));
-			}
-
-			// starting south, direction north west
-			for (int x = width - 1; x >= 0; x--) {
-				// starting point for every diagonal
-				deltaX = x;
-				deltaY = height - 1;
-				lengthAkt = 0;
-				lum = 0;
-				while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-					lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
-					lengthAkt += 1;
-					// iterate
-					deltaX -= 1;
-					deltaY -= 1;
-				}
-
-				if (lengthAkt > lengthMin)
-					if (x % (sampling) == 0)
-						features.add(new NumericalFeature(
-								"Luminance, diagonal NW, start (" + x + ", " + (height - 1) + ")", lum));
-			}
-
-			// starting east, direction north west
-			for (int y = 0; y < height - 1; y++) {
-				// starting point for every diagonal
-				deltaX = width - 1;
-				deltaY = y;
-				lengthAkt = 0;
-				lum = 0;
-				while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-					lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
-					lengthAkt += 1;
-					// iterate
-					deltaX -= 1;
-					deltaY -= 1;
-				}
-
-				if (lengthAkt > lengthMin)
-					if (y % (sampling) == 0)
-						features.add(new NumericalFeature(
-								"Luminance, diagonal NW, start (" + (width - 1) + ", " + y + ")", lum));
-			}
-
-			List<NumericalFeatureVector> featureVectors = new ArrayList<>();
-
-			NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
 			featureVector.setMaster(complexDataObject);
 			if (complexDataObject.getAttribute("Label") != null)
 				featureVector.add("Label", complexDataObject.getAttribute("Label"));
@@ -234,6 +117,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			throw new IllegalArgumentException("parameter must be >= 1");
 
 		this.sampling = sampling;
+
+		this.biDescriptor.setSampling(sampling);
 	}
 
 	public int getCropBorders() {
@@ -245,6 +130,8 @@ public class BufferedImageRowColumnDiagonalsDescriptor implements INumericFeatur
 			throw new IllegalArgumentException("parameter must be >= 0");
 
 		this.cropBorders = cropBorders;
+
+		this.biDescriptor.setCropBorders(cropBorders);
 	}
 
 	@Override
