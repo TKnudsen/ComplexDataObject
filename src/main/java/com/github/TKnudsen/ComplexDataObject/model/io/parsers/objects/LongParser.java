@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Title: IntegerParser
+ * Title: LongParser
  * </p>
  * 
  * <p>
@@ -10,17 +10,17 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2018
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.01
  */
 
-public class IntegerParser implements IObjectParser<Integer> {
+public class LongParser implements IObjectParser<Long> {
 
 	@Override
-	public Integer apply(Object object) {
+	public Long apply(Object object) {
 		String stringValue = String.valueOf(object).toLowerCase();
 
 		stringValue = stringValue.trim();
@@ -29,7 +29,7 @@ public class IntegerParser implements IObjectParser<Integer> {
 			stringValue = stringValue.substring(0, stringValue.indexOf(" "));
 
 		try {
-			return Integer.parseInt(stringValue);
+			return Long.parseLong(stringValue);
 		} catch (Exception e) {
 			return null;
 		}
