@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -17,7 +18,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * 
  * <p>
  * Description: Stores the probability distribution of a given set of items.
- * Probabilities must add up to 100%
+ * The given set of items may be empty. If it is not empty, the associated
+ * probabilities must add up to 1.0.
  * </p>
  * 
  * <p>
@@ -31,33 +33,23 @@ public class ProbabilityDistribution<I> {
 
 	public static double EPSILON = 1e-8;
 
-	private Map<I, Double> probabilityDistribution;
+	private final Map<I, Double> probabilityDistribution;
 
 	private I mostLikelyItem;
 
-	@SuppressWarnings("unused")
-	private ProbabilityDistribution() {
-		this(null);
-	}
-
 	public ProbabilityDistribution(Map<I, Double> probabilityDistribution) {
-		this.probabilityDistribution = probabilityDistribution;
-
-		if (probabilityDistribution == null)
-			throw new NullPointerException("ProbabilityDistribution: given set of probabilites was null");
+		this.probabilityDistribution = Objects.requireNonNull(probabilityDistribution, "The probabilityDistribution may not be null");
 
 		calculateRepresentant();
 	}
 
 	private void calculateRepresentant() {
-		if (probabilityDistribution == null) {
-			mostLikelyItem = null;
+
+		if (probabilityDistribution.isEmpty()) {
 			return;
 		}
-
 		Double winning = 0.0;
 		double sum = 0.0;
-
 		for (I value : probabilityDistribution.keySet()) {
 			if (probabilityDistribution.get(value) > winning) {
 				mostLikelyItem = value;
