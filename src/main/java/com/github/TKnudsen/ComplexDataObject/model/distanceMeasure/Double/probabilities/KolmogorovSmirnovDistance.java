@@ -1,5 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities;
 
+import org.apache.commons.math3.exception.NullArgumentException;
+import org.apache.commons.math3.exception.util.LocalizedFormats;
+
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovTest;
 
@@ -33,7 +36,7 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovT
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 
@@ -48,17 +51,14 @@ public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 	@Override
 	public double getDistance(double[] o1, double[] o2) {
 		if (o1 == null || o2 == null)
-			return Double.NaN;
+			// return Double.NaN;
+			throw new NullArgumentException(LocalizedFormats.NULL_NOT_ALLOWED);
 
-		if (o1.length != o2.length)
-			throw new IllegalArgumentException(getName() + ": given arrays have different length");
+		if (o1.length < 2 || o2.length < 2)
+			// test will throw an exeption. return max distance.
+			return 1.0;
 
-		double kolmogorovSmirnov = KolmogorovSmirnovTest.calculateKolmogorovSmirnov(o1, o2);
-
-		// TODO clarify whether or not KolmogorovSmirnovTest rather assesses similarity,
-		// not distances.
-
-		return kolmogorovSmirnov;
+		return KolmogorovSmirnovTest.calculateKolmogorovSmirnov(o1, o2);
 	}
 
 	@Override
