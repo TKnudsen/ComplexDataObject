@@ -17,8 +17,7 @@ public class ComplexDataContainerTest {
 	public void shouldConstructWithObjects() {
 		final List<ComplexDataObject> objects = Arrays.asList(
 				ComplexDataObjectFactory.createObject("Att A", new Double(2.0), "Att B", "asdf"),
-				ComplexDataObjectFactory.createObject("Att A", new Double(3.0), "Att B", "jkl�")
-		);
+				ComplexDataObjectFactory.createObject("Att A", new Double(3.0), "Att B", "jkl"));
 
 		final ComplexDataContainer complexDataContainer = new ComplexDataContainer(objects);
 
