@@ -14,11 +14,11 @@ import java.util.Set;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 
 public class NumericalFeatureVectorTools {
@@ -53,6 +53,50 @@ public class NumericalFeatureVectorTools {
 		for (NumericalFeature feature : featureVector.getVectorRepresentation())
 			d = Math.max(d, feature.doubleValue());
 		return d;
+	}
+
+	/**
+	 * calculates the min value for a dimension
+	 * 
+	 * @param features
+	 * @param dim
+	 * @return
+	 */
+	public static double getMin(List<NumericalFeatureVector> features, int dim) {
+		if (features == null || features.size() == 0)
+			throw new IllegalArgumentException();
+
+		double min = Double.MAX_VALUE - 1;
+
+		for (int n = 0; n < features.size(); n++) {
+			if (!Double.isNaN(features.get(n).get(dim))) {
+				min = Math.min(min, features.get(n).get(dim));
+			}
+		}
+
+		return min;
+	}
+
+	/**
+	 * calculates the max value for a dimension
+	 * 
+	 * @param features
+	 * @param dim
+	 * @return
+	 */
+	public static double getMax(List<NumericalFeatureVector> features, int dim) {
+		if (features == null || features.size() == 0)
+			throw new IllegalArgumentException();
+
+		double max = Double.MIN_VALUE + 1;
+
+		for (int n = 0; n < features.size(); n++) {
+			if (!Double.isNaN(features.get(n).get(dim))) {
+				max = Math.max(max, features.get(n).get(dim));
+			}
+		}
+
+		return max;
 	}
 
 	/**
@@ -93,20 +137,22 @@ public class NumericalFeatureVectorTools {
 		return returnValues;
 	}
 
-	public static void addClassAttribute(List<NumericalFeatureVector> featureVectors, List<String> labels, String classAttribute) {
+	public static void addClassAttribute(List<NumericalFeatureVector> featureVectors, List<String> labels,
+			String classAttribute) {
 		for (int i = 0; i < featureVectors.size(); i++)
 			featureVectors.get(i).add(classAttribute, labels.get(i));
 	}
 
-	public static void addNumericAttribute(List<NumericalFeatureVector> features, List<Double> labels, String attributeName) {
+	public static void addNumericAttribute(List<NumericalFeatureVector> features, List<Double> labels,
+			String attributeName) {
 		for (int i = 0; i < features.size(); i++)
 			features.get(i).add(attributeName, labels.get(i));
 	}
 
 	/**
-	 * creates a matrix-like representation with the number of feature vectors
-	 * in the first dimension and the dimensionality of the feature vectors in
-	 * the second dimension.
+	 * creates a matrix-like representation with the number of feature vectors in
+	 * the first dimension and the dimensionality of the feature vectors in the
+	 * second dimension.
 	 * 
 	 * @param fvs
 	 * @return
@@ -126,8 +172,8 @@ public class NumericalFeatureVectorTools {
 	}
 
 	/**
-	 * creates a vector with the information of one feature from the
-	 * FeatureVectors, addressed by the index.
+	 * creates a vector with the information of one feature from the FeatureVectors,
+	 * addressed by the index.
 	 * 
 	 * @param fvs
 	 * @param index

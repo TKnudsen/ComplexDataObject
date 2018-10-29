@@ -27,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -55,19 +55,21 @@ public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<Compl
 		NumericalFeatureVector featureVector = new NumericalFeatureVector(features);
 
 		Iterator<String> iterator = input.iterator();
-		int i = 0;
 		while (iterator.hasNext()) {
 			String next = iterator.next();
-			if (i == 4) {
-				featureVector.add(next, input.getAttribute(next));
-				break;
-			} else {
-				Object feature = input.getAttribute(next);
-				if (feature instanceof Number)
-					features.add(new NumericalFeature(next, ((Number) input.getAttribute(next)).doubleValue()));
-			}
 
-			i++;
+			if (next.equals("class"))
+				featureVector.add("class", input.getAttribute(next));
+			else if (next.equals("className"))
+				featureVector.add("className", input.getAttribute(next));
+			else {
+				Object feature = input.getAttribute(next);
+				if (feature instanceof Double)
+					features.add(new NumericalFeature(next, ((Number) input.getAttribute(next)).doubleValue()));
+				else {
+					// featureVector.add(next, input.getAttribute(next));
+				}
+			}
 		}
 
 		return Arrays.asList(new NumericalFeatureVector[] { featureVector });
