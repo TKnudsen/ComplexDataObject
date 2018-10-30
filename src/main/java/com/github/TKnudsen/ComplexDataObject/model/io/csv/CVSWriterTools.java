@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.io.parsers.csv;
+package com.github.TKnudsen.ComplexDataObject.model.io.csv;
 
 import java.io.FileWriter;
 import java.io.IOException;
