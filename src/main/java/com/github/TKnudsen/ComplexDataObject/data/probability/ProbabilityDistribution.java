@@ -3,10 +3,11 @@ package com.github.TKnudsen.ComplexDataObject.data.probability;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
@@ -17,8 +18,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * <p>
- * Description: Stores the probability distribution of a given set of items.
- * The given set of items may be empty. If it is not empty, the associated
+ * Description: Stores the probability distribution of a given set of items. The
+ * given set of items may be empty. If it is not empty, the associated
  * probabilities must add up to 1.0.
  * </p>
  * 
@@ -27,7 +28,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public class ProbabilityDistribution<I> {
 
@@ -38,7 +39,8 @@ public class ProbabilityDistribution<I> {
 	private I mostLikelyItem;
 
 	public ProbabilityDistribution(Map<I, Double> probabilityDistribution) {
-		this.probabilityDistribution = Objects.requireNonNull(probabilityDistribution, "The probabilityDistribution may not be null");
+		this.probabilityDistribution = Objects.requireNonNull(probabilityDistribution,
+				"The probabilityDistribution may not be null");
 
 		calculateRepresentant();
 	}
@@ -116,6 +118,26 @@ public class ProbabilityDistribution<I> {
 		}
 
 		return list;
+	}
+
+	/**
+	 * little helper to normalize a map with doubles to 1.0.
+	 * 
+	 * @param valuesMap
+	 * @return
+	 */
+	public static <I> Map<I, Double> normalize(Map<I, Double> valuesMap) {
+		double sum = 0.0;
+
+		for (double d : valuesMap.values())
+			sum += d;
+
+		Map<I, Double> output = new LinkedHashMap<>();
+
+		for (I i : valuesMap.keySet())
+			output.put(i, valuesMap.get(i) / sum);
+
+		return output;
 	}
 
 	public Double getProbability(I item) {
