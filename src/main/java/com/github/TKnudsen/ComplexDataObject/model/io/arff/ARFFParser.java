@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff;
+package com.github.TKnudsen.ComplexDataObject.model.io.arff;
 
 import java.io.IOException;
 import java.util.ArrayList;

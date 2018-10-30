@@ -7,9 +7,9 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.io.arff.ARFFParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.arff.WekaTools;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.TitanicDataSetParserTester;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff.ARFFParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.arff.WekaTools;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.mixedDataFeatures.MixedDataDescriptor;
 
 import weka.core.Instances;
