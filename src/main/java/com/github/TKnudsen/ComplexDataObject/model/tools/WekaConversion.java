@@ -19,6 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContaine
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -40,9 +41,11 @@ import weka.core.Instances;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public class WekaConversion {
+
+	private static DoubleParser doubleParser = new DoubleParser();
 
 	public static Instances getInstances(ComplexDataContainer container) {
 		if (container == null)
@@ -127,7 +130,8 @@ public class WekaConversion {
 	 * @return
 	 * @deprecated use
 	 */
-	public static Instances getInstances(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
+	public static Instances getInstances(
+			FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
 
 		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
 		for (String featureName : featureContainer.getFeatureNames()) {
@@ -177,9 +181,9 @@ public class WekaConversion {
 	/**
 	 * 
 	 * @param fvs
-	 * @param stringToNominal
-	 *            decides whether string values are represented as nominal values
-	 *            (with a concrete alphabet of observations)
+	 * @param stringToNominal decides whether string values are represented as
+	 *                        nominal values (with a concrete alphabet of
+	 *                        observations)
 	 * @return
 	 */
 	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal) {
@@ -310,9 +314,8 @@ public class WekaConversion {
 	/**
 	 * 
 	 * @param fvs
-	 * @param classAttribute
-	 *            attribute in the features with the class information. Note: the
-	 *            Weka class attribute will be 'class', though.
+	 * @param classAttribute attribute in the features with the class information.
+	 *                       Note: the Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
@@ -344,9 +347,8 @@ public class WekaConversion {
 	 * 
 	 * @param fvs
 	 * @param weights
-	 * @param classAttribute
-	 *            attribute in the features with the class information. Note: the
-	 *            Weka class attribute will be 'class', though.
+	 * @param classAttribute attribute in the features with the class information.
+	 *                       Note: the Weka class attribute will be 'class', though.
 	 * @return
 	 */
 	public static Instances getLabeledInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, List<Double> weights,
@@ -560,10 +562,8 @@ public class WekaConversion {
 	 * Add a weka instance to the given data set, that corresponds to the given
 	 * feature vector
 	 * 
-	 * @param instances
-	 *            The instances
-	 * @param fv
-	 *            The feature vector
+	 * @param instances The instances
+	 * @param fv        The feature vector
 	 */
 	private static void addInstance(Instances instances, IFeatureVectorObject<?, ?> fv) {
 
@@ -616,8 +616,7 @@ public class WekaConversion {
 	 * {@link #hasOnlyValidDoubleFeatureValues(IFeatureVectorObject)} returns
 	 * <code>true</code> for the given vector.
 	 * 
-	 * @param fv
-	 *            The feature vector
+	 * @param fv The feature vector
 	 * @return The double values
 	 */
 	private static double[] getDoubleFeatureValues(IFeatureVectorObject<?, ?> fv) {
@@ -626,7 +625,10 @@ public class WekaConversion {
 		for (int i = 0; i < n; i++) {
 			Feature<?> f = fv.getFeature(i);
 			Object v = f.getFeatureValue();
-			featureValues[i] = (Double) v;
+			if (v instanceof Double)
+				featureValues[i] = (Double) v;
+			else
+				featureValues[i] = doubleParser.apply(v);
 		}
 		return featureValues;
 	}
@@ -635,8 +637,7 @@ public class WekaConversion {
 	 * Returns whether all features of the given feature vector are not
 	 * <code>null</code> and have the type "Double"
 	 * 
-	 * @param fv
-	 *            The feature vector
+	 * @param fv The feature vector
 	 * @return Whether the vector contains only valid double values
 	 */
 	private static boolean hasOnlyValidDoubleFeatureValues(IFeatureVectorObject<?, ?> fv) {
