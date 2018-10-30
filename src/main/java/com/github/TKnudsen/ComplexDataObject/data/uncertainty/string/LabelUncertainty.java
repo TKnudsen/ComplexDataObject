@@ -92,7 +92,7 @@ public class LabelUncertainty implements IUncertaintyQualitative<String> {
 	}
 
 	@Override
-	public String getMostCertainRepresentant() {
+	public String getUncertainty() {
 		return representant;
 	}
 
