@@ -3,12 +3,11 @@ package com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double;
 import java.util.Collection;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQuantitative;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: NumericalUncertainty
+ * Title: ValueUncertainty
  * </p>
  * 
  * <p>
@@ -16,59 +15,53 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2018
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.02
  */
-public class NumericalUncertainty extends ComplexDataObject implements IUncertaintyQuantitative<Double> {
+public class ValueUncertainty extends ComplexDataObject implements IValueUncertainty {
 
-	private Double min;
-	private Double max;
 	private Double representant;
 	private double variation;
 
-	public NumericalUncertainty(Collection<? extends Double> values) {
+	public ValueUncertainty(double representant) {
+		this(representant, 0.0);
+	}
+
+	public ValueUncertainty(double representant, double variation) {
+		this.representant = representant;
+		this.variation = variation;
+	}
+
+	public ValueUncertainty(Collection<? extends Double> values) {
 		initialize(values);
 	}
-	
-	public NumericalUncertainty() {
+
+	public ValueUncertainty() {
 		super();
 	}
 
 	private void initialize(Collection<? extends Double> values) {
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
 
-		this.min = statisticsSupport.getMin();
-		this.max = statisticsSupport.getMax();
 		this.representant = statisticsSupport.getMedian();
 		this.variation = statisticsSupport.getVariance();
 	}
 
 	@Override
 	public String toString() {
-		return "NumericalUncertainty. min, max, representant, variation: " + min + ", " + max + ", " + representant
-				+ ", " + variation;
+		return "ValueUncertainty. Representant: " + representant + ", " + variation;
 	}
 
 	@Override
-	public Double getMostCertainRepresentant() {
+	public Double getUncertainty() {
 		return representant;
 	}
 
 	@Override
-	public Double getMinimum() {
-		return min;
-	}
-
-	@Override
-	public Double getMaximum() {
-		return max;
-	}
-
-	@Override
-	public double getVariation() {
+	public Double getVariation() {
 		return variation;
 	}
 

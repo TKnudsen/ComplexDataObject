@@ -18,5 +18,5 @@ package com.github.TKnudsen.ComplexDataObject.data.uncertainty;
  */
 public interface IUncertainty<T> {
 
-	public T getMostCertainRepresentant();
+	public T getUncertainty();
 }

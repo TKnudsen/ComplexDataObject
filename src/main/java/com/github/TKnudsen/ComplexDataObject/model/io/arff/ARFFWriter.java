@@ -15,9 +15,7 @@ import weka.core.Instances;
  * </p>
  * 
  * <p>
- * Description: Parses ComplexDataObjects from an ARFF file. Note: this parser
- * is not part of the persistence layer. In fact, it gathers new
- * ComplexDataObjects from a given file.
+ * Writes relevant object types to ARFF.
  * </p>
  * 
  * <p>
