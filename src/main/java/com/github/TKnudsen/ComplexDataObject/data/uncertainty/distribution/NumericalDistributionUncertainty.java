@@ -19,7 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class NumericalDistributionUncertainty extends ComplexDataObject
 		implements IValueDistributionUncertainty<Double> {
@@ -30,12 +30,13 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 	private Double representant;
 	private double variation;
 
-	public NumericalDistributionUncertainty(Collection<? extends Double> values) {
-		initialize(values);
+	@SuppressWarnings("unused")
+	private NumericalDistributionUncertainty() {
+		super();
 	}
 
-	public NumericalDistributionUncertainty() {
-		super();
+	public NumericalDistributionUncertainty(Collection<? extends Double> values) {
+		initialize(values);
 	}
 
 	private void initialize(Collection<? extends Double> values) {
