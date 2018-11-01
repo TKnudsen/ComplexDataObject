@@ -19,9 +19,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public class ValueUncertainty extends ComplexDataObject implements IValueUncertainty {
+public class ValueUncertainty extends ComplexDataObject implements IValueUncertainty<Double> {
 
 	private Double representant;
 	private double variation;
