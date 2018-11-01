@@ -25,6 +25,7 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 		implements IValueDistributionUncertainty<Double> {
 
 	private Double min;
+	private Double median;
 	private Double max;
 	private Double representant;
 	private double variation;
@@ -41,6 +42,7 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
 
 		this.min = statisticsSupport.getMin();
+		this.median = statisticsSupport.getMedian();
 		this.max = statisticsSupport.getMax();
 		this.representant = statisticsSupport.getMedian();
 		this.variation = statisticsSupport.getVariance();
@@ -70,6 +72,11 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 	@Override
 	public Double getVariation() {
 		return variation;
+	}
+
+	@Override
+	public Double getUncertaintyMedian() {
+		return median;
 	}
 
 }

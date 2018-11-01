@@ -16,11 +16,13 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double.IValueUncer
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public interface IValueDistributionUncertainty<T> extends IValueUncertainty<T> {
 
 	public T getUncertaintyMinimum();
+
+	public T getUncertaintyMedian();
 
 	public T getUncertaintyMaximum();
 
