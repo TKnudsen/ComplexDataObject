@@ -9,6 +9,29 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 public class ParameterSupportTools {
 
+	public static List<Float> getAlternativeFloats(float baseline, int count) {
+
+		SortedSet<Float> set = new TreeSet<>();
+
+		int lower = count / 2;
+		float div = (float) (1 / (lower + 1.0));
+		for (int i = 1; i < lower + 1; i++) {
+			float newValue = baseline * (i * div);
+			if (newValue != baseline)
+				set.add(newValue);
+		}
+
+		int upper = count - lower;
+		for (int i = 1; i < upper + 1; i++) {
+			float pow = (float) Math.pow(2, i);
+			float newValue = baseline * pow;
+			if (newValue != baseline)
+				set.add(newValue);
+		}
+
+		return new ArrayList<>(set);
+	}
+
 	public static List<Double> getAlternativeDoubles(double baseline, int count) {
 
 		SortedSet<Double> set = new TreeSet<>();
