@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.numericalData;
 
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
-
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 import de.javagl.nd.tuples.d.DoubleTuple;
 

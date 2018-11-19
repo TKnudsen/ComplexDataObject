@@ -1,14 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
-
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
  * <p>

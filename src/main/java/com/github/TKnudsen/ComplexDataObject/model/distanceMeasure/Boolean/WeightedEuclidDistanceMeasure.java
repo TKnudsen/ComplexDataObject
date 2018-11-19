@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Boolean;
 
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDistanceMeasure;
+
+import java.util.List;
 
 /**
  * <p>

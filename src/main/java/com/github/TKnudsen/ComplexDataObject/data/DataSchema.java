@@ -1,13 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>

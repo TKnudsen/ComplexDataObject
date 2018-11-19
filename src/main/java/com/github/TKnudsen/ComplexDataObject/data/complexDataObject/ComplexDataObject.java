@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

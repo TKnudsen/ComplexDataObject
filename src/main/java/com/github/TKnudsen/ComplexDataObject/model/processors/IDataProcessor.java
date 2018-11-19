@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors;
 
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
+
+import java.util.List;
 
 /**
  * <p>

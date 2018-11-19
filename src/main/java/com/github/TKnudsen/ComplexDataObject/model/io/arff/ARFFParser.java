@@ -1,5 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.arff;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ComplexDataObjectParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,10 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.math3.exception.NullArgumentException;
-
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ComplexDataObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 
 import weka.core.Instance;
 import weka.core.Instances;

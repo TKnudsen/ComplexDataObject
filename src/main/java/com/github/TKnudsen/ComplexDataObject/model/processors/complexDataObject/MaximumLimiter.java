@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>

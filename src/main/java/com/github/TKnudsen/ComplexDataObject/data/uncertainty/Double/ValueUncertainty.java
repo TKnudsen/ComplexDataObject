@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double;
 
-import java.util.Collection;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
+
+import java.util.Collection;
 
 /**
  * <p>

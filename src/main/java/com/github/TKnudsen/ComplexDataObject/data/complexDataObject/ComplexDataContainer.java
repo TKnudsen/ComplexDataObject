@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
-import java.util.Map;
-
 import com.github.TKnudsen.ComplexDataObject.data.DataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
+
+import java.util.Map;
 
 /**
  * <p>

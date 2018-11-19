@@ -1,14 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.attributes.Double;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainerTools;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

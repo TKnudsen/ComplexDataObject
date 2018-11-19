@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
-import java.util.Map;
-
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureSchema;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
+
+import java.util.Map;
 
 /**
  * <p>
