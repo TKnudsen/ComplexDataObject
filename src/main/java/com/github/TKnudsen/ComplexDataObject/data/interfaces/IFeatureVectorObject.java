@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.data.interfaces;
 
-import java.util.List;
-import java.util.Set;
-
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>

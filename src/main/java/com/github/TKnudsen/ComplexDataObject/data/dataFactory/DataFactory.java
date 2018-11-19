@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.data.dataFactory;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>

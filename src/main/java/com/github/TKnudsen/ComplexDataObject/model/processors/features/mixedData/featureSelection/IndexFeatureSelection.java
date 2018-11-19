@@ -1,12 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.featureSelection;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.IMixedDataFeatureVectorProcessor;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Christian Ritter

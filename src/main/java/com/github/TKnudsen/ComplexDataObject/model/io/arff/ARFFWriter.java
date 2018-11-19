@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.arff;
 
-import java.io.IOException;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
+
+import java.io.IOException;
 
 import weka.core.Instances;
 

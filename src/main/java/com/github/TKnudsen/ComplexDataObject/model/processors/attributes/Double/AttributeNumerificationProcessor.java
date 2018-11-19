@@ -1,14 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.attributes.Double;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AttributeNumerificationProcessor implements IComplexDataObjectProcessor {
 

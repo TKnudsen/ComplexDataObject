@@ -1,12 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data.attributes;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
  * <p>

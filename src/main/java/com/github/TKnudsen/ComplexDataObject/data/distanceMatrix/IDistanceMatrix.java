@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.data.distanceMatrix;
 
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
+
+import java.util.List;
 
 /**
  * <p>

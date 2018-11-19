@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.features;
 
-import java.io.Serializable;
-
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
+
+import java.io.Serializable;
 
 /**
  * <p>

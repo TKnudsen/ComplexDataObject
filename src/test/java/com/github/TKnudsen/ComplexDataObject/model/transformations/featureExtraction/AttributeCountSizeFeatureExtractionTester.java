@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.featureExtraction;
 
-import java.util.List;
-
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.TitanicDataSetParserTester;
+
+import java.util.List;
 
 public class AttributeCountSizeFeatureExtractionTester {
 
