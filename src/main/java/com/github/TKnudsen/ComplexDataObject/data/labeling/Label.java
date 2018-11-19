@@ -1,5 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.data.labeling;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+
 import java.awt.Color;
 
 /**
@@ -16,12 +18,11 @@ import java.awt.Color;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
-public class Label {
+public class Label extends ComplexDataObject {
 
 	private Color labelColor;
-	private String labelName;
 
 	@SuppressWarnings("unused")
 	private Label() {
@@ -29,26 +30,8 @@ public class Label {
 	}
 
 	public Label(Color labelColor, String labelName) {
+		super(labelName, "");
 		this.labelColor = labelColor;
-		this.labelName = labelName;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getName() {
-		return labelName;
-	}
-
-	/**
-	 * convenient method. still not sure if it would make more sense to just
-	 * re-instantiate a new object.
-	 * 
-	 * @param name
-	 */
-	public void setName(String name) {
-		this.labelName = name;
 	}
 
 	/**
@@ -82,6 +65,6 @@ public class Label {
 	 * 
 	 */
 	public Label clone() {
-		return new Label(new Color(labelColor.getRed(), labelColor.getGreen(), labelColor.getBlue()), labelName);
+		return new Label(new Color(labelColor.getRed(), labelColor.getGreen(), labelColor.getBlue()), getName());
 	}
 }
