@@ -51,6 +51,8 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 		this.max = statisticsSupport.getMax();
 		this.representant = statisticsSupport.getMedian();
 		this.variation = statisticsSupport.getVariance();
+		
+		this.values = values;
 	}
 
 	@Override
