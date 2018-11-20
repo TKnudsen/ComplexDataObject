@@ -19,7 +19,7 @@ import java.util.Collection;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class NumericalDistributionUncertainty extends ComplexDataObject
 		implements IValueDistributionUncertainty<Double> {
@@ -30,6 +30,8 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 	private Double representant;
 	private double variation;
 
+	private Collection<? extends Double> values;
+
 	@SuppressWarnings("unused")
 	private NumericalDistributionUncertainty() {
 		super();
@@ -37,6 +39,8 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 
 	public NumericalDistributionUncertainty(Collection<? extends Double> values) {
 		initialize(values);
+
+		this.values = values;
 	}
 
 	private void initialize(Collection<? extends Double> values) {
@@ -78,6 +82,10 @@ public class NumericalDistributionUncertainty extends ComplexDataObject
 	@Override
 	public Double getUncertaintyMedian() {
 		return median;
+	}
+
+	public Collection<? extends Double> getValues() {
+		return values;
 	}
 
 }
