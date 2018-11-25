@@ -8,7 +8,7 @@ import java.util.Map;
  * </p>
  * 
  * <p>
- * Description: Tnterface for uncertainty information for qualitative data.
+ * Description: Interface for uncertainty information for qualitative data.
  * </p>
  * 
  * <p>
