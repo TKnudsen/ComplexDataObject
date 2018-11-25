@@ -4,22 +4,17 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertainty;
 
 /**
  * <p>
- * Title: IValueUncertainty
+ * Basic interface uncertainties of numerical values modeled as Double.
  * </p>
  * 
  * <p>
- * Description: Interface for uncertainty information for qualitative data.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2018
+ * Copyright: (c) 2015-2018 Juergen Bernard,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
-public interface IValueUncertainty<T> extends IUncertainty<T> {
-
-	public T getVariation();
+public interface IValueUncertainty extends IUncertainty<Double> {
 
 }

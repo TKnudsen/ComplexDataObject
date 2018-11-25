@@ -1,68 +1,56 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-
 import java.util.Collection;
+
+import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: ValueUncertainty
+ * Basic interface uncertainties of numerical values modeled as Double.
  * </p>
  * 
  * <p>
- * Description: data model for uncertainties of numerical values.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2018
+ * Copyright: (c) 2015-2018 Juergen Bernard,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.06
  */
-public class ValueUncertainty extends ComplexDataObject implements IValueUncertainty<Double> {
+public class ValueUncertainty implements IValueUncertainty {
 
-	private Double representant;
-	private double variation;
+	private Double amount;
 
-	public ValueUncertainty(double representant) {
-		this(representant, 0.0);
+	public ValueUncertainty() {
+		super();
 	}
 
-	public ValueUncertainty(double representant, double variation) {
-		this.representant = representant;
-		this.variation = variation;
+	public ValueUncertainty(double amount) {
+		this.setAmount(amount);
 	}
 
 	public ValueUncertainty(Collection<? extends Double> values) {
 		initialize(values);
 	}
 
-	public ValueUncertainty() {
-		super();
-	}
-
 	private void initialize(Collection<? extends Double> values) {
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
 
-		this.representant = statisticsSupport.getMedian();
-		this.variation = statisticsSupport.getVariance();
+		this.setAmount(statisticsSupport.getMedian());
 	}
 
 	@Override
 	public String toString() {
-		return "ValueUncertainty. Representant: " + representant + ", " + variation;
+		return "ValueUncertainty. Amount: " + getAmount();
 	}
 
 	@Override
-	public Double getUncertainty() {
-		return representant;
+	public Double getAmount() {
+		return amount;
 	}
 
-	@Override
-	public Double getVariation() {
-		return variation;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
 }
