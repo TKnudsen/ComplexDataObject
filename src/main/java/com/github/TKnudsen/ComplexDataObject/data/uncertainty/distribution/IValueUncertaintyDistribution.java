@@ -32,7 +32,7 @@ public interface IValueUncertaintyDistribution extends IValueUncertaintyRange {
 
 	double getMedian();
 
-	double getLowerQuartie();
+	double getLowerQuartile();
 
 	double getVariance();
 
