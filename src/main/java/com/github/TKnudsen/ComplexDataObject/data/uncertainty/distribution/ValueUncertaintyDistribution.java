@@ -73,7 +73,7 @@ public class ValueUncertaintyDistribution extends ValueUncertaintyRange implemen
 	}
 
 	@Override
-	public double getLowerQuartie() {
+	public double getLowerQuartile() {
 		return lowerQuartile;
 	}
 
