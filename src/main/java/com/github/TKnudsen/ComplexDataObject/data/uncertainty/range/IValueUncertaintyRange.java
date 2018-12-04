@@ -34,8 +34,4 @@ public interface IValueUncertaintyRange extends IValueUncertainty {
 	 */
 	double getLowerBound();
 
-	@Override
-	default Double getAmount() {
-		return getUpperBound() - getLowerBound();
-	}
 }

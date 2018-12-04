@@ -20,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.03
  */
 public class ValueUncertaintyRange extends ValueUncertainty implements IValueUncertaintyRange {
 
@@ -45,6 +45,7 @@ public class ValueUncertaintyRange extends ValueUncertainty implements IValueUnc
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
 
 		this.setAmount(statisticsSupport.getMedian());
+
 		this.lowerBound = statisticsSupport.getMin();
 		this.upperBound = statisticsSupport.getMax();
 	}
@@ -60,9 +61,17 @@ public class ValueUncertaintyRange extends ValueUncertainty implements IValueUnc
 		return upperBound;
 	}
 
+	public void setUpperBound(double upperBound) {
+		this.upperBound = upperBound;
+	}
+
 	@Override
 	public double getLowerBound() {
 		return lowerBound;
+	}
+
+	public void setLowerBound(double lowerBound) {
+		this.lowerBound = lowerBound;
 	}
 
 }

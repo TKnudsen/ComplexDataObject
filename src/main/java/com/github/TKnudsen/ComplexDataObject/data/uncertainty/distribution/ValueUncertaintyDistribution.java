@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.distribution;
 
-import java.util.Collection;
-
 import com.github.TKnudsen.ComplexDataObject.data.uncertainty.range.ValueUncertaintyRange;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
+
+import java.util.Collection;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.07
+ * @version 1.08
  */
 public class ValueUncertaintyDistribution extends ValueUncertaintyRange implements IValueUncertaintyDistribution {
 
@@ -46,6 +46,11 @@ public class ValueUncertaintyDistribution extends ValueUncertaintyRange implemen
 
 	private void initialize(Collection<? extends Double> values) {
 		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
+
+		this.setAmount(statisticsSupport.getMedian());
+
+		this.setLowerBound(statisticsSupport.getMin());
+		this.setUpperBound(statisticsSupport.getMax());
 
 		this.upperQartile = statisticsSupport.getPercentile(75);
 		this.median = statisticsSupport.getMedian();
