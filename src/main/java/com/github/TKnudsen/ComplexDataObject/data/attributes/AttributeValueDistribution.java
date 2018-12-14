@@ -39,8 +39,7 @@ public class AttributeValueDistribution<T> extends ComplexDataObject implements 
 
 	private String attributeName;
 
-	@SuppressWarnings("unused") // only for serialization purposes
-	public AttributeValueDistribution() {
+	protected AttributeValueDistribution() {
 		super();
 	}
 
