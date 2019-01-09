@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.mixedData.testing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>

@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.utility;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-
 import java.util.Set;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 
 public interface IUniqueValuesIdentifier {
 	

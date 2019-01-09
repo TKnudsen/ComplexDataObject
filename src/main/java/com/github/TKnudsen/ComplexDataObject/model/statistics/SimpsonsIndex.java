@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
-import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 
 /**
  * <p>

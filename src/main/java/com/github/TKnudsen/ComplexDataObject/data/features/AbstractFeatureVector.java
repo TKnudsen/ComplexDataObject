@@ -1,11 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.data.features;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IMasterProvider;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +8,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IMasterProvider;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
+import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>

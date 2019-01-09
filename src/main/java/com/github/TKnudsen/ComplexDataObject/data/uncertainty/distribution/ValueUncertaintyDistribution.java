@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.distribution;
 
+import java.util.Collection;
+
 import com.github.TKnudsen.ComplexDataObject.data.uncertainty.range.ValueUncertaintyRange;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-
-import java.util.Collection;
 
 /**
  * <p>

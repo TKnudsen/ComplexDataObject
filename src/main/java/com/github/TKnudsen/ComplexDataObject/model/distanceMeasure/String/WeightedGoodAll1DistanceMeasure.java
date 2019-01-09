@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.String;
 
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDistanceMeasure;
-
 import java.util.List;
 import java.util.Map;
+
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDistanceMeasure;
 
 /**
  * <p>

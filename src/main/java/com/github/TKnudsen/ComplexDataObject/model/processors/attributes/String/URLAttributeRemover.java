@@ -1,13 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.attributes.String;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
 
 public class URLAttributeRemover implements IComplexDataObjectProcessor {
 

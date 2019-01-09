@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.data.labeling;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-
 import java.awt.Color;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
  * <p>

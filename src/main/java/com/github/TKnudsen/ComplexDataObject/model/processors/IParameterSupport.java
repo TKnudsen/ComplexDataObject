@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-
 import java.util.List;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 
 public interface IParameterSupport<O extends IDObject> {
 

@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
-import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+
+import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>

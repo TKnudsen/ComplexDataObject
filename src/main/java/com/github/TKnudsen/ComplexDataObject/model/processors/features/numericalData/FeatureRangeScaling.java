@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features.numericalData;
 
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
-
-import java.util.List;
 
 /**
  * Allows to scale the range of feature values by a given factor.

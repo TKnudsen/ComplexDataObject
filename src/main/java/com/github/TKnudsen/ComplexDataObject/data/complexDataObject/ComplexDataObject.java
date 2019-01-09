@@ -1,10 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.events.IComplexDataObjectListener;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
+import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>
@@ -30,6 +32,8 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	protected String name;
 	protected String description;
+
+	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
 
 	public ComplexDataObject() {
 		super();
@@ -85,6 +89,22 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 		this.description = description;
 	}
 
+	@Override
+	public void add(String attribute, Object value) {
+		super.add(attribute, value);
+
+		fireAttributeValueChanged(attribute);
+	}
+
+	@Override
+	public Object removeAttribute(String attribute) {
+		Object removeAttribute = super.removeAttribute(attribute);
+
+		fireAttributeRemoved(attribute);
+
+		return removeAttribute;
+	}
+
 	/**
 	 * retrieves all attributes for objects matching a given class type.
 	 * 
@@ -94,10 +114,37 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	public List<String> getAttributes(Class<?> classType) {
 		List<String> properties = new ArrayList<>();
 		for (String property : attributes.keySet())
-			if (getAttribute(property) != null && getAttribute(property) != null && getAttribute(property).getClass().equals(classType))
+			if (getAttribute(property) != null && getAttribute(property) != null
+					&& getAttribute(property).getClass().equals(classType))
 				if (!properties.contains(property))
 					properties.add(property);
 		return properties;
 	}
 
+	public List<IComplexDataObjectListener> getListeners() {
+		return listeners;
+	}
+
+	public void addComplexDataObjectListener(IComplexDataObjectListener listener) {
+		if (listeners.contains(listener))
+			listeners.remove(listener);
+
+		this.listeners.add(listener);
+	}
+
+	private final void fireAttributeValueChanged(String attribute) {
+		if (listeners.isEmpty())
+			return;
+
+		for (IComplexDataObjectListener listener : listeners)
+			listener.attributeValueChanged(this, attribute);
+	}
+
+	private final void fireAttributeRemoved(String attribute) {
+		if (listeners.isEmpty())
+			return;
+
+		for (IComplexDataObjectListener listener : listeners)
+			listener.attributeRemoved(this, attribute);
+	}
 }

@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Boolean;
 
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
-
 import java.io.Serializable;
+
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
  * <p>

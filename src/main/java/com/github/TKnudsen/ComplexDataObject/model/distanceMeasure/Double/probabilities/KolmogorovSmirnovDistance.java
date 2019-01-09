@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities;
 
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
-import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovTest;
-
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.util.LocalizedFormats;
+
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
+import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovTest;
 
 /**
  * <p>

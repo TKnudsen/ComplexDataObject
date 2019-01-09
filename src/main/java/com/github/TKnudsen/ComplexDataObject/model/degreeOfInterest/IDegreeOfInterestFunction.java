@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.degreeOfInterest;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * 

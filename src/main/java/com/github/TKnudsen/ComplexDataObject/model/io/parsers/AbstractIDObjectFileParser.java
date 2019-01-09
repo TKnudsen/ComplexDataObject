@@ -1,8 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 public abstract class AbstractIDObjectFileParser<O extends IDObject> implements IDObjectParser<O>, ISelfDescription {
 
