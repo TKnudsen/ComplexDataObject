@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features.numericalData;
 
-import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
-import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-
 import java.util.List;
 import java.util.Map.Entry;
+
+import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
+import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>

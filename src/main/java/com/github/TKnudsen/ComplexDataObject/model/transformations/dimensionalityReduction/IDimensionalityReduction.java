@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.dimensionalityReduction;
 
+import java.util.Map;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
-
-import java.util.Map;
 
 /**
  * <p>

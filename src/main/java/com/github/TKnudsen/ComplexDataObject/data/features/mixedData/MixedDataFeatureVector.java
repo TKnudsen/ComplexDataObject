@@ -1,12 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
-import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>

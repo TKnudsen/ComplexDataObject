@@ -1,12 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
  * Used to delete a given list of (extreme) values from each

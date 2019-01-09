@@ -1,10 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData;
 
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDistanceMeasure;
-
-import java.util.List;
 
 /**
  * <p>

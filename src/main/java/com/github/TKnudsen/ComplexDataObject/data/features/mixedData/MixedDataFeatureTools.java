@@ -1,12 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MixedDataFeatureTools {
 

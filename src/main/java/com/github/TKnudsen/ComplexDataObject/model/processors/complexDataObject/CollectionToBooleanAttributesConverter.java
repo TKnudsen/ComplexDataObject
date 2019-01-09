@@ -1,14 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
 
 /**
  * <p>

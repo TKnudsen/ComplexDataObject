@@ -1,13 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>

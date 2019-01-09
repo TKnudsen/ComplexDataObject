@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.data.keyValueObject;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
-
 import java.util.List;
 import java.util.Objects;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>

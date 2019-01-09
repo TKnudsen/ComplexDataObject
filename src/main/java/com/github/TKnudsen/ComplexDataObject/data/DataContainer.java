@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
@@ -74,7 +74,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return true;
 	}
 
-	private void extendDataSchema(T object) {
+	protected final void extendDataSchema(T object) {
 		if (object instanceof IKeyValueProvider) {
 			IKeyValueProvider<?> keyValueProvider = (IKeyValueProvider<?>) object;
 			for (String string : keyValueProvider.keySet())
@@ -88,13 +88,10 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	 * 
 	 *
 	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
-	 *            object.
+	 * @param attribute    the attribute name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the attribute is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <A> DataSchema addAttribute(String attribute, Class<A> type, A defaultValue) {
@@ -139,8 +136,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	/**
 	 * Removes an attribute from the container and the set of objects.
 	 * 
-	 * @param attribute
-	 *            the attribute name.
+	 * @param attribute the attribute name.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public DataSchema remove(String attribute) {

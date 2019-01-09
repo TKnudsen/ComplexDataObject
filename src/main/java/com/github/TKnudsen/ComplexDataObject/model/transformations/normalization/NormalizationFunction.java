@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization;
 
-import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-
 import java.util.Collection;
 import java.util.function.Function;
+
+import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>

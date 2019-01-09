@@ -1,13 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
@@ -54,6 +54,7 @@ public class DataSchema {
 	 */
 	public boolean contains(String attribute) {
 		return attributes.keySet().contains(attribute);
+//		return attributes.containsKey(attribute);
 	}
 
 	/**
@@ -111,11 +112,11 @@ public class DataSchema {
 	}
 
 	/**
-	 * @return a map containing the types for each attribute defined in this
-	 *         schema.
+	 * @return a map containing the types for each attribute defined in this schema.
 	 */
 	public Map<String, Class<?>> getTypes() {
-		return Collections.unmodifiableMap(attributes.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getType())));
+		return Collections.unmodifiableMap(
+				attributes.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getType())));
 	}
 
 	/**
@@ -123,12 +124,12 @@ public class DataSchema {
 	 *         this schema.
 	 */
 	public Map<String, Object> getDefaultValues() {
-		return Collections.unmodifiableMap(attributes.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getDefaultValue())));
+		return Collections.unmodifiableMap(attributes.entrySet().stream()
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getDefaultValue())));
 	}
 
 	/**
-	 * @param attribute
-	 *            an attribute name.
+	 * @param attribute an attribute name.
 	 * @return the type of the given attribute.
 	 */
 	public Class<?> getType(String attribute) {
@@ -139,8 +140,7 @@ public class DataSchema {
 	}
 
 	/**
-	 * @param attribute
-	 *            an attribute name.
+	 * @param attribute an attribute name.
 	 * @return the default value of the given attribute.
 	 */
 	@SuppressWarnings("unchecked")
@@ -155,10 +155,8 @@ public class DataSchema {
 	 * Introduces or updates a new attribute to the data schema with 'null' as
 	 * default value.
 	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @param defaultValue
-	 *            the default value in case the
+	 * @param attribute    the attribute name
+	 * @param defaultValue the default value in case the
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> DataSchema add(String attribute, Class<T> type) {
@@ -168,13 +166,10 @@ public class DataSchema {
 	/**
 	 * Introduces or updates a new attribute to the data schema.
 	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
-	 *            object.
+	 * @param attribute    the attribute name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the attribute is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> DataSchema add(String attribute, Class<T> type, T defaultValue) {
@@ -187,13 +182,10 @@ public class DataSchema {
 	/**
 	 * Introduces or updates a new attribute to the data schema.
 	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
-	 *            object.
+	 * @param attribute    the attribute name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the attribute is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {
@@ -203,16 +195,14 @@ public class DataSchema {
 	/**
 	 * Introduces or updates a new attribute to the data schema.
 	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
-	 *            object.
+	 * @param attribute    the attribute name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the attribute is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
-	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema, T defaultValue) {
+	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema,
+			T defaultValue) {
 		final DataSchemaEntry<T> entry = new DataSchemaEntry<T>(attribute, type, defaultValue, dataSchema);
 		this.attributes.put(attribute, entry);
 
@@ -222,8 +212,7 @@ public class DataSchema {
 	/**
 	 * Removes an attribute from the data schema.
 	 * 
-	 * @param attribute
-	 *            the attribute name.
+	 * @param attribute the attribute name.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public DataSchema remove(String attribute) {

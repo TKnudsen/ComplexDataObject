@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-
 import java.util.function.ToDoubleBiFunction;
+
+import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * <p>

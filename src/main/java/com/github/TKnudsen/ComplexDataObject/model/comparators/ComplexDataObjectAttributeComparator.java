@@ -1,8 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.comparators;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-
 import java.util.Comparator;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
  * <p>

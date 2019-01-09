@@ -1,11 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.data.uncertainty.string;
 
-import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualitative;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualitative;
 
 /**
  * <p>

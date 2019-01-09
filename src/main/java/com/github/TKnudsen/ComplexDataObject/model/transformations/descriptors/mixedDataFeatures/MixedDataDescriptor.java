@@ -1,5 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.mixedDataFeatures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
@@ -11,9 +14,6 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IMixedDataFeatureVectorDescriptor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>

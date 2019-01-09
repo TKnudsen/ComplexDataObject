@@ -1,9 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.test;
 
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
 public class QuantileNormalizationFunctionTest {
 

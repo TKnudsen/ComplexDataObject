@@ -1,5 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.features.mixedData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
@@ -8,13 +15,6 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.
 import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.Boolean.BooleanEqualsFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.Double.SubtractionFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.string.BigramGenerator;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * <p>

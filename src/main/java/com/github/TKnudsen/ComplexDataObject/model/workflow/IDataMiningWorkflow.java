@@ -1,13 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.model.workflow;
 
+import java.util.List;
+import java.util.function.Function;
+
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * <p>
