@@ -16,6 +16,10 @@ import org.apache.commons.collections4.list.TreeList;
  * {@link TreeList} it provides fast insertion and removal, even in the middle
  * of the List. The earlier implementation extended a {@link LinkedList} - if
  * doesn't perform well it is possible to return to {@link LinkedList}.
+ * 
+ * Tip: you can also use a List of AbstractMap.SimpleEntry as a simple
+ * alternative. Then, a comparable key can be obtained by
+ * Collections.sort(collection, Entry.comparingByKey());
  * </p>
  * 
  * <p>
@@ -50,8 +54,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	}
 
 	/**
-	 * Fast way to add at the end of the Ranking. Tests if the sorting criterion
-	 * is fulfilled, otherwise the value is added at the correct position.
+	 * Fast way to add at the end of the Ranking. Tests if the sorting criterion is
+	 * fulfilled, otherwise the value is added at the correct position.
 	 * 
 	 * @return
 	 */
@@ -73,8 +77,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 
 	@Override
 	/**
-	 * To preserve the sorting criterion addAll(int index, Collection<? extends
-	 * T> c) is mounted to addAll(Collection<? extends T> c).
+	 * To preserve the sorting criterion addAll(int index, Collection<? extends T>
+	 * c) is mounted to addAll(Collection<? extends T> c).
 	 */
 	public boolean addAll(int index, Collection<? extends T> c) {
 		return addAll(c);
@@ -82,8 +86,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 
 	@Override
 	/**
-	 * Adds a value at a given index IF the sorting criterion is preserved. Else
-	 * the value is added that the correct index.
+	 * Adds a value at a given index IF the sorting criterion is preserved. Else the
+	 * value is added that the correct index.
 	 */
 	public void add(int index, T t) {
 		if (size() < index)

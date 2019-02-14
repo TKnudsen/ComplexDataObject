@@ -1,7 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.data.interval;
 
-import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
-
 /**
  * <p>
  * ComplexDataObject
@@ -17,24 +15,23 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.03
  */
-public class NumberInterval implements ISelfDescription {
+public class NumberInterval {
 
 	protected Number start;
 	protected Number end;
 	protected String name;
-	protected String description;
 
 	protected NumberInterval() {
 
 	}
 
 	public NumberInterval(Number start, Number end) {
-		this(start, end, "", "");
+		this(start, end, "");
 	}
 
-	public NumberInterval(Number start, Number end, String name, String description) {
+	public NumberInterval(Number start, Number end, String name) {
 		this.start = start;
 		this.end = end;
 
@@ -42,7 +39,6 @@ public class NumberInterval implements ISelfDescription {
 			throw new IllegalArgumentException(getName() + ": start value must not be larger than end value");
 
 		this.name = name;
-		this.description = description;
 	}
 
 	public boolean contains(Number value) {
@@ -60,7 +56,7 @@ public class NumberInterval implements ISelfDescription {
 		return start;
 	}
 
-	public void setStart(long start) {
+	public void setStart(Number start) {
 		this.start = start;
 	}
 
@@ -68,7 +64,7 @@ public class NumberInterval implements ISelfDescription {
 		return end;
 	}
 
-	public void setEnd(long end) {
+	public void setEnd(Number end) {
 		this.end = end;
 	}
 
@@ -97,14 +93,8 @@ public class NumberInterval implements ISelfDescription {
 		return "Interval: [" + start + "-" + end + "]";
 	}
 
-	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
 	}
 
 }
