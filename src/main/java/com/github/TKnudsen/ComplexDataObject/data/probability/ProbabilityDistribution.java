@@ -71,7 +71,7 @@ public class ProbabilityDistribution<I> {
 		double sum = MathFunctions.getSum(probabilities, false);
 
 		if (Math.abs(sum - 1.0) > EPSILON) {
-			System.err.println("ProbabilityDistribution: sum of given set of probabilites was != 100% (" + sum + ")");
+//			System.err.println("ProbabilityDistribution: sum of given set of probabilities was != 100% (" + sum + ")");
 			return false;
 		}
 
