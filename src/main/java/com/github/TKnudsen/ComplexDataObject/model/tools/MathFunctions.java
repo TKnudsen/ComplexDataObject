@@ -133,7 +133,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMin(Collection<Number> values) {
+	public static double getMin(Collection<? extends Number> values) {
 		if (values == null)
 			return Double.NaN;
 
@@ -154,18 +154,6 @@ public class MathFunctions {
 			return Double.NaN;
 
 		return min;
-	}
-
-	/**
-	 * Calculates the min value for a given series of values. Ignores Double.NAN.
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static double getMin(List<Number> values) {
-		Collection<Number> v = values;
-
-		return getMin(v);
 	}
 
 	/**
@@ -251,31 +239,21 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMean(Collection<Double> values) {
+	public static double getMean(Collection<? extends Number> values) {
 		if (values == null)
 			return Double.NaN;
 
 		double sum = 0;
 		double count = 0;
-		for (Double d : values)
+		for (Number n : values) {
+			Double d = n.doubleValue();
 			if (d != null && !Double.isNaN(d)) {
 				sum += d;
 				count++;
 			}
+		}
 
 		return sum / count;
-	}
-
-	/**
-	 * Calculates the mean value for a given series of values. Ignores Double.NAN
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static double getMean(List<Double> values) {
-		Collection<Double> v = values;
-
-		return getMean(v);
 	}
 
 	/**
@@ -284,7 +262,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMax(Collection<Number> values) {
+	public static double getMax(Collection<? extends Number> values) {
 		if (values == null)
 			return Double.NaN;
 
@@ -305,18 +283,6 @@ public class MathFunctions {
 			return Double.NaN;
 
 		return max;
-	}
-
-	/**
-	 * Calculates the max value for a given list. Ignores Double.NAN.
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static double getMax(List<Number> values) {
-		Collection<Number> v = values;
-
-		return getMax(v);
 	}
 
 	/**
@@ -401,7 +367,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getVariance(List<Double> values) {
+	public static double getVariance(Collection<? extends Number> values) {
 		double sumOfSquares = 0;
 
 		if (values == null)
@@ -409,8 +375,8 @@ public class MathFunctions {
 
 		double mean = getMean(values);
 
-		for (int i = 0; i < values.size(); i++)
-			sumOfSquares += Math.pow((values.get(i) - mean), 2);
+		for (Number n : values)
+			sumOfSquares += Math.pow((n.doubleValue() - mean), 2);
 
 		return sumOfSquares / (double) values.size();
 	}
@@ -441,7 +407,7 @@ public class MathFunctions {
 	 * @param valules
 	 * @return
 	 */
-	public static double getStandardDeviation(List<Double> valules) {
+	public static double getStandardDeviation(Collection<? extends Number> valules) {
 		double sumOfSquares = 0;
 
 		if (valules == null)
@@ -449,8 +415,8 @@ public class MathFunctions {
 
 		double mean = getMean(valules);
 
-		for (int i = 0; i < valules.size(); i++)
-			sumOfSquares += Math.pow((valules.get(i) - mean), 2);
+		for (Number n : valules)
+			sumOfSquares += Math.pow((n.doubleValue() - mean), 2);
 
 		return Math.sqrt(sumOfSquares / (double) valules.size());
 	}
