@@ -42,18 +42,18 @@ public class KullbackLeiblerDivergence {
 
 		for (int i = 0; i < o1.length; ++i) {
 			double a = o1[i];
-			if (a == 0)
-				if (handleZeroToInfinityProblem)
+			if (handleZeroToInfinityProblem) {
+				if (a >= 0.0 && a <= zeroReplacement)
 					a = zeroReplacement;
-				else
-					return Double.POSITIVE_INFINITY;
+			} else if (a == 0.0)
+				return Double.POSITIVE_INFINITY;
 
 			double b = o2[i];
-			if (b == 0.0)
-				if (handleZeroToInfinityProblem)
+			if (handleZeroToInfinityProblem) {
+				if (b >= 0.0 && b <= zeroReplacement)
 					b = zeroReplacement;
-				else
-					return Double.POSITIVE_INFINITY;
+			} else if (b == 0.0)
+				return Double.POSITIVE_INFINITY;
 
 			klDivergence += a * Math.log(a / b);
 		}

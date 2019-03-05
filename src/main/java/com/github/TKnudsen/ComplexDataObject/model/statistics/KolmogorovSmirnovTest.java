@@ -12,7 +12,6 @@ public class KolmogorovSmirnovTest {
 	 * @return
 	 */
 	public static double calculateKolmogorovSmirnov(double[] probability1, double[] probability2) {
-
 		org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest test = new org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest();
 
 		return test.kolmogorovSmirnovStatistic(probability1, probability2);

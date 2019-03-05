@@ -13,7 +13,7 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovT
  * 
  * <p>
  * Description: nonparametric test of the equality of continuous,
- * one-dimensional probability distributions. Used to to compare two samples
+ * one-dimensional probability distributions. Used to compare two samples
  * (two-sample K–S test).
  * 
  * The Kolmogorov–Smirnov statistic quantifies a distance between the empirical
@@ -55,7 +55,7 @@ public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 			throw new NullArgumentException(LocalizedFormats.NULL_NOT_ALLOWED);
 
 		if (o1.length < 2 || o2.length < 2)
-			// test will throw an exeption. return max distance.
+			// test will throw an exception. return max distance.
 			return 1.0;
 
 		return KolmogorovSmirnovTest.calculateKolmogorovSmirnov(o1, o2);
