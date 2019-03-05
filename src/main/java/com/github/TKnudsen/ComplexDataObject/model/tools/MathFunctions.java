@@ -133,20 +133,22 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMin(Collection<Double> values) {
+	public static double getMin(Collection<Number> values) {
 		if (values == null)
 			return Double.NaN;
 
 		double min = Double.POSITIVE_INFINITY - 1;
 
 		boolean onlyNaN = true;
-		for (Double d : values)
+		for (Number n : values) {
+			Double d = n.doubleValue();
 			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				min = Math.min(min, d);
 				onlyNaN = false;
 			}
+		}
 
 		if (onlyNaN)
 			return Double.NaN;
@@ -160,8 +162,8 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static double getMin(List<Double> values) {
-		Collection<Double> v = values;
+	public static double getMin(List<Number> values) {
+		Collection<Number> v = values;
 
 		return getMin(v);
 	}
@@ -277,25 +279,27 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores Double.NAN.
+	 * Calculates the max value for a given collection. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
 	 */
-	public static double getMax(Collection<Double> values) {
+	public static double getMax(Collection<Number> values) {
 		if (values == null)
 			return Double.NaN;
 
 		double max = Double.NEGATIVE_INFINITY + 1;
 
 		boolean onlyNaN = true;
-		for (Double d : values)
+		for (Number n : values) {
+			Double d = n.doubleValue();
 			if (d == null || Double.isNaN(d))
 				continue;
 			else {
 				max = Math.max(max, d);
 				onlyNaN = false;
 			}
+		}
 
 		if (onlyNaN)
 			return Double.NaN;
@@ -304,13 +308,13 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Calculates the min value for a given series of values. Ignores Double.NAN.
+	 * Calculates the max value for a given list. Ignores Double.NAN.
 	 * 
 	 * @param values
 	 * @return
 	 */
-	public static double getMax(List<Double> values) {
-		Collection<Double> v = values;
+	public static double getMax(List<Number> values) {
+		Collection<Number> v = values;
 
 		return getMax(v);
 	}
