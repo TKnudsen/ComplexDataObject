@@ -71,8 +71,11 @@ public class NumberInterval {
 	@Override
 	public int hashCode() {
 		int hash = 17;
-		hash += (39 * hash + start.doubleValue());
-		hash *= (39 * hash + end.doubleValue());
+
+		hash = 29 * hash + start.hashCode();
+
+		hash = 29 * hash + end.hashCode();
+
 		return hash;
 	}
 
