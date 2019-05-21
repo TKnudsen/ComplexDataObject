@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -29,11 +31,11 @@ import javax.imageio.ImageIO;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2019
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class BufferedImageTools {
 
@@ -42,7 +44,8 @@ public class BufferedImageTools {
 			throw new IllegalArgumentException("BufferedImageTools.getLuminanceforPixel(...): BufferedImage was null.");
 
 		if (x < 0 || x >= bi.getWidth() || y < 0 || y >= bi.getHeight())
-			throw new IndexOutOfBoundsException("BufferedImageTools.getLuminanceforPixel(...): pixel coordinates ill-defined.");
+			throw new IndexOutOfBoundsException(
+					"BufferedImageTools.getLuminanceforPixel(...): pixel coordinates ill-defined.");
 
 		int color = bi.getRGB(x, y);
 		int R = (color >>> 16) & 0xFF;
@@ -112,7 +115,8 @@ public class BufferedImageTools {
 	}
 
 	public static BufferedImage toBufferedImage(Image image) {
-		BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = bufferedImage.createGraphics();
 		g2.drawImage(image, 0, 0, null);
 		g2.dispose();
@@ -194,7 +198,7 @@ public class BufferedImageTools {
 
 		return bufferedImage;
 	}
-	
+
 	public static BufferedImage subImage(BufferedImage bufferedImage, Rectangle rectangle) {
 		if (bufferedImage == null || rectangle == null)
 			return null;
@@ -202,5 +206,79 @@ public class BufferedImageTools {
 		BufferedImage bi = bufferedImage.getSubimage((int) rectangle.getMinX(), (int) rectangle.getMinY(),
 				(int) rectangle.getWidth(), (int) rectangle.getHeight());
 		return bi;
+	}
+
+	/**
+	 * Sets the color of a pixel. Sensitive to alpha.
+	 * 
+	 * @param bufferedImage
+	 * @param x
+	 * @param y
+	 * @param color
+	 */
+	public static void setColor(BufferedImage bufferedImage, int x, int y, Color color) {
+		Objects.requireNonNull(bufferedImage);
+		Objects.requireNonNull(color);
+
+		if (x < 0 || y < 0)
+			throw new IllegalArgumentException("x or y out of range!");
+		if (x > bufferedImage.getWidth() || y > bufferedImage.getHeight())
+			throw new IllegalArgumentException("x or y out of range!");
+
+		int col = 0;
+		col = (color.getAlpha() << 24) | (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
+
+		bufferedImage.setRGB(x, y, col);
+	}
+
+	/**
+	 * creates a new BufferedImage from a given matrix of BufferedImages. Uses width
+	 * and height from the BufferedImage at [0][0] for the definition of the target
+	 * size.
+	 * 
+	 * @param bufferedImages
+	 * @return
+	 */
+	public static BufferedImage gridToSingle(BufferedImage[][] bufferedImages) {
+		Objects.requireNonNull(bufferedImages);
+
+		if (bufferedImages.length == 0 || bufferedImages[0].length == 0)
+			throw new IllegalArgumentException("grid size zero");
+
+		int widthTiles = bufferedImages[0][0].getWidth();
+		int heightTiles = bufferedImages[0][0].getHeight();
+
+		int xCount = bufferedImages.length;
+		int yCount = bufferedImages[0].length;
+
+		BufferedImage bufferedImage = new BufferedImage(widthTiles * xCount, heightTiles * yCount,
+				BufferedImage.TYPE_INT_ARGB);
+
+		for (int x = 0; x < xCount; x++)
+			for (int y = 0; y < yCount; y++) {
+				addImage(bufferedImage, bufferedImages[x][y], 1.0f, x * widthTiles, y * heightTiles);
+			}
+
+		return bufferedImage;
+	}
+
+	private static void addImage(BufferedImage buff1, BufferedImage buff2, float opaque, int x, int y) {
+		Graphics2D g2d = buff1.createGraphics();
+
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opaque));
+		g2d.drawImage(buff2, x, y, null);
+		g2d.dispose();
+	}
+
+	public static int hashCodeFromPixelColors(BufferedImage img) {
+		Objects.requireNonNull(img);
+
+		int hash = 29;
+
+		for (int x = 0; x < img.getWidth(); x++)
+			for (int y = 0; y < img.getHeight(); y++)
+				hash = 31 * hash + img.getRGB(x, y);
+
+		return hash;
 	}
 }
