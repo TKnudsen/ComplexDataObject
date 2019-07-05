@@ -20,39 +20,24 @@ import org.apache.commons.lang3.ArrayUtils;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2019
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class DataConversion {
 
 	/**
-	 * converts a list of Doubles to an array of double primitives. May make
-	 * List<Double> become obsolete.
+	 * converts a collection of Numbers to an array of double primitives.
 	 * 
 	 * @param values
 	 * @return
 	 */
-	public static double[] toPrimitives(Collection<Double> values) {
+	public static double[] toPrimitives(Collection<? extends Number> values) {
 		if (values == null)
 			return null;
-
-		return values.stream().mapToDouble(Double::doubleValue).toArray();
-	}
-
-	/**
-	 * converts a list of Doubles to an array of double primitives.
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static double[] toPrimitives(List<Double> values) {
-		if (values == null)
-			return null;
-
-		return values.stream().mapToDouble(Double::doubleValue).toArray();
+		return values.stream().mapToDouble(Number::doubleValue).toArray();
 	}
 
 	/**
@@ -69,29 +54,15 @@ public class DataConversion {
 	}
 
 	/**
-	 * converts a list of Integers to an array of int primitives.
+	 * converts a collection of Integers to an array of int primitives.
 	 * 
 	 * @param values
 	 * @return
 	 */
-	public static int[] toIntPrimitives(Collection<Integer> values) {
+	public static int[] toIntPrimitives(Collection<? extends Number> values) {
 		if (values == null)
 			return null;
-
-		return values.stream().mapToInt(Integer::intValue).toArray();
-	}
-
-	/**
-	 * converts a list of Integers to an array of int primitives.
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static int[] toIntPrimitives(List<Integer> values) {
-		if (values == null)
-			return null;
-
-		return values.stream().mapToInt(Integer::intValue).toArray();
+		return values.stream().mapToInt(Number::intValue).toArray();
 	}
 
 	/**
