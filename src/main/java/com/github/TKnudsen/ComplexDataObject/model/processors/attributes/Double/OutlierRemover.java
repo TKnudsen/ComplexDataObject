@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainerTools;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainers;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
@@ -85,7 +85,7 @@ public class OutlierRemover implements IComplexDataObjectProcessor {
 		if (!container.isNumeric(attribute))
 			throw new IllegalArgumentException("OutlierRemover requires numeric attribute definition.");
 
-		process(ComplexDataContainerTools.getObjectList(container));
+		process(ComplexDataContainers.getObjectList(container));
 	}
 
 	@Override
