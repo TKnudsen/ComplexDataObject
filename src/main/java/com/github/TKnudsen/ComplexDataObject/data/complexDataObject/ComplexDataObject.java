@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.events.IComplexDataObjectListener;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
@@ -22,17 +23,18 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
 
 	protected String name;
 	protected String description;
 
+	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
 
 	public ComplexDataObject() {

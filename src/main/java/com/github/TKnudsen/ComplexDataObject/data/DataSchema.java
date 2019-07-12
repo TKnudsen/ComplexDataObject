@@ -47,7 +47,7 @@ public class DataSchema {
 	}
 
 	/**
-	 * Whether the DataSchemaEntry contains a given attribute.
+	 * whether the DataSchemaEntry contains a given attribute.
 	 * 
 	 * @param key
 	 * @return
