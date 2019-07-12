@@ -183,6 +183,21 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return attributeValues.get(attribute);
 	}
 
+	public Class<?> getType(String attribute) {
+		if (attributeValues.get(attribute) == null) {
+			calculateEntities(attribute);
+		}
+		return dataSchema.getAttributeEntry(attribute).getType();
+	}
+
+	/**
+	 * @param attribute an attribute name.
+	 * @return the default value of the given attribute.
+	 */
+	public <X> X getDefaultValue(String attribute) {
+		return dataSchema.getDefaultValue(attribute);
+	}
+
 	public boolean contains(T object) {
 		if (objectsMap.containsKey(object.getID()))
 			return true;

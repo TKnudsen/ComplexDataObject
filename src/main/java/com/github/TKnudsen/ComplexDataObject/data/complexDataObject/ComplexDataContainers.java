@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
+
 /**
  * <p>
  * Title: ComplexDataContainerTools
@@ -20,7 +22,7 @@ import java.util.Objects;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class ComplexDataContainers {
 
@@ -40,5 +42,15 @@ public class ComplexDataContainers {
 
 		return new ComplexDataContainer(Arrays.asList(new ComplexDataObject[] { cdo }));
 
+	}
+
+	public static DataSchema deduceDataSchema(ComplexDataContainer container) {
+		DataSchema schema = new DataSchema();
+
+		for (String attribute : container.getAttributeNames()) {
+			schema.add(attribute, container.getType(attribute), container.getDefaultValue(null));
+		}
+
+		return schema;
 	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -31,7 +32,7 @@ public class JSON_IO_Tester {
 
 	public static void main(String[] args) {
 
-		// create complex data object(s)
+		// create ComplexDataObject(s)
 		List<ComplexDataObject> titanicData = null;
 		TitanicParser p = new TitanicParser("", true);
 		try {
@@ -42,17 +43,24 @@ public class JSON_IO_Tester {
 		ComplexDataObject complexDataObject = titanicData.get(0);
 		System.out.println(complexDataObject);
 
-		// write
+		// write ComplexDataObject
 		String file = "titanic0.json";
 		String JSONString = JSONWriter.writeToString(complexDataObject);
 		JSONWriter.writeToFile(complexDataObject, file);
 		System.out.println(JSONString);
 
-		// load
+		// load ComplexDataObject
 		ComplexDataObject loadConfigsFromString = JSONLoader.loadFromString(JSONString);
 		System.out.println(loadConfigsFromString);
 		ComplexDataObject loadConfigsFromFile = JSONLoader.loadFromFile(file);
 		System.out.println(loadConfigsFromFile);
+
+		// side track: save ComplexDataContainer
+		ComplexDataContainer container = new ComplexDataContainer(titanicData);
+		System.out.println(container);
+		JSONWriter.writeToFile(container, file);
+		container = JSONLoader.loadComplexDataContainerFromFile(file);
+		System.out.println(container);
 
 		List<NumericalFeature> features = new ArrayList<>();
 
@@ -76,7 +84,8 @@ public class JSON_IO_Tester {
 		System.out.println(JSONStringNFV);
 
 		// load
-		NumericalFeatureVector loadConfigsFromStringNFV = JSONLoader.loadNumericalFeatureVectorFromString(JSONStringNFV);
+		NumericalFeatureVector loadConfigsFromStringNFV = JSONLoader
+				.loadNumericalFeatureVectorFromString(JSONStringNFV);
 		System.out.println(loadConfigsFromStringNFV);
 		NumericalFeatureVector loadConfigsFromFileNFV = JSONLoader.loadNumericalFeatureVectorFromFile(fileNFV);
 		System.out.println(loadConfigsFromFileNFV);

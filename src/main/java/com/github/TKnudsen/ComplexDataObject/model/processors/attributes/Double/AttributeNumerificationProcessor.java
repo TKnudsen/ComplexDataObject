@@ -50,13 +50,19 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 		if (attribute == null)
 			throw new IllegalArgumentException("AttributeNumerificationProcessor requires attribute definition first.");
 
-		for (ComplexDataObject cdo : data) {
-			if (cdo.getAttribute(attribute) != null) {
-				Double d = doubleParser.apply(cdo.getAttribute(attribute));
-				cdo.add(attribute, d);
-			} else
-				cdo.add(attribute, Double.NaN);
-		}
+		for (ComplexDataObject cdo : data)
+			applyConversion(cdo);
+	}
+
+	public Double applyConversion(ComplexDataObject cdo) {
+		Double d = Double.NaN;
+
+		if (cdo.getAttribute(attribute) != null)
+			d = doubleParser.apply(cdo.getAttribute(attribute));
+
+		cdo.add(attribute, d);
+
+		return d;
 	}
 
 	@Override
