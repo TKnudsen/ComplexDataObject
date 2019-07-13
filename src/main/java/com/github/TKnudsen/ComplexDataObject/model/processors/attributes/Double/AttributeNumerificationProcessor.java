@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
 
@@ -14,14 +15,19 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 
 	private String attribute;
 
-	private final DoubleParser doubleParser = new DoubleParser();
+	private final IObjectParser<Double> doubleParser;
 
 	public AttributeNumerificationProcessor() {
-		this.attribute = null;
+		this(null);
 	}
 
 	public AttributeNumerificationProcessor(String attribute) {
+		this(attribute, new DoubleParser());
+	}
+
+	public AttributeNumerificationProcessor(String attribute, IObjectParser<Double> doubleParser) {
 		this.attribute = attribute;
+		this.doubleParser = doubleParser;
 	}
 
 	public void process(ComplexDataContainer container) {
@@ -32,11 +38,12 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 		// then remove attribute and re-create attribute in the container
 		Map<ComplexDataObject, Double> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
-			if (cdo.getAttribute(attribute) != null) {
-				Double d = doubleParser.apply(cdo.getAttribute(attribute));
-				values.put(cdo, d);
-			} else
-				values.put(cdo, Double.NaN);
+			Double d = Double.NaN;
+
+			if (cdo.getAttribute(attribute) != null)
+				d = doubleParser.apply(cdo.getAttribute(attribute));
+
+			values.put(cdo, d);
 		}
 
 		container.remove(attribute);
@@ -50,19 +57,14 @@ public class AttributeNumerificationProcessor implements IComplexDataObjectProce
 		if (attribute == null)
 			throw new IllegalArgumentException("AttributeNumerificationProcessor requires attribute definition first.");
 
-		for (ComplexDataObject cdo : data)
-			applyConversion(cdo);
-	}
+		for (ComplexDataObject cdo : data) {
+			Double d = Double.NaN;
 
-	public Double applyConversion(ComplexDataObject cdo) {
-		Double d = Double.NaN;
+			if (cdo.getAttribute(attribute) != null)
+				d = doubleParser.apply(cdo.getAttribute(attribute));
 
-		if (cdo.getAttribute(attribute) != null)
-			d = doubleParser.apply(cdo.getAttribute(attribute));
-
-		cdo.add(attribute, d);
-
-		return d;
+			cdo.add(attribute, d);
+		}
 	}
 
 	@Override
