@@ -18,7 +18,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public class DoubleParser implements IObjectParser<Double> {
@@ -76,5 +76,10 @@ public class DoubleParser implements IObjectParser<Double> {
 				return true;
 
 		return false;
+	}
+
+	@Override
+	public Class<Double> getOutputClassType() {
+		return Double.class;
 	}
 }

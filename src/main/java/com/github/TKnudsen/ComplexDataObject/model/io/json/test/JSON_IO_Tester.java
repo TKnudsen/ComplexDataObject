@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -18,11 +17,11 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicPa
  * </p>
  * 
  * <p>
- * Description: tests JSON output-inout.
+ * Description: tests JSON output-input.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2019
  * </p>
  * 
  * @author Juergen Bernard
@@ -54,13 +53,6 @@ public class JSON_IO_Tester {
 		System.out.println(loadConfigsFromString);
 		ComplexDataObject loadConfigsFromFile = JSONLoader.loadFromFile(file);
 		System.out.println(loadConfigsFromFile);
-
-		// side track: save ComplexDataContainer
-		ComplexDataContainer container = new ComplexDataContainer(titanicData);
-		System.out.println(container);
-		JSONWriter.writeToFile(container, file);
-		container = JSONLoader.loadComplexDataContainerFromFile(file);
-		System.out.println(container);
 
 		List<NumericalFeature> features = new ArrayList<>();
 

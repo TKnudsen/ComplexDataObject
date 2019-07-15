@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
@@ -53,56 +51,6 @@ public class JSONWriter {
 		return;
 	}
 
-	public static String writeToString(ComplexDataContainer complexDataContainter) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
-		String stringRepresentation;
-		try {
-			stringRepresentation = mapper.writeValueAsString(complexDataContainter);
-			return stringRepresentation;
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static void writeToFile(ComplexDataContainer complexDataContainer, String file) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
-		try {
-			mapper.writeValue(new File(file), complexDataContainer);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return;
-	}
-
-	public static String writeToString(DataSchema dataSchema) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
-		String stringRepresentation;
-		try {
-			stringRepresentation = mapper.writeValueAsString(dataSchema);
-			return stringRepresentation;
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static void writeToFile(DataSchema dataSchema, String file) {
-		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
-		try {
-			mapper.writeValue(new File(file), dataSchema);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return;
-	}
-
 	public static String writeToString(NumericalFeatureVector fv) {
 		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
@@ -127,4 +75,17 @@ public class JSONWriter {
 
 		return;
 	}
+
+	public static void writeToFile(Object object, String file) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		try {
+			mapper.writeValue(new File(file), object);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return;
+	}
+
 }

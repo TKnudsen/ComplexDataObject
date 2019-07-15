@@ -14,7 +14,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class StringParser implements IObjectParser<String> {
 
@@ -22,8 +22,13 @@ public class StringParser implements IObjectParser<String> {
 	public String apply(Object t) {
 		if (t == null)
 			return null;
-		
+
 		return String.valueOf(t);
+	}
+
+	@Override
+	public Class<String> getOutputClassType() {
+		return String.class;
 	}
 
 }

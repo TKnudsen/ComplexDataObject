@@ -20,7 +20,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class DateParser implements IObjectParser<Date> {
 
@@ -149,5 +149,10 @@ public class DateParser implements IObjectParser<Date> {
 		}
 
 		return date;
+	}
+
+	@Override
+	public Class<Date> getOutputClassType() {
+		return Date.class;
 	}
 }

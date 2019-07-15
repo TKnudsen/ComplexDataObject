@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
@@ -50,32 +49,6 @@ public class JSONLoader {
 		try {
 			complexDataObject = mapper.readValue(new File(file), ComplexDataObject.class);
 			return complexDataObject;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public static ComplexDataContainer loadComplexDataContainerFromString(String json) {
-
-		ComplexDataContainer complexDataContainer;
-		try {
-			complexDataContainer = mapper.readValue(json, ComplexDataContainer.class);
-			return complexDataContainer;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public static ComplexDataContainer loadComplexDataContainerFromFile(String file) {
-
-		ComplexDataContainer complexDataContainer;
-		try {
-			complexDataContainer = mapper.readValue(new File(file), ComplexDataContainer.class);
-			return complexDataContainer;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

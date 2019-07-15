@@ -4,4 +4,5 @@ import java.util.function.Function;
 
 public interface IObjectParser<T> extends Function<Object, T> {
 
+	public Class<T> getOutputClassType();
 }
