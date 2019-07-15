@@ -14,7 +14,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public class BooleanParser implements IObjectParser<Boolean> {
 
@@ -49,5 +49,10 @@ public class BooleanParser implements IObjectParser<Boolean> {
 			System.out.println("Object " + object + " could not be parsed to Boolean");
 			return null;
 		}
+	}
+
+	@Override
+	public Class<Boolean> getOutputClassType() {
+		return Boolean.class;
 	}
 }

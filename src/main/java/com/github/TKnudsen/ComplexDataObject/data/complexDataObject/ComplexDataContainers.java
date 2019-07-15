@@ -48,7 +48,7 @@ public class ComplexDataContainers {
 		DataSchema schema = new DataSchema();
 
 		for (String attribute : container.getAttributeNames()) {
-			schema.add(attribute, container.getType(attribute), container.getDefaultValue(null));
+			schema.add(attribute, container.getType(attribute), container.getDefaultValue(attribute));
 		}
 
 		return schema;

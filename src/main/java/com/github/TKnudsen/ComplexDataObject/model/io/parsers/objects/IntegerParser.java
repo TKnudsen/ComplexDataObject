@@ -14,7 +14,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 
 public class IntegerParser implements IObjectParser<Integer> {
@@ -33,6 +33,11 @@ public class IntegerParser implements IObjectParser<Integer> {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	@Override
+	public Class<Integer> getOutputClassType() {
+		return Integer.class;
 	}
 
 }
