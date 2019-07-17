@@ -59,11 +59,11 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 		} else if (s.endsWith("M")) {
 			s = s.substring(0, s.length() - 2).trim();
 			multiply = 1000000;
-		} else if (s.endsWith("K")) {
+		} else if (s.endsWith("K") && s.length() > 1) {
 			s = s.substring(0, s.length() - 2).trim();
 			multiply = 1000;
-		} else if (s.contains("k")) {
-			s = s.substring(0, s.indexOf("k")).trim();
+		} else if (s.endsWith("k") && s.length() > 1) {
+			s = s.substring(0, s.length() - 2).trim();
 			multiply = 1000;
 		} else {
 			System.err.println("LargeAmountAbbreviationsDoubleParser.apply has problems with value " + s);
