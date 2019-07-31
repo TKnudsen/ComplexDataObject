@@ -11,10 +11,6 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>
- * Title: ComplexDataObject
- * </p>
- * 
- * <p>
  * Description: ComplexDataObject is a key-value store that can be used to model
  * complex real-world objects.
  * 
@@ -27,12 +23,20 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
 
 	protected String name;
 	protected String description;
+
+	@JsonIgnore
+	/**
+	 * can be used to trigger a data container and a corresponding data schema to be
+	 * sensitive to changes made to the complex data object. false by default, as it
+	 * is quite time-consuming to apply requests to the schema
+	 */
+	private boolean listenersActive = true;
 
 	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
@@ -135,7 +139,7 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	private final void fireAttributeValueChanged(String attribute) {
-		if (listeners.isEmpty())
+		if (!listenersActive || listeners.isEmpty())
 			return;
 
 		for (IComplexDataObjectListener listener : listeners)
@@ -143,10 +147,18 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	private final void fireAttributeRemoved(String attribute) {
-		if (listeners.isEmpty())
+		if (!listenersActive || listeners.isEmpty())
 			return;
 
 		for (IComplexDataObjectListener listener : listeners)
 			listener.attributeRemoved(this, attribute);
+	}
+
+	public boolean isListenersActive() {
+		return listenersActive;
+	}
+
+	public void setListenersActive(boolean listenersActive) {
+		this.listenersActive = listenersActive;
 	}
 }

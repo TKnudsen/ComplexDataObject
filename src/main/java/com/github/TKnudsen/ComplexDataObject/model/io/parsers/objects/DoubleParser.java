@@ -6,22 +6,22 @@ import java.util.Locale;
 
 /**
  * <p>
- * Title: DoubleParser
- * </p>
- * 
- * <p>
  * Description:
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 
 public class DoubleParser implements IObjectParser<Double> {
+
+	private boolean dotMeansThousands = true;
+
+	private boolean printStackTrace = false;
 
 	@Override
 	public Double apply(Object object) {
@@ -34,14 +34,15 @@ public class DoubleParser implements IObjectParser<Double> {
 		while (stringValue.contains(" "))
 			stringValue = stringValue.replace(" ", "");
 
-		if (isDotForThousandsNotation(stringValue)) {
+		if (dotMeansThousands || isDotForThousandsNotation(stringValue)) {
 			NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
 			try {
 				Number number = nf.parse(stringValue);
 				if (number != null)
 					return number.doubleValue();
 			} catch (ParseException e) {
-				e.printStackTrace();
+				if (printStackTrace)
+					e.printStackTrace();
 			}
 		}
 
@@ -64,7 +65,7 @@ public class DoubleParser implements IObjectParser<Double> {
 		}
 	}
 
-	private boolean isDotForThousandsNotation(String string) {
+	protected boolean isDotForThousandsNotation(String string) {
 		if (string == null)
 			return false;
 
@@ -82,4 +83,21 @@ public class DoubleParser implements IObjectParser<Double> {
 	public Class<Double> getOutputClassType() {
 		return Double.class;
 	}
+
+	public boolean isDotMeansThousands() {
+		return dotMeansThousands;
+	}
+
+	public void setDotMeansThousands(boolean dotMeansThousands) {
+		this.dotMeansThousands = dotMeansThousands;
+	}
+
+	public boolean isPrintStackTrace() {
+		return printStackTrace;
+	}
+
+	public void setPrintStackTrace(boolean printStackTrace) {
+		this.printStackTrace = printStackTrace;
+	}
+
 }

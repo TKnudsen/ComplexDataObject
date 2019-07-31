@@ -30,6 +30,9 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		if (attribute == null)
 			throw new IllegalArgumentException("AttributeConverterProcessor requires attribute definition first.");
 
+		if (attribute.equals("Gesamtverbindlichkeiten - "))
+			System.err.println("AttributeConverterProcessor: Debug Entry Point here.");
+
 		Map<ComplexDataObject, Object> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
 			Object d = null;

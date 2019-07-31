@@ -204,6 +204,10 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return false;
 	}
 
+	public boolean containsAttribute(String attribute) {
+		return dataSchema.contains(attribute);
+	}
+
 	private void calculateEntities(String attribute) {
 		Map<Long, Object> ent = new HashMap<Long, Object>();
 

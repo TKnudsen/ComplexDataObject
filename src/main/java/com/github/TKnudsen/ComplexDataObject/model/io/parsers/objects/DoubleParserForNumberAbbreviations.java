@@ -27,11 +27,6 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 		if (object == null)
 			return Double.NaN;
 
-		Double d = super.apply(object);
-
-		if (d != null && !Double.isNaN(d))
-			return d;
-
 		// handle currency identification
 		String s = object.toString().trim();
 		if (s.isEmpty())
@@ -65,19 +60,17 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 		} else if (s.endsWith("k") && s.length() > 1) {
 			s = s.substring(0, s.length() - 2).trim();
 			multiply = 1000;
-		} else {
-			System.err.println("LargeAmountAbbreviationsDoubleParser.apply has problems with value " + s);
-			return Double.NaN;
 		}
 
 		try {
-			d = super.apply(s);
+			Double d = super.apply(s);
 			d *= multiply;
+			return d;
 		} catch (Exception e) {
-			System.err.println("LargeAmountAbbreviationsDoubleParser.apply has problems with value " + s);
-			d = Double.NaN;
+			System.err.println(
+					"LargeAmountDoubleParserForNumberAbbreviationsAbbreviationsDoubleParser.apply has problems with value "
+							+ s);
+			return Double.NaN;
 		}
-
-		return d;
 	}
 }
