@@ -21,6 +21,9 @@ public class LongParser implements IObjectParser<Long> {
 
 	@Override
 	public Long apply(Object object) {
+		if (object instanceof Long)
+			return new Long((long) object);
+
 		String stringValue = String.valueOf(object).toLowerCase();
 
 		stringValue = stringValue.trim();

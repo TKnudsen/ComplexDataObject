@@ -20,6 +20,9 @@ public class BooleanParser implements IObjectParser<Boolean> {
 
 	@Override
 	public Boolean apply(Object object) {
+		if (object instanceof Boolean)
+			return new Boolean((boolean) object);
+
 		final String stringRepresentation = String.valueOf(object).toLowerCase();
 		switch (stringRepresentation) {
 		case "false":
