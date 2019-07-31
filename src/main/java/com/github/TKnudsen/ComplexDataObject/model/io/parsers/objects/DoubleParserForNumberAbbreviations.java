@@ -1,5 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
+import java.util.Date;
+
 /**
  * <p>
  * ComplexDataObject
@@ -23,9 +25,11 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 
 	@Override
 	public Double apply(Object object) {
-
 		if (object == null)
 			return Double.NaN;
+
+		if (object instanceof Double)
+			return new Double((double) object);
 
 		// handle currency identification
 		String s = object.toString().trim();

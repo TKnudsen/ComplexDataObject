@@ -39,10 +39,13 @@ public class DateParser implements IObjectParser<Date> {
 	private static SimpleDateFormat zzz = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 	@Override
-	public synchronized Date apply(Object inputObject) {
+	public synchronized Date apply(Object object) {
+		if (object instanceof Date)
+			return new Date(((Date) object).getTime());
+
 		Date date = null;
 
-		String interpretableString = String.valueOf(inputObject);
+		String interpretableString = String.valueOf(object);
 		String replacedT = interpretableString.replace("T", " ");
 
 		// speedup:
@@ -142,7 +145,7 @@ public class DateParser implements IObjectParser<Date> {
 			try {
 				// Thu Apr 13 00:00:00 CEST 2017
 				synchronized (zzz) {
-					date = zzz.parse(String.valueOf(inputObject));
+					date = zzz.parse(String.valueOf(object));
 				}
 			} catch (ParseException parseException) {
 			}

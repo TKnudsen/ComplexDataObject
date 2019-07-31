@@ -21,6 +21,9 @@ public class IntegerParser implements IObjectParser<Integer> {
 
 	@Override
 	public Integer apply(Object object) {
+		if (object instanceof Integer)
+			return new Integer((int) object);
+
 		String stringValue = String.valueOf(object).toLowerCase();
 
 		stringValue = stringValue.trim();

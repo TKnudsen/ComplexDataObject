@@ -25,6 +25,9 @@ public class DoubleParser implements IObjectParser<Double> {
 
 	@Override
 	public Double apply(Object object) {
+		if (object instanceof Double)
+			return new Double((double) object);
+
 		String stringValue = String.valueOf(object).toLowerCase();
 
 		if (stringValue.endsWith(";"))
