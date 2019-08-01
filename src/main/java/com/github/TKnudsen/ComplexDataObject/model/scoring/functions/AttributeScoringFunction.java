@@ -63,6 +63,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		setUncertaintyFunction(uncertaintyFunction);
 	}
 
+	protected abstract void refreshScoringFunction();
+
 	protected abstract Double applyValue(T value);
 
 	@Override
@@ -116,16 +118,15 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 			listener.attributeScoringFunctionChanged(event);
 	}
 
-	public String getAttribute() {
-		return attribute;
+	public String getAbbreviation() {
+		return abbreviation;
 	}
 
-	public boolean isQuantileBased() {
-		return quantileBased;
-	}
+	public final void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 
-	public void setQuantileBased(boolean quantileBased) {
-		this.quantileBased = quantileBased;
+		// not necessarily needed but consistent
+		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
@@ -136,32 +137,24 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return highIsGood;
 	}
 
-	public void setHighIsGood(boolean highIsGood) {
+	public final void setHighIsGood(boolean highIsGood) {
 		this.highIsGood = highIsGood;
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
-
-		notifyListeners(event);
-	}
-
-	public double getWeight() {
-		return weight;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
+		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
 
-	public String getAbbreviation() {
-		return abbreviation;
+	public boolean isQuantileBased() {
+		return quantileBased;
 	}
 
-	public void setAbbreviation(String abbreviation) {
-		this.abbreviation = abbreviation;
+	public void setQuantileBased(boolean quantileBased) {
+		this.quantileBased = quantileBased;
+
+		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
@@ -172,12 +165,48 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return scoreForMissingObjects;
 	}
 
-	public void setScoreForMissingObjects(double scoreForMissingObjects) {
+	public final void setScoreForMissingObjects(double scoreForMissingObjects) {
 		this.scoreForMissingObjects = scoreForMissingObjects;
+
+		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
+	}
+
+	public Function<ComplexDataObject, Double> getUncertaintyFunction() {
+		return uncertaintyFunction;
+	}
+
+	public final void setUncertaintyFunction(Function<ComplexDataObject, Double> uncertaintyFunction) {
+		this.uncertaintyFunction = uncertaintyFunction;
+
+		refreshScoringFunction();
+
+		initializeUncertaintyNormalizationFunction();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public final void setWeight(double weight) {
+		this.weight = weight;
+
+		refreshScoringFunction();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
+	public String getAttribute() {
+		return attribute;
 	}
 
 	public ComplexDataContainer getContainer() {
@@ -186,16 +215,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public IObjectParser<T> getParser() {
 		return parser;
-	}
-
-	public Function<ComplexDataObject, Double> getUncertaintyFunction() {
-		return uncertaintyFunction;
-	}
-
-	public void setUncertaintyFunction(Function<ComplexDataObject, Double> uncertaintyFunction) {
-		this.uncertaintyFunction = uncertaintyFunction;
-
-		initializeUncertaintyNormalizationFunction();
 	}
 
 }
