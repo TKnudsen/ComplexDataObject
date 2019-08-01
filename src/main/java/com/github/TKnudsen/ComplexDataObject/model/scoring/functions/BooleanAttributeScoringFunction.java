@@ -34,11 +34,10 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			String attribute, String abbreviation, boolean quantileBased, boolean highIsGood, double weight,
 			Function<ComplexDataObject, Double> uncertaintyFunction) {
 		super(container, parser, attribute, abbreviation, quantileBased, highIsGood, weight, uncertaintyFunction);
-
-		initializeStatisticsSupport();
 	}
 
-	protected void initializeStatisticsSupport() {
+	@Override
+	protected void refreshScoringFunction() {
 		Map<Long, Object> attributeValues = getContainer().getAttributeValues(getAttribute());
 
 		Collection<Object> values = attributeValues.values();
@@ -83,4 +82,5 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			return 1.0;
 		return 0.0;
 	}
+
 }

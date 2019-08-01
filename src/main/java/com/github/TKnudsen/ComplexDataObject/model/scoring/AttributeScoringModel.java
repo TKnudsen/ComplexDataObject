@@ -27,6 +27,15 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 	private List<ChangeListener> changeListeners = new ArrayList<>();
 
+	/**
+	 * is not stored internally as the objects to be ranked may differ from the ones
+	 * that have been used for the initialization of the scoring functions. Just as
+	 * well it is not the aim to store the data (objects) for the calculation in the
+	 * model itself
+	 * 
+	 * @param container
+	 * @return
+	 */
 	public Ranking<EntryWithComparableKey<Double, ComplexDataObject>> calculateRanking(ComplexDataContainer container) {
 
 		Ranking<EntryWithComparableKey<Double, ComplexDataObject>> cdoRanking = new Ranking<>();
@@ -108,6 +117,13 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
+	}
+
+	public boolean containsAttributeScoringFunction(String attribute) {
+		if (getAttributeScoringFunction(attribute) != null)
+			return true;
+
+		return false;
 	}
 
 	public AttributeScoringFunction<?> getAttributeScoringFunction(String attribute) {

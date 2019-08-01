@@ -34,10 +34,11 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 			Function<ComplexDataObject, Double> uncertaintyFunction) {
 		super(container, parser, attribute, abbreviation, quantileBased, highIsGood, weight, uncertaintyFunction);
 
-		initializeStatisticsSupport();
+		refreshScoringFunction();
 	}
 
-	protected void initializeStatisticsSupport() {
+	@Override
+	protected void refreshScoringFunction() {
 		Map<Long, Object> attributeValues = getContainer().getAttributeValues(getAttribute());
 
 		Collection<Object> values = attributeValues.values();
@@ -68,12 +69,6 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 		// decision: weight should be applied externally. This, the relative value
 		// domain is preserved and guaranteed internally.
 		return output; // * getWeight();
-	}
-
-	public void setQuantileBased(boolean quantileBased) {
-		super.setQuantileBased(quantileBased);
-
-		initializeStatisticsSupport();
 	}
 
 	public StatisticsSupport getStatisticsSupport() {
