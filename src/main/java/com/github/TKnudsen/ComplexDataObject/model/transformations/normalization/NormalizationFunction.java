@@ -20,11 +20,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public abstract class NormalizationFunction implements Function<Number, Number> {
 
@@ -32,6 +32,13 @@ public abstract class NormalizationFunction implements Function<Number, Number> 
 	private Number globalMax = Double.NaN;
 
 	private boolean limitToBounds = false;
+
+	/**
+	 * for serialization purposes only
+	 */
+	protected NormalizationFunction() {
+
+	}
 
 	public NormalizationFunction(Collection<? extends Number> values) {
 		this(new StatisticsSupport(values));

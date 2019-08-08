@@ -1,39 +1,47 @@
 package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeListener;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
 
-	private final IObjectParser<T> parser;
+	private IObjectParser<T> parser;
 
-	private final ComplexDataContainer container;
+	@JsonIgnore
+	private ComplexDataContainer container;
 
-	private final String attribute;
+	private String attribute;
 	private String abbreviation;
 	private boolean quantileBased;
 	private boolean highIsGood;
 	private double weight;
 
+	@JsonIgnore
 	private Function<ComplexDataObject, Double> uncertaintyFunction = null;
-	private NormalizationFunction uncertaintyNormalizationFunction = null;
 
-	private double scoreForMissingObjects = 0.25;
+	private Double scoreForMissingObjects = null;
 
+	@JsonIgnore
 	private List<AttributeScoringChangeListener> listeners = new ArrayList<AttributeScoringChangeListener>();
+
+	/**
+	 * for serialization purposes
+	 */
+	protected AttributeScoringFunction() {
+
+	}
 
 	public AttributeScoringFunction(ComplexDataContainer container, IObjectParser<T> parser, String attribute) {
 		this(container, parser, attribute, null, false, true, 1.0);
@@ -60,52 +68,45 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		this.highIsGood = highIsGood;
 		this.weight = weight;
 
-		setUncertaintyFunction(uncertaintyFunction);
+		this.uncertaintyFunction = uncertaintyFunction;
 	}
+
+	public abstract double getAverageScoreWithoutMissingValues();
 
 	protected abstract void refreshScoringFunction();
 
 	protected abstract Double applyValue(T value);
 
 	@Override
-	public Double apply(ComplexDataObject cdo) {
+	public final Double apply(ComplexDataObject cdo) {
 
 		Object o = cdo.getAttribute(attribute);
+
+		Double missingValueValue = getScoreForMissingObjects();
+		if (missingValueValue == null)
+			missingValueValue = getAverageScoreWithoutMissingValues() * 0.5;
+
 		if (o == null)
-			return getScoreForMissingObjects();
+			return missingValueValue;
 
 		T value = parser.apply(o);
 
 		double s = applyValue(value);
 
-		// uncertainty information. this has the result that the scoring function does
+		// uncertainty information. As a result the scoring function does
 		// not necessarily produce at least once the score 1.0
-		if (getUncertaintyFunction() != null && uncertaintyNormalizationFunction != null) {
+		if (getUncertaintyFunction() != null) {
 			Double u = getUncertaintyFunction().apply(cdo);
-			Double u2 = uncertaintyNormalizationFunction.apply(u).doubleValue();
-			return s * (1 - u2);
+
+			if (u == null || Double.isNaN(u))
+				u = missingValueValue;
+
+			u = Math.max(0.0, Math.min(1.0, u));
+
+			return s * (1 - u);
 		}
 
 		return s;
-	}
-
-	protected final void initializeUncertaintyNormalizationFunction() {
-		if (uncertaintyFunction == null) {
-			uncertaintyNormalizationFunction = null;
-			return;
-		}
-
-		List<Double> doubleValues = new ArrayList<>();
-
-		for (ComplexDataObject cdo : container)
-			doubleValues.add(uncertaintyFunction.apply(cdo));
-
-		StatisticsSupport statisticsSupport = new StatisticsSupport(doubleValues);
-
-		if (isQuantileBased())
-			uncertaintyNormalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
-		else
-			uncertaintyNormalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
 	}
 
 	public void addAttributeScoringChangeListener(AttributeScoringChangeListener listener) {
@@ -161,7 +162,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
-	public double getScoreForMissingObjects() {
+	public Double getScoreForMissingObjects() {
 		return scoreForMissingObjects;
 	}
 
@@ -183,8 +184,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		this.uncertaintyFunction = uncertaintyFunction;
 
 		refreshScoringFunction();
-
-		initializeUncertaintyNormalizationFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
@@ -209,12 +208,48 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return attribute;
 	}
 
+	public IObjectParser<T> getParser() {
+		return parser;
+	}
+
 	public ComplexDataContainer getContainer() {
 		return container;
 	}
 
-	public IObjectParser<T> getParser() {
-		return parser;
+	/**
+	 * sets the data context for the attribute scoring function. Triggers
+	 * re-initialization of the function
+	 * 
+	 * @param container
+	 */
+	public void setContainer(ComplexDataContainer container) {
+		this.container = container;
+
+		refreshScoringFunction();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
+	public static double calculateAverageScoreWithoutMissingValues(AttributeScoringFunction<?> function) {
+		Collection<Double> scores = new ArrayList<>();
+
+		for (ComplexDataObject cdo : function.getContainer()) {
+			Object o = cdo.getAttribute(function.getAttribute());
+
+			if (o == null)
+				continue;
+
+			if (o instanceof Number)
+				if (Double.isNaN(((Number) o).doubleValue()))
+					continue;
+
+			scores.add(function.apply(cdo));
+		}
+
+		StatisticsSupport statistics = new StatisticsSupport(scores);
+		return statistics.getMean();
 	}
 
 }

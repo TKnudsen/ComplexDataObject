@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.scoring;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -8,6 +9,9 @@ import java.util.function.Function;
 
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
@@ -17,14 +21,18 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoublePars
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.DoubleAttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeWeightingFunctions = new ArrayList<>();
 
+	protected Double currentScoreMax = null;
+
 	private Boolean validationMode = false;
 
+	@JsonIgnore
 	private List<ChangeListener> changeListeners = new ArrayList<>();
 
 	/**
@@ -41,15 +49,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		Ranking<EntryWithComparableKey<Double, ComplexDataObject>> cdoRanking = new Ranking<>();
 
 		for (ComplexDataObject cdo : container) {
-			double score = 0.0;
-			for (AttributeScoringFunction<?> attributeScoringFunction : attributeWeightingFunctions) {
-				Double v = attributeScoringFunction.apply(cdo);
-
-				v *= attributeScoringFunction.getWeight();
-
-				if (v != null && !Double.isNaN(v))
-					score += v;
-			}
+			double score = getScore(cdo);
 
 			cdoRanking.add(new EntryWithComparableKey<Double, ComplexDataObject>(score, cdo));
 		}
@@ -59,9 +59,34 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 				System.out.println(MathFunctions.round(entry.getKey(), 3) + ":\t" + entry.getValue().getName() + ":\t"
 						+ entry.getValue().getAttribute("ISIN"));
 
+		currentScoreMax = cdoRanking.getLast().getKey();
+
 		handleItemRankingChangeEvent(new ItemRankingChangeEvent(this, cdoRanking));
 
 		return cdoRanking;
+	}
+
+	public Double getScore(ComplexDataObject cdo) {
+		double score = 0.0;
+		for (AttributeScoringFunction<?> attributeScoringFunction : attributeWeightingFunctions) {
+			Double v = attributeScoringFunction.apply(cdo);
+
+			v *= attributeScoringFunction.getWeight();
+
+			if (v != null && !Double.isNaN(v))
+				score += v;
+		}
+
+		return score;
+	}
+
+	public Double getScoreRelative(ComplexDataObject cdo) {
+		double score = getScore(cdo);
+
+		if (currentScoreMax != null)
+			return score / currentScoreMax;
+
+		return 0.0;
 	}
 
 	public void addAttributeScoringFunction(ComplexDataContainer container, String attribute) {
@@ -119,6 +144,13 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		handleAttributeScoringChangeEvent(event);
 	}
 
+	public void clearAttributeScoringFunctions() {
+		attributeWeightingFunctions.clear();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, "null", null);
+		handleAttributeScoringChangeEvent(event);
+	}
+
 	public boolean containsAttributeScoringFunction(String attribute) {
 		if (getAttributeScoringFunction(attribute) != null)
 			return true;
@@ -135,6 +167,30 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 	public List<AttributeScoringFunction<?>> getAttributeScoringFunctions() {
 		return new CopyOnWriteArrayList<AttributeScoringFunction<?>>(attributeWeightingFunctions);
+	}
+
+	public double getAttributeScoringCorrelation(ComplexDataContainer container, AttributeScoringFunction<?> f1,
+			AttributeScoringFunction<?> f2) {
+
+		Collection<Double> values1 = new ArrayList<>();
+		Collection<Double> values2 = new ArrayList<>();
+
+		for (ComplexDataObject cdo : container) {
+			double v1 = f1.apply(cdo);
+			double v2 = f2.apply(cdo);
+
+			if (!Double.isNaN(v1) && !Double.isNaN(v2)) {
+				values1.add(v1);
+				values2.add(v2);
+			}
+		}
+
+		PearsonsCorrelation pc = new PearsonsCorrelation();
+		double[] xArray = DataConversion.toPrimitives(values1);
+		double[] yArray = DataConversion.toPrimitives(values2);
+		double correlation = pc.correlation(xArray, yArray);
+
+		return correlation;
 	}
 
 	public void setAttributeScoringInformationQuantile(String attribute, Boolean quantile) {
@@ -180,6 +236,8 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 	}
 
 	private final void handleAttributeScoringChangeEvent(AttributeScoringChangeEvent event) {
+		currentScoreMax = null;
+
 		for (ChangeListener listener : changeListeners)
 			listener.stateChanged(event);
 	}

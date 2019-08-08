@@ -42,7 +42,8 @@ public class ARFFInstancesIO {
 			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("ARFFInstancesIO.loadARFF: unable to read file " + arffFile + " . Exception caught.");
+//			e.printStackTrace();
 			return null;
 		}
 	}

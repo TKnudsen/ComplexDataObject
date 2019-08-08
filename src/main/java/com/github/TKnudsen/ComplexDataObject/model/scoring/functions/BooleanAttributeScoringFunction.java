@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
@@ -18,8 +19,20 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
 
 public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Boolean> {
 
+	@JsonIgnore
 	private StatisticsSupport statisticsSupport;
+
 	private NormalizationFunction normalizationFunction;
+
+	private double scoreAverageWithoutMissingValues = 0.0;
+
+	/**
+	 * for serialization purposes
+	 */
+	@SuppressWarnings("unused")
+	private BooleanAttributeScoringFunction() {
+		super();
+	}
 
 	public BooleanAttributeScoringFunction(ComplexDataContainer container, String attribute) {
 		this(container, new BooleanParser(), attribute, null, false, true, 1.0, null);
@@ -34,6 +47,8 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			String attribute, String abbreviation, boolean quantileBased, boolean highIsGood, double weight,
 			Function<ComplexDataObject, Double> uncertaintyFunction) {
 		super(container, parser, attribute, abbreviation, quantileBased, highIsGood, weight, uncertaintyFunction);
+
+		refreshScoringFunction();
 	}
 
 	@Override
@@ -58,12 +73,17 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
 		else
 			normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+
+		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this);
 	}
 
 	@Override
 	public Double applyValue(Boolean value) {
-		if (value == null)
-			return getScoreForMissingObjects();
+		if (value == null) {
+			Double v = getScoreForMissingObjects();
+			if (v == null)
+				return scoreAverageWithoutMissingValues * 0.5;
+		}
 
 		double output = normalizationFunction.apply(boolToDouble(value)).doubleValue();
 
@@ -83,4 +103,8 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		return 0.0;
 	}
 
+	@Override
+	public double getAverageScoreWithoutMissingValues() {
+		return scoreAverageWithoutMissingValues;
+	}
 }
