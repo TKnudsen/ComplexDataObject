@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.DoubleAttributeScoringFunction;
 
 /**
  * <p>
@@ -55,7 +58,7 @@ public class JSONLoader {
 
 		return null;
 	}
-
+	
 	public static DataSchema loadDataSchemaFromString(String json) {
 
 		DataSchema dataSchema;
@@ -103,6 +106,19 @@ public class JSONLoader {
 		try {
 			numericalFeatureVector = mapper.readValue(new File(file), NumericalFeatureVector.class);
 			return numericalFeatureVector;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static AttributeScoringFunction<?> loadAttributeScoringFunctionFromFile(String file) {
+
+		AttributeScoringFunction<?> function;
+		try {
+			function = mapper.readValue(new File(file), AttributeScoringFunction.class);
+			return function;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

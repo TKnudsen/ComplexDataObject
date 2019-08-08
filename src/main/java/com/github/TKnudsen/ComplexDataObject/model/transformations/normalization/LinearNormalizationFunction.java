@@ -20,13 +20,21 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class LinearNormalizationFunction extends NormalizationFunction {
+
+	/**
+	 * for serialization purposes only
+	 */
+	@SuppressWarnings("unused")
+	private LinearNormalizationFunction() {
+		super();
+	}
 
 	public LinearNormalizationFunction(Collection<? extends Number> values) {
 		super(values);

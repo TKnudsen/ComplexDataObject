@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 
 /**
  * <p>
@@ -81,6 +82,18 @@ public class JSONWriter {
 
 		try {
 			mapper.writeValue(new File(file), object);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return;
+	}
+
+	public static void writeToFile(AttributeScoringFunction<?> scoringFunction, String file) {
+		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+
+		try {
+			mapper.writeValue(new File(file), scoringFunction);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

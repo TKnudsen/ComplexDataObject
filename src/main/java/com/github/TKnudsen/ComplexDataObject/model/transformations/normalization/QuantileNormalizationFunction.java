@@ -19,15 +19,23 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class QuantileNormalizationFunction extends NormalizationFunction {
 
 	private Ranking<Double> valueRanking;
+
+	/**
+	 * for serialization purposes only
+	 */
+	@SuppressWarnings("unused")
+	private QuantileNormalizationFunction() {
+		super();
+	}
 
 	public QuantileNormalizationFunction(Collection<Number> values) {
 		super(values);

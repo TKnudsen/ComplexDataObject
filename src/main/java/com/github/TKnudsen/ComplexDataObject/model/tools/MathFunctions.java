@@ -384,41 +384,41 @@ public class MathFunctions {
 	/**
 	 * calculates the standard deviation (SD, sDev) of a double array.
 	 * 
-	 * @param valules
+	 * @param values
 	 * @return
 	 */
-	public static double getStandardDeviation(double valules[]) {
+	public static double getStandardDeviation(double values[]) {
 		double sumOfSquares = 0;
 
-		if (valules == null)
+		if (values == null)
 			return sumOfSquares;
 
-		double mean = getMean(valules);
+		double mean = getMean(values);
 
-		for (int i = 0; i < valules.length; i++)
-			sumOfSquares += Math.pow((valules[i] - mean), 2);
+		for (int i = 0; i < values.length; i++)
+			sumOfSquares += Math.pow((values[i] - mean), 2);
 
-		return Math.sqrt(sumOfSquares / (double) valules.length);
+		return Math.sqrt(sumOfSquares / (double) values.length);
 	}
 
 	/**
 	 * calculates the standard deviation (SD, sDev) of a double array.
 	 * 
-	 * @param valules
+	 * @param values
 	 * @return
 	 */
-	public static double getStandardDeviation(Collection<? extends Number> valules) {
+	public static double getStandardDeviation(Collection<? extends Number> values) {
 		double sumOfSquares = 0;
 
-		if (valules == null)
+		if (values == null)
 			return sumOfSquares;
 
-		double mean = getMean(valules);
+		double mean = getMean(values);
 
-		for (Number n : valules)
+		for (Number n : values)
 			sumOfSquares += Math.pow((n.doubleValue() - mean), 2);
 
-		return Math.sqrt(sumOfSquares / (double) valules.size());
+		return Math.sqrt(sumOfSquares / (double) values.size());
 	}
 
 	/**
