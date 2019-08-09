@@ -188,9 +188,11 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		PearsonsCorrelation pc = new PearsonsCorrelation();
 		double[] xArray = DataConversion.toPrimitives(values1);
 		double[] yArray = DataConversion.toPrimitives(values2);
-		double correlation = pc.correlation(xArray, yArray);
 
-		return correlation;
+		if (xArray.length < 2 || yArray.length < 2)
+			return 0.0;
+
+		return pc.correlation(xArray, yArray);
 	}
 
 	public void setAttributeScoringInformationQuantile(String attribute, Boolean quantile) {

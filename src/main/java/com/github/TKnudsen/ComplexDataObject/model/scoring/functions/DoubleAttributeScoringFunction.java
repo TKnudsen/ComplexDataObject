@@ -77,10 +77,12 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 
 		statisticsSupport = new StatisticsSupport(doubleValues);
 
-		if (isQuantileBased())
-			normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
-		else
-			normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+		// if the entire value domain is NaN no normalizationFunction can be built
+		if (!Double.isNaN(statisticsSupport.getMean()))
+			if (isQuantileBased())
+				normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
+			else
+				normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
 
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this);
 	}
