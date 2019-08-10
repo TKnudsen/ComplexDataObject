@@ -9,7 +9,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.DoubleAttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributePositiveScoringFunction;
 
 /**
  * <p>
