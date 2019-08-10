@@ -20,7 +20,8 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanPar
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.DoubleAttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributePositiveScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
@@ -106,12 +107,15 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 					uncertaintyFunction);
 			break;
 		case "Double":
-			f = new DoubleAttributeScoringFunction(container, new DoubleParser(), attribute, null, false, true, 1.0,
-					uncertaintyFunction);
+			// TODO decide whether or not a bipolar scoring function shall be defined
+//			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(), attribute, null, false, true, 1.0,
+//					uncertaintyFunction);
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(), attribute, null, false, true,
+					1.0, uncertaintyFunction);
 			break;
 		case "Integer":
-			f = new DoubleAttributeScoringFunction(container, new DoubleParser(), attribute, null, false, true, 1.0,
-					uncertaintyFunction);
+			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(), attribute, null, false, true,
+					1.0, uncertaintyFunction);
 			break;
 		default:
 			System.err.println(

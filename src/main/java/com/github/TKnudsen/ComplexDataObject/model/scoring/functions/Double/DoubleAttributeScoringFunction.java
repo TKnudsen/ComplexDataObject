@@ -1,39 +1,30 @@
-package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
+package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeEvent;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
-public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
+public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
 
-	@JsonIgnore
-	private StatisticsSupport statisticsSupport;
+	protected Double outlierStd = 2.96;
+	protected Double minOutlierPruning;
+	protected Double maxOutlierPruning;
 
-	private NormalizationFunction normalizationFunction;
-
-	private Double outlierStd = 2.96;
-	private Double minOutlierPruning;
-	private Double maxOutlierPruning;
-
-	private double scoreAverageWithoutMissingValues = 0.0;
+	protected double scoreAverageWithoutMissingValues = 0.0;
 
 	/**
 	 * for serialization purposes
 	 */
-	@SuppressWarnings("unused")
-	private DoubleAttributeScoringFunction() {
+	protected DoubleAttributeScoringFunction() {
 		super();
 	}
 
@@ -62,8 +53,11 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 
 		Collection<Double> doubleValues = new ArrayList<>();
 
-		for (Object o : values)
-			doubleValues.add(getParser().apply(o));
+		for (Object o : values) {
+			Double value = getParser().apply(o);
+			if (value != null && !Double.isNaN(value))
+				doubleValues.add(value);
+		}
 
 		if (!isQuantileBased() && outlierStd != null && !Double.isNaN(outlierStd))
 			initializeOutlierTreatment(doubleValues);
@@ -71,23 +65,25 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 		if (!isQuantileBased() && minOutlierPruning != null && maxOutlierPruning != null) {
 			Collection<Double> afterO = new ArrayList<>();
 			for (Double d : doubleValues)
-				afterO.add(pruneOutliers(d));
+				afterO.add(pruneOutlier(d));
 			doubleValues = afterO;
 		}
 
-		statisticsSupport = new StatisticsSupport(doubleValues);
+		initializeStatisticsSupport(doubleValues);
 
-		// if the entire value domain is NaN no normalizationFunction can be built
-		if (!Double.isNaN(statisticsSupport.getMean()))
-			if (isQuantileBased())
-				normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
-			else
-				normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+		initializeNormalizationFunctions();
 
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this);
 	}
 
-	private void initializeOutlierTreatment(Collection<Double> doubleValues) {
+	/**
+	 * treatment of anomalies is performed across the entire value domain with one
+	 * statistics distribution instance. no differentiation between positive and
+	 * negative here.
+	 * 
+	 * given double values must not be null or NaN!
+	 */
+	protected final void initializeOutlierTreatment(Collection<Double> doubleValues) {
 
 		StatisticsSupport statisticsSupport = new StatisticsSupport(doubleValues);
 
@@ -99,6 +95,25 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 		minOutlierPruning = Math.max(min, mean - outlierStd * standardDeviation);
 		maxOutlierPruning = Math.min(max, mean + outlierStd * standardDeviation);
 	}
+
+	/**
+	 * given double values must not be null or NaN!
+	 */
+	protected abstract void initializeStatisticsSupport(Collection<Double> doubleValues);
+
+	protected abstract void initializeNormalizationFunctions();
+
+	private final double pruneOutlier(double value) {
+		if (minOutlierPruning == null || maxOutlierPruning == null)
+			return value;
+
+		return Math.max(minOutlierPruning, Math.min(value, maxOutlierPruning));
+	}
+
+	/**
+	 * given double values must not be null or NaN!
+	 */
+	protected abstract double normalize(double value);
 
 	@Override
 	public Double applyValue(Double value) {
@@ -112,7 +127,7 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 
 		// pruning outliers is not necessary as the normalization function will crop
 		// extreme values.
-		double output = normalizationFunction.apply(v).doubleValue();
+		double output = normalize(v);
 
 		if (!isHighIsGood())
 			output = 1 - output;
@@ -127,16 +142,7 @@ public class DoubleAttributeScoringFunction extends AttributeScoringFunction<Dou
 		return scoreAverageWithoutMissingValues;
 	}
 
-	private double pruneOutliers(double value) {
-		if (minOutlierPruning == null || maxOutlierPruning == null)
-			return value;
-
-		return Math.max(minOutlierPruning, Math.min(value, maxOutlierPruning));
-	}
-
-	public StatisticsSupport getStatisticsSupport() {
-		return statisticsSupport;
-	}
+	public abstract StatisticsSupport getStatisticsSupport();
 
 	public double getOutlierStd() {
 		return outlierStd;
