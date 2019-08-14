@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -117,6 +118,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	@Override
 	public Double applyValue(Double value) {
+
 		if (value == null || Double.isNaN(value)) {
 			Double v = getScoreForMissingObjects();
 			if (v == null)
@@ -125,17 +127,18 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		Double v = value;
 
-		// pruning outliers is not necessary as the normalization function will crop
-		// extreme values.
+		// pruning outliers: non need since normalization will crop extremes
 		double output = normalize(v);
 
 		if (!isHighIsGood())
-			output = 1 - output;
+			output = invertScore(output);
 
 		// decision: weight should be applied externally. Thus, the relative value
 		// domain is preserved and guaranteed internally.
 		return output; // * getWeight();
 	}
+
+	protected abstract double invertScore(double output);
 
 	@Override
 	public double getAverageScoreWithoutMissingValues() {
@@ -150,6 +153,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	public void setOutlierStd(double outlierStd) {
 		this.outlierStd = outlierStd;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 

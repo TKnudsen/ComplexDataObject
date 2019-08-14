@@ -119,4 +119,12 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		return new StatisticsSupport(values);
 	}
 
+	@Override
+	protected double invertScore(double output) {
+		if (normalizationFunctionNegative != null)
+			return -output;
+		else
+			return 1 - output;
+	}
+
 }
