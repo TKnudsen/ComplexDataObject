@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -197,6 +198,18 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 			return 0.0;
 
 		return pc.correlation(xArray, yArray);
+	}
+
+	public List<String> getAttributes() {
+		List<String> attributeList = new ArrayList<>();
+
+		for (AttributeScoringFunction<?> attributeScoringFunction : getAttributeScoringFunctions()) {
+			attributeList.add(attributeScoringFunction.getAttribute());
+		}
+
+		Collections.sort(attributeList);
+
+		return attributeList;
 	}
 
 	public void setAttributeScoringInformationQuantile(String attribute, Boolean quantile) {

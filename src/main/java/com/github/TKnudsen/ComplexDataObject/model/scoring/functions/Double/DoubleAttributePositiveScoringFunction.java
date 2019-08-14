@@ -64,6 +64,11 @@ public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScori
 	}
 
 	@Override
+	protected double invertScore(double output) {
+		return 1 - output;
+	}
+
+	@Override
 	public StatisticsSupport getStatisticsSupport() {
 		return statisticsSupport;
 	}

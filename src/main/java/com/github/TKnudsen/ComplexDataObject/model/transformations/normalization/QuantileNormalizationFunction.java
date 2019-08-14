@@ -1,6 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization;
 
 import java.util.Collection;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
@@ -23,11 +25,14 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class QuantileNormalizationFunction extends NormalizationFunction {
 
 	private Ranking<Double> valueRanking;
+
+	// TODO replace by interpolation search
+	private SortedMap<Double, Integer> rankingLookup;
 
 	/**
 	 * for serialization purposes only
@@ -66,6 +71,8 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 		for (Number value : values)
 			valueRanking.add(value.doubleValue());
+
+		refreshRankingLookup();
 	}
 
 	private void initializeRanking(double[] values) {
@@ -73,6 +80,15 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 		for (double value : values)
 			valueRanking.add(value);
+
+		refreshRankingLookup();
+	}
+
+	private final void refreshRankingLookup() {
+		rankingLookup = new TreeMap<Double, Integer>();
+
+		for (int i = 0; i < valueRanking.size(); i += 50)
+			rankingLookup.put(valueRanking.get(i), i);
 	}
 
 	@Override
@@ -118,7 +134,13 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		// iterate the ranking
 		double q = 1.0 / (double) (valueRanking.size() - 1);
 
-		for (int i = 0; i < valueRanking.size(); i++)
+		// speedup: lookup the index range
+		Integer startIndex = 0;
+		for (Double d : rankingLookup.keySet())
+			if (d <= t.doubleValue())
+				startIndex = rankingLookup.get(d);
+
+		for (int i = startIndex; i < valueRanking.size(); i++)
 			if (t.doubleValue() < valueRanking.get(i))
 				return (double) (i - 1) / (double) (valueRanking.size() - 1) + q * 0.5;
 			else if (t.doubleValue() == valueRanking.get(i)) {

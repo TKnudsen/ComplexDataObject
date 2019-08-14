@@ -2,7 +2,9 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +33,23 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	@JsonIgnore
 	private Function<ComplexDataObject, Double> uncertaintyFunction = null;
 
+	private UncertaintyConsideration uncertaintyConsideration = UncertaintyConsideration.Full;
+
+	public enum UncertaintyConsideration {
+		Full, Half, None
+	}
+
 	private Double scoreForMissingObjects = null;
 
 	@JsonIgnore
 	private List<AttributeScoringChangeListener> listeners = new ArrayList<AttributeScoringChangeListener>();
+
+	/**
+	 * can be used to improve calculation time by the cost of adding a state to the
+	 * function that has to be maintained carefully
+	 */
+	@JsonIgnore
+	protected Map<ComplexDataObject, Double> scoresBuffer = new HashMap<>();
 
 	/**
 	 * for serialization purposes
@@ -80,14 +95,20 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	@Override
 	public final Double apply(ComplexDataObject cdo) {
 
+		Double buffered = scoresBuffer.get(cdo);
+		if (buffered != null)
+			return buffered;
+
 		Object o = cdo.getAttribute(attribute);
 
 		Double missingValueValue = getScoreForMissingObjects();
 		if (missingValueValue == null)
 			missingValueValue = getAverageScoreWithoutMissingValues() * 0.5;
 
-		if (o == null)
+		if (o == null) {
+			scoresBuffer.put(cdo, missingValueValue);
 			return missingValueValue;
+		}
 
 		T value = parser.apply(o);
 
@@ -95,17 +116,24 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		// uncertainty information. As a result the scoring function does
 		// not necessarily produce at least once the score 1.0
-		if (getUncertaintyFunction() != null) {
-			Double u = getUncertaintyFunction().apply(cdo);
+		if (uncertaintyConsideration != UncertaintyConsideration.None)
+			if (getUncertaintyFunction() != null) {
+				Double u = getUncertaintyFunction().apply(cdo);
 
-			if (u == null || Double.isNaN(u))
-				u = missingValueValue;
+				if (u == null || Double.isNaN(u))
+					u = missingValueValue;
 
-			u = Math.max(0.0, Math.min(1.0, u));
+				u = Math.max(0.0, Math.min(1.0, u));
 
-			return s * (1 - u);
-		}
+				double sFinal = s * (1 - u);
+				if (uncertaintyConsideration.equals(UncertaintyConsideration.Half))
+					sFinal = s * (1 - u * 0.5);
 
+				scoresBuffer.put(cdo, sFinal);
+				return sFinal;
+			}
+
+		scoresBuffer.put(cdo, s);
 		return s;
 	}
 
@@ -127,7 +155,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		this.abbreviation = abbreviation;
 
 		// not necessarily needed but consistent
-		refreshScoringFunction();
+//		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
@@ -140,6 +168,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setHighIsGood(boolean highIsGood) {
 		this.highIsGood = highIsGood;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 
@@ -154,6 +183,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public void setQuantileBased(boolean quantileBased) {
 		this.quantileBased = quantileBased;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 
@@ -168,6 +198,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setScoreForMissingObjects(double scoreForMissingObjects) {
 		this.scoreForMissingObjects = scoreForMissingObjects;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 
@@ -180,8 +211,42 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return uncertaintyFunction;
 	}
 
+	public double getUncertainty(ComplexDataObject cdo) {
+		Double missingValueValue = getScoreForMissingObjects();
+		if (missingValueValue == null)
+			missingValueValue = getAverageScoreWithoutMissingValues() * 0.5;
+
+		Double u = missingValueValue;
+
+		if (getUncertaintyFunction() != null) {
+			u = getUncertaintyFunction().apply(cdo);
+
+			if (u == null || Double.isNaN(u))
+				u = missingValueValue;
+
+			u = Math.max(0.0, Math.min(1.0, u));
+		}
+		return u;
+	}
+
 	public final void setUncertaintyFunction(Function<ComplexDataObject, Double> uncertaintyFunction) {
 		this.uncertaintyFunction = uncertaintyFunction;
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
+	public UncertaintyConsideration getUncertaintyConsideration() {
+		return uncertaintyConsideration;
+	}
+
+	public void setUncertaintyConsideration(UncertaintyConsideration uncertaintyConsideration) {
+		this.uncertaintyConsideration = uncertaintyConsideration;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 
@@ -196,6 +261,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setWeight(double weight) {
 		this.weight = weight;
+		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
 
@@ -252,4 +318,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return statistics.getMean();
 	}
 
+	@Override
+	public String toString() {
+		return getAttribute();
+	}
 }
