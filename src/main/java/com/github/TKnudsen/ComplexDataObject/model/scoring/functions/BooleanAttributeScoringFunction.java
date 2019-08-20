@@ -74,7 +74,8 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		else
 			normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
 
-		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this);
+		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
+				false);
 	}
 
 	@Override

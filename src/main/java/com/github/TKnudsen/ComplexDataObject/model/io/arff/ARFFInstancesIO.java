@@ -19,11 +19,11 @@ import weka.core.converters.ArffSaver;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2018
+ * Copyright: Copyright (c) 2018-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class ARFFInstancesIO {
 
@@ -35,8 +35,12 @@ public class ARFFInstancesIO {
 		try {
 			FileReader fileReader = new FileReader(arffFile);
 			reader = new BufferedReader(fileReader);
+
 			Instances instances = new Instances(reader);
+
+			fileReader.close();
 			reader.close();
+
 			return instances;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
