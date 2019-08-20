@@ -9,6 +9,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
@@ -25,6 +26,8 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 	private NormalizationFunction normalizationFunctionPositive;
 	private NormalizationFunction normalizationFunctionNegative;
+
+	private double scoreAverageAbsoluteValuesWithoutMissingValues = 0.0;
 
 	/**
 	 * for serialization purposes
@@ -106,6 +109,14 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	}
 
 	@Override
+	protected void refreshScoringFunction() {
+		super.refreshScoringFunction();
+
+		this.scoreAverageAbsoluteValuesWithoutMissingValues = AttributeScoringFunction
+				.calculateAverageScoreWithoutMissingValues(this, true);
+	}
+
+	@Override
 	/**
 	 * this is expensive. is it really needed?
 	 */
@@ -125,6 +136,10 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 			return -output;
 		else
 			return 1 - output;
+	}
+
+	public double getScoreAverageAbsoluteValuesWithoutMissingValues() {
+		return scoreAverageAbsoluteValuesWithoutMissingValues;
 	}
 
 }

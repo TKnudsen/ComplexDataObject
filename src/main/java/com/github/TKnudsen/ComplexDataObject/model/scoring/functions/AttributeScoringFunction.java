@@ -298,7 +298,15 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
-	public static double calculateAverageScoreWithoutMissingValues(AttributeScoringFunction<?> function) {
+	/**
+	 * 
+	 * @param function
+	 * @param absoluteValues scores may be negative but may be needed in an absolute
+	 *                       way
+	 * @return
+	 */
+	public static double calculateAverageScoreWithoutMissingValues(AttributeScoringFunction<?> function,
+			boolean absoluteValues) {
 		Collection<Double> scores = new ArrayList<>();
 
 		for (ComplexDataObject cdo : function.getContainer()) {
@@ -311,7 +319,10 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 				if (Double.isNaN(((Number) o).doubleValue()))
 					continue;
 
-			scores.add(function.apply(cdo));
+			if (absoluteValues)
+				scores.add(Math.abs(function.apply(cdo)));
+			else
+				scores.add(function.apply(cdo));
 		}
 
 		StatisticsSupport statistics = new StatisticsSupport(scores);

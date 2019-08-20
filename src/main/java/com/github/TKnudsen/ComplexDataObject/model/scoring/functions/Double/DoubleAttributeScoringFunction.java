@@ -74,7 +74,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		initializeNormalizationFunctions();
 
-		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this);
+		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
+				false);
 	}
 
 	/**

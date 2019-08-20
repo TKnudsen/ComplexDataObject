@@ -92,6 +92,10 @@ public class WekaConversion {
 			Iterator<String> attNames = cdo.iterator();
 			while (attNames.hasNext()) {
 				String attName = attNames.next();
+
+				if (!attributeMap.containsKey(attName))
+					continue;
+
 				Attribute attribute = attributeMap.get(attName);
 
 				Object value = cdo.getAttribute(attName);
