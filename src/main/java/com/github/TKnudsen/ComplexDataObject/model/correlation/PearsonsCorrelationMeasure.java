@@ -13,12 +13,12 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017-2018,
+ * Copyright: Copyright (c) 2017-2019,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class PearsonsCorrelationMeasure {
 	PearsonsCorrelation correlationMeasure = new PearsonsCorrelation();
@@ -41,4 +41,5 @@ public class PearsonsCorrelationMeasure {
 
 		return correlationMeasure.correlation(a, b);
 	}
+
 }
