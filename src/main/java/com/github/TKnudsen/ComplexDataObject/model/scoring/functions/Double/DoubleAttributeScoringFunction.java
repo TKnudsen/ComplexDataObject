@@ -20,8 +20,6 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	protected Double minOutlierPruning;
 	protected Double maxOutlierPruning;
 
-	protected double scoreAverageWithoutMissingValues = 0.0;
-
 	/**
 	 * for serialization purposes
 	 */
@@ -74,8 +72,11 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		initializeNormalizationFunctions();
 
-		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
-				false);
+		scoreAverageWithoutMissingValues = calculateAverageScore();
+	}
+
+	protected double calculateAverageScore() {
+		return AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, false);
 	}
 
 	/**
