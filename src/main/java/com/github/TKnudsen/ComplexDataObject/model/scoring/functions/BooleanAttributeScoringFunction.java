@@ -24,8 +24,6 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 
 	private NormalizationFunction normalizationFunction;
 
-	private double scoreAverageWithoutMissingValues = 0.0;
-
 	/**
 	 * for serialization purposes
 	 */
@@ -103,9 +101,5 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			return 1.0;
 		return 0.0;
 	}
-
-	@Override
-	public double getAverageScoreWithoutMissingValues() {
-		return scoreAverageWithoutMissingValues;
-	}
+	
 }

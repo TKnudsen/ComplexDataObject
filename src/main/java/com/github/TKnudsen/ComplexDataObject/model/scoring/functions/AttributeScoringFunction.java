@@ -30,6 +30,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private boolean highIsGood;
 	private double weight;
 
+	protected double scoreAverageWithoutMissingValues;
+
 	@JsonIgnore
 	private Function<ComplexDataObject, Double> uncertaintyFunction = null;
 
@@ -85,8 +87,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		this.uncertaintyFunction = uncertaintyFunction;
 	}
-
-	public abstract double getAverageScoreWithoutMissingValues();
 
 	protected abstract void refreshScoringFunction();
 
@@ -205,6 +205,10 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
+	}
+
+	public double getAverageScoreWithoutMissingValues() {
+		return scoreAverageWithoutMissingValues;
 	}
 
 	public Function<ComplexDataObject, Double> getUncertaintyFunction() {

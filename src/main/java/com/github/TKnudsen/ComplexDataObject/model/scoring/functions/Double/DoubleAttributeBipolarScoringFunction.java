@@ -27,8 +27,6 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	private NormalizationFunction normalizationFunctionPositive;
 	private NormalizationFunction normalizationFunctionNegative;
 
-	private double scoreAverageAbsoluteValuesWithoutMissingValues = 0.0;
-
 	/**
 	 * for serialization purposes
 	 */
@@ -108,12 +106,8 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		return Double.NaN;
 	}
 
-	@Override
-	protected void refreshScoringFunction() {
-		super.refreshScoringFunction();
-
-		this.scoreAverageAbsoluteValuesWithoutMissingValues = AttributeScoringFunction
-				.calculateAverageScoreWithoutMissingValues(this, true);
+	protected double calculateAverageScore() {
+		return AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, true);
 	}
 
 	@Override
@@ -136,10 +130,6 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 			return -output;
 		else
 			return 1 - output;
-	}
-
-	public double getScoreAverageAbsoluteValuesWithoutMissingValues() {
-		return scoreAverageAbsoluteValuesWithoutMissingValues;
 	}
 
 }
