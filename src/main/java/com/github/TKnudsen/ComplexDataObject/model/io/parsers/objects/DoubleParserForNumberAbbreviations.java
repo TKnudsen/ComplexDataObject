@@ -1,7 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
-import java.util.Date;
-
 /**
  * <p>
  * ComplexDataObject

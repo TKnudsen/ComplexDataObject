@@ -37,8 +37,4 @@ public class ChebyshevDistance extends DoubleDistanceMeasure {
 		return "Chebyshev Distance Measure";
 	}
 
-	@Override
-	public String getDescription() {
-		return getName();
-	}
 }
