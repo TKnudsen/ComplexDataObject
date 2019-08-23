@@ -73,6 +73,12 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		initializeNormalizationFunctions();
 
 		scoreAverageWithoutMissingValues = calculateAverageScore();
+
+		Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
+		if (missingValueAvgScoreRatio == null)
+			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
+		else
+			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 	}
 
 	protected double calculateAverageScore() {
@@ -121,11 +127,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	@Override
 	public Double applyValue(Double value) {
 
-		if (value == null || Double.isNaN(value)) {
-			Double v = getScoreForMissingObjects();
-			if (v == null)
-				return scoreAverageWithoutMissingValues * 0.5;
-		}
+		if (value == null || Double.isNaN(value))
+			return getScoreForMissingObjects();
 
 		Double v = value;
 

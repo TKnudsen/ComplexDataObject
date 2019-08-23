@@ -74,15 +74,18 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
 				false);
+
+		Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
+		if (missingValueAvgScoreRatio == null)
+			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
+		else
+			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 	}
 
 	@Override
 	public Double applyValue(Boolean value) {
-		if (value == null) {
-			Double v = getScoreForMissingObjects();
-			if (v == null)
-				return scoreAverageWithoutMissingValues * 0.5;
-		}
+		if (value == null)
+			getScoreForMissingObjects();
 
 		double output = normalizationFunction.apply(boolToDouble(value)).doubleValue();
 
@@ -101,5 +104,5 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			return 1.0;
 		return 0.0;
 	}
-	
+
 }
