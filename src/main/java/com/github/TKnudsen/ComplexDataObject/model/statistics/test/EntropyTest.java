@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.github.TKnudsen.ComplexDataObject.model.statistics.Entropy;
-import com.github.TKnudsen.ComplexDataObject.model.statistics.SimpsonsIndex;
 
 /**
  * <p>
@@ -26,7 +25,7 @@ public class EntropyTest {
 		distribution.add(0.2);
 		distribution.add(0.2);
 		distribution.add(0.2);
-		distribution.add(0.1);
+		distribution.add(0.2);
 
 		System.out.println("Entropy: " + Entropy.calculateEntropy(distribution));
 	}

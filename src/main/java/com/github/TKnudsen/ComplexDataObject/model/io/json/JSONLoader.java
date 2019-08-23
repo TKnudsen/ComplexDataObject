@@ -8,8 +8,6 @@ import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributePositiveScoringFunction;
 
 /**
  * <p>

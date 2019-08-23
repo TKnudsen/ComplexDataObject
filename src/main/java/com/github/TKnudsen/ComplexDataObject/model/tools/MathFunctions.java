@@ -1,7 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

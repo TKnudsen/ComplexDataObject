@@ -35,4 +35,9 @@ public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]
 	public double dist(double[] a, double[] b) {
 		return getDistance(a, b);
 	}
+
+	@Override
+	public String getDescription() {
+		return getName();
+	}
 }

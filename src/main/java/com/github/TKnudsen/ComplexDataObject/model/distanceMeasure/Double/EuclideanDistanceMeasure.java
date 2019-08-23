@@ -43,8 +43,4 @@ public class EuclideanDistanceMeasure extends DoubleDistanceMeasure {
 		return "Euclidean Distance Measure";
 	}
 
-	@Override
-	public String getDescription() {
-		return getName();
-	}
 }
