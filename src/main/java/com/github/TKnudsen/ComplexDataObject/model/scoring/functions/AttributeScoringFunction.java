@@ -41,7 +41,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		Full, Half, None
 	}
 
-	private Double scoreForMissingObjects = null;
+	protected double scoreForMissingObjects = 0.2;
+	private Double missingValueAvgScoreRatio = null;
 
 	@JsonIgnore
 	private List<AttributeScoringChangeListener> listeners = new ArrayList<AttributeScoringChangeListener>();
@@ -101,9 +102,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		Object o = cdo.getAttribute(attribute);
 
-		Double missingValueValue = getScoreForMissingObjects();
-		if (missingValueValue == null)
-			missingValueValue = getAverageScoreWithoutMissingValues() * 0.5;
+		double missingValueValue = getScoreForMissingObjects();
 
 		if (o == null) {
 			scoresBuffer.put(cdo, missingValueValue);
@@ -192,12 +191,13 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
-	public Double getScoreForMissingObjects() {
-		return scoreForMissingObjects;
+	public Double getMissingValueAvgScoreRatio() {
+		return missingValueAvgScoreRatio;
 	}
 
-	public final void setScoreForMissingObjects(double scoreForMissingObjects) {
-		this.scoreForMissingObjects = scoreForMissingObjects;
+	public void setMissingValueAvgScoreRatio(Double missingValueAvgScoreRatio) {
+		this.missingValueAvgScoreRatio = missingValueAvgScoreRatio;
+
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
@@ -205,6 +205,10 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
+	}
+
+	public double getScoreForMissingObjects() {
+		return scoreForMissingObjects;
 	}
 
 	public double getAverageScoreWithoutMissingValues() {
@@ -216,9 +220,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	}
 
 	public double getUncertainty(ComplexDataObject cdo) {
-		Double missingValueValue = getScoreForMissingObjects();
-		if (missingValueValue == null)
-			missingValueValue = getAverageScoreWithoutMissingValues() * 0.5;
+		double missingValueValue = getScoreForMissingObjects();
 
 		Double u = missingValueValue;
 
@@ -337,4 +339,5 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	public String toString() {
 		return getAttribute();
 	}
+
 }

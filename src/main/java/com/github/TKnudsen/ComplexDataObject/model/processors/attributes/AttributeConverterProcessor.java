@@ -33,6 +33,13 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		if (attribute.equals("Gesamtverbindlichkeiten - "))
 			System.err.println("AttributeConverterProcessor: Debug Entry Point here.");
 
+		// avoid that listeners are triggered and slow down the process
+		boolean listenersActiveAccoutsForAll = true;
+		for (ComplexDataObject cdo : container) {
+			listenersActiveAccoutsForAll = cdo.isListenersActive();
+			cdo.setListenersActive(false);
+		}
+
 		Map<ComplexDataObject, Object> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
 			Object d = null;
@@ -47,6 +54,11 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		container.addAttribute(attribute, parser.getOutputClassType(), null);
 		for (ComplexDataObject cdo : container)
 			cdo.add(attribute, values.get(cdo));
+
+		// re-set the original state of the listeners
+		for (ComplexDataObject cdo : container) {
+			cdo.setListenersActive(listenersActiveAccoutsForAll);
+		}
 	}
 
 	@Override
