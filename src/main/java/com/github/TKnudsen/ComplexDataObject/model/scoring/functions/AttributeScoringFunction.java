@@ -296,7 +296,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	 */
 	public void setContainer(ComplexDataContainer container) {
 		this.container = container;
-
+		this.scoresBuffer = new HashMap<>();
+		
 		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);

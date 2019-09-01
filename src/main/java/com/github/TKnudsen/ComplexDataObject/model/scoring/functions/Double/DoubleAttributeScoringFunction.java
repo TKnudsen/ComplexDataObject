@@ -16,7 +16,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
 
-	protected Double outlierStd = 2.96;
+	protected Double outlierStd = 1.96;
 	protected Double minOutlierPruning;
 	protected Double maxOutlierPruning;
 
