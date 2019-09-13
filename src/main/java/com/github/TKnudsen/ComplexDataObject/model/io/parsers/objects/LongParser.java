@@ -43,4 +43,8 @@ public class LongParser implements IObjectParser<Long> {
 		return Long.class;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

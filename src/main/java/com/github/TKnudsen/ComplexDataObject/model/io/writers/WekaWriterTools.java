@@ -66,8 +66,11 @@ public class WekaWriterTools {
 	 * @param fileName
 	 * @throws IOException
 	 */
-	public static void writeToFile(ComplexDataContainer container, String fileName) throws IOException {
+	public static void writeToFile(ComplexDataContainer container, String fileName, String relationName)
+			throws IOException {
 		Instances instances = WekaConversion.getInstances(container);
+		instances.setRelationName(relationName);
+
 		writeToFile(instances, fileName);
 	}
 

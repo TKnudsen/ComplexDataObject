@@ -14,7 +14,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 
 public class DoubleParser implements IObjectParser<Double> {
@@ -85,6 +85,11 @@ public class DoubleParser implements IObjectParser<Double> {
 	@Override
 	public Class<Double> getOutputClassType() {
 		return Double.class;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
 	}
 
 	public boolean isDotMeansThousands() {

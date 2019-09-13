@@ -43,4 +43,8 @@ public class IntegerParser implements IObjectParser<Integer> {
 		return Integer.class;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

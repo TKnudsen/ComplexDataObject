@@ -38,6 +38,18 @@ public class ARFFWriter {
 		}
 	}
 
+	public void writeToARFF(ComplexDataContainer container, String fileNameWithoutExtension, String relationName) {
+
+		Instances instances = WekaConversion.getInstances(container);
+		instances.setRelationName(relationName);
+
+		try {
+			ARFFInstancesIO.saveARFF(instances, fileNameWithoutExtension + ".arff");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void writeToARFF(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
 			boolean stringToNominal, String fileNameWithoutExtension) {
 
