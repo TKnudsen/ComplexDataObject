@@ -61,12 +61,19 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		if (!isQuantileBased() && outlierStd != null && !Double.isNaN(outlierStd))
 			initializeOutlierTreatment(doubleValues);
 
+		truncatedValueRate = 0;
 		if (!isQuantileBased() && minOutlierPruning != null && maxOutlierPruning != null) {
 			Collection<Double> afterO = new ArrayList<>();
-			for (Double d : doubleValues)
-				afterO.add(pruneOutlier(d));
+			for (Double d : doubleValues) {
+				double truncated = truncateOutlier(d);
+				if (truncated != d)
+					truncatedValueRate++;
+				afterO.add(truncated);
+			}
 			doubleValues = afterO;
 		}
+
+		truncatedValueRate /= doubleValues.size();
 
 		initializeStatisticsSupport(doubleValues);
 
@@ -112,7 +119,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	protected abstract void initializeNormalizationFunctions();
 
-	private final double pruneOutlier(double value) {
+	private final double truncateOutlier(double value) {
 		if (minOutlierPruning == null || maxOutlierPruning == null)
 			return value;
 

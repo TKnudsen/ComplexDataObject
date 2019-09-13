@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.DataContainers;
 
@@ -64,6 +65,14 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 		primaryKeysSelectedAttributesCDOMap.remove(object.getAttribute(primaryKeyAttribute));
 
 		return super.remove(object);
+	}
+
+	public String getPrimaryKeyAttribute() {
+		return primaryKeyAttribute;
+	}
+
+	public Set<Object> primaryKeySet() {
+		return this.primaryKeysSelectedAttributesCDOMap.keySet();
 	}
 
 }

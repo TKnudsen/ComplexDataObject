@@ -19,6 +19,7 @@ import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
@@ -118,6 +119,11 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(), attribute, null, false, true,
 					1.0, uncertaintyFunction);
 			break;
+		case "String":
+			f = new DoubleAttributePositiveScoringFunction(container, new NumerificationInputDialogFunction(),
+					attribute, null, false, true, 1.0, uncertaintyFunction);
+			break;
+
 		default:
 			System.err.println(
 					"AttributeScoringModel: unsupported data type: " + container.getType(attribute).getSimpleName());
@@ -133,6 +139,15 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this,
 				attributeScoringFunction.getAttribute(), attributeScoringFunction);
+		handleAttributeScoringChangeEvent(event);
+	}
+
+	public void addAttributeScoringFunctions(List<AttributeScoringFunction<?>> attributeScoringFunctions) {
+		attributeWeightingFunctions.addAll(attributeScoringFunctions);
+		for (AttributeScoringFunction<?> attributeScoringFunction : attributeScoringFunctions)
+			attributeScoringFunction.addAttributeScoringChangeListener(this);
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, null, null);
 		handleAttributeScoringChangeEvent(event);
 	}
 

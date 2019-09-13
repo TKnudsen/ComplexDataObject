@@ -57,13 +57,6 @@ public class ARFFInstancesIO {
 	}
 
 	public static void saveARFF(Instances instances, File arffFile) throws IOException {
-		// // Variant 1:
-		// BufferedWriter writer = new BufferedWriter(new FileWriter(arffFile));
-		// writer.write(instances.toString());
-		// writer.flush();
-		// writer.close();
-
-		// Variant 2:
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(instances);
 		saver.setFile(arffFile);

@@ -31,4 +31,8 @@ public class StringParser implements IObjectParser<String> {
 		return String.class;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

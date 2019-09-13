@@ -158,4 +158,9 @@ public class DateParser implements IObjectParser<Date> {
 	public Class<Date> getOutputClassType() {
 		return Date.class;
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

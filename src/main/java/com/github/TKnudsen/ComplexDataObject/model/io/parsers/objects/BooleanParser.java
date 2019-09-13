@@ -58,4 +58,9 @@ public class BooleanParser implements IObjectParser<Boolean> {
 	public Class<Boolean> getOutputClassType() {
 		return Boolean.class;
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

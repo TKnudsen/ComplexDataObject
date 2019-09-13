@@ -31,6 +31,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private double weight;
 
 	protected double scoreAverageWithoutMissingValues;
+	
+	protected double truncatedValueRate;
 
 	@JsonIgnore
 	private Function<ComplexDataObject, Double> uncertaintyFunction = null;
@@ -297,7 +299,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	public void setContainer(ComplexDataContainer container) {
 		this.container = container;
 		this.scoresBuffer = new HashMap<>();
-		
+
 		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
@@ -341,4 +343,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return getAttribute();
 	}
 
+	public double getTruncatedValueRate() {
+		return truncatedValueRate;
+	}
 }
