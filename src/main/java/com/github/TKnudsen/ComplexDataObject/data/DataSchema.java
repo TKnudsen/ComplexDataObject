@@ -53,8 +53,9 @@ public class DataSchema {
 	 * @return
 	 */
 	public boolean contains(String attribute) {
-		return attributes.keySet().contains(attribute);
-//		return attributes.containsKey(attribute);
+		// return attributes.keySet().contains(attribute);
+		// supposed to be faster
+		return attributes.containsKey(attribute);
 	}
 
 	/**

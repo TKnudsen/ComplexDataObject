@@ -30,6 +30,14 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		if (attribute == null)
 			throw new IllegalArgumentException("AttributeConverterProcessor requires attribute definition first.");
 
+		// outer part, disabling listeners
+		boolean listenersActiveAccoutsForAll = true;
+		for (ComplexDataObject cdo : container) {
+			listenersActiveAccoutsForAll = cdo.isListenersActive();
+			cdo.setListenersActive(false);
+		}
+
+		// inner part, after having disabled listeners
 		Map<ComplexDataObject, Object> values = new HashMap<>();
 		for (ComplexDataObject cdo : container) {
 			Object d = cdo.getAttribute(attribute);
@@ -47,6 +55,11 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		// add converted data
 		for (ComplexDataObject cdo : container)
 			cdo.add(attribute, values.get(cdo));
+
+		// outer part, redefining listener state
+		for (ComplexDataObject cdo : container) {
+			cdo.setListenersActive(listenersActiveAccoutsForAll);
+		}
 	}
 
 	@Override
@@ -54,6 +67,14 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 		if (attribute == null)
 			throw new IllegalArgumentException("AttributeConverterProcessor requires attribute definition first.");
 
+		// outer part, disabling listeners
+		boolean listenersActiveAccoutsForAll = true;
+		for (ComplexDataObject cdo : data) {
+			listenersActiveAccoutsForAll = cdo.isListenersActive();
+			cdo.setListenersActive(false);
+		}
+
+		// inner part, after having disabled listeners
 		for (ComplexDataObject cdo : data) {
 			Object d = null;
 
@@ -61,6 +82,11 @@ public class AttributeConverterProcessor implements IComplexDataObjectProcessor 
 				d = parser.apply(cdo.getAttribute(attribute));
 
 			cdo.add(attribute, d);
+		}
+
+		// outer part, redefining listener state
+		for (ComplexDataObject cdo : data) {
+			cdo.setListenersActive(listenersActiveAccoutsForAll);
 		}
 	}
 

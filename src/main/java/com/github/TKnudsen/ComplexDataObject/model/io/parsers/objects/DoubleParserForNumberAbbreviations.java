@@ -45,7 +45,7 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 			s = s.substring(0, s.indexOf("Billion")).trim();
 			multiply = 1000000000;
 		} else if (s.endsWith("B")) {
-			s = s.substring(0, s.length() - 2).trim();
+			s = s.substring(0, s.length() - 1).trim();
 			multiply = 1000000000;
 		} else if (s.contains("Mio")) {
 			s = s.substring(0, s.indexOf("Mio")).trim();
@@ -54,13 +54,13 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 			s = s.substring(0, s.indexOf("Million")).trim();
 			multiply = 1000000;
 		} else if (s.endsWith("M")) {
-			s = s.substring(0, s.length() - 2).trim();
+			s = s.substring(0, s.length() - 1).trim();
 			multiply = 1000000;
 		} else if (s.endsWith("K") && s.length() > 1) {
-			s = s.substring(0, s.length() - 2).trim();
+			s = s.substring(0, s.length() - 1).trim();
 			multiply = 1000;
 		} else if (s.endsWith("k") && s.length() > 1) {
-			s = s.substring(0, s.length() - 2).trim();
+			s = s.substring(0, s.length() - 1).trim();
 			multiply = 1000;
 		}
 

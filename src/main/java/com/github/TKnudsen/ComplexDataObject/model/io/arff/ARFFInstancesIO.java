@@ -74,6 +74,10 @@ public class ARFFInstancesIO {
 		// e.printStackTrace();
 		// }
 
+		File parentDir = new File(fileNameWithArffExtension).getParentFile();
+		if (!parentDir.exists())
+			parentDir.mkdirs();
+
 		BufferedWriter writer = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(fileNameWithArffExtension), "UTF8"));
 		writer.write(instances.toString());
