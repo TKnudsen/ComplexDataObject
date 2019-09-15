@@ -31,7 +31,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private double weight;
 
 	protected double scoreAverageWithoutMissingValues;
-	
+
 	protected double truncatedValueRate;
 
 	@JsonIgnore
@@ -154,9 +154,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setAbbreviation(String abbreviation) {
 		this.abbreviation = abbreviation;
-
-		// not necessarily needed but consistent
-//		refreshScoringFunction();
 
 		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
 

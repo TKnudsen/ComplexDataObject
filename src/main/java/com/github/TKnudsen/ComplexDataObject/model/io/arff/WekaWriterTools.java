@@ -1,6 +1,5 @@
-package com.github.TKnudsen.ComplexDataObject.model.io.writers;
+package com.github.TKnudsen.ComplexDataObject.model.io.arff;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +9,6 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
 
 import weka.core.Instances;
-import weka.core.converters.ArffSaver;
 
 /**
  * <p>
@@ -34,19 +32,27 @@ public class WekaWriterTools {
 	 * simple Weka writer routine. Inspired by Weka's tutorial:
 	 * https://weka.wikispaces.com/Save+Instances+to+an+ARFF+File
 	 * 
+	 * TODO get rid of this extra class. use ARFWriter instead
+	 * 
 	 * @param instances
 	 * @param fileName
 	 * @throws IOException
 	 */
-	public static void writeToFile(ComplexDataObject object, String fileName) throws IOException {
+	public static void writeToFile(ComplexDataObject object, String fileName, String relationName) throws IOException {
 		ComplexDataContainer container = new ComplexDataContainer(Arrays.asList(object));
 		Instances instances = WekaConversion.getInstances(container);
-		writeToFile(instances, fileName);
+
+		if (relationName != null)
+			instances.setRelationName(relationName);
+
+		ARFFInstancesIO.saveARFF(instances, fileName);
 	}
 
 	/**
 	 * simple Weka writer routine. Inspired by Weka's tutorial:
 	 * https://weka.wikispaces.com/Save+Instances+to+an+ARFF+File
+	 * 
+	 * TODO get rid of this extra class. use ARFWriter instead
 	 * 
 	 * @param instances
 	 * @param fileName
@@ -55,12 +61,14 @@ public class WekaWriterTools {
 	public static void writeToFile(List<ComplexDataObject> objects, String fileName) throws IOException {
 		ComplexDataContainer container = new ComplexDataContainer(objects);
 		Instances instances = WekaConversion.getInstances(container);
-		writeToFile(instances, fileName);
+		ARFFInstancesIO.saveARFF(instances, fileName);
 	}
 
 	/**
 	 * simple Weka writer routine. Inspired by Weka's tutorial:
 	 * https://weka.wikispaces.com/Save+Instances+to+an+ARFF+File
+	 * 
+	 * TODO get rid of this extra class. use ARFWriter instead
 	 * 
 	 * @param container
 	 * @param fileName
@@ -69,28 +77,11 @@ public class WekaWriterTools {
 	public static void writeToFile(ComplexDataContainer container, String fileName, String relationName)
 			throws IOException {
 		Instances instances = WekaConversion.getInstances(container);
-		instances.setRelationName(relationName);
 
-		writeToFile(instances, fileName);
+		if (relationName != null)
+			instances.setRelationName(relationName);
+
+		ARFFInstancesIO.saveARFF(instances, fileName);
 	}
 
-	/**
-	 * simple Weka writer routine. Inspired by Weka's tutorial:
-	 * https://weka.wikispaces.com/Save+Instances+to+an+ARFF+File
-	 * 
-	 * @param instances
-	 * @param fileName
-	 * @throws IOException
-	 */
-	public static void writeToFile(Instances instances, String fileName) throws IOException {
-		if (fileName == null)
-			throw new IllegalArgumentException("WekaWriterTools.writeToFile: file was null.");
-
-		File file = new File(fileName);
-
-		ArffSaver saver = new ArffSaver();
-		saver.setInstances(instances);
-		saver.setFile(file);
-		saver.writeBatch();
-	}
 }

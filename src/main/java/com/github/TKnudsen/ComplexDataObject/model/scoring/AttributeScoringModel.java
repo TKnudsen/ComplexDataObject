@@ -109,9 +109,6 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 					uncertaintyFunction);
 			break;
 		case "Double":
-			// TODO decide whether or not a bipolar scoring function shall be defined
-//			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(), attribute, null, false, true, 1.0,
-//					uncertaintyFunction);
 			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(), attribute, null, false, true,
 					1.0, uncertaintyFunction);
 			break;
