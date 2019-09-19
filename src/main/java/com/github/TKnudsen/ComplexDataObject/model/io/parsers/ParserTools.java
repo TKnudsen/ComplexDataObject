@@ -179,14 +179,6 @@ public abstract class ParserTools implements Serializable {
 		return rows;
 	}
 
-	public static boolean hasFloatingPointValues(double[] values) {
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] != Math.floor(values[i]))
-				return true;
-		}
-		return false;
-	}
-
 	/**
 	 * assigns an identifier and an object to an Entry.
 	 * 

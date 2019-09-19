@@ -1,16 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.arff;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
+import weka.core.converters.ConverterUtils.DataSink;
 
 /**
  * <p>
@@ -63,26 +61,14 @@ public class ARFFInstancesIO {
 	 * @throws IOException
 	 */
 	public static void saveARFF(Instances instances, String fileNameWithArffExtension) throws IOException {
-		// unable to avoid UTF8 char encoding problem with this strategy
 		// saveARFF(instances, new File(fileNameWithArffExtension));
 
-		// unable to avoid UTF8 char encoding problem with this strategy
-		// try {
-		// DataSink.write(fileName, instances);
-		// } catch (Exception e) {
-		// System.err.println("Failed to save data to: " + fileName);
-		// e.printStackTrace();
-		// }
-
-		File parentDir = new File(fileNameWithArffExtension).getParentFile();
-		if (!parentDir.exists())
-			parentDir.mkdirs();
-
-		BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(fileNameWithArffExtension), "UTF8"));
-		writer.write(instances.toString());
-		writer.flush();
-		writer.close();
+		try {
+			DataSink.write(fileNameWithArffExtension, instances);
+		} catch (Exception e) {
+			System.err.println("Failed to save data to: " + fileNameWithArffExtension);
+			e.printStackTrace();
+		}
 	}
 
 	public static void saveARFF(Instances instances, File arffFile) throws IOException {

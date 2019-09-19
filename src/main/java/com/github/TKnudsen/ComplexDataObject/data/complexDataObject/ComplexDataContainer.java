@@ -59,10 +59,15 @@ public class ComplexDataContainer extends DataContainer<ComplexDataObject> imple
 
 	@Override
 	public void attributeValueChanged(ComplexDataObject cdo, String attribute) {
+		// extend schema if attribute does not exist and meaningful(value !=null)
+		if (!dataSchema.contains(attribute) && cdo.getAttribute(attribute) != null)
+			extendDataSchema(cdo);
+
+		// update attribute
 		if (attributeValues.get(attribute) != null)
 			this.attributeValues.get(attribute).put(cdo.getID(), cdo.getAttribute(attribute));
 		else
-			extendDataSchema(cdo);
+			calculateEntities(attribute);
 	}
 
 	@Override
