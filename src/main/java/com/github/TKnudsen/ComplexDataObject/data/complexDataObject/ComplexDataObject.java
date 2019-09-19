@@ -31,14 +31,6 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	protected String description;
 
 	@JsonIgnore
-	/**
-	 * can be used to trigger a data container and a corresponding data schema to be
-	 * sensitive to changes made to the complex data object. false by default, as it
-	 * is quite time-consuming to apply requests to the schema
-	 */
-	private boolean listenersActive = true;
-
-	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
 
 	public ComplexDataObject() {
@@ -139,26 +131,13 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	private final void fireAttributeValueChanged(String attribute) {
-		if (!listenersActive || listeners.isEmpty())
-			return;
-
 		for (IComplexDataObjectListener listener : listeners)
 			listener.attributeValueChanged(this, attribute);
 	}
 
 	private final void fireAttributeRemoved(String attribute) {
-		if (!listenersActive || listeners.isEmpty())
-			return;
-
 		for (IComplexDataObjectListener listener : listeners)
 			listener.attributeRemoved(this, attribute);
 	}
 
-	public boolean isListenersActive() {
-		return listenersActive;
-	}
-
-	public void setListenersActive(boolean listenersActive) {
-		this.listenersActive = listenersActive;
-	}
 }

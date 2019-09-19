@@ -473,4 +473,19 @@ public class MathFunctions {
 
 		return false;
 	}
+
+	/**
+	 * determines whether or not the given double array contains floating point
+	 * values
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static boolean hasFloatingPointValues(double[] values) {
+		for (int i = 0; i < values.length; i++) {
+			if (values[i] != Math.floor(values[i]))
+				return true;
+		}
+		return false;
+	}
 }

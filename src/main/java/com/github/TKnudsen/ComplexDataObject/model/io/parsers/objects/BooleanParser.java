@@ -23,6 +23,12 @@ public class BooleanParser implements IObjectParser<Boolean> {
 		if (object instanceof Boolean)
 			return new Boolean((boolean) object);
 
+		if (object instanceof Integer)
+			if ((Integer) object == 0)
+				return Boolean.FALSE;
+			else if ((Integer) object == 1)
+				return Boolean.TRUE;
+
 		final String stringRepresentation = String.valueOf(object).toLowerCase();
 		switch (stringRepresentation) {
 		case "false":

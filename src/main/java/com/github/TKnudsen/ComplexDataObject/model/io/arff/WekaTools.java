@@ -13,6 +13,7 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -226,7 +227,7 @@ public class WekaTools {
 		AttributeType type;
 		if (attribute.isNumeric()) {
 			// determine if attribute is numeric or ordinal
-			if (ParserTools.hasFloatingPointValues(instances.attributeToDoubleArray(index(instances, attribute))))
+			if (MathFunctions.hasFloatingPointValues(instances.attributeToDoubleArray(attribute.index())))
 				type = AttributeType.NUMERIC;
 			else
 				type = AttributeType.ORDINAL;
@@ -253,13 +254,6 @@ public class WekaTools {
 				type = AttributeType.CATEGORICAL;
 		}
 		return type;
-	}
-
-	private static int index(Instances instances, Attribute att) {
-		for (int i = 0; i < instances.numAttributes(); i++)
-			if (instances.attribute(i).equals(att))
-				return i;
-		throw new IndexOutOfBoundsException("Attribut nicht vorhanden! Oder: equals checken ;-)");
 	}
 
 }

@@ -19,11 +19,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
@@ -177,16 +177,18 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public Map<Long, Object> getAttributeValues(String attribute) {
-		if (attributeValues.get(attribute) == null) {
-			calculateEntities(attribute);
-		}
+		// no need. attributeValues should always be in sync with the
+		// ComplexDataObjects. In inheriting classes, this can, e.g., be ensured with
+		// listener concept to track modifications in ComplexDataObjects.
+
+		// if (attributeValues.get(attribute) == null) {
+		// calculateEntities(attribute);
+		// }
+
 		return attributeValues.get(attribute);
 	}
 
 	public Class<?> getType(String attribute) {
-		if (attributeValues.get(attribute) == null) {
-			calculateEntities(attribute);
-		}
 		return dataSchema.getAttributeEntry(attribute).getType();
 	}
 
@@ -208,7 +210,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return dataSchema.contains(attribute);
 	}
 
-	private void calculateEntities(String attribute) {
+	protected void calculateEntities(String attribute) {
 		Map<Long, Object> ent = new HashMap<Long, Object>();
 
 		Iterator<T> iterator = iterator();
