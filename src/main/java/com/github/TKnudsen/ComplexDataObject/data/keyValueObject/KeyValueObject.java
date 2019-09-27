@@ -22,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2018
+ * Copyright: Copyright (c) 2015-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 
 public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String> {
@@ -156,12 +156,12 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	private String toLineString(String attribute) {
-		if (attributes.get(attribute) == null)
-			return "";
+		String output = "Attribute: " + attribute + "\t";
 
-		String output = "";
-		output += ("Attribute: " + attribute + "\t" + "Type: " + attributes.get(attribute).getClass() + "\t" + "Value: "
-				+ attributes.get(attribute));
+		if (attributes.get(attribute) == null)
+			output += ("Type: unknown\tValue: null");
+		else
+			output += ("Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
 		return output;
 	}
 }

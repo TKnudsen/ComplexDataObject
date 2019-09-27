@@ -49,6 +49,9 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 	 */
 	public Ranking<EntryWithComparableKey<Double, ComplexDataObject>> calculateRanking(ComplexDataContainer container) {
 
+		if (container == null)
+			return null;
+		
 		Ranking<EntryWithComparableKey<Double, ComplexDataObject>> cdoRanking = new Ranking<>();
 
 		for (ComplexDataObject cdo : container) {

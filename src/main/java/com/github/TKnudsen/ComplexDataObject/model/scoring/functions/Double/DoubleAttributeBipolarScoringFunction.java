@@ -107,7 +107,12 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	}
 
 	protected double calculateAverageScore() {
-		return AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, true);
+		double score = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, true);
+
+		if (Double.isNaN(score))
+			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
+
+		return score;
 	}
 
 	@Override

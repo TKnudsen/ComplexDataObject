@@ -107,6 +107,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		double missingValueValue = getScoreForMissingObjects();
 
 		if (o == null) {
+			if (Double.isNaN(missingValueValue))
+				System.err.println(this.getClass().getSimpleName() + ": NaN value inserted in the scoresBuffer!");
 			scoresBuffer.put(cdo, missingValueValue);
 			return missingValueValue;
 		}
@@ -130,10 +132,14 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 				if (uncertaintyConsideration.equals(UncertaintyConsideration.Half))
 					sFinal = s * (1 - u * 0.5);
 
+				if (Double.isNaN(sFinal))
+					System.err.println(this.getClass().getSimpleName() + ": NaN value inserted in the scoresBuffer!");
 				scoresBuffer.put(cdo, sFinal);
 				return sFinal;
 			}
 
+		if (Double.isNaN(s))
+			System.err.println(this.getClass().getSimpleName() + ": NaN value inserted in the scoresBuffer!");
 		scoresBuffer.put(cdo, s);
 		return s;
 	}
@@ -330,6 +336,9 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 			else
 				scores.add(function.apply(cdo));
 		}
+
+		if (scores.isEmpty())
+			return 0.0;
 
 		StatisticsSupport statistics = new StatisticsSupport(scores);
 		return statistics.getMean();

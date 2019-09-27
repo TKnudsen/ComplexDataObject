@@ -75,8 +75,12 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
 				false);
 
+		if (Double.isNaN(scoreAverageWithoutMissingValues))
+			System.err.println(
+					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");
+
 		Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
-		if (missingValueAvgScoreRatio == null)
+		if (missingValueAvgScoreRatio == null || Double.isNaN(missingValueAvgScoreRatio))
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
 		else
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;

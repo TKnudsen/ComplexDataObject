@@ -32,6 +32,9 @@ public class AttributeRemover implements IComplexDataObjectProcessor {
 
 	@Override
 	public void process(ComplexDataContainer container) {
+		if (container == null)
+			return;
+
 		container.remove(attributeString);
 	}
 

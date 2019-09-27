@@ -82,8 +82,10 @@ public class WekaConversion {
 			attributeMap.put(string, a);
 		}
 
-		Instances instances = new Instances("ComplexDataContainer " + container.toString(),
-				(ArrayList<Attribute>) attrs, container.size());
+		String shortString = container.toString();
+		if (shortString.contains("\n"))
+			shortString = shortString.substring(0, shortString.indexOf("\n")).trim();
+		Instances instances = new Instances(shortString, (ArrayList<Attribute>) attrs, container.size());
 
 		// create instance objects
 		for (ComplexDataObject cdo : container) {
@@ -99,21 +101,18 @@ public class WekaConversion {
 				Attribute attribute = attributeMap.get(attName);
 
 				Object value = cdo.getAttribute(attName);
-				if (container.isNumeric(attName)) {
+				if (value == null)
+					instance.setMissing(attribute);
+				else if (container.isNumeric(attName)) {
 					if (value != null)
 						instance.setValue(attribute, ((Number) value).doubleValue());
-					else
-						instance.setMissing(attribute);
 				} else if (container.isBoolean(attName)) {
 					if (value != null) {
 						Integer i = ((Boolean) value).booleanValue() ? 1 : 0;
 						instance.setValue(attribute, ((Number) i).doubleValue());
-					} else
-						instance.setMissing(attribute);
+					}
 				} else if (value != null)
 					instance.setValue(attribute, value.toString());
-				else
-					instance.setMissing(attribute);
 			}
 
 			Attribute nameAttribute = attributeMap.get("Name");

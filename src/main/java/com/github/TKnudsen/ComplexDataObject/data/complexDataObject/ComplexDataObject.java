@@ -23,34 +23,58 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.07
+ * @version 1.08
  */
 public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
 
-	protected String name;
-	protected String description;
+//	protected String name;
+//	protected String description;
 
 	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
 
 	public ComplexDataObject() {
 		super();
+
+		// attribute schema will identify attributes as String
+		add("Name", "no name");
+		add("Description", "no description");
 	}
 
 	public ComplexDataObject(long ID) {
 		super(ID);
+
+		// attribute schema will identify attributes as String
+		add("Name", "no name");
+		add("Description", "no description");
 	}
 
 	public ComplexDataObject(String name, String description) {
 		super();
-		this.name = name;
-		this.description = description;
+
+//		this.name = name;
+//		this.description = description;
+
+		// attribute schema will characterize attributes as String
+		add("Name", "no name");
+		add("Description", "no description");
+
+		setName(name);
+		setDescription(description);
 	}
 
 	public ComplexDataObject(Long ID, String name, String description) {
 		super(ID);
-		this.name = name;
-		this.description = description;
+
+//		this.name = name;
+//		this.description = description;
+
+		// attribute schema will characterize attributes as String
+		add("Name", "no name");
+		add("Description", "no description");
+
+		setName(name);
+		setDescription(description);
 	}
 
 	public String toStringInLine() {
@@ -61,30 +85,45 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	@Override
+	public String toString() {
+		String output = "Name: " + getName() + "\n";
+		output += super.toString();
+
+		return output;
+	}
+
+	@Override
 	public String getName() {
-		if (name != null)
-			return name;
+//		if (name != null)
+//			return name;
 
 		if (getAttribute("Name") != null)
 			return getAttribute("Name").toString();
 
-		return "no name available";
+		return String.valueOf(getID());
 	}
 
 	public void setName(String name) {
-		this.name = name;
+//		this.name = name;
+
+		this.add("Name", name);
 	}
 
 	@Override
 	public String getDescription() {
-		if (description != null)
-			return description;
+//		if (description != null)
+//			return description;
 
-		return "no description";
+		if (getAttribute("Description") != null)
+			return getAttribute("Description").toString();
+
+		return "no description for " + getName();
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+//		this.description = description;
+
+		this.add("Description", description);
 	}
 
 	@Override

@@ -20,11 +20,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class DataSchema {
 	private final String name;
@@ -81,16 +81,20 @@ public class DataSchema {
 
 	@Override
 	public String toString() {
-		String output = "";
+		String output = "DataSchema with " + attributes.size() + " attributes\n";
+
 		for (String key : attributes.keySet())
-			output += (key + ": " + attributes.get(key) + "\n");
+			output += (attributes.get(key) + "\n");
+
 		return output;
 	}
 
 	public String toStringInLine() {
 		String output = "";
+
 		for (String key : attributes.keySet())
 			output += (key + attributes.get(key).toString() + "/t");
+
 		return output;
 	}
 

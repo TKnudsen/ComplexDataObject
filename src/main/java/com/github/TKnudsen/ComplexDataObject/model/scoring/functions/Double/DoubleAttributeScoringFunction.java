@@ -81,15 +81,24 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		scoreAverageWithoutMissingValues = calculateAverageScore();
 
+		if (Double.isNaN(scoreAverageWithoutMissingValues))
+			System.err.println(
+					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");
+
 		Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
-		if (missingValueAvgScoreRatio == null)
+		if (missingValueAvgScoreRatio == null || Double.isNaN(missingValueAvgScoreRatio))
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
 		else
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 	}
 
 	protected double calculateAverageScore() {
-		return AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, false);
+		double score = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, false);
+
+		if (Double.isNaN(score))
+			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
+
+		return score;
 	}
 
 	/**
