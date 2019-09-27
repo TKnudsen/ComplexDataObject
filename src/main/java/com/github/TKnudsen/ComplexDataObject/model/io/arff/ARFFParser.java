@@ -78,11 +78,15 @@ public class ARFFParser implements ComplexDataObjectParser {
 				} else
 					throw new NullArgumentException();
 
-				if (complexDataObject.getAttribute("Name") != null)
+				if (complexDataObject.getAttribute("Name") != null) {
 					complexDataObject.setName(complexDataObject.getAttribute("Name").toString());
+//					complexDataObject.removeAttribute("Name");
+				}
 
-				if (complexDataObject.getAttribute("Description") != null)
+				if (complexDataObject.getAttribute("Description") != null) {
 					complexDataObject.setDescription(complexDataObject.getAttribute("Description").toString());
+//					complexDataObject.removeAttribute("Description");
+				}
 
 			}
 			data.add(complexDataObject);
