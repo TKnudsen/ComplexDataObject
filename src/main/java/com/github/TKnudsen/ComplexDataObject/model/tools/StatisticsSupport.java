@@ -32,7 +32,7 @@ import com.google.common.primitives.Doubles;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2018
+ * Copyright: Copyright (c) 2012-2019
  * </p>
  * 
  * @author Juergen Bernard
@@ -115,8 +115,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 
 	/**
 	 * 
-	 * @param quantile
-	 *            the median is called by typing 50.0, not by 0.5!
+	 * @param quantile the median is called by typing 50.0, not by 0.5!
 	 * @return
 	 */
 	public double[] getOutliers(double quantile) {
@@ -181,7 +180,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 	public double getMin() {
 		return super.getMin();
 	}
-	
+
 	/**
 	 * Must be between 0 and 100
 	 * 
@@ -240,8 +239,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 	 * Predicts if a given variable is discrete by examining the ratio
 	 * #uniques/#elements.
 	 * 
-	 * @param percent
-	 *            the variable which values are checked.
+	 * @param percent the variable which values are checked.
 	 * @return true if the ratio is smaller than the given parameter (0.01 means
 	 *         1%).
 	 */
@@ -258,4 +256,27 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 		return Doubles.asList(getValues()).iterator();
 	}
 
+	/**
+	 * Calculates the Entropy for the value distribution. Should only be applied for
+	 * positive values. Negative values will be inverted.
+	 * 
+	 * @return
+	 */
+	public double getEntropy() {
+		if (getCount() == 0)
+			return 0;
+
+		double entropy = 0.0;
+		for (Iterator<Double> iter = iterator(); iter.hasNext();) {
+			Double d = iter.next();
+			if (d > 0)
+				entropy -= (d * Math.log(d));
+			else if (d < 0)
+				entropy -= (Math.abs(d) * Math.log(Math.abs(d)));
+		}
+
+		entropy /= Math.log(2.0);
+
+		return entropy;
+	}
 }
