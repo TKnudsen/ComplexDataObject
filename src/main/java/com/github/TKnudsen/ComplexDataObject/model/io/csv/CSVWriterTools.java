@@ -23,7 +23,7 @@ import java.util.List;
  * @author Juergen Bernard
  * @version 1.01
  */
-public class CVSWriterTools {
+public class CSVWriterTools {
 
 	private static final char SEPARATOR = ',';
 
