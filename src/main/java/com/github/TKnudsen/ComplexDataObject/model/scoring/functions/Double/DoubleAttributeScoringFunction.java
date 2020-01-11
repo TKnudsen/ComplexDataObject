@@ -8,13 +8,14 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
+
+	private Double preFilterOutlierStd = 10.0;
 
 	protected Double outlierStd = 1.96;
 	protected Double minOutlierPruning;
@@ -27,8 +28,9 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		super();
 	}
 
-	public DoubleAttributeScoringFunction(ComplexDataContainer container, String attribute) {
-		this(container, new DoubleParser(), attribute, null, false, true, 1.0, null);
+	public DoubleAttributeScoringFunction(ComplexDataContainer container, String attribute,
+			IObjectParser<Double> parser) {
+		this(container, parser, attribute, null, false, true, 1.0, null);
 	}
 
 	public DoubleAttributeScoringFunction(ComplexDataContainer container, IObjectParser<Double> parser,
@@ -110,10 +112,29 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	 */
 	protected final void initializeOutlierTreatment(Collection<Double> doubleValues) {
 
+		// two-step process. first: remove crappy values from distribution.
 		StatisticsSupport statisticsSupport = new StatisticsSupport(doubleValues);
-
 		double mean = statisticsSupport.getMean();
 		double standardDeviation = statisticsSupport.getStandardDeviation();
+
+		if (mean - 10.0 * standardDeviation > statisticsSupport.getMin()
+				|| mean + 10.0 * standardDeviation < statisticsSupport.getMax()) {
+
+			Collection<Double> clampedValues = new ArrayList<>();
+
+			for (Double d : doubleValues)
+				if (mean - preFilterOutlierStd * standardDeviation < d
+						&& mean + preFilterOutlierStd * standardDeviation > d)
+					clampedValues.add(d);
+
+			statisticsSupport = new StatisticsSupport(clampedValues);
+		}
+
+		// two-step process. second: calculate statistics with remaining values and
+		// define min and max crop level
+
+		mean = statisticsSupport.getMean();
+		standardDeviation = statisticsSupport.getStandardDeviation();
 		double min = statisticsSupport.getMin();
 		double max = statisticsSupport.getMax();
 

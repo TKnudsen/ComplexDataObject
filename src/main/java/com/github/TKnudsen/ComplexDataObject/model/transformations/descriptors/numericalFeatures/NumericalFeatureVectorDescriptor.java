@@ -10,6 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 
@@ -28,11 +29,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
-	DoubleParser DoubleParser = new DoubleParser();
+	private IObjectParser<Double> doubleParser = new DoubleParser(false);
 
 	@Override
 	public List<NumericalFeatureVector> transform(ComplexDataObject input) {
@@ -59,7 +60,7 @@ public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDe
 
 			for (String attribute : container.getAttributeNames()) {
 				if (container.isNumeric(attribute)) {
-					Double d = DoubleParser.apply(cdo.getAttribute(attribute));
+					Double d = doubleParser.apply(cdo.getAttribute(attribute));
 					NumericalFeature feature = new NumericalFeature(attribute, d);
 					features.add(feature);
 				}
@@ -95,6 +96,14 @@ public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDe
 	@Override
 	public DataTransformationCategory getDataTransformationCategory() {
 		return DataTransformationCategory.DESCRIPTOR;
+	}
+
+	public IObjectParser<Double> getDoubleParser() {
+		return doubleParser;
+	}
+
+	public void setDoubleParser(IObjectParser<Double> doubleParser) {
+		this.doubleParser = doubleParser;
 	}
 
 }

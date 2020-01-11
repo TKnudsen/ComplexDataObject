@@ -8,7 +8,16 @@ import javax.swing.JOptionPane;
 public class NumerificationInputDialogFunction implements IObjectParser<Double> {
 
 	private Map<Object, Double> numerificationLookup = new HashMap<Object, Double>();
-	private DoubleParser doubleParser = new DoubleParser();
+	private DoubleParser doubleParser;
+
+	@SuppressWarnings("unused")
+	private NumerificationInputDialogFunction() {
+		this(false);
+	}
+
+	public NumerificationInputDialogFunction(boolean dotMeansThousands) {
+		doubleParser = new DoubleParser(dotMeansThousands);
+	}
 
 	@Override
 	public Double apply(Object t) {

@@ -6,7 +6,6 @@ import java.util.function.Function;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
@@ -28,8 +27,9 @@ public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScori
 		super();
 	}
 
-	public DoubleAttributePositiveScoringFunction(ComplexDataContainer container, String attribute) {
-		this(container, new DoubleParser(), attribute, null, false, true, 1.0, null);
+	public DoubleAttributePositiveScoringFunction(ComplexDataContainer container, String attribute,
+			IObjectParser<Double> parser) {
+		this(container, parser, attribute, null, false, true, 1.0, null);
 	}
 
 	public DoubleAttributePositiveScoringFunction(ComplexDataContainer container, IObjectParser<Double> parser,

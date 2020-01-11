@@ -13,11 +13,11 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoublePars
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017-2018
+ * Copyright: Copyright (c) 2017-2019
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class AttributeDivision implements IComplexDataObjectProcessor {
 
@@ -25,12 +25,18 @@ public class AttributeDivision implements IComplexDataObjectProcessor {
 	private final String divisor;
 	private final String targetAttributeName;
 
-	private DoubleParser doubleParser = new DoubleParser();
+	private final DoubleParser doubleParser;
 
 	public AttributeDivision(String dividend, String divisor, String targetAttributeName) {
+		this(dividend, divisor, targetAttributeName, false);
+	}
+
+	public AttributeDivision(String dividend, String divisor, String targetAttributeName, boolean dotMeansThousands) {
 		this.dividend = dividend;
 		this.divisor = divisor;
 		this.targetAttributeName = targetAttributeName;
+
+		doubleParser = new DoubleParser(dotMeansThousands);
 	}
 
 	@Override

@@ -19,9 +19,17 @@ import java.util.Locale;
 
 public class DoubleParser implements IObjectParser<Double> {
 
-	private boolean dotMeansThousands = true;
+	private boolean dotMeansThousands;
 
 	private boolean printStackTrace = false;
+
+	public DoubleParser() {
+		this(false);
+	}
+
+	public DoubleParser(boolean dotMeansThousands) {
+		this.dotMeansThousands = dotMeansThousands;
+	}
 
 	@Override
 	public Double apply(Object object) {
