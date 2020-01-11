@@ -21,6 +21,10 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  */
 public class DoubleParserForNumberAbbreviations extends DoubleParser {
 
+	public DoubleParserForNumberAbbreviations(boolean dotMeansThousands) {
+		super(dotMeansThousands);
+	}
+
 	@Override
 	public Double apply(Object object) {
 		if (object == null)

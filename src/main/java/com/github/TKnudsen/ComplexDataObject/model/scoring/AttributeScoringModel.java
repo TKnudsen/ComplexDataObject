@@ -112,15 +112,15 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 					uncertaintyFunction);
 			break;
 		case "Double":
-			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(), attribute, null, false, true,
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false, true,
 					1.0, uncertaintyFunction);
 			break;
 		case "Integer":
-			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(), attribute, null, false, true,
+			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false, true,
 					1.0, uncertaintyFunction);
 			break;
 		case "String":
-			f = new DoubleAttributePositiveScoringFunction(container, new NumerificationInputDialogFunction(),
+			f = new DoubleAttributePositiveScoringFunction(container, new NumerificationInputDialogFunction(true),
 					attribute, null, false, true, 1.0, uncertaintyFunction);
 			break;
 

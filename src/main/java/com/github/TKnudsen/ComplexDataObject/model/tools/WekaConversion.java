@@ -45,7 +45,7 @@ import weka.core.Instances;
  */
 public class WekaConversion {
 
-	private static DoubleParser doubleParser = new DoubleParser();
+	private static DoubleParser doubleParser = new DoubleParser(false);
 
 	public static Instances getInstances(ComplexDataContainer container) {
 		if (container == null)

@@ -7,7 +7,6 @@ import java.util.function.Function;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
@@ -35,8 +34,9 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		super();
 	}
 
-	public DoubleAttributeBipolarScoringFunction(ComplexDataContainer container, String attribute) {
-		this(container, new DoubleParser(), attribute, null, false, true, 1.0, null);
+	public DoubleAttributeBipolarScoringFunction(ComplexDataContainer container, String attribute,
+			IObjectParser<Double> parser) {
+		this(container, parser, attribute, null, false, true, 1.0, null);
 	}
 
 	public DoubleAttributeBipolarScoringFunction(ComplexDataContainer container, IObjectParser<Double> parser,
