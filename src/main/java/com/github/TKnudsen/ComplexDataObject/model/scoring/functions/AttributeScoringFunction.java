@@ -33,6 +33,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	protected double scoreAverageWithoutMissingValues;
 
 	protected double truncatedValueRate;
+	protected double truncatedValueRateTop;
 
 	@JsonIgnore
 	private Function<ComplexDataObject, Double> uncertaintyFunction = null;
@@ -351,5 +352,13 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public double getTruncatedValueRate() {
 		return truncatedValueRate;
+	}
+
+	public double getTruncatedValueRateTop() {
+		return truncatedValueRateTop;
+	}
+
+	public void setTruncatedValueRateTop(double truncatedValueRateTop) {
+		this.truncatedValueRateTop = truncatedValueRateTop;
 	}
 }

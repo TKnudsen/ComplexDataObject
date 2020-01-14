@@ -18,6 +18,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	private Double preFilterOutlierStd = 10.0;
 
 	protected Double outlierStd = 1.96;
+	protected Double outlierStdTop = 1.96;
 	protected Double minOutlierPruning;
 	protected Double maxOutlierPruning;
 
@@ -60,22 +61,28 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 				doubleValues.add(value);
 		}
 
-		if (!isQuantileBased() && outlierStd != null && !Double.isNaN(outlierStd))
+		if (!isQuantileBased() && outlierStd != null && !Double.isNaN(outlierStd) && outlierStdTop != null
+				&& !Double.isNaN(outlierStdTop))
 			initializeOutlierTreatment(doubleValues);
 
 		truncatedValueRate = 0;
+		truncatedValueRateTop = 0;
 		if (!isQuantileBased() && minOutlierPruning != null && maxOutlierPruning != null) {
 			Collection<Double> afterO = new ArrayList<>();
 			for (Double d : doubleValues) {
 				double truncated = truncateOutlier(d);
-				if (truncated != d)
+				if (truncated != d) {
 					truncatedValueRate++;
+					if (d > maxOutlierPruning)
+						truncatedValueRateTop++;
+				}
 				afterO.add(truncated);
 			}
 			doubleValues = afterO;
 		}
 
 		truncatedValueRate /= doubleValues.size();
+		truncatedValueRateTop /= doubleValues.size();
 
 		initializeStatisticsSupport(doubleValues);
 
@@ -139,7 +146,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		double max = statisticsSupport.getMax();
 
 		minOutlierPruning = Math.max(min, mean - outlierStd * standardDeviation);
-		maxOutlierPruning = Math.min(max, mean + outlierStd * standardDeviation);
+//		maxOutlierPruning = Math.min(max, mean + outlierStd * standardDeviation);
+		maxOutlierPruning = Math.min(max, mean + outlierStdTop * standardDeviation);
 	}
 
 	/**
@@ -195,6 +203,21 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	public void setOutlierStd(double outlierStd) {
 		this.outlierStd = outlierStd;
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, getAttribute(), this);
+
+		notifyListeners(event);
+	}
+
+	public Double getOutlierStdTop() {
+		return outlierStdTop;
+	}
+
+	public void setOutlierStdTop(Double outlierStdTop) {
+		this.outlierStdTop = outlierStdTop;
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
