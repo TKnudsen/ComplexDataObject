@@ -9,7 +9,7 @@ import java.util.function.Function;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeEvent;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
@@ -207,7 +207,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, getAttribute(), this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, getAttribute(), this);
 
 		notifyListeners(event);
 	}
@@ -222,7 +222,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, getAttribute(), this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, getAttribute(), this);
 
 		notifyListeners(event);
 	}

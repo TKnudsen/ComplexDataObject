@@ -27,7 +27,7 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.Doub
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
-public class AttributeScoringModel implements AttributeScoringChangeListener {
+public class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeWeightingFunctions = new ArrayList<>();
 
@@ -137,7 +137,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		attributeWeightingFunctions.add(attributeScoringFunction);
 		attributeScoringFunction.addAttributeScoringChangeListener(this);
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this,
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this,
 				attributeScoringFunction.getAttribute(), attributeScoringFunction);
 		handleAttributeScoringChangeEvent(event);
 	}
@@ -147,7 +147,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		for (AttributeScoringFunction<?> attributeScoringFunction : attributeScoringFunctions)
 			attributeScoringFunction.addAttributeScoringChangeListener(this);
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, null, null);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, null, null);
 		handleAttributeScoringChangeEvent(event);
 	}
 
@@ -160,14 +160,14 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 				i--;
 			}
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, f);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
 	}
 
 	public void clearAttributeScoringFunctions() {
 		attributeWeightingFunctions.clear();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, "null", null);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, "null", null);
 		handleAttributeScoringChangeEvent(event);
 	}
 
@@ -235,7 +235,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 		f.setQuantileBased(quantile);
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, f);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
 	}
 
@@ -247,7 +247,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 		f.setHighIsGood(highIsGood);
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, f);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
 	}
 
@@ -259,7 +259,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 
 		f.setWeight(weight);
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, f);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
 	}
 
@@ -269,7 +269,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 		changeListeners.add(listener);
 	}
 
-	private final void handleAttributeScoringChangeEvent(AttributeScoringChangeEvent event) {
+	private final void handleAttributeScoringChangeEvent(AttributeScoringFunctionChangeEvent event) {
 		currentScoreMax = null;
 
 		for (ChangeListener listener : changeListeners)
@@ -290,7 +290,7 @@ public class AttributeScoringModel implements AttributeScoringChangeListener {
 	}
 
 	@Override
-	public void attributeScoringFunctionChanged(AttributeScoringChangeEvent event) {
+	public void attributeScoringFunctionChanged(AttributeScoringFunctionChangeEvent event) {
 		handleAttributeScoringChangeEvent(event);
 	}
 }

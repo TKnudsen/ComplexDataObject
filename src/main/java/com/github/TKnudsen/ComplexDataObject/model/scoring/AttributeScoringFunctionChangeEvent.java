@@ -4,7 +4,7 @@ import javax.swing.event.ChangeEvent;
 
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 
-public class AttributeScoringChangeEvent extends ChangeEvent {
+public class AttributeScoringFunctionChangeEvent extends ChangeEvent {
 
 	/**
 	 * 
@@ -14,7 +14,7 @@ public class AttributeScoringChangeEvent extends ChangeEvent {
 	private final String attribute;
 	private final AttributeScoringFunction<?> function;
 
-	public AttributeScoringChangeEvent(Object source, String attribute, AttributeScoringFunction<?> function) {
+	public AttributeScoringFunctionChangeEvent(Object source, String attribute, AttributeScoringFunction<?> function) {
 		super(source);
 
 		this.attribute = attribute;
