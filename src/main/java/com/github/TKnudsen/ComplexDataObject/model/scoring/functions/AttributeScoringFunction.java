@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeEvent;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringChangeListener;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeListener;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
@@ -48,7 +48,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private Double missingValueAvgScoreRatio = null;
 
 	@JsonIgnore
-	private List<AttributeScoringChangeListener> listeners = new ArrayList<AttributeScoringChangeListener>();
+	private List<AttributeScoringFunctionChangeListener> listeners = new ArrayList<AttributeScoringFunctionChangeListener>();
 
 	/**
 	 * can be used to improve calculation time by the cost of adding a state to the
@@ -103,10 +103,20 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		if (buffered != null)
 			return buffered;
 
-		Object o = cdo.getAttribute(attribute);
-
 		double missingValueValue = getScoreForMissingObjects();
 
+		// check for missing attribute (never a good sign)
+		if (!cdo.keySet().contains(attribute)) {
+			if (Double.isNaN(missingValueValue))
+				System.err.println(this.getClass().getSimpleName() + ": NaN value inserted in the scoresBuffer!");
+			// no buffering
+			// scoresBuffer.put(cdo, missingValueValue);
+			return missingValueValue;
+		}
+
+		Object o = cdo.getAttribute(attribute);
+
+		// check for missing value
 		if (o == null) {
 			if (Double.isNaN(missingValueValue))
 				System.err.println(this.getClass().getSimpleName() + ": NaN value inserted in the scoresBuffer!");
@@ -145,13 +155,13 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return s;
 	}
 
-	public void addAttributeScoringChangeListener(AttributeScoringChangeListener listener) {
+	public void addAttributeScoringChangeListener(AttributeScoringFunctionChangeListener listener) {
 		listeners.remove(listener);
 		listeners.add(listener);
 	}
 
-	protected final void notifyListeners(AttributeScoringChangeEvent event) {
-		for (AttributeScoringChangeListener listener : listeners)
+	protected final void notifyListeners(AttributeScoringFunctionChangeEvent event) {
+		for (AttributeScoringFunctionChangeListener listener : listeners)
 			listener.attributeScoringFunctionChanged(event);
 	}
 
@@ -162,7 +172,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	public final void setAbbreviation(String abbreviation) {
 		this.abbreviation = abbreviation;
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -177,7 +187,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -192,7 +202,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -208,7 +218,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -247,7 +257,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -262,7 +272,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -277,7 +287,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
@@ -306,7 +316,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		refreshScoringFunction();
 
-		AttributeScoringChangeEvent event = new AttributeScoringChangeEvent(this, attribute, this);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
 	}
