@@ -11,22 +11,24 @@ import weka.core.Instances;
 
 /**
  * <p>
- * Title: ARFFParser
+ * Writes relevant data contained in ComplexDataContainer to ARFF.
  * </p>
  * 
  * <p>
- * Writes relevant object types to ARFF.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
+ * Copyright: Copyright (c) 2018-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class ARFFWriter {
 
+	/**
+	 * no file ending (arff) required
+	 * 
+	 * @param container
+	 * @param fileNameWithoutExtension
+	 */
 	public void writeToARFF(ComplexDataContainer container, String fileNameWithoutExtension) {
 
 		Instances instances = WekaConversion.getInstances(container);
@@ -38,6 +40,13 @@ public class ARFFWriter {
 		}
 	}
 
+	/**
+	 * no file ending (arff) required
+	 * 
+	 * @param container
+	 * @param fileNameWithoutExtension
+	 * @param relationName
+	 */
 	public void writeToARFF(ComplexDataContainer container, String fileNameWithoutExtension, String relationName) {
 
 		Instances instances = WekaConversion.getInstances(container);
@@ -50,6 +59,13 @@ public class ARFFWriter {
 		}
 	}
 
+	/**
+	 * no file ending (arff) required
+	 * 
+	 * @param featureContainer
+	 * @param stringToNominal
+	 * @param fileNameWithoutExtension
+	 */
 	public void writeToARFF(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
 			boolean stringToNominal, String fileNameWithoutExtension) {
 

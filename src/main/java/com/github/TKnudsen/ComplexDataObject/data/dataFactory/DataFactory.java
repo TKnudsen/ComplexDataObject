@@ -32,6 +32,7 @@ public class DataFactory {
 		try {
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			titanicData = p.parse("data/titanic_extended.txt");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
