@@ -190,10 +190,10 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	protected abstract double invertScore(double output);
 
-	@Override
-	public double getAverageScoreWithoutMissingValues() {
-		return scoreAverageWithoutMissingValues;
-	}
+//	@Override
+//	public double getAverageScoreWithoutMissingValues() {
+//		return scoreAverageWithoutMissingValues;
+//	}
 
 	public abstract StatisticsSupport getStatisticsSupport();
 

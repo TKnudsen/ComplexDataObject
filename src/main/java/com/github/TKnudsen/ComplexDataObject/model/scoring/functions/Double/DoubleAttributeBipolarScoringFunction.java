@@ -2,12 +2,14 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
@@ -22,6 +24,8 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 	@JsonIgnore
 	private StatisticsSupport statisticsSupportNegative;
+
+	private double neutralValue = 0.0;
 
 	private NormalizationFunction normalizationFunctionPositive;
 	private NormalizationFunction normalizationFunctionNegative;
@@ -50,6 +54,14 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		super(container, parser, attribute, abbreviation, quantileBased, highIsGood, weight, uncertaintyFunction);
 	}
 
+	public DoubleAttributeBipolarScoringFunction(ComplexDataContainer container, IObjectParser<Double> parser,
+			String attribute, String abbreviation, boolean quantileBased, boolean highIsGood, double weight,
+			Function<ComplexDataObject, Double> uncertaintyFunction, double neutralValue) {
+		super(container, parser, attribute, abbreviation, quantileBased, highIsGood, weight, uncertaintyFunction);
+
+		setNeutralValue(neutralValue);
+	}
+
 	@Override
 	/**
 	 * given double values must not be null or NaN!
@@ -62,7 +74,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 		for (Double value : doubleValues)
 			if (value != null && !Double.isNaN(value))
-				if (value >= 0)
+				if (value >= neutralValue)
 					positive.add(value);
 				else
 					negative.add(value);
@@ -89,8 +101,8 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 					normalizationFunctionNegative = new LinearNormalizationFunction(statisticsSupportNegative, true);
 
 					// close the region around 0.0
-					normalizationFunctionPositive.setGlobalMin(0.0);
-					normalizationFunctionNegative.setGlobalMax(0.0);
+					normalizationFunctionPositive.setGlobalMin(neutralValue);
+					normalizationFunctionNegative.setGlobalMax(neutralValue);
 				}
 			} else
 				normalizationFunctionNegative = null;
@@ -98,7 +110,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 	@Override
 	protected double normalize(double value) {
-		if (value >= 0)
+		if (value >= neutralValue)
 			return normalizationFunctionPositive.apply(value).doubleValue();
 		else if (normalizationFunctionNegative != null)
 			return normalizationFunctionNegative.apply(value).doubleValue() - 1;
@@ -135,6 +147,22 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 			return -output;
 		else
 			return 1 - output;
+	}
+
+	public double getNeutralValue() {
+		return neutralValue;
+	}
+
+	public void setNeutralValue(double neutralValue) {
+		this.neutralValue = neutralValue;
+
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, getAttribute(), this);
+
+		notifyListeners(event);
 	}
 
 }
