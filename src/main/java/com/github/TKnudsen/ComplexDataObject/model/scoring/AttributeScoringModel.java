@@ -27,9 +27,9 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.Doub
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
-public class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
+public final class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
 
-	private List<AttributeScoringFunction<?>> attributeWeightingFunctions = new ArrayList<>();
+	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();
 
 	protected Double currentScoreMax = null;
 
@@ -51,7 +51,7 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 
 		if (container == null)
 			return null;
-		
+
 		Ranking<EntryWithComparableKey<Double, ComplexDataObject>> cdoRanking = new Ranking<>();
 
 		for (ComplexDataObject cdo : container) {
@@ -74,7 +74,7 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 
 	public Double getScore(ComplexDataObject cdo) {
 		double score = 0.0;
-		for (AttributeScoringFunction<?> attributeScoringFunction : attributeWeightingFunctions) {
+		for (AttributeScoringFunction<?> attributeScoringFunction : attributeScoringFunctions) {
 			Double v = attributeScoringFunction.apply(cdo);
 
 			v *= attributeScoringFunction.getWeight();
@@ -112,12 +112,12 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 					uncertaintyFunction);
 			break;
 		case "Double":
-			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false, true,
-					1.0, uncertaintyFunction);
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
+					true, 1.0, uncertaintyFunction);
 			break;
 		case "Integer":
-			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false, true,
-					1.0, uncertaintyFunction);
+			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false,
+					true, 1.0, uncertaintyFunction);
 			break;
 		case "String":
 			f = new DoubleAttributePositiveScoringFunction(container, new NumerificationInputDialogFunction(true),
@@ -134,7 +134,7 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 	}
 
 	public void addAttributeScoringFunction(AttributeScoringFunction<?> attributeScoringFunction) {
-		attributeWeightingFunctions.add(attributeScoringFunction);
+		this.attributeScoringFunctions.add(attributeScoringFunction);
 		attributeScoringFunction.addAttributeScoringChangeListener(this);
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this,
@@ -143,8 +143,8 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 	}
 
 	public void addAttributeScoringFunctions(List<AttributeScoringFunction<?>> attributeScoringFunctions) {
-		attributeWeightingFunctions.addAll(attributeScoringFunctions);
-		for (AttributeScoringFunction<?> attributeScoringFunction : attributeScoringFunctions)
+		this.attributeScoringFunctions.addAll(attributeScoringFunctions);
+		for (AttributeScoringFunction<?> attributeScoringFunction : this.attributeScoringFunctions)
 			attributeScoringFunction.addAttributeScoringChangeListener(this);
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, null, null);
@@ -154,9 +154,9 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 	public void removeAttributeScoringFunction(String attribute) {
 		AttributeScoringFunction<?> f = null;
 
-		for (int i = 0; i < attributeWeightingFunctions.size(); i++)
-			if (attributeWeightingFunctions.get(i).getAttribute().equals(attribute)) {
-				f = attributeWeightingFunctions.remove(i);
+		for (int i = 0; i < attributeScoringFunctions.size(); i++)
+			if (attributeScoringFunctions.get(i).getAttribute().equals(attribute)) {
+				f = attributeScoringFunctions.remove(i);
 				i--;
 			}
 
@@ -165,7 +165,7 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 	}
 
 	public void clearAttributeScoringFunctions() {
-		attributeWeightingFunctions.clear();
+		attributeScoringFunctions.clear();
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, "null", null);
 		handleAttributeScoringChangeEvent(event);
@@ -179,14 +179,14 @@ public class AttributeScoringModel implements AttributeScoringFunctionChangeList
 	}
 
 	public AttributeScoringFunction<?> getAttributeScoringFunction(String attribute) {
-		for (int i = 0; i < attributeWeightingFunctions.size(); i++)
-			if (attributeWeightingFunctions.get(i).getAttribute().equals(attribute))
-				return attributeWeightingFunctions.get(i);
+		for (int i = 0; i < attributeScoringFunctions.size(); i++)
+			if (attributeScoringFunctions.get(i).getAttribute().equals(attribute))
+				return attributeScoringFunctions.get(i);
 		return null;
 	}
 
 	public List<AttributeScoringFunction<?>> getAttributeScoringFunctions() {
-		return new CopyOnWriteArrayList<AttributeScoringFunction<?>>(attributeWeightingFunctions);
+		return new CopyOnWriteArrayList<AttributeScoringFunction<?>>(attributeScoringFunctions);
 	}
 
 	public double getAttributeScoringCorrelation(ComplexDataContainer container, AttributeScoringFunction<?> f1,
