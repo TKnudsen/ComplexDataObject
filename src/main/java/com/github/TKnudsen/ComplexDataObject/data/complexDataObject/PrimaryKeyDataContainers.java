@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class PrimaryKeyDataContainers {
 
-	public static PrimaryKeyDataContainer createPrimaryKeyDataContainers(ComplexDataObject cdo,
+	public static PrimaryKeyDataContainer createPrimaryKeyDataContainer(ComplexDataObject cdo,
 			String primaryKeyAttribute) {
 		Objects.requireNonNull(cdo);
 

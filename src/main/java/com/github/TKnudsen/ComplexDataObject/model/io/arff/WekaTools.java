@@ -13,6 +13,8 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IntegerParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.LongParser;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 import weka.core.Attribute;
@@ -34,9 +36,12 @@ import weka.core.Instances;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public class WekaTools {
+
+	private static IntegerParser intParser = new IntegerParser();
+	private static LongParser longParser = new LongParser();
 
 	public static List<ComplexDataObject> getComplexDataObjects(Instances instances) {
 		List<ComplexDataObject> data = new ArrayList<>();
@@ -86,7 +91,11 @@ public class WekaTools {
 				attributeSchema.put((Integer) i,
 						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Double.class));
 				break;
-			case ORDINAL:
+			case LONG:
+				attributeSchema.put((Integer) i,
+						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Long.class));
+				break;
+			case INTEGER:
 				attributeSchema.put((Integer) i,
 						new SimpleEntry<String, Class<?>>(instances.attribute(i).name(), Integer.class));
 				break;
@@ -118,14 +127,25 @@ public class WekaTools {
 
 		Entry<String, ?> entry = null;
 
+		// Long
+		if (attributeSchema.get(spalte).getValue().equals(Long.class))
+			if (missingValue)
+				entry = new SimpleEntry<String, Long>(attributeSchema.get(spalte).getKey(), null);
+			else
+				try {
+					entry = new SimpleEntry<String, Long>(attributeSchema.get(spalte).getKey(),
+							longParser.apply(instance.value(spalte)));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
 		// Integer
-		if (attributeSchema.get(spalte).getValue().equals(Integer.class))
+		else if (attributeSchema.get(spalte).getValue().equals(Integer.class))
 			if (missingValue)
 				entry = new SimpleEntry<String, Integer>(attributeSchema.get(spalte).getKey(), null);
 			else
 				try {
 					entry = new SimpleEntry<String, Integer>(attributeSchema.get(spalte).getKey(),
-							Integer.parseInt(String.valueOf((int) instance.value(spalte))));
+							intParser.apply(instance.value(spalte)));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
@@ -229,8 +249,16 @@ public class WekaTools {
 			// determine if attribute is numeric or ordinal
 			if (MathFunctions.hasFloatingPointValues(instances.attributeToDoubleArray(attribute.index())))
 				type = AttributeType.NUMERIC;
-			else
-				type = AttributeType.ORDINAL;
+			else {
+				// assess the number of digits
+				int length = 0;
+				for (double number : instances.attributeToDoubleArray(attribute.index()))
+					length = Math.max(length, (int) (Math.log10(number) + 1));
+				if (length > 9)
+					type = AttributeType.LONG;
+				else
+					type = AttributeType.INTEGER;
+			}
 		} else {
 			// get list of attribute values
 			List<String> attValues = new ArrayList<>();

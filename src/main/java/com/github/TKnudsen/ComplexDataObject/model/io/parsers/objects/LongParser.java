@@ -2,27 +2,32 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Title: LongParser
- * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
+ * Copyright: Copyright (c) 2018-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 
 public class LongParser implements IObjectParser<Long> {
 
 	@Override
 	public Long apply(Object object) {
+		if (object == null)
+			return null;
+
 		if (object instanceof Long)
 			return new Long((long) object);
+
+		if (object instanceof Number)
+			return new Long(((Number) object).longValue());
+
+		if (object.toString().contains("E")) {
+			try {
+				return Double.valueOf(object.toString()).longValue();
+			} catch (Exception e) {
+			}
+		}
 
 		String stringValue = String.valueOf(object).toLowerCase();
 
