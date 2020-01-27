@@ -41,6 +41,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	private List<T> closestElements = new ArrayList<>(2);
 	private List<T> farestElements = new ArrayList<>(2);
 
+	private boolean reportWhenDistanceIsMissing = false;
+
 	public DistanceMatrix(List<T> objects, IDistanceMeasure<T> distanceMeasure) {
 		if (distanceMeasure == null)
 			throw new IllegalArgumentException("DistanceMatrix: given distance measures was null");
@@ -100,8 +102,9 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 		Integer index2 = getObjectIndex(o2);
 
 		if (index1 == null || index2 == null) {
-			System.out.println(
-					"DistanceMatrix.getDistance: item not in the DM index, thus no lookup possible. Calculating distance..");
+			if (reportWhenDistanceIsMissing)
+				System.out.println(
+						"DistanceMatrix.getDistance: item not in the DM index, thus no lookup possible. Calculating distance..");
 			return distanceMeasure.getDistance(o1, o2);
 		}
 
@@ -190,5 +193,13 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	@Override
 	public List<T> getElements() {
 		return objects;
+	}
+
+	public boolean isReportWhenDistanceIsMissing() {
+		return reportWhenDistanceIsMissing;
+	}
+
+	public void setReportWhenDistanceIsMissing(boolean reportWhenDistanceIsMissing) {
+		this.reportWhenDistanceIsMissing = reportWhenDistanceIsMissing;
 	}
 }
