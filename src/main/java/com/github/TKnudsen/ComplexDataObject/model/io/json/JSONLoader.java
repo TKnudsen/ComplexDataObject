@@ -11,27 +11,22 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
 
 /**
  * <p>
- * Title: JSONLoader
+ * Loads ComplexDataObjects from JSON. Brings its own ObjectMapper for speedup
+ * purposes, but can also be run with an external ObjectMapper parameter.
  * </p>
  * 
  * <p>
- * Description: loads ComplexDataObjects from JSON
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019
+ * Copyright: Copyright (c) 2017-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class JSONLoader {
 
 	private static ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
 
 	public static ComplexDataObject loadFromString(String json) {
-//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
 		ComplexDataObject complexDataObject;
 		try {
 			complexDataObject = mapper.readValue(json, ComplexDataObject.class);
@@ -44,8 +39,6 @@ public class JSONLoader {
 	}
 
 	public static ComplexDataObject loadFromFile(String file) {
-//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
 		ComplexDataObject complexDataObject;
 		try {
 			complexDataObject = mapper.readValue(new File(file), ComplexDataObject.class);
@@ -56,7 +49,19 @@ public class JSONLoader {
 
 		return null;
 	}
-	
+
+	public static ComplexDataObject loadFromFile(String file, ObjectMapper mapper) {
+		ComplexDataObject complexDataObject;
+		try {
+			complexDataObject = mapper.readValue(new File(file), ComplexDataObject.class);
+			return complexDataObject;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	public static DataSchema loadDataSchemaFromString(String json) {
 
 		DataSchema dataSchema;
@@ -84,8 +89,6 @@ public class JSONLoader {
 	}
 
 	public static NumericalFeatureVector loadNumericalFeatureVectorFromString(String json) {
-//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
 		NumericalFeatureVector numericalFeatureVector;
 		try {
 			numericalFeatureVector = mapper.readValue(json, NumericalFeatureVector.class);
@@ -98,8 +101,6 @@ public class JSONLoader {
 	}
 
 	public static NumericalFeatureVector loadNumericalFeatureVectorFromFile(String file) {
-//		ObjectMapper mapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
-
 		NumericalFeatureVector numericalFeatureVector;
 		try {
 			numericalFeatureVector = mapper.readValue(new File(file), NumericalFeatureVector.class);
