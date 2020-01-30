@@ -22,6 +22,9 @@ public class LongParser implements IObjectParser<Long> {
 		if (object instanceof Number)
 			return new Long(((Number) object).longValue());
 
+		if (object instanceof Boolean)
+			return ((boolean) object) ? 1L : 0L;
+
 		if (object.toString().contains("E")) {
 			try {
 				return Double.valueOf(object.toString()).longValue();
