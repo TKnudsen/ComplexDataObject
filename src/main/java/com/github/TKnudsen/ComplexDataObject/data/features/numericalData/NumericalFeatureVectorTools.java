@@ -6,21 +6,12 @@ import java.util.Set;
 
 /**
  * <p>
- * Title: NumericalFeatureVectorTools
- * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
  * Copyright: Copyright (c) 2016-2018
  * </p>
  * 
  * @author Juergen Bernard
  * @version 1.02
  */
-
 public class NumericalFeatureVectorTools {
 
 	/**
