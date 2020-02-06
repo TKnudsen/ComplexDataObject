@@ -42,6 +42,8 @@ public class DateParser implements IObjectParser<Date> {
 	public synchronized Date apply(Object object) {
 		if (object instanceof Date)
 			return new Date(((Date) object).getTime());
+		if (object instanceof Long)
+			return new Date((long) object);
 
 		Date date = null;
 

@@ -95,6 +95,23 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		return 0.0;
 	}
 
+	public Double getUncertainty(ComplexDataObject cdo) {
+		double u = 0.0;
+		for (AttributeScoringFunction<?> attributeScoringFunction : attributeScoringFunctions) {
+			if (attributeScoringFunction.getUncertaintyFunction() == null)
+				continue;
+
+			Double v = attributeScoringFunction.getUncertaintyFunction().apply(cdo);
+
+			if (v != null && !Double.isNaN(v))
+				u += v;
+			else
+				u += 0.5;
+		}
+
+		return u;
+	}
+
 	public void addAttributeScoringFunction(ComplexDataContainer container, String attribute) {
 		this.addAttributeScoringFunction(container, attribute, null);
 	}
