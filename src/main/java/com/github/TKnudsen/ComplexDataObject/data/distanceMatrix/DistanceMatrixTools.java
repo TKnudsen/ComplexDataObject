@@ -18,6 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * Copyright: Copyright (c) 2017
  * </p>
  * 
+ * @deprecated use DistanceMatrixStatistics instead.
  * @author Juergen Bernard
  * @version 1.01
  */
@@ -27,13 +28,14 @@ public class DistanceMatrixTools {
 	 * 
 	 * @param distanceMatrix
 	 * @param excludeMainDiagonal
-	 * @param skipTransponedValues
-	 *            for every pair of instances only use one value (assumes a
-	 *            symmetric distance measure)
+	 * @param skipTransponedValues for every pair of instances only use one value
+	 *                             (assumes a symmetric distance measure)
 	 * @return
 	 */
-	public static StatisticsSupport getPairwiseDistances(IDistanceMatrix<?> distanceMatrix, boolean excludeMainDiagonal, boolean skipTransponedValues) {
-		List<Double> distances = new ArrayList<>(distanceMatrix.getElements().size() * distanceMatrix.getElements().size());
+	public static StatisticsSupport getPairwiseDistances(IDistanceMatrix<?> distanceMatrix, boolean excludeMainDiagonal,
+			boolean skipTransponedValues) {
+		List<Double> distances = new ArrayList<>(
+				distanceMatrix.getElements().size() * distanceMatrix.getElements().size());
 
 		double[][] dm = distanceMatrix.getDistanceMatrix();
 		for (int i = 0; i < distanceMatrix.getElements().size(); i++)

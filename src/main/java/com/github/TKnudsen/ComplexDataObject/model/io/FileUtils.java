@@ -33,4 +33,45 @@ public class FileUtils {
 
 		return exists;
 	}
+
+	/**
+	 * clears all files in a the given folder. for a given filename nothing will
+	 * happen. use f.getParentFile() to come from a filename to a folder name.
+	 * 
+	 * @param folderName
+	 */
+	public static void clearFolder(String folderName) {
+		clearFolder(new File(folderName));
+	}
+
+	/**
+	 * clears all files in a the given folder. for a given filename nothing will
+	 * happen. use f.getParentFile() to come from a filename to a folder name.
+	 * 
+	 * @param folderName
+	 */
+	public static void clearFolder(File folderName) {
+		clearFolder(folderName, false);
+	}
+
+	/**
+	 * clears all files in a the given folder. for a given filename nothing will
+	 * happen. use f.getParentFile() to come from a filename to a folder name.
+	 * 
+	 * @param folderName
+	 */
+	public static void clearFolder(File folderName, boolean printOut) {
+		if (!folderName.exists())
+			return;
+
+		int deleteCount = 0;
+		for (File someFile : folderName.listFiles())
+			if (!someFile.isDirectory())
+				if (someFile.delete())
+					deleteCount++;
+
+		if (printOut && deleteCount > 0)
+			System.out.println("FileUtils.clearFolder: cleared. " + deleteCount + " files deleted in folder "
+					+ folderName.getName());
+	}
 }
