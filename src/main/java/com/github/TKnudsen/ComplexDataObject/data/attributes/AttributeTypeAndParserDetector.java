@@ -7,8 +7,8 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectPar
 
 /**
  * <p>
- * Description: determines the attribute type and the type of parser needed for
- * a collection of values.
+ * Determines the attribute type and the type of parser needed for a collection
+ * of values.
  * </p>
  * 
  * <p>
