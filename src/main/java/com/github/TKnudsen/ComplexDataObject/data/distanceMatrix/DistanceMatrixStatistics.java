@@ -18,7 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class DistanceMatrixStatistics<T> implements IDistanceMatrix<T> {
 
@@ -96,7 +96,7 @@ public class DistanceMatrixStatistics<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<? extends T> getElements() {
+	public List<T> getElements() {
 		return distanceMatrix.getElements();
 	}
 

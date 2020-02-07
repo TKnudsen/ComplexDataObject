@@ -25,7 +25,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	// constructor properties
-	private List<? extends T> objects;
+	private List<T> objects;
 	protected IDistanceMeasure<? super T> distanceMeasure;
 
 	// storage, indexing
@@ -34,7 +34,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	private boolean reportWhenDistanceIsMissing = false;
 
-	public DistanceMatrix(List<? extends T> objects, IDistanceMeasure<? super T> distanceMeasure) {
+	public DistanceMatrix(List<T> objects, IDistanceMeasure<? super T> distanceMeasure) {
 		if (distanceMeasure == null)
 			throw new IllegalArgumentException("DistanceMatrix: given distance measures was null");
 
@@ -124,7 +124,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<? extends T> getElements() {
+	public List<T> getElements() {
 		return objects;
 	}
 

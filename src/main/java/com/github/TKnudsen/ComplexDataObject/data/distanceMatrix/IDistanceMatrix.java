@@ -26,7 +26,7 @@ public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 
 	public double[][] getDistanceMatrix();
 
-	public List<? extends T> getElements();
+	public List<T> getElements();
 
 	public boolean isSymmetric();
 
