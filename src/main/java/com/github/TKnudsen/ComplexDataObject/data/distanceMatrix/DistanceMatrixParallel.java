@@ -14,19 +14,19 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  */
 public class DistanceMatrixParallel<T> implements IDistanceMatrix<T> {
 
-	private final List<? extends T> elements;
+	private final List<T> elements;
 	private final Map<T, Integer> indices;
 	private final boolean symmetric;
 	private final boolean parallel;
 
 	private final double matrix[][];
 
-	public DistanceMatrixParallel(List<? extends T> elements, IDistanceMeasure<? super T> distanceMeasure) {
+	public DistanceMatrixParallel(List<T> elements, IDistanceMeasure<? super T> distanceMeasure) {
 		this(elements, distanceMeasure, true, true);
 	}
 
-	public DistanceMatrixParallel(List<? extends T> elements, IDistanceMeasure<? super T> distanceMeasure,
-			boolean symmetric, boolean parallel) {
+	public DistanceMatrixParallel(List<T> elements, IDistanceMeasure<? super T> distanceMeasure, boolean symmetric,
+			boolean parallel) {
 
 		this.elements = elements;
 		this.indices = new LinkedHashMap<T, Integer>();
@@ -96,7 +96,7 @@ public class DistanceMatrixParallel<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<? extends T> getElements() {
+	public List<T> getElements() {
 		return elements;
 	}
 

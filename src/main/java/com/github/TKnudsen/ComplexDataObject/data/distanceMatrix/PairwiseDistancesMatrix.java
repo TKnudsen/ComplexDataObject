@@ -24,9 +24,9 @@ public class PairwiseDistancesMatrix<T> implements IDistanceMatrix<T> {
 
 	private double[][] distanceMatrix;
 	private Map<T, Integer> objectMapping;
-	private List<? extends T> elements;
+	private List<T> elements;
 
-	public PairwiseDistancesMatrix(List<? extends T> objects, double[][] pairwiseDistances) {
+	public PairwiseDistancesMatrix(List<T> objects, double[][] pairwiseDistances) {
 		this.distanceMatrix = pairwiseDistances;
 		this.elements = objects;
 
@@ -77,7 +77,7 @@ public class PairwiseDistancesMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<? extends T> getElements() {
+	public List<T> getElements() {
 		return elements;
 	}
 
