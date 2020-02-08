@@ -17,26 +17,34 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 /**
- * <p>
- * Title: ARFFParser
+ * Parses ComplexDataObjects from an ARFF file. Note: this parser is not part of
+ * the persistence layer. In fact, it gathers new ComplexDataObjects from a
+ * given file.
+ * 
+ * a flag can be set to assign IDs of ComplexDataObjects incrementally starting
+ * with 0, reflecting the lines of instances within the arff file.
  * </p>
  * 
  * <p>
- * Description: Parses ComplexDataObjects from an ARFF file. Note: this parser
- * is not part of the persistence layer. In fact, it gathers new
- * ComplexDataObjects from a given file.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015
+ * Copyright: Copyright (c) 2015-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public class ARFFParser implements ComplexDataObjectParser {
 
 	private String missingValueIndicator = "?";
+
+	private final boolean assignIncrementalIDs;
+
+	public ARFFParser() {
+		this(false);
+	}
+
+	public ARFFParser(boolean assignIncrementalIDs) {
+		this.assignIncrementalIDs = assignIncrementalIDs;
+	}
 
 	@Override
 	public List<ComplexDataObject> parse(String filename) throws IOException {
@@ -53,8 +61,10 @@ public class ARFFParser implements ComplexDataObjectParser {
 		for (int zeile = 0; zeile < instances.numInstances(); zeile++) {
 
 			Instance instance = instances.instance(zeile);
-
-			ComplexDataObject complexDataObject = new ComplexDataObject();
+			// new: added zeile as the ID for the ComplexDataObject.
+			// This replaces the creation of a random ID
+			ComplexDataObject complexDataObject = (assignIncrementalIDs) ? new ComplexDataObject(zeile)
+					: new ComplexDataObject();
 
 			// parse columns
 			for (Integer spalte = 0; spalte < instances.numAttributes(); spalte++) {
@@ -87,7 +97,6 @@ public class ARFFParser implements ComplexDataObjectParser {
 					complexDataObject.setDescription(complexDataObject.getAttribute("Description").toString());
 //					complexDataObject.removeAttribute("Description");
 				}
-
 			}
 			data.add(complexDataObject);
 		}
