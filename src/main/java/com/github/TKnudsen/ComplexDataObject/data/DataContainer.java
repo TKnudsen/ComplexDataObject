@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
@@ -29,7 +30,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 	private Map<Long, T> objectsMap = new HashMap<Long, T>();
 
-	protected Map<String, Map<Long, Object>> attributeValues = new HashMap<String, Map<Long, Object>>();
+	protected Map<String, Map<Long, Object>> attributeValues = new TreeMap<String, Map<Long, Object>>();
 
 	protected DataSchema dataSchema;
 
@@ -180,8 +181,16 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return attributeValues.get(attribute);
 	}
 
+	public Collection<Object> getAttributeValueCollection(String attribute) {
+		return attributeValues.get(attribute).values();
+	}
+
 	public Class<?> getType(String attribute) {
 		return dataSchema.getAttributeEntry(attribute).getType();
+	}
+
+	public Map<String, Class<?>> getSchema() {
+		return DataSchemas.getClassMap(dataSchema);
 	}
 
 	/**

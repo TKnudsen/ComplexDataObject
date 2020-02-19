@@ -101,6 +101,10 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 
 		return true;
 	}
+	
+	public boolean containsAttribute(String attribute) {
+		return attributes.containsKey(attribute);
+	}
 
 	@Override
 	public void add(String attribute, V value) {
@@ -113,15 +117,31 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	@Override
-	public Class<?> getType(String attribute) {
+	public Set<String> keySet() {
+		return attributes.keySet();
+	}
+
+	/**
+	 * convenient method identical with keySet();
+	 * 
+	 * @return
+	 */
+	public Set<String> getAttributes() {
+		return attributes.keySet();
+	}
+
+	@Override
+	public V removeAttribute(String attribute) {
 		if (attributes.get(attribute) != null)
-			return attributes.get(attribute).getClass();
+			return attributes.remove(attribute);
 		return null;
 	}
 
 	@Override
-	public Set<String> keySet() {
-		return attributes.keySet();
+	public Class<?> getType(String attribute) {
+		if (attributes.get(attribute) != null)
+			return attributes.get(attribute).getClass();
+		return null;
 	}
 
 	@Override
@@ -132,13 +152,6 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 				ret.put(string, null);
 			else
 				ret.put(string, attributes.get(string).getClass());
-		return null;
-	}
-
-	@Override
-	public V removeAttribute(String attribute) {
-		if (attributes.get(attribute) != null)
-			return attributes.remove(attribute);
 		return null;
 	}
 
