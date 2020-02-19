@@ -47,7 +47,7 @@ public class ComplexDataContainers {
 
 	}
 
-	public static DataSchema deduceDataSchema(ComplexDataContainer container) {
+	public static DataSchema dataSchema(ComplexDataContainer container) {
 		DataSchema schema = new DataSchema();
 
 		for (String attribute : container.getAttributeNames()) {
