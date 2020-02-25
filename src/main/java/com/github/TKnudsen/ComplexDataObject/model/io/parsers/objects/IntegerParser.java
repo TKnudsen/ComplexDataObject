@@ -29,9 +29,9 @@ public class IntegerParser implements IObjectParser<Integer> {
 		if (l == null)
 			return null;
 		else if (l > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("IntegerParser should never parse values of size: " + l);
-		else
-			return l.intValue();
+			System.err.println("IntegerParser should never parse values of size: " + l + ". Value will be parsed to "
+					+ l.intValue());
+		return l.intValue();
 	}
 
 	@Override
