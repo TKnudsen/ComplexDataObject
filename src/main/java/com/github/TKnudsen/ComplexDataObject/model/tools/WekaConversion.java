@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -17,7 +18,6 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainerTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 
@@ -37,11 +37,11 @@ import weka.core.Instances;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.07
+ * @version 1.08
  */
 public class WekaConversion {
 
@@ -160,21 +160,10 @@ public class WekaConversion {
 	public static Instances getInstances(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
 			boolean stringToNominal) {
 
-		List<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer),
+		Collection<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer),
 				stringToNominal);
 
-		// List<Attribute> attrs = new
-		// ArrayList<Attribute>(featureContainer.getFeatureNames().size());
-		// for (String featureName : featureContainer.getFeatureNames()) {
-		// Attribute a = null;
-		// if (featureContainer.isNumeric(featureName))
-		// a = new Attribute(featureName);
-		// else
-		// a = new Attribute(featureName, (List<String>) null);
-		// attrs.add(a);
-		// }
-
-		Instances instances = new Instances("asdf", (ArrayList<Attribute>) attributes, featureContainer.size());
+		Instances instances = new Instances("asdf", new ArrayList<Attribute>(attributes), featureContainer.size());
 
 		addInstances(featureContainer, instances);
 
@@ -189,11 +178,12 @@ public class WekaConversion {
 	 *                        observations)
 	 * @return
 	 */
-	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal) {
+	public static Instances getInstances(Collection<? extends IFeatureVectorObject<?, ?>> fvs,
+			boolean stringToNominal) {
 		return getInstances(fvs, stringToNominal, null);
 	}
 
-	public static Instances getInstances(List<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal,
+	public static Instances getInstances(Collection<? extends IFeatureVectorObject<?, ?>> fvs, boolean stringToNominal,
 			Map<String, Set<String>> featureAlphabet) {
 		if (fvs == null)
 			return null;
@@ -201,13 +191,14 @@ public class WekaConversion {
 		if (fvs.size() == 0)
 			return null;
 
-		List<Attribute> attrs;
+		Collection<Attribute> attrs;
 		if (featureAlphabet == null)
 			attrs = createAttributes(fvs, stringToNominal);
 		else
 			attrs = createAttributes(fvs, featureAlphabet);
 
-		Instances data = new Instances(fvs.get(0).getClass().getName(), (ArrayList<Attribute>) attrs, fvs.size());
+		Instances data = new Instances(fvs.iterator().next().getClass().getName(), (ArrayList<Attribute>) attrs,
+				fvs.size());
 
 		addInstances(fvs, data);
 
@@ -215,13 +206,13 @@ public class WekaConversion {
 	}
 
 	/**
-	 * creates a list of WEKA attributes for a given list of FVs.
+	 * creates a collection of WEKA attributes for a given list of FVs.
 	 * 
 	 * @param fvs
 	 * @param stringToNominal
 	 * @return
 	 */
-	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs,
+	private static Collection<Attribute> createAttributes(Collection<? extends IFeatureVectorObject<?, ?>> fvs,
 			boolean stringToNominal) {
 		if (fvs == null)
 			return null;
@@ -229,14 +220,14 @@ public class WekaConversion {
 		if (fvs.size() == 0)
 			return new ArrayList<>();
 
-		int length = fvs.get(0).sizeOfFeatures();
+		int length = fvs.iterator().next().sizeOfFeatures();
 		List<Attribute> attributes = new ArrayList<Attribute>(length);
 
 		for (int i = 0; i < length; i++) {
 			Attribute a = null;
-			if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
+			if (fvs.iterator().next().getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
 				a = new Attribute(i + 1 + "");
-			else if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.BOOLEAN))
+			else if (fvs.iterator().next().getFeature(i).getFeatureType().equals(FeatureType.BOOLEAN))
 				a = new Attribute(i + 1 + "");
 			else if (!stringToNominal)
 				a = new Attribute(i + 1 + "", (List<String>) null);
@@ -248,7 +239,7 @@ public class WekaConversion {
 						if (fv.getFeature(i) != null && fv.getFeature(i).getFeatureValue() != null)
 							alphabet.add(fv.getFeature(i).getFeatureValue().toString());
 						else {
-							Feature<?> feature = fv.getFeature(fvs.get(0).getFeature(i).getFeatureName());
+							Feature<?> feature = fv.getFeature(fvs.iterator().next().getFeature(i).getFeatureName());
 							if (feature != null && feature.getFeatureValue() != null)
 								alphabet.add(feature.getFeatureValue().toString());
 						}
@@ -260,7 +251,7 @@ public class WekaConversion {
 		return attributes;
 	}
 
-	private static List<Attribute> createAttributes(List<? extends IFeatureVectorObject<?, ?>> fvs,
+	private static Collection<Attribute> createAttributes(Collection<? extends IFeatureVectorObject<?, ?>> fvs,
 			Map<String, Set<String>> featureAlphabet) {
 		if (fvs == null)
 			return null;
@@ -268,20 +259,20 @@ public class WekaConversion {
 		if (fvs.size() == 0)
 			return new ArrayList<>();
 
-		int length = fvs.get(0).sizeOfFeatures();
+		int length = fvs.iterator().next().sizeOfFeatures();
 		List<Attribute> attributes = new ArrayList<Attribute>(length);
 
 		for (int i = 0; i < length; i++) {
 			Attribute a = null;
-			if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
+			if (fvs.iterator().next().getFeature(i).getFeatureType().equals(FeatureType.DOUBLE))
 				a = new Attribute(i + 1 + "");
-			else if (fvs.get(0).getFeature(i).getFeatureType().equals(FeatureType.BOOLEAN))
+			else if (fvs.iterator().next().getFeature(i).getFeatureType().equals(FeatureType.BOOLEAN))
 				a = new Attribute(i + 1 + "");
-			else if (!featureAlphabet.containsKey(fvs.get(0).getFeature(i).getFeatureName()))
+			else if (!featureAlphabet.containsKey(fvs.iterator().next().getFeature(i).getFeatureName()))
 				a = new Attribute(i + 1 + "", (List<String>) null);
 			else {
 				a = new Attribute(i + 1 + "",
-						new ArrayList<>(featureAlphabet.get(fvs.get(0).getFeature(i).getFeatureName())));
+						new ArrayList<>(featureAlphabet.get(fvs.iterator().next().getFeature(i).getFeatureName())));
 			}
 			attributes.add(a);
 		}
@@ -321,13 +312,20 @@ public class WekaConversion {
 	 *                       Note: the Weka class attribute will be 'class', though.
 	 * @return
 	 */
-	public static Instances getLabeledInstancesNumerical(List<NumericalFeatureVector> fvs, String classAttribute) {
+	public static Instances getLabeledInstancesNumerical(Collection<? extends IFeatureVectorObject<?, ?>> fvs,
+			String classAttribute) {
 		List<Object> labels = new ArrayList<>();
-		for (int i = 0; i < fvs.size(); i++)
-			if (fvs.get(i).getAttribute(classAttribute) instanceof String)
-				labels.add((String) fvs.get(i).getAttribute(classAttribute));
+
+		Iterator<? extends IFeatureVectorObject<?, ?>> iterator = fvs.iterator();
+
+		while (iterator.hasNext()) {
+			IFeatureVectorObject<?, ?> next = iterator.next();
+
+			if (next.getAttribute(classAttribute) instanceof String)
+				labels.add((String) next.getAttribute(classAttribute));
 			else
-				labels.add(fvs.get(i).getAttribute(classAttribute).toString());
+				labels.add(next.getAttribute(classAttribute).toString());
+		}
 
 		Instances insances = getInstances(fvs, false);
 
