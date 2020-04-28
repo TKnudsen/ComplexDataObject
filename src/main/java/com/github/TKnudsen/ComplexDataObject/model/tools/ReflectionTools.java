@@ -68,8 +68,9 @@ public class ReflectionTools {
 				Collection<?> collection = getObjectFromField(field, instance, Collection.class);
 				if (collection != null)
 					for (Object object : collection)
-						targets.addAll(getAllFieldsObjectsOfInstance(null, object, targetClass, includeSuperClassFields,
-								rolloutCollectionsAndMaps));
+						if (object != null)
+							targets.addAll(getAllFieldsObjectsOfInstance(null, object, targetClass,
+									includeSuperClassFields, rolloutCollectionsAndMaps));
 
 				Map<?, ?> map = getObjectFromField(field, instance, Map.class);
 				if (map != null)
