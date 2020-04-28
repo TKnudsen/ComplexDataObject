@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.processors.features;
+package com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +10,10 @@ import java.util.Set;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainerTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
-import com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.IMixedDataFeatureVectorProcessor;
 
 /**
  * <p>
@@ -57,14 +55,17 @@ public class IdenticalFeaturesProvider implements IMixedDataFeatureVectorProcess
 				String featureName = names.get(i);
 				FeatureType featureType = featureTypes.get(featureName);
 				if (fv.sizeOfFeatures() <= i)
-					fv.addFeature(MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+					fv.addFeature(
+							MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
 				else if (fv.getFeature(i) == null || fv.getFeature(i).getFeatureName() == null) {
 					fv.removeFeature(i);
-					fv.setFeature(i, MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+					fv.setFeature(i,
+							MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
 				} else if (!fv.getFeature(i).getFeatureName().equals(featureName)) {
 					Feature<?> feature = fv.getFeature(featureName);
 					if (feature == null)
-						fv.setFeature(i, MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+						fv.setFeature(i, MixedDataFeatureTools
+								.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
 					else
 						fv.setFeature(i, fv.removeFeature(featureName));
 				}
@@ -74,14 +75,12 @@ public class IdenticalFeaturesProvider implements IMixedDataFeatureVectorProcess
 
 	@Override
 	public void process(MixedDataFeatureContainer container) {
-		List<MixedDataFeatureVector> fvs = FeatureVectorContainerTools.getObjectList(container);
-
-		process(fvs);
+		process(new ArrayList<>(container.values()));
 	}
 
 	/**
-	 * guesses the type of a feature, according to the number of occurrences in
-	 * a list of featureVectors.
+	 * guesses the type of a feature, according to the number of occurrences in a
+	 * list of featureVectors.
 	 * 
 	 * @param featureName
 	 * @param featureVectors
@@ -94,7 +93,8 @@ public class IdenticalFeaturesProvider implements IMixedDataFeatureVectorProcess
 				if (counts.get(fv.getFeature(featureName).getFeatureType()) == null)
 					counts.put(fv.getFeature(featureName).getFeatureType(), new Integer(0));
 				else
-					counts.put(fv.getFeature(featureName).getFeatureType(), counts.get(fv.getFeature(featureName).getFeatureType()) + 1);
+					counts.put(fv.getFeature(featureName).getFeatureType(),
+							counts.get(fv.getFeature(featureName).getFeatureType()) + 1);
 
 		FeatureType ret = null;
 		Integer maxCount = 0;

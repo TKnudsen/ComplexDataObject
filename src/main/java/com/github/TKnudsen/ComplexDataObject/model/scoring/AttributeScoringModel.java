@@ -184,7 +184,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	public void clearAttributeScoringFunctions() {
 		attributeScoringFunctions.clear();
 
-		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, "null", null);
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, null, null);
 		handleAttributeScoringChangeEvent(event);
 	}
 

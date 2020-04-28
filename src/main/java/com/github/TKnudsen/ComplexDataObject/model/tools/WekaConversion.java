@@ -16,7 +16,6 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainerTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
@@ -159,9 +158,7 @@ public class WekaConversion {
 	 */
 	public static Instances getInstances(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
 			boolean stringToNominal) {
-
-		Collection<Attribute> attributes = createAttributes(FeatureVectorContainerTools.getObjectList(featureContainer),
-				stringToNominal);
+		Collection<Attribute> attributes = createAttributes(featureContainer.values(), stringToNominal);
 
 		Instances instances = new Instances("asdf", new ArrayList<Attribute>(attributes), featureContainer.size());
 

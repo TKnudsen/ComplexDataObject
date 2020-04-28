@@ -76,7 +76,7 @@ public class DimensionalityReductionPipeline<X> {
 
 	/**
 	 * Implementations of IDimensionalityReduction either receive X through the
-	 * constructor or via transform(X). Just as well the particular
+	 * constructor or via transform(X). Also, the particular
 	 * IDimensionalityReduction may not be known in this context. Thus, it is
 	 * necessary to receive the IDimensionalityReduction routine from external.
 	 * 
@@ -93,11 +93,14 @@ public class DimensionalityReductionPipeline<X> {
 		Map<X, NumericalFeatureVector> featureVectorsMap = getFeatureVectorsMap();
 		List<NumericalFeatureVector> input = new ArrayList<>(featureVectorsMap.values());
 
-		// transform
+		// transform (refers to the mapping, not necessarily the calculation)
 		dimensionalityReduction.transform(input);
 
 		// store result
 		featureVectorsLowDMap = dimensionalityReduction.getMapping();
+
+		// set dim red
+		this.dimensionalityReduction = dimensionalityReduction;
 	}
 
 	/**

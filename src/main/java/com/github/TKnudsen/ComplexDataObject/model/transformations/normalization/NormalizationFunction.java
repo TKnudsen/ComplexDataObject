@@ -71,10 +71,12 @@ public abstract class NormalizationFunction implements Function<Number, Number> 
 
 	private void checkValueIntegrity() {
 		if (globalMin == null || Double.isNaN(globalMin.doubleValue()))
-			throw new IllegalArgumentException("ScalingFunction: lower bound ill-defined (value is " + globalMin + ")");
+			throw new IllegalArgumentException(
+					getClass().getSimpleName() + ": lower bound ill-defined (value is " + globalMin + ")");
 
 		if (globalMax == null || Double.isNaN(globalMax.doubleValue()))
-			throw new IllegalArgumentException("ScalingFunction: upper bound ill-defined (value is " + globalMax + ")");
+			throw new IllegalArgumentException(
+					getClass().getSimpleName() + ": upper bound ill-defined (value is " + globalMax + ")");
 	}
 
 	@Override

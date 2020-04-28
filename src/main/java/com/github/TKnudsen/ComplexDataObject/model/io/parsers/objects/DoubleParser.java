@@ -33,8 +33,11 @@ public class DoubleParser implements IObjectParser<Double> {
 
 	@Override
 	public Double apply(Object object) {
+		if (object == null)
+			return Double.NaN;
+
 		if (object instanceof Double)
-			return new Double((double) object);
+			return (Double) object;
 
 		String stringValue = String.valueOf(object).toLowerCase();
 

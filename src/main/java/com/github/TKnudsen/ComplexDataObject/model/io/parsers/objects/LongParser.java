@@ -19,8 +19,13 @@ public class LongParser implements IObjectParser<Long> {
 		if (object instanceof Long)
 			return new Long((long) object);
 
-		if (object instanceof Number)
-			return new Long(((Number) object).longValue());
+		if (object instanceof Number) {
+			Number n = (Number) object;
+			if (Double.isNaN(n.doubleValue()))
+				return null;
+			else
+				return new Long(((Number) object).longValue());
+		}
 
 		if (object instanceof Boolean)
 			return ((boolean) object) ? 1L : 0L;
