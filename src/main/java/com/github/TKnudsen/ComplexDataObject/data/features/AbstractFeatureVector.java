@@ -296,8 +296,8 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	/**
-	 * Features always describes the individual features of the vector. In contrast,
-	 * getAttributes() retrieves the metadata.
+	 * Features always points to the feature vector columns. In contrast, keySet()
+	 * points to the attributes in the metadata.
 	 */
 	@Override
 	public Set<String> getFeatureKeySet() {

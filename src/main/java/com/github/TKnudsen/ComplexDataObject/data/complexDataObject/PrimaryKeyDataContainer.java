@@ -51,7 +51,11 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 					"PrimaryKeyComplexDataStore: cdo did not have the necessary primary key attribute "
 							+ primaryKeyAttribute);
 
-		primaryKeysSelectedAttributesCDOMap.put(cdo.getAttribute(primaryKeyAttribute), cdo);
+		Object primaryKey = cdo.getAttribute(primaryKeyAttribute);
+		if (primaryKeysSelectedAttributesCDOMap.containsKey(primaryKey))
+			remove(primaryKeysSelectedAttributesCDOMap.get(primaryKey));
+
+		primaryKeysSelectedAttributesCDOMap.put(primaryKey, cdo);
 
 		return super.add(cdo);
 	}
