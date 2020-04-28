@@ -18,7 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 public class MixedDataFeature extends Feature<Object> {
 
@@ -47,17 +47,20 @@ public class MixedDataFeature extends Feature<Object> {
 	public boolean setFeatureValue(Object featureValue) {
 		if (featureValue == null) {
 			this.featureValue = featureValue;
+			resetHashCode();
 			return true;
 		}
 
 		FeatureType featureType = MixedDataFeatureTools.guessFeatureType(featureValue);
 		if (this.featureType.equals(featureType)) {
 			this.featureValue = featureValue;
+			resetHashCode();
 			return true;
 		}
 
 		// ugly. but better than keeping an old value instead
 		this.featureValue = null;
+		resetHashCode();
 		return false;
 	}
 

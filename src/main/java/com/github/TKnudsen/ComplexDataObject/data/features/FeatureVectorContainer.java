@@ -1,33 +1,38 @@
 package com.github.TKnudsen.ComplexDataObject.data.features;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title: FeatureVectorContainer
+ * Stores and manages collections of Feature Vectors. A FeatureSchema manages
+ * the features of the collection.
  * </p>
  *
  * <p>
- * Description: Stores and manages collections of Feature Vectors. A
- * FeatureSchema manages the features of the collection.
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> implements Iterable<FV> {
 
 	private Map<Long, FV> featureVectorMap = new HashMap<Long, FV>();
+
+	/**
+	 * created to allow values() operation without iterator to be more thread-safe.
+	 * 
+	 * Important: always needs to be kept in sync with the featureVectorMap.
+	 */
+	private ArrayList<FV> values = new ArrayList<FV>();
 
 	protected Map<String, Map<Long, Object>> featureValues = new HashMap<String, Map<Long, Object>>();
 
@@ -48,6 +53,7 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 		featureSchema = new FeatureSchema();
 		for (FV object : objects) {
 			featureVectorMap.put(object.getID(), object);
+			values.add(object);
 			extendDataSchema(object);
 		}
 	}
@@ -69,13 +75,10 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	/**
 	 * Introduces or updates a new feature.
 	 *
-	 * @param featureName
-	 *            the feature name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the feature is missing from a data
-	 *            object.
+	 * @param featureName  the feature name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the feature is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema addFeature(Feature<?> feature) {
@@ -96,13 +99,10 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	/**
 	 * Introduces or updates a feature.
 	 *
-	 * @param featureName
-	 *            the feature name
-	 * @param type
-	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the feature is missing from a data
-	 *            object.
+	 * @param featureName  the feature name
+	 * @param type         the expected data type.
+	 * @param defaultValue the default value in case the feature is missing from a
+	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema addFeature(String featureName, Class<Feature<?>> featureClass, FeatureType featureType) {
@@ -141,6 +141,7 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 		}
 
 		featureVectorMap.remove(id);
+		values.remove(featureVector);
 
 		return true;
 	}
@@ -148,8 +149,7 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	/**
 	 * Removes a feature from the container and the set of objects.
 	 *
-	 * @param featureName
-	 *            the feature name.
+	 * @param featureName the feature name.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema remove(String featureName) {
@@ -165,6 +165,15 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	@Override
 	public Iterator<FV> iterator() {
 		return featureVectorMap.values().iterator();
+	}
+
+	/**
+	 * thread-safe as no iterator of the featureVectorMap is needed.
+	 * 
+	 * @return
+	 */
+	public Collection<FV> values() {
+		return new CopyOnWriteArrayList<FV>(values);
 	}
 
 	public Boolean isNumeric(String featureName) {
