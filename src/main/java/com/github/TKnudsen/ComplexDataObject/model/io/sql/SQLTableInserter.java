@@ -70,6 +70,8 @@ public class SQLTableInserter {
 					for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
 						if (!keyValuePairs.containsKey(attribute))
 							continue;
+						if (keyValuePairs.get(attribute) == null)
+							continue;
 						if (javaClass == null)
 							javaClass = keyValuePairs.get(attribute).getClass();
 						else if (javaClass.equals(keyValuePairs.get(attribute).getClass()))
@@ -87,9 +89,9 @@ public class SQLTableInserter {
 			List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
 
 			// remove attributes that cannot be inserted in columns
-			for (String attribute : columns)
-				for (LinkedHashMap<String, Object> row : listOfMapWithKeyValuePairs)
-					if (!row.keySet().contains(attribute))
+			for (LinkedHashMap<String, Object> row : listOfMapWithKeyValuePairs)
+				for (String attribute : row.keySet())
+					if (!columns.contains(attribute))
 						row.remove(attribute);
 		}
 
