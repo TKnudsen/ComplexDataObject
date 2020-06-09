@@ -160,6 +160,15 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		listeners.add(listener);
 	}
 
+	public void addAttributeScoringChangeListener(int position, AttributeScoringFunctionChangeListener listener) {
+		listeners.remove(listener);
+		listeners.add(position, listener);
+	}
+
+	public void removeAttributeScoringChangeListener(AttributeScoringFunctionChangeListener listener) {
+		listeners.remove(listener);
+	}
+
 	protected final void notifyListeners(AttributeScoringFunctionChangeEvent event) {
 		for (AttributeScoringFunctionChangeListener listener : listeners)
 			listener.attributeScoringFunctionChanged(event);
@@ -253,7 +262,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setUncertaintyFunction(Function<ComplexDataObject, Double> uncertaintyFunction) {
 		this.uncertaintyFunction = uncertaintyFunction;
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -268,7 +277,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public void setUncertaintyConsideration(UncertaintyConsideration uncertaintyConsideration) {
 		this.uncertaintyConsideration = uncertaintyConsideration;
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -283,7 +292,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setWeight(double weight) {
 		this.weight = weight;
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -312,7 +321,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	 */
 	public void setContainer(ComplexDataContainer container) {
 		this.container = container;
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 

@@ -42,8 +42,8 @@ public class DimensionalityReductionPipeline<X> {
 
 	private IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction;
 
-	private Map<X, NumericalFeatureVector> featureVectors;
-	private Map<NumericalFeatureVector, NumericalFeatureVector> featureVectorsLowDMap;
+	private Map<X, NumericalFeatureVector> dataToFeatureVectorsMapping;
+	private Map<NumericalFeatureVector, NumericalFeatureVector> featureVectorsToLowDMapping;
 
 	// relative coordinates per dimension
 	private SortedMap<Integer, Function<X, Double>> lowDimRelativeWorldCoordinates;
@@ -59,8 +59,8 @@ public class DimensionalityReductionPipeline<X> {
 	 * @return
 	 */
 	public Map<X, NumericalFeatureVector> getFeatureVectorsMap() {
-		if (featureVectors == null) {
-			featureVectors = new HashMap<X, NumericalFeatureVector>();
+		if (dataToFeatureVectorsMapping == null) {
+			dataToFeatureVectorsMapping = new HashMap<X, NumericalFeatureVector>();
 
 			ArrayList<X> dataList = new ArrayList<>(data);
 			List<NumericalFeatureVector> transform = descriptor.transform(dataList);
@@ -68,10 +68,10 @@ public class DimensionalityReductionPipeline<X> {
 			for (int i = 0; i < transform.size(); i++) {
 				NumericalFeatureVector fv = transform.get(i);
 				X x = dataList.get(i);
-				featureVectors.put(x, fv);
+				dataToFeatureVectorsMapping.put(x, fv);
 			}
 		}
-		return featureVectors;
+		return dataToFeatureVectorsMapping;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class DimensionalityReductionPipeline<X> {
 	 */
 	public void setDimensionalityReduction(IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction) {
 
-		featureVectorsLowDMap = null;
+		featureVectorsToLowDMapping = null;
 		lowDimRelativeWorldCoordinates = null;
 
 		// high-dim feature vectors
@@ -97,7 +97,7 @@ public class DimensionalityReductionPipeline<X> {
 		dimensionalityReduction.transform(input);
 
 		// store result
-		featureVectorsLowDMap = dimensionalityReduction.getMapping();
+		featureVectorsToLowDMapping = dimensionalityReduction.getMapping();
 
 		// set dim red
 		this.dimensionalityReduction = dimensionalityReduction;
@@ -126,7 +126,7 @@ public class DimensionalityReductionPipeline<X> {
 			return null;
 		}
 
-		return featureVectorsLowDMap.get(getFeatureVectorsMap().get(x));
+		return featureVectorsToLowDMapping.get(getFeatureVectorsMap().get(x));
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class DimensionalityReductionPipeline<X> {
 	private void refreshLowDimRelativeWorldCoordinates() {
 		lowDimRelativeWorldCoordinates = null;
 
-		if (featureVectorsLowDMap == null)
+		if (featureVectorsToLowDMapping == null)
 			return;
 
 		lowDimRelativeWorldCoordinates = new TreeMap<>();

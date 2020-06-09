@@ -2,21 +2,23 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Title: BooleanParser
- * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
+ * Copyright: Copyright (c) 2016-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class BooleanParser implements IObjectParser<Boolean> {
+
+	private boolean printWarnings = false;
+
+	public BooleanParser() {
+		this(false);
+	}
+
+	public BooleanParser(boolean printWarnings) {
+		this.printWarnings = printWarnings;
+	}
 
 	@Override
 	public Boolean apply(Object object) {
@@ -55,7 +57,8 @@ public class BooleanParser implements IObjectParser<Boolean> {
 		case "YES":
 			return Boolean.TRUE;
 		default:
-			System.out.println("Object " + object + " could not be parsed to Boolean");
+			if (printWarnings)
+				System.out.println("Object " + object + " could not be parsed to Boolean");
 			return null;
 		}
 	}
@@ -68,5 +71,13 @@ public class BooleanParser implements IObjectParser<Boolean> {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
+	}
+
+	public boolean isPrintWarnings() {
+		return printWarnings;
+	}
+
+	public void setPrintWarnings(boolean printWarnings) {
+		this.printWarnings = printWarnings;
 	}
 }

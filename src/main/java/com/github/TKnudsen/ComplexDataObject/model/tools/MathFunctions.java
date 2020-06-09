@@ -431,8 +431,7 @@ public class MathFunctions {
 		Double sum = 0.0;
 
 		for (Double d : values)
-			// TODO this seems to be inverse...
-			if (Double.isNaN(d) && !ignoreNAN)
+			if (Double.isNaN(d) && ignoreNAN)
 				continue;
 			else
 				sum += d;
