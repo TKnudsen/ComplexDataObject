@@ -26,7 +26,18 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	private String attribute;
 	private String abbreviation;
-	private boolean quantileBased;
+
+	@Deprecated
+	/**
+	 * remove this field, use quantileNormalizationRate = 1.0 instead
+	 */
+	protected boolean quantileBased;
+
+	/**
+	 * rate to which the quantile normalization shall be used
+	 */
+	private double quantileNormalizationRate = 0.0;
+
 	private boolean highIsGood;
 	private double weight;
 
@@ -85,7 +96,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 			this.abbreviation = abbreviation;
 		else
 			this.abbreviation = StringUtils.abbreviate(attribute, 10);
-		this.quantileBased = quantileBased;
+		this.setQuantileBased(quantileBased);
+//		this.quantileBased = quantileBased;
 		this.highIsGood = highIsGood;
 		this.weight = weight;
 
@@ -94,7 +106,31 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	protected abstract void refreshScoringFunction();
 
-	protected abstract Double applyValue(T value);
+	public Double applyValue(T value) {
+		return applyDoubleValue(toDouble(value));
+	}
+
+	protected abstract Double toDouble(T t);
+
+	public Double applyDoubleValue(Double value) {
+
+		if (value == null || Double.isNaN(value))
+			return getScoreForMissingObjects();
+
+		Double v = value;
+
+		// outlier treatment: no need since normalization will crop extremes
+		double output = normalize(v);
+
+		if (!isHighIsGood())
+			output = invertScore(output);
+
+		// decision: weight should be applied externally. Thus, the relative value
+		// domain is preserved and guaranteed internally.
+		return output; // * getWeight();
+	}
+
+	protected abstract double invertScore(double output);
 
 	@Override
 	public final Double apply(ComplexDataObject cdo) {
@@ -128,8 +164,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		double s = applyValue(value);
 
-		// uncertainty information. As a result the scoring function does
-		// not necessarily produce at least once the score 1.0
+		// uncertainty information. Considering uncertainty information may result in a
+		// scoring which does not reach 1.0 for all objects
 		if (uncertaintyConsideration != UncertaintyConsideration.None)
 			if (getUncertaintyFunction() != null) {
 				Double u = getUncertaintyFunction().apply(cdo);
@@ -154,6 +190,20 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		scoresBuffer.put(cdo, s);
 		return s;
 	}
+
+	protected double normalize(double value) {
+		if (getQuantileNormalizationRate() == 0)
+			return normalizeLinear(value);
+
+		double dq = normalizeQuantiles(value);
+		double dl = normalizeLinear(value);
+
+		return (dq * getQuantileNormalizationRate() + dl * (1 - getQuantileNormalizationRate()));
+	}
+
+	protected abstract double normalizeLinear(double value);
+
+	protected abstract double normalizeQuantiles(double value);
 
 	public void addAttributeScoringChangeListener(AttributeScoringFunctionChangeListener listener) {
 		listeners.remove(listener);
@@ -201,12 +251,29 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
+	@Deprecated
+	/**
+	 * replaced by a continuous way to integrate quantile normalization
+	 * 
+	 * @return
+	 */
 	public boolean isQuantileBased() {
-		return quantileBased;
+		return (this.quantileNormalizationRate == 1.0);
 	}
 
+	@Deprecated
+	/**
+	 * replaced by a continuous way to integrate quantile normalization
+	 * 
+	 * @param quantileBased
+	 */
 	public void setQuantileBased(boolean quantileBased) {
-		this.quantileBased = quantileBased;
+//		this.quantileBased = quantileBased;
+		if (quantileBased)
+			this.quantileNormalizationRate = 1.0;
+		else
+			this.quantileNormalizationRate = 0.0;
+
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
@@ -379,5 +446,26 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public void setTruncatedValueRateTop(double truncatedValueRateTop) {
 		this.truncatedValueRateTop = truncatedValueRateTop;
+	}
+
+	public double getQuantileNormalizationRate() {
+		return quantileNormalizationRate;
+	}
+
+	public void setQuantileNormalizationRate(double quantileNormalizationRate) {
+		this.quantileNormalizationRate = Math.max(0.0, Math.min(1.0, quantileNormalizationRate));
+
+//		if (this.quantileNormalizationRate == 1)
+//			quantileBased = true;
+//		else
+//			quantileBased = false;
+
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
 	}
 }
