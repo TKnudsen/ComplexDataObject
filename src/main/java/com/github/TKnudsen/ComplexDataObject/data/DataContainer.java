@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.data;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,25 +11,21 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title: DataContainer
- * </p>
- * 
- * <p>
- * Description: Stores and manages collections of IDObjects. A DataSchema
- * manages the keys/attributes of the collection iff the objects are instanceOf
+ * Stores and manages collections of IDObjects. A DataSchema manages the
+ * keys/attributes of the collection iff the objects are instanceOf
  * IKeyValueProvider.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2019
+ * Copyright: Copyright (c) 2015-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
-	private Map<Long, T> objectsMap = new HashMap<Long, T>();
+	private LinkedHashMap<Long, T> objectsMap = new LinkedHashMap<Long, T>();
 
 	protected Map<String, Map<Long, Object>> attributeValues = new TreeMap<String, Map<Long, Object>>();
 
@@ -39,7 +36,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public DataContainer(Map<Long, T> objectsMap) {
-		this.objectsMap = objectsMap;
+		this.objectsMap.putAll(objectsMap);
+
 		dataSchema = new DataSchema();
 		for (Long ID : objectsMap.keySet())
 			extendDataSchema(objectsMap.get(ID));
