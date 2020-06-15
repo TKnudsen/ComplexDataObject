@@ -115,7 +115,7 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 		// crop values outside bounds to the new value interval
 		for (int i = valueRanking.size() - 1; i >= 0; i--)
-			if (valueRanking.get(i) > getGlobalMin().doubleValue()) {
+			if (valueRanking.get(i) > getGlobalMax().doubleValue()) {
 				valueRanking.remove(i);
 				valueRanking.add(getGlobalMax().doubleValue());
 				i++;
