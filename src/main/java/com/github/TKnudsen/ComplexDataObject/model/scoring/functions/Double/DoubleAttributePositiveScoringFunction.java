@@ -16,8 +16,11 @@ public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScori
 
 	@JsonIgnore
 	private StatisticsSupport statisticsSupport;
+	@JsonIgnore
+	private StatisticsSupport statisticsSupportRaw;
 
 	private NormalizationFunction normalizationFunction;
+	private QuantileNormalizationFunction quantileNormalizationFunction;
 
 	/**
 	 * for serialization purposes
@@ -49,18 +52,34 @@ public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScori
 	}
 
 	@Override
-	protected void initializeNormalizationFunctions() {
-		// if the entire value domain is NaN no normalizationFunction can be built
-		if (!Double.isNaN(statisticsSupport.getMean()))
-			if (isQuantileBased())
-				normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
-			else
-				normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+	protected void initializeRawValuesStatisticsSupport(Collection<Double> doubleValues) {
+		statisticsSupportRaw = new StatisticsSupport(doubleValues);
 	}
 
 	@Override
-	protected double normalize(double value) {
+	protected void initializeNormalizationFunctions() {
+		// if the entire value domain is NaN no normalizationFunction can be built
+		if (!Double.isNaN(statisticsSupport.getMean())) {
+			if (getQuantileNormalizationRate() > 0)
+				quantileNormalizationFunction = new QuantileNormalizationFunction(statisticsSupportRaw, true);
+
+			normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+		}
+	}
+
+	@Override
+	protected double normalizeLinear(double value) {
 		return normalizationFunction.apply(value).doubleValue();
+	}
+
+	@Override
+	protected double normalizeQuantiles(double value) {
+		return quantileNormalizationFunction.apply(value).doubleValue();
+	}
+
+	@Override
+	protected Double toDouble(Double t) {
+		return t;
 	}
 
 	@Override

@@ -17,10 +17,28 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	private Double preFilterOutlierStd = 10.0;
 
+	/**
+	 * outlier cropping level at the minimum side
+	 */
 	protected Double outlierStd = 1.96;
+
+	/**
+	 * outlier cropping level at the maximum side
+	 */
 	protected Double outlierStdTop = 1.96;
-	protected Double minOutlierPruning;
-	protected Double maxOutlierPruning;
+
+	protected Double outlierPruningMinValue;
+	protected Double outlierPruningMaxValue;
+	protected Double outlierPruningMinValueExternal;
+	protected Double outlierPruningMaxValueExternal;
+
+	/**
+	 * if true, values that exactly match the neutral value will receive no quantile
+	 * normalization. Values that exactly match the outlier pruning levels will
+	 * receibe the defined {@link quantileNormalizationRate}. every value in between
+	 * receives a ratio that is interpolated, accordingly.
+	 */
+	private boolean linearTransitionOfQuantileNormalizationRates = true;
 
 	/**
 	 * for serialization purposes
@@ -61,19 +79,24 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 				doubleValues.add(value);
 		}
 
-		if (!isQuantileBased() && outlierStd != null && !Double.isNaN(outlierStd) && outlierStdTop != null
-				&& !Double.isNaN(outlierStdTop))
-			initializeOutlierTreatment(doubleValues);
+		// raw value statistics
+		initializeRawValuesStatisticsSupport(doubleValues);
+
+		// !isQuantileBased()
+//		if (outlierStd != null && !Double.isNaN(outlierStd) && outlierStdTop != null && !Double.isNaN(outlierStdTop)) {
+		doubleValues = clampValues(doubleValues, 10.0);
+		initializeStdOutlierTreatment(doubleValues);
+//		}
 
 		truncatedValueRate = 0;
 		truncatedValueRateTop = 0;
-		if (!isQuantileBased() && minOutlierPruning != null && maxOutlierPruning != null) {
+		if (outlierPruningMinValue != null && outlierPruningMaxValue != null) {
 			Collection<Double> afterO = new ArrayList<>();
 			for (Double d : doubleValues) {
 				double truncated = truncateOutlier(d);
 				if (truncated != d) {
 					truncatedValueRate++;
-					if (d > maxOutlierPruning)
+					if (d > outlierPruningMaxValue)
 						truncatedValueRateTop++;
 				}
 				afterO.add(truncated);
@@ -84,6 +107,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		truncatedValueRate /= doubleValues.size();
 		truncatedValueRateTop /= doubleValues.size();
 
+		// outlier-pruned value statistics
 		initializeStatisticsSupport(doubleValues);
 
 		initializeNormalizationFunctions();
@@ -110,44 +134,55 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		return score;
 	}
 
-	/**
-	 * treatment of anomalies is performed across the entire value domain with one
-	 * statistics distribution instance. no differentiation between positive and
-	 * negative here.
-	 * 
-	 * given double values must not be null or NaN!
-	 */
-	protected final void initializeOutlierTreatment(Collection<Double> doubleValues) {
+	private Collection<Double> clampValues(Collection<Double> doubleValues, double std) {
+		Collection<Double> clampedValues = new ArrayList<>();
+		for (Double d : doubleValues)
+			if (d != null && !Double.isNaN(d))
+				clampedValues.add(d);
 
-		// two-step process. first: remove crappy values from distribution.
-		StatisticsSupport statisticsSupport = new StatisticsSupport(doubleValues);
+		StatisticsSupport statisticsSupport = new StatisticsSupport(clampedValues);
 		double mean = statisticsSupport.getMean();
 		double standardDeviation = statisticsSupport.getStandardDeviation();
 
-		if (mean - 10.0 * standardDeviation > statisticsSupport.getMin()
-				|| mean + 10.0 * standardDeviation < statisticsSupport.getMax()) {
+		if (mean - std * standardDeviation > statisticsSupport.getMin()
+				|| mean + std * standardDeviation < statisticsSupport.getMax()) {
 
-			Collection<Double> clampedValues = new ArrayList<>();
+			Collection<Double> clamped = new ArrayList<>();
 
-			for (Double d : doubleValues)
-				if (mean - preFilterOutlierStd * standardDeviation < d
-						&& mean + preFilterOutlierStd * standardDeviation > d)
-					clampedValues.add(d);
+			for (Double d : clampedValues) {
+				d = Math.max(d, mean - preFilterOutlierStd * standardDeviation);
+				d = Math.min(d, mean + preFilterOutlierStd * standardDeviation);
+				clamped.add(d);
+			}
 
-			statisticsSupport = new StatisticsSupport(clampedValues);
+			clampedValues = clamped;
 		}
 
-		// two-step process. second: calculate statistics with remaining values and
-		// define min and max crop level
+		return clampedValues;
+	}
 
-		mean = statisticsSupport.getMean();
-		standardDeviation = statisticsSupport.getStandardDeviation();
+	protected void initializeStdOutlierTreatment(Collection<Double> doubleValues) {
+
+		Collection<Double> values = new ArrayList<>();
+		for (Double d : doubleValues)
+			if (d != null && !Double.isNaN(d))
+				values.add(d);
+
+		StatisticsSupport statisticsSupport = new StatisticsSupport(values);
+
+		double mean = statisticsSupport.getMean();
+		double standardDeviation = statisticsSupport.getStandardDeviation();
 		double min = statisticsSupport.getMin();
 		double max = statisticsSupport.getMax();
 
-		minOutlierPruning = Math.max(min, mean - outlierStd * standardDeviation);
-//		maxOutlierPruning = Math.min(max, mean + outlierStd * standardDeviation);
-		maxOutlierPruning = Math.min(max, mean + outlierStdTop * standardDeviation);
+		double outlierStd = (this.outlierStd != null && !Double.isNaN(this.outlierStd)) ? this.outlierStd : 10.0;
+		double outlierStdTop = (this.outlierStdTop != null && !Double.isNaN(this.outlierStdTop)) ? this.outlierStdTop
+				: 10.0;
+
+		outlierPruningMinValue = (outlierPruningMinValueExternal != null) ? outlierPruningMinValueExternal
+				: Math.max(min, mean - outlierStd * standardDeviation);
+		outlierPruningMaxValue = (outlierPruningMaxValueExternal != null) ? outlierPruningMaxValueExternal
+				: Math.min(max, mean + outlierStdTop * standardDeviation);
 	}
 
 	/**
@@ -155,54 +190,60 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	 */
 	protected abstract void initializeStatisticsSupport(Collection<Double> doubleValues);
 
+	protected abstract void initializeRawValuesStatisticsSupport(Collection<Double> doubleValues);
+
 	protected abstract void initializeNormalizationFunctions();
 
+	public final boolean isLowerOutlier(double value) {
+		if (outlierPruningMinValue == null)
+			throw new NullPointerException(getClass().getSimpleName() + ": minOutlierPruning must not be null");
+
+		if (value < outlierPruningMinValue)
+			return true;
+		return false;
+	}
+
+	public final boolean isUpperOutlier(double value) {
+		if (outlierPruningMaxValue == null)
+			throw new NullPointerException(getClass().getSimpleName() + ": maxOutlierPruning must not be null");
+
+		if (value > outlierPruningMaxValue)
+			return true;
+		return false;
+	}
+
 	private final double truncateOutlier(double value) {
-		if (minOutlierPruning == null || maxOutlierPruning == null)
+		if (outlierPruningMinValue == null || outlierPruningMaxValue == null)
 			return value;
 
-		return Math.max(minOutlierPruning, Math.min(value, maxOutlierPruning));
+		return Math.max(outlierPruningMinValue, Math.min(value, outlierPruningMaxValue));
 	}
-
-	/**
-	 * given double values must not be null or NaN!
-	 */
-	protected abstract double normalize(double value);
 
 	@Override
-	public Double applyValue(Double value) {
+	protected double normalize(double value) {
+		if (!linearTransitionOfQuantileNormalizationRates)
+			return super.normalize(value);
 
-		if (value == null || Double.isNaN(value))
-			return getScoreForMissingObjects();
+		if (getQuantileNormalizationRate() == 0)
+			return normalizeLinear(value);
 
-		Double v = value;
+		double dq = normalizeQuantiles(value);
+		double dl = normalizeLinear(value);
 
-		// pruning outliers: non need since normalization will crop extremes
-		double output = normalize(v);
-
-		if (!isHighIsGood())
-			output = invertScore(output);
-
-		// decision: weight should be applied externally. Thus, the relative value
-		// domain is preserved and guaranteed internally.
-		return output; // * getWeight();
+		double localQuantileNormalizationRate = Math.abs(normalizeLinear(value)) * getQuantileNormalizationRate();
+		return (dq * localQuantileNormalizationRate + dl * (1 - localQuantileNormalizationRate));
 	}
-
-	protected abstract double invertScore(double output);
-
-//	@Override
-//	public double getAverageScoreWithoutMissingValues() {
-//		return scoreAverageWithoutMissingValues;
-//	}
 
 	public abstract StatisticsSupport getStatisticsSupport();
 
-	public double getOutlierStd() {
+	public Double getOutlierStd() {
 		return outlierStd;
 	}
 
-	public void setOutlierStd(double outlierStd) {
+	public void setOutlierStd(Double outlierStd) {
 		this.outlierStd = outlierStd;
+		this.outlierPruningMinValueExternal = null;
+
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();
@@ -218,6 +259,50 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	public void setOutlierStdTop(Double outlierStdTop) {
 		this.outlierStdTop = outlierStdTop;
+		this.outlierPruningMaxValueExternal = null;
+
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, getAttribute(), this);
+
+		notifyListeners(event);
+	}
+
+	public boolean isLinearTransitionOfQuantileNormalizationRates() {
+		return linearTransitionOfQuantileNormalizationRates;
+	}
+
+	public void setLinearTransitionOfQuantileNormalizationRates(boolean linearTransitionOfQuantileNormalizationRates) {
+		this.linearTransitionOfQuantileNormalizationRates = linearTransitionOfQuantileNormalizationRates;
+	}
+
+	public Double getOutlierPruningMinValue() {
+		return outlierPruningMinValue;
+	}
+
+	public void setOutlierPruningMinValue(Double outlierPruningMinValue) {
+		this.outlierPruningMinValueExternal = outlierPruningMinValue;
+		this.outlierStd = null;
+
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, getAttribute(), this);
+
+		notifyListeners(event);
+	}
+
+	public Double getOutlierPruningMaxValue() {
+		return outlierPruningMaxValue;
+	}
+
+	public void setOutlierPruningMaxValue(Double outlierPruningMaxValue) {
+		this.outlierPruningMaxValueExternal = outlierPruningMaxValue;
+		this.outlierStdTop = null;
+
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();

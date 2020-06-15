@@ -23,6 +23,7 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 	private StatisticsSupport statisticsSupport;
 
 	private NormalizationFunction normalizationFunction;
+	private QuantileNormalizationFunction quantileNormalizationFunction;
 
 	/**
 	 * for serialization purposes
@@ -62,15 +63,15 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			if (b == null)
 				continue;
 
-			doubleValues.add(boolToDouble(b));
+			doubleValues.add(toDouble(b));
 		}
 
 		statisticsSupport = new StatisticsSupport(doubleValues);
 
-		if (isQuantileBased())
-			normalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
-		else
-			normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+		if (getQuantileNormalizationRate() > 0)
+			quantileNormalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
+
+		normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
 
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
 				false);
@@ -86,27 +87,51 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 	}
 
+//	@Override
+//	public Double applyValue(Boolean value) {
+//		if (value == null)
+//			getScoreForMissingObjects();
+//
+//		double output = normalizationFunction.apply(boolToDouble(value)).doubleValue();
+//
+//		if (!isHighIsGood())
+//			output = 1 - output;
+//
+//		// decision: weight should be applied externally. This, the relative value
+//		// domain is preserved and guaranteed internally.
+//		return output; // * getWeight();
+//	}
+
+//	private Double boolToDouble(Boolean bool) {
+//		Objects.requireNonNull(bool);
+//
+//		if (bool)
+//			return 1.0;
+//		return 0.0;
+//	}
+
 	@Override
-	public Double applyValue(Boolean value) {
-		if (value == null)
-			getScoreForMissingObjects();
+	protected Double toDouble(Boolean t) {
+		Objects.requireNonNull(t);
 
-		double output = normalizationFunction.apply(boolToDouble(value)).doubleValue();
-
-		if (!isHighIsGood())
-			output = 1 - output;
-
-		// decision: weight should be applied externally. This, the relative value
-		// domain is preserved and guaranteed internally.
-		return output; // * getWeight();
-	}
-
-	private Double boolToDouble(Boolean bool) {
-		Objects.requireNonNull(bool);
-
-		if (bool)
+		if (t)
 			return 1.0;
 		return 0.0;
+	}
+
+	@Override
+	protected double invertScore(double output) {
+		return output = 1 - output;
+	}
+
+	@Override
+	protected double normalizeLinear(double value) {
+		return normalizationFunction.apply(value).doubleValue();
+	}
+
+	@Override
+	protected double normalizeQuantiles(double value) {
+		return quantileNormalizationFunction.apply(value).doubleValue();
 	}
 
 }

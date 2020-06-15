@@ -3,7 +3,9 @@ package com.github.TKnudsen.ComplexDataObject.model.io.json;
 import java.io.File;
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
@@ -118,6 +120,15 @@ public class JSONLoader {
 		try {
 			function = mapper.readValue(new File(file), AttributeScoringFunction.class);
 			return function;
+		} catch (UnrecognizedPropertyException ue) {
+			ObjectMapper objectMapper = ObjectMapperFactory.getComplexDataObjectObjectMapper();
+			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			try {
+				function = objectMapper.readValue(new File(file), AttributeScoringFunction.class);
+				return function;
+			} catch (IOException e_) {
+				e_.printStackTrace();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
