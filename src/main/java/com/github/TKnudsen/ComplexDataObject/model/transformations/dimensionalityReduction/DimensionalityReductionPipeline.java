@@ -40,7 +40,7 @@ public class DimensionalityReductionPipeline<X> {
 	private final IDescriptor<X, NumericalFeatureVector> descriptor;
 	private final Collection<X> data;
 
-	private IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction;
+	private IDimensionalityReduction<NumericalFeatureVector, NumericalFeatureVector> dimensionalityReduction;
 
 	private Map<X, NumericalFeatureVector> dataToFeatureVectorsMapping;
 	private Map<NumericalFeatureVector, NumericalFeatureVector> featureVectorsToLowDMapping;
@@ -84,7 +84,8 @@ public class DimensionalityReductionPipeline<X> {
 	 * 
 	 * @param dimensionalityReduction
 	 */
-	public void setDimensionalityReduction(IDimensionalityReduction<NumericalFeatureVector> dimensionalityReduction) {
+	public void setDimensionalityReduction(
+			IDimensionalityReduction<NumericalFeatureVector, NumericalFeatureVector> dimensionalityReduction) {
 
 		featureVectorsToLowDMapping = null;
 		lowDimRelativeWorldCoordinates = null;
