@@ -74,11 +74,6 @@
 			<version>${weka.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>15.0</version><!-- <version>11.0.2</version> -->
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.9.6</version>
@@ -207,7 +202,6 @@
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
