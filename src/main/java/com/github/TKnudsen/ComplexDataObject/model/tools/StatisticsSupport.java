@@ -9,8 +9,6 @@ import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import com.google.common.primitives.Doubles;
-
 /**
  * <p>
  * Title: StatisticsSupport
@@ -31,11 +29,14 @@ import com.google.common.primitives.Doubles;
  * Values stored? Yes
  * </p>
  * 
+ * *
  * <p>
- * Copyright: Copyright (c) 2012-2019
+ * Copyright: (c) 2012-2020 Juergen Bernard,
+ * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
+ * @version 1.08
  *
  */
 public class StatisticsSupport extends DescriptiveStatistics implements Iterable<Double> {
@@ -222,7 +223,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 	 */
 	public int getCountUniqueObservations() {
 		if (uniqueObservations == -1) {
-			List<Double> list = Doubles.asList(getValues());
+			List<Double> list = DataConversion.doublePrimitivesToList(getValues());
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			Set uniqueValues = new HashSet(list);
 			uniqueObservations = uniqueValues.size();
@@ -253,7 +254,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 
 	@Override
 	public Iterator<Double> iterator() {
-		return Doubles.asList(getValues()).iterator();
+		return DataConversion.doublePrimitivesToList(getValues()).iterator();
 	}
 
 	/**
