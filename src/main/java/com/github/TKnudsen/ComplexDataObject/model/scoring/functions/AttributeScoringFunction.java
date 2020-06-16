@@ -96,7 +96,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 			this.abbreviation = abbreviation;
 		else
 			this.abbreviation = StringUtils.abbreviate(attribute, 10);
-		this.setQuantileBased(quantileBased);
+		this.quantileBased = quantileBased;
+		this.quantileNormalizationRate = (quantileBased) ? 1.0 : 0.0;
 //		this.quantileBased = quantileBased;
 		this.highIsGood = highIsGood;
 		this.weight = weight;
