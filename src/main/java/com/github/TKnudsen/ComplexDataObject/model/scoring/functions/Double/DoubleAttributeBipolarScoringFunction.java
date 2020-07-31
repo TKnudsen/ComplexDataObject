@@ -29,7 +29,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	@JsonIgnore
 	private StatisticsSupport statisticsSupportNegative;
 
-	private double neutralValue = Double.NaN;
+	private double neutralValue = 0.0;
 
 	private NormalizationFunction normalizationFunctionPositive;
 	private NormalizationFunction normalizationFunctionNegative;
