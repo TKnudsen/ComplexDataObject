@@ -27,7 +27,6 @@ public class CategoricalFeature extends Feature<String> {
 	 */
 	private static final long serialVersionUID = -2550677654103245531L;
 
-	@SuppressWarnings("unused")
 	private CategoricalFeature() {
 		super(FeatureType.STRING);
 	}
