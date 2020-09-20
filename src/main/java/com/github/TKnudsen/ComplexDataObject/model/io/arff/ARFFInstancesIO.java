@@ -61,8 +61,6 @@ public class ARFFInstancesIO {
 	 * @throws IOException
 	 */
 	public static void saveARFF(Instances instances, String fileNameWithArffExtension) throws IOException {
-		// saveARFF(instances, new File(fileNameWithArffExtension));
-
 		try {
 			DataSink.write(fileNameWithArffExtension, instances);
 		} catch (Exception e) {

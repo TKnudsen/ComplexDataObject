@@ -71,6 +71,10 @@ public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDe
 
 			if (container.getAttributeNames().contains("class"))
 				fv.add("class", cdo.getAttribute("class"));
+			if (container.getAttributeNames().contains("Class"))
+				fv.add("class", cdo.getAttribute("Class"));
+			if (container.getAttributeNames().contains("CLASS"))
+				fv.add("class", cdo.getAttribute("CLASS"));
 
 			featureVectors.add(fv);
 		}

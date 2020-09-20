@@ -14,6 +14,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DateParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IntegerParser;
+
 /**
  * <p>
  * Title: ParserTools
@@ -50,105 +55,42 @@ public abstract class ParserTools implements Serializable {
 	private static SimpleDateFormat IS07 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 	private static SimpleDateFormat IS08 = new SimpleDateFormat("MM.dd.yyyy");
 
+	private static BooleanParser booleanParser = new BooleanParser();
+	private static IntegerParser integerParser = new IntegerParser();
+	private static DoubleParser doubleParser = new DoubleParser();
+	private static DateParser dateParser = new DateParser();
+
 	/**
 	 * Parses date-oriented tokens. Checks most of the popular date formats.
 	 * 
-	 * @param date
-	 *            token as String.
+	 * @param date token as String.
 	 * @return
 	 * @throws ParseException
 	 * @Deprecated use DateParser
 	 */
-	@Deprecated
-	public static synchronized Date parseDate(String token) {
-		Date date = null;
-		String t = token.replace("T", " ");
+	public static synchronized Date parseDate(Object token) {
+		return dateParser.apply(token);
+	}
 
-		// speedup:
-		if (token.equals("Date/Time"))
-			return date;
+	public static synchronized Boolean parseBoolean(Object token) {
+		return booleanParser.apply(token);
+	}
 
-		// alternative
-		if (t.length() == 23)
-			try {
-				// 2007-01-01 00:00:00:000
-				synchronized (ISO0) {
-					date = ISO0.parse(t);
-				}
-			} catch (ParseException pe0) {
-			}
-		else if (t.length() == 19)
-			try {
-				// 2007-01-01 00:00:00
-				synchronized (ISO1) {
-					date = ISO1.parse(t);
-				}
-			} catch (ParseException pe8) {
-			}
-		else if (t.length() == 16)
-			try {
-				// 2007-01-01 00:00
-				synchronized (IS02) {
-					date = IS02.parse(t);
-				}
-			} catch (ParseException pe8) {
-				try {
-					// 2007.01.01 00:00
-					date = IS07.parse(t);
-				} catch (ParseException pe7) {
-				}
-			}
-		else if (t.length() == 13)
-			try {
-				// 2007-01-01 00
-				synchronized (IS03) {
-					date = IS03.parse(t);
-				}
-			} catch (ParseException pe8) {
-			}
-		else if (t.length() == 10)
-			try {
-				// 2007-01-01
-				synchronized (IS04) {
-					date = IS04.parse(t);
-				}
-			} catch (ParseException pe8) {
-				try {
-					// 13.01.1969
-					synchronized (IS06) {
-						date = IS06.parse(token);
-					}
-				} catch (ParseException pe) {
-					try {
-						// 01_13_1969
-						synchronized (IS06b) {
-							date = IS06b.parse(token);
-						}
-					} catch (ParseException pe_) {
-						try {
-							// 01.13.1969
-							synchronized (IS08) {
-								date = IS08.parse(token);
-							}
-						} catch (ParseException pe__) {
-						}
-					}
-				}
-			}
-		else if (t.length() == 7)
-			try {
-				// 2007-01
-				synchronized (IS05) {
-					date = IS05.parse(t);
-				}
-			} catch (ParseException pe8) {
-			}
-		return date;
+	public static synchronized Integer parseInteger(Object token) {
+		return integerParser.apply(token);
+	}
+
+	public static synchronized Double parseDouble(Object token) {
+		return doubleParser.apply(token);
+	}
+
+	public static synchronized Float parseFloat(Object token) {
+		return doubleParser.apply(token).floatValue();
 	}
 
 	/**
-	 * method for loading data from a file. data is returned row-wise as a List
-	 * of Strings
+	 * method for loading data from a file. data is returned row-wise as a List of
+	 * Strings
 	 * 
 	 * @param dataFile
 	 * @return
@@ -180,107 +122,93 @@ public abstract class ParserTools implements Serializable {
 	}
 
 	/**
-	 * assigns an identifier and an object to an Entry.
 	 * 
-	 * @param identifier
+	 * @param file
+	 * @param tokenizer
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<List<String>> loadTokens(String file, String tokenizer) throws IOException {
+		List<String> rows = loadRows(file);
+
+		List<List<String>> dataTokens = new ArrayList<List<String>>();
+		int coloumbsCount = 0;
+		for (int i = 0; i < rows.size(); i++) {
+			String row = rows.get(i);
+			List<String> lineTokens = new ArrayList<String>();
+
+			while (true) {
+				if (row.contains(tokenizer)) {
+					lineTokens.add(row.substring(0, row.indexOf(tokenizer)));
+					row = row.substring(row.indexOf(tokenizer) + tokenizer.length(), row.length());
+					if (!row.contains(tokenizer))
+						lineTokens.add(row.trim());
+					continue;
+				}
+
+				dataTokens.add(lineTokens);
+				if (coloumbsCount < lineTokens.size())
+					coloumbsCount = lineTokens.size();
+				break;
+			}
+		}
+
+		return dataTokens;
+	}
+
+	/**
+	 * assigns an identifier and an object to an entry.
+	 * 
+	 * @param attribute
 	 * @param value
 	 * @param missingValueIndicator
-	 * @return
+	 * @return an entry with the value parsed to the attribute type
 	 */
-	public static Entry<String, ?> assignEntry(String identifier, Object value, String missingValueIndicator) {
+	public static Entry<String, ?> parseValue(String attribute, Class<?> classType, Object value,
+			String missingValueIndicator) {
 
-		if (identifier == null || value == null)
+		if (attribute == null || value == null)
 			return null;
 
 		Entry<String, ?> entry = null;
 
 		// Integer
-		if (value.equals(Integer.class))
-			try {
-				entry = new SimpleEntry<String, Integer>(identifier, Integer.parseInt(String.valueOf((int) value)));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		// Date (real date)
-		else if (value.equals(Date.class))
-			if (String.valueOf(value).equals(""))
-				entry = new SimpleEntry<String, Date>(identifier, null);
-			else
-				entry = new SimpleEntry<String, Date>(identifier, ParserTools.parseDate(String.valueOf(value)));
-		// Double //TODO check for Number?
-		else if (value.equals(Double.class))
-			if (String.valueOf(value).equals("") || String.valueOf(value).equals(missingValueIndicator))
-				entry = new SimpleEntry<String, Double>(identifier, Double.NaN);
-			else {
-				try {
-					entry = new SimpleEntry<String, Double>(identifier, new Double(String.valueOf(value).replace(",", ".")));
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-			}
-		// String
-		else if (value.equals(String.class))
-			entry = new SimpleEntry<String, String>(identifier, new String(String.valueOf(value)));
-		// Boolean
-		else if (value.equals(Boolean.class)) {
-			String s = String.valueOf(value);
+		if (classType.equals(Integer.class))
+			entry = new SimpleEntry<String, Integer>(attribute, parseInteger(value));
 
-			switch (s) {
-			case "j": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
+		// Double
+		else if (classType.equals(Double.class))
+			if (String.valueOf(value).equals("") || String.valueOf(value).equals(missingValueIndicator))
+				entry = new SimpleEntry<String, Double>(attribute, Double.NaN);
+			else {
+				entry = new SimpleEntry<String, Double>(attribute, parseDouble(value));
 			}
-			case "V": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
+
+		// Float
+		else if (classType.equals(Float.class))
+			if (String.valueOf(value).equals("") || String.valueOf(value).equals(missingValueIndicator))
+				entry = new SimpleEntry<String, Float>(attribute, Float.NaN);
+			else {
+				entry = new SimpleEntry<String, Float>(attribute, parseFloat(value));
 			}
-			case "1": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
-			}
-			case "1.0": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
-			}
-			case "Ja": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
-			}
-			case "ja": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
-			}
-			case "yes": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(true));
-				break;
-			}
-			case "0": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
-				break;
-			}
-			case "0.0": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
-				break;
-			}
-			case "Nein": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
-				break;
-			}
-			case "nein": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
-				break;
-			}
-			case "no": {
-				entry = new SimpleEntry<String, Boolean>(identifier, new Boolean(false));
-				break;
-			}
-			default:
-				System.out.println("ParserTools.assignEntry: new boolean!!!: " + s);
-				System.exit(-1);
-				break;
-			}
+
+		// Date (real date)
+		else if (classType.equals(Date.class))
+			if (String.valueOf(value).equals(""))
+				entry = new SimpleEntry<String, Date>(attribute, null);
+			else
+				entry = new SimpleEntry<String, Date>(attribute, parseDate(value));
+
+		// String
+		else if (classType.equals(String.class))
+			entry = new SimpleEntry<String, String>(attribute, new String(String.valueOf(value)));
+
+		// Boolean
+		else if (classType.equals(Boolean.class)) {
+			entry = new SimpleEntry<String, Boolean>(attribute, parseBoolean(value));
 		}
 
 		return entry;
 	}
+
 }

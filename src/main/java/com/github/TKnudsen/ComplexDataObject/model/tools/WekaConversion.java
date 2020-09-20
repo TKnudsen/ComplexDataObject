@@ -126,29 +126,29 @@ public class WekaConversion {
 		return instances;
 	}
 
-	/**
-	 * 
-	 * @param fvs
-	 * @return
-	 * @deprecated use
-	 */
-	public static Instances getInstances(
-			FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
-
-		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
-		for (String featureName : featureContainer.getFeatureNames()) {
-			Attribute a = null;
-			if (featureContainer.isNumeric(featureName))
-				a = new Attribute(featureName);
-			else
-				a = new Attribute(featureName, (List<String>) null);
-			attrs.add(a);
-		}
-
-		Instances instances = new Instances("asdf", (ArrayList<Attribute>) attrs, featureContainer.size());
-		addInstances(featureContainer, instances);
-		return instances;
-	}
+//	/**
+//	 * 
+//	 * @param fvs
+//	 * @return
+//	 * @deprecated use
+//	 */
+//	public static Instances getInstances(
+//			FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer) {
+//
+//		List<Attribute> attrs = new ArrayList<Attribute>(featureContainer.getFeatureNames().size());
+//		for (String featureName : featureContainer.getFeatureNames()) {
+//			Attribute a = null;
+//			if (featureContainer.isNumeric(featureName))
+//				a = new Attribute(featureName);
+//			else
+//				a = new Attribute(featureName, (List<String>) null);
+//			attrs.add(a);
+//		}
+//
+//		Instances instances = new Instances("asdf", (ArrayList<Attribute>) attrs, featureContainer.size());
+//		addInstances(featureContainer, instances);
+//		return instances;
+//	}
 
 	/**
 	 * 
