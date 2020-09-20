@@ -20,6 +20,7 @@ import weka.core.Instances;
  * 
  * @author Juergen Bernard
  * @version 1.02
+ * @deprecated switch to a static variant
  */
 public class ARFFWriter {
 
@@ -28,6 +29,7 @@ public class ARFFWriter {
 	 * 
 	 * @param container
 	 * @param fileNameWithoutExtension
+	 * @deprecated switch to a static variant
 	 */
 	public void writeToARFF(ComplexDataContainer container, String fileNameWithoutExtension) {
 
@@ -46,6 +48,7 @@ public class ARFFWriter {
 	 * @param container
 	 * @param fileNameWithoutExtension
 	 * @param relationName
+	 * @deprecated switch to a static variant
 	 */
 	public void writeToARFF(ComplexDataContainer container, String fileNameWithoutExtension, String relationName) {
 
@@ -65,6 +68,8 @@ public class ARFFWriter {
 	 * @param featureContainer
 	 * @param stringToNominal
 	 * @param fileNameWithoutExtension
+	 * @deprecated does not store class attribute. better use
+	 *             WekaConversion.getlabeledinstances and than use output method
 	 */
 	public void writeToARFF(FeatureVectorContainer<? extends IFeatureVectorObject<?, ?>> featureContainer,
 			boolean stringToNominal, String fileNameWithoutExtension) {
