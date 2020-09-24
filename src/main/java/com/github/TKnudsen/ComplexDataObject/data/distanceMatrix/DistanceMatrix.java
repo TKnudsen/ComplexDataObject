@@ -25,7 +25,7 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	// constructor properties
-	private List<T> objects;
+	private List<? extends T> elements;
 	protected IDistanceMeasure<? super T> distanceMeasure;
 
 	// storage, indexing
@@ -34,11 +34,11 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	private boolean reportWhenDistanceIsMissing = false;
 
-	public DistanceMatrix(List<T> objects, IDistanceMeasure<? super T> distanceMeasure) {
+	public DistanceMatrix(List<? extends T> elements, IDistanceMeasure<? super T> distanceMeasure) {
 		if (distanceMeasure == null)
 			throw new IllegalArgumentException("DistanceMatrix: given distance measures was null");
 
-		this.objects = objects;
+		this.elements = elements;
 		this.distanceMeasure = distanceMeasure;
 
 		initializeDistanceMatrix();
@@ -47,8 +47,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	protected void initializeObjectIndex() {
 		// create index
 		objectIndex = new HashMap<>();
-		for (int i = 0; i < objects.size(); i++)
-			objectIndex.put(objects.get(i), i);
+		for (int i = 0; i < elements.size(); i++)
+			objectIndex.put(elements.get(i), i);
 	}
 
 	protected void initializeDistanceMatrix() {
@@ -98,7 +98,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 
 	@Override
 	public String getDescription() {
-		return getName() + ", size: " + objects.size() + " x " + objects.size() + ".";
+		return getName() + ", size: " + elements.size() + " x " + elements.size() + ".";
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	public int size() {
-		return objects.size();
+		return elements.size();
 	}
 
 	@Override
@@ -124,8 +124,8 @@ public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<T> getElements() {
-		return objects;
+	public List<? extends T> getElements() {
+		return elements;
 	}
 
 	public boolean isReportWhenDistanceIsMissing() {
