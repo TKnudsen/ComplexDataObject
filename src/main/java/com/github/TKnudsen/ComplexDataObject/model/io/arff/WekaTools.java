@@ -149,13 +149,6 @@ public class WekaTools {
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-		// Date (real date)
-		else if (attributeSchema.get(spalte).getValue().equals(Date.class))
-			if (missingValue || String.valueOf(instance.value(spalte)).equals(""))
-				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(), null);
-			else
-				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(),
-						ParserTools.parseDate(String.valueOf(instance.value(spalte))));
 		// Double //TODO check for Number?
 		else if (attributeSchema.get(spalte).getValue().equals(Double.class))
 			if (missingValue || String.valueOf(instance.value(spalte)).equals("")
@@ -182,63 +175,17 @@ public class WekaTools {
 				entry = new SimpleEntry<String, String>(attributeSchema.get(spalte).getKey(), null);
 			else {
 				String s = String.valueOf(instance.value(spalte));
-
-				switch (s) {
-				case "j": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "V": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "1": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "1.0": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "Ja": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "ja": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "yes": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(true));
-					break;
-				}
-				case "0": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(false));
-					break;
-				}
-				case "0.0": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(false));
-					break;
-				}
-				case "Nein": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(false));
-					break;
-				}
-				case "nein": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(false));
-					break;
-				}
-				case "no": {
-					entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), new Boolean(false));
-					break;
-				}
-				default:
-					System.out.println("WekaTools.assignEntry: new boolean!!!: " + s);
-					System.exit(-1);
-					break;
-				}
+				Boolean b = ParserTools.parseBoolean(s);
+				entry = new SimpleEntry<String, Boolean>(attributeSchema.get(spalte).getKey(), b);
 			}
 		}
+		// Date (real date)
+		else if (attributeSchema.get(spalte).getValue().equals(Date.class))
+			if (missingValue || String.valueOf(instance.value(spalte)).equals(""))
+				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(), null);
+			else
+				entry = new SimpleEntry<String, Date>(attributeSchema.get(spalte).getKey(),
+						ParserTools.parseDate(String.valueOf(instance.value(spalte))));
 
 		return entry;
 	}

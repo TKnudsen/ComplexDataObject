@@ -96,7 +96,7 @@ public class DistanceMatrixStatistics<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<T> getElements() {
+	public List<? extends T> getElements() {
 		return distanceMatrix.getElements();
 	}
 

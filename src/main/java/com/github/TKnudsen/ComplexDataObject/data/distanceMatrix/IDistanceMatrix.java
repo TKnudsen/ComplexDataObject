@@ -20,13 +20,13 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 
 	public double[][] getDistanceMatrix();
 
-	public List<T> getElements();
+	public List<? extends T> getElements();
 
 	public boolean isSymmetric();
 

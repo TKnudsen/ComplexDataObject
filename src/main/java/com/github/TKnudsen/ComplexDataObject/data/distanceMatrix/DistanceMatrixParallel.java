@@ -3,9 +3,8 @@ package com.github.TKnudsen.ComplexDataObject.data.distanceMatrix;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.ToDoubleBiFunction;
 import java.util.stream.IntStream;
-
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 
 /**
  * Distance matrix implementation which allows the computation of pairwise
@@ -14,19 +13,20 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
  */
 public class DistanceMatrixParallel<T> implements IDistanceMatrix<T> {
 
-	private final List<T> elements;
+	private final List<? extends T> elements;
 	private final Map<T, Integer> indices;
 	private final boolean symmetric;
 	private final boolean parallel;
 
 	private final double matrix[][];
 
-	public DistanceMatrixParallel(List<T> elements, IDistanceMeasure<? super T> distanceMeasure) {
+	public DistanceMatrixParallel(List<? extends T> elements,
+			ToDoubleBiFunction<? super T, ? super T> distanceMeasure) {
 		this(elements, distanceMeasure, true, true);
 	}
 
-	public DistanceMatrixParallel(List<T> elements, IDistanceMeasure<? super T> distanceMeasure, boolean symmetric,
-			boolean parallel) {
+	public DistanceMatrixParallel(List<? extends T> elements, ToDoubleBiFunction<? super T, ? super T> distanceMeasure,
+			boolean symmetric, boolean parallel) {
 
 		this.elements = elements;
 		this.indices = new LinkedHashMap<T, Integer>();
@@ -96,7 +96,7 @@ public class DistanceMatrixParallel<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<T> getElements() {
+	public List<? extends T> getElements() {
 		return elements;
 	}
 

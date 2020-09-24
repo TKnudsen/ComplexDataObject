@@ -18,17 +18,17 @@ import java.util.Map;
  * </p>
  * 
  * @author Christian Ritter, Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class PairwiseDistancesMatrix<T> implements IDistanceMatrix<T> {
 
 	private double[][] distanceMatrix;
 	private Map<T, Integer> objectMapping;
-	private List<T> elements;
+	private List<? extends T> elements;
 
-	public PairwiseDistancesMatrix(List<T> objects, double[][] pairwiseDistances) {
+	public PairwiseDistancesMatrix(List<? extends T> elements, double[][] pairwiseDistances) {
 		this.distanceMatrix = pairwiseDistances;
-		this.elements = objects;
+		this.elements = elements;
 
 		initializeObjectMapping();
 	}
@@ -77,7 +77,7 @@ public class PairwiseDistancesMatrix<T> implements IDistanceMatrix<T> {
 	}
 
 	@Override
-	public List<T> getElements() {
+	public List<? extends T> getElements() {
 		return elements;
 	}
 
