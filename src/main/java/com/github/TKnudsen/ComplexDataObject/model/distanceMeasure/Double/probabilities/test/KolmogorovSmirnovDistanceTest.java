@@ -1,6 +1,8 @@
-package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities;
+package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities.test;
 
 import java.util.Arrays;
+
+import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities.KolmogorovSmirnovDistance;
 
 public class KolmogorovSmirnovDistanceTest {
 

@@ -1,18 +1,21 @@
-package com.github.TKnudsen.ComplexDataObject.data.features;
-
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+package com.github.TKnudsen.ComplexDataObject.data.features.mixedData.testing;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContainer;
+import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeature;
+import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
+import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 
 public class FeatureContainerTest {
 
-	@Test
-	public void testStuff() {
+	public static void main(String[] args) {
+		testStuff();
+	}
+
+	private static void testStuff() {
 		List<MixedDataFeature> mixedDataFeatures1 = new ArrayList<>();
 		mixedDataFeatures1.add(new MixedDataFeature("Feature 1", true, FeatureType.BOOLEAN));
 		mixedDataFeatures1.add(new MixedDataFeature("Feature 2", 1.33, FeatureType.DOUBLE));

@@ -1,16 +1,17 @@
-package com.github.TKnudsen.ComplexDataObject.model.tools;
-
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.model.io.arff.ARFFParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.arff.WekaTools;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.TitanicDataSetParserTester;
-import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.mixedDataFeatures.MixedDataDescriptor;
+package com.github.TKnudsen.ComplexDataObject.model.io.arff.test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.dataFactory.DataSets;
+import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
+import com.github.TKnudsen.ComplexDataObject.model.io.arff.ARFFParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.arff.WekaTools;
+import com.github.TKnudsen.ComplexDataObject.model.tools.WekaConversion;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.mixedDataFeatures.MixedDataDescriptor;
 
 import weka.core.Instances;
 
@@ -18,12 +19,12 @@ public class WekaConversionTester {
 
 	public static void main(String[] args) throws IOException {
 
-		//testConversion();
+		// testConversion();
 		testPerformance();
 	}
-	
+
 	private static void testConversion() {
-		List<ComplexDataObject> data = TitanicDataSetParserTester.parseTitanicDataSet();
+		List<ComplexDataObject> data = DataSets.titanicDataSet();
 		// List<ComplexDataObject> data = createSimpleDataSet();
 
 		MixedDataDescriptor descriptor = new MixedDataDescriptor();
@@ -35,7 +36,7 @@ public class WekaConversionTester {
 		ComplexDataContainer container2 = new ComplexDataContainer(WekaTools.getComplexDataObjects(instances));
 		for (ComplexDataObject o : container2)
 			System.out.println(o);
-		
+
 	}
 
 	@SuppressWarnings("unused")
@@ -64,10 +65,8 @@ public class WekaConversionTester {
 
 		return complexDataObjects;
 	}
-	
-	
-	private static void testPerformance() 
-	{
+
+	private static void testPerformance() {
 		for (int numStringAttributes = 0; numStringAttributes <= 1; numStringAttributes++) {
 			for (int numDoubleAttributes = 10; numDoubleAttributes <= 90; numDoubleAttributes += 10) {
 				for (int numObjects = 5000; numObjects <= 10000; numObjects += 5000) {
@@ -86,36 +85,33 @@ public class WekaConversionTester {
 		}
 	}
 
-	private static List<MixedDataFeatureVector> createTestVectors(int numDoubleAttributes, int numStringAttributes, int numObjects) {
+	private static List<MixedDataFeatureVector> createTestVectors(int numDoubleAttributes, int numStringAttributes,
+			int numObjects) {
 		List<ComplexDataObject> cdos = createTestObjects(numDoubleAttributes, numStringAttributes, numObjects);
 		MixedDataDescriptor descriptor = new MixedDataDescriptor();
 		List<MixedDataFeatureVector> featureVectors = descriptor.transform(cdos);
 		return featureVectors;
 	}
-	
-	
-	private static List<ComplexDataObject> createTestObjects(int numDoubleAttributes, int numStringAttributes, int numObjects)
-	{
+
+	private static List<ComplexDataObject> createTestObjects(int numDoubleAttributes, int numStringAttributes,
+			int numObjects) {
 		List<ComplexDataObject> cdos = new ArrayList<>();
-		for (int i=0; i<numObjects; i++) {
+		for (int i = 0; i < numObjects; i++) {
 			cdos.add(createTestObject(numDoubleAttributes, numStringAttributes));
 		}
 		return cdos;
 	}
-	
-	private static ComplexDataObject createTestObject(int numDoubleAttributes, int numStringAttributes)
-	{
+
+	private static ComplexDataObject createTestObject(int numDoubleAttributes, int numStringAttributes) {
 		ComplexDataObject cdo = new ComplexDataObject();
-		for (int i=0; i<numStringAttributes; i++) {
-			cdo.add("StringAttribute"+i, "String"+i);
+		for (int i = 0; i < numStringAttributes; i++) {
+			cdo.add("StringAttribute" + i, "String" + i);
 		}
-		for (int i=0; i<numDoubleAttributes; i++) {
-			cdo.add("DoubleAttribute"+i, 0.0);
+		for (int i = 0; i < numDoubleAttributes; i++) {
+			cdo.add("DoubleAttribute" + i, 0.0);
 		}
 		return cdo;
-		
-		
+
 	}
-	
 
 }

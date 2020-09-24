@@ -8,34 +8,30 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicPa
 
 /**
  * <p>
- * Title: DataFactory
- * </p>
- * 
- * <p>
- * Description: Provides Lists of ComplexDataObject instances for some given
+ * Title: Datasets provides Lists of ComplexDataObject instances for some given
  * data sets.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public class DataFactory {
+public class DataSets {
 
-	public static List<ComplexDataObject> createTitanicDataSet() {
+	public static List<ComplexDataObject> titanicDataSet() {
 		List<ComplexDataObject> titanicData = null;
 
 		TitanicParser p = new TitanicParser("", true);
 		try {
 			System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			titanicData = p.parse("data/titanic_extended.txt");
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		return titanicData;
 	}
 }
