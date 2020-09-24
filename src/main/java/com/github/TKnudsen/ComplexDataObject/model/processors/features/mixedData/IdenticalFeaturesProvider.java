@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
-import com.github.TKnudsen.ComplexDataObject.data.features.FeatureTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
+import com.github.TKnudsen.ComplexDataObject.data.features.Features;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureTools;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
@@ -56,16 +56,16 @@ public class IdenticalFeaturesProvider implements IMixedDataFeatureVectorProcess
 				FeatureType featureType = featureTypes.get(featureName);
 				if (fv.sizeOfFeatures() <= i)
 					fv.addFeature(
-							MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+							MixedDataFeatureTools.convert(Features.createDefaultFeature(featureName, featureType)));
 				else if (fv.getFeature(i) == null || fv.getFeature(i).getFeatureName() == null) {
 					fv.removeFeature(i);
 					fv.setFeature(i,
-							MixedDataFeatureTools.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+							MixedDataFeatureTools.convert(Features.createDefaultFeature(featureName, featureType)));
 				} else if (!fv.getFeature(i).getFeatureName().equals(featureName)) {
 					Feature<?> feature = fv.getFeature(featureName);
 					if (feature == null)
-						fv.setFeature(i, MixedDataFeatureTools
-								.convert(FeatureTools.createDefaultFeature(featureName, featureType)));
+						fv.setFeature(i,
+								MixedDataFeatureTools.convert(Features.createDefaultFeature(featureName, featureType)));
 					else
 						fv.setFeature(i, fv.removeFeature(featureName));
 				}

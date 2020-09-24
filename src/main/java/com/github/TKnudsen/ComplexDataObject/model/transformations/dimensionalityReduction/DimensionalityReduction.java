@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.ToDoubleBiFunction;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
-import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeasure;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataTransformationCategory;
 
 /**
@@ -20,14 +20,19 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public abstract class DimensionalityReduction<X> implements IDimensionalityReduction<X, NumericalFeatureVector> {
 
 	/**
+	 * feature vectors for the model creation and dimensionality reduction
+	 */
+	protected List<? extends X> featureVectors;
+
+	/**
 	 * used by many routines to calculate pairwise distances
 	 */
-	protected IDistanceMeasure<X> distanceMeasure;
+	protected ToDoubleBiFunction<? super X, ? super X> distanceMeasure;
 
 	/**
 	 * the dimensionality of the manifold to be learned
@@ -63,7 +68,7 @@ public abstract class DimensionalityReduction<X> implements IDimensionalityReduc
 	}
 
 	/**
-	 * Uses the model to tranform given data to the mapped space. Does not build a
+	 * Uses the model to transform given data to the mapped space. Does not build a
 	 * new model!
 	 */
 	@Override
