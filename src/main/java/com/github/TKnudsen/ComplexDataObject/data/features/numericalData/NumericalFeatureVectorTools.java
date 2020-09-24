@@ -10,6 +10,7 @@ import java.util.Set;
  * </p>
  * 
  * @author Juergen Bernard
+ * @deprecated use NumericalFeatureVectors
  * @version 1.02
  */
 public class NumericalFeatureVectorTools {
@@ -18,6 +19,7 @@ public class NumericalFeatureVectorTools {
 	 * retrieves the minimum value.
 	 * 
 	 * @param featureVector
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static Double getMin(NumericalFeatureVector featureVector) {
@@ -34,6 +36,7 @@ public class NumericalFeatureVectorTools {
 	 * retrieves the maximum value.
 	 * 
 	 * @param featureVector
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static Double getMax(NumericalFeatureVector featureVector) {
@@ -51,6 +54,7 @@ public class NumericalFeatureVectorTools {
 	 * 
 	 * @param features
 	 * @param dim
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static double getMin(List<NumericalFeatureVector> features, int dim) {
@@ -73,6 +77,7 @@ public class NumericalFeatureVectorTools {
 	 * 
 	 * @param features
 	 * @param dim
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static double getMax(List<NumericalFeatureVector> features, int dim) {
@@ -95,6 +100,7 @@ public class NumericalFeatureVectorTools {
 	 * 
 	 * @param features
 	 * @param dim
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static double getMean(List<NumericalFeatureVector> features, int dim) {
@@ -110,6 +116,12 @@ public class NumericalFeatureVectorTools {
 		return sum / count;
 	}
 
+	/**
+	 * 
+	 * @param featureVectors
+	 * @deprecated use NumericalFeatureVectors
+	 * @return
+	 */
 	public static List<double[]> toPrimitives(Set<NumericalFeatureVector> featureVectors) {
 		List<double[]> returnValues = new ArrayList<>();
 
@@ -119,6 +131,12 @@ public class NumericalFeatureVectorTools {
 		return returnValues;
 	}
 
+	/**
+	 * 
+	 * @param featureVectors
+	 * @deprecated use NumericalFeatureVectors
+	 * @return
+	 */
 	public static List<double[]> toPrimitives(List<NumericalFeatureVector> featureVectors) {
 		List<double[]> returnValues = new ArrayList<>();
 
@@ -128,6 +146,13 @@ public class NumericalFeatureVectorTools {
 		return returnValues;
 	}
 
+	/**
+	 * 
+	 * @param featureVectors
+	 * @param labels
+	 * @param classAttribute
+	 * @deprecated use NumericalFeatureVectors
+	 */
 	public static void addClassAttribute(List<NumericalFeatureVector> featureVectors, List<String> labels,
 			String classAttribute) {
 		for (int i = 0; i < featureVectors.size(); i++)
@@ -146,6 +171,7 @@ public class NumericalFeatureVectorTools {
 	 * second dimension.
 	 * 
 	 * @param fvs
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static double[][] createMatrixRepresentation(List<NumericalFeatureVector> fvs) {
@@ -168,6 +194,7 @@ public class NumericalFeatureVectorTools {
 	 * 
 	 * @param fvs
 	 * @param index
+	 * @deprecated use NumericalFeatureVectors
 	 * @return
 	 */
 	public static double[] retrieveVariable(List<NumericalFeatureVector> fvs, int index) {
@@ -184,6 +211,13 @@ public class NumericalFeatureVectorTools {
 		return values;
 	}
 
+	/**
+	 * 
+	 * @param fvs
+	 * @param classAttribute
+	 * @deprecated use NumericalFeatureVectors
+	 * @return
+	 */
 	public static double[] retrieveNumericalAttribute(List<NumericalFeatureVector> fvs, String classAttribute) {
 		if (fvs == null)
 			throw new NullPointerException("LDA: feature vectors must not be null");

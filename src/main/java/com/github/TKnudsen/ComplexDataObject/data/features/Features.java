@@ -5,21 +5,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 
 /**
  * <p>
- * Title: FeatureTools
- * </p>
- *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
-public class FeatureTools {
+public class Features {
 
 	public static Feature<?> createDefaultFeature(String featureName, FeatureType featureType) {
 		switch (featureType) {
