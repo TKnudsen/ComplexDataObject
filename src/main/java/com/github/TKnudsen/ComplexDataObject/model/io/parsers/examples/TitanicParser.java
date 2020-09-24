@@ -15,19 +15,11 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 
 /**
  * <p>
- * Title: TitanicParser
- * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2013-2016
+ * Copyright: Copyright (c) 2013-2020
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.13
+ * @version 1.14
  */
 public class TitanicParser implements ComplexDataObjectParser {
 
@@ -351,4 +343,5 @@ public class TitanicParser implements ComplexDataObjectParser {
 	public String getDescription() {
 		return getName();
 	}
+	
 }

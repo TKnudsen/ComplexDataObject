@@ -24,7 +24,6 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributePositiveScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 

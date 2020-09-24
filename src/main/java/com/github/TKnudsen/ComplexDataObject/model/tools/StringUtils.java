@@ -14,9 +14,17 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class StringUtils {
+	
+	public static void main(String[] args) {
+		double value = 66.3363456;
+		System.out.println(value);
+
+		String trunc = StringUtils.truncateDouble(value, 3);
+		System.out.println(trunc);
+	}
 
 	public static String truncateDouble(double value, int decimals) {
 		if (decimals < 0)
