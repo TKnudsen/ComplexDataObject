@@ -239,19 +239,19 @@ public class NumericalFeatureVectors {
 	 * the first dimension and the dimensionality of the feature vectors in the
 	 * second dimension.
 	 * 
-	 * @param fvs
+	 * @param featureVectors
 	 * @return
 	 */
-	public static double[][] createMatrixRepresentation(List<? extends NumericalFeatureVector> fvs) {
-		if (fvs == null)
+	public static double[][] createMatrixRepresentation(List<? extends NumericalFeatureVector> featureVectors) {
+		if (featureVectors == null)
 			throw new NullPointerException("NumericalFeatureVectorTools: feature vectors must not be null");
 
-		if (fvs.size() == 0)
+		if (featureVectors.size() == 0)
 			throw new IllegalArgumentException("NumericalFeatureVectorTools: feature vectors size was 0");
 
-		double[][] values = new double[fvs.size()][fvs.get(0).getDimensions()];
-		for (int i = 0; i < fvs.size(); i++)
-			values[i] = fvs.get(i).getVectorClone();
+		double[][] values = new double[featureVectors.size()][featureVectors.get(0).getDimensions()];
+		for (int i = 0; i < featureVectors.size(); i++)
+			values[i] = featureVectors.get(i).getVectorClone();
 
 		return values;
 	}
