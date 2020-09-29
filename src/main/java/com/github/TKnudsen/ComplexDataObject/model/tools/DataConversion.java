@@ -6,25 +6,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * <p>
- * Title: DataConversion
- * </p>
+ * little helpers for the conversion of general data structures
  *
  * <p>
- * Description: Provides little helpers for the conversion of general data
- * structures
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017-2019
+ * Copyright: Copyright (c) 2017-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public class DataConversion {
 
@@ -81,13 +76,23 @@ public class DataConversion {
 	}
 
 	/**
-	 * Converts an array of double primitives to an array of Double objects.
+	 * Converts an array of double primitives to a List of Double objects.
 	 * 
 	 * @param values
 	 * @return
 	 */
 	public static List<Double> doublePrimitivesToList(double[] values) {
 		return Arrays.asList(DataConversion.doublePrimitivesToArray(values));
+	}
+
+	/**
+	 * Converts an array of int primitives to a List of Integer objects.
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public static List<Integer> intPrimitivesToList(int[] values) {
+		return IntStream.of(values).boxed().collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**
@@ -173,5 +178,22 @@ public class DataConversion {
 		}
 
 		return array;
+	}
+
+	/**
+	 * creates a list with constant values, according to a given value t.
+	 * 
+	 * @param <T>
+	 * @param t
+	 * @param count
+	 * @return
+	 */
+	public static <T> List<T> constantValueList(T t, int count) {
+		List<T> list = new ArrayList<T>(count);
+
+		for (int i = 0; i < count; i++)
+			list.add(t);
+
+		return list;
 	}
 }
