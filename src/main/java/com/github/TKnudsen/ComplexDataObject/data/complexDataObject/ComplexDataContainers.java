@@ -89,7 +89,7 @@ public class ComplexDataContainers {
 
 		List<ComplexDataObject> mergedCDOs = new ArrayList<>();
 		for (String attributeValue : objects.keySet())
-			mergedCDOs.add(ComplexDataObjectTools.mergeObjects(objects.get(attributeValue)));
+			mergedCDOs.add(ComplexDataObjects.merge(objects.get(attributeValue)));
 
 		return new ComplexDataContainer(mergedCDOs);
 	}

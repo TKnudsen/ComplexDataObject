@@ -1,7 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -21,6 +20,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
  * 
  * Source of the text: http://www.countrysideinfo.co.uk/simpsons.htm
  * 
+ * NOTE: The Simpson's Index is NOT Simpson's index of Diversity!
+ * 
  * Variation: Simpson's Index of Diversity: 1 - D
  * 
  * Variation: Simpson's Reciprocal Index: 1 / D
@@ -29,11 +30,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class SimpsonsIndex {
 
@@ -42,12 +43,14 @@ public class SimpsonsIndex {
 	 * diversity and 1, no diversity. That is, the bigger the value of D, the lower
 	 * the diversity.
 	 * 
+	 * To calculate Simpson's Index of Diversity, do 1-D.
+	 * 
 	 * @param distribution
 	 * @return
 	 */
 	public static double calculateSimpsonsIndex(int[] distribution) {
 		if (distribution == null)
-			throw new IllegalArgumentException("SimpsonsDiversityIndex: given distribution was null");
+			throw new IllegalArgumentException("SimpsonsIndex: given distribution was null");
 
 		int numbers = 0;
 		int totalNumber = 0;
@@ -56,7 +59,7 @@ public class SimpsonsIndex {
 			if (distribution[i] == 0) // skip 0 observations
 				continue;
 			else if (distribution[i] < 0)
-				throw new IllegalArgumentException("SimpsonsDiversityIndex: given distribution contained value < 0");
+				throw new IllegalArgumentException("SimpsonsIndex: given distribution contained value < 0");
 
 			numbers += (distribution[i] * (distribution[i] - 1));
 			totalNumber += distribution[i];
@@ -68,11 +71,17 @@ public class SimpsonsIndex {
 			return numbers / (double) (totalNumber * (totalNumber - 1));
 	}
 
+	/**
+	 * The value of D ranges between 0 and 1. With this index, 0 represents infinite
+	 * diversity and 1, no diversity. That is, the bigger the value of D, the lower
+	 * the diversity.
+	 * 
+	 * To calculate Simpson's Index of Diversity, do 1-D.
+	 * 
+	 * @param distribution
+	 * @return
+	 */
 	public static double calculateSimpsonsIndex(Collection<Integer> distribution) {
-		return calculateSimpsonsIndex(DataConversion.toIntPrimitives(distribution));
-	}
-
-	public static double calculateSimpsonsIndex(List<Integer> distribution) {
 		return calculateSimpsonsIndex(DataConversion.toIntPrimitives(distribution));
 	}
 
@@ -96,7 +105,7 @@ public class SimpsonsIndex {
 	 * @param distribution
 	 * @return
 	 */
-	public static double calculateSimpsonsIndexOfDiversity(List<Integer> distribution) {
+	public static double calculateSimpsonsIndexOfDiversity(Collection<Integer> distribution) {
 		return 1 - calculateSimpsonsIndex(distribution);
 	}
 
@@ -118,7 +127,7 @@ public class SimpsonsIndex {
 				minUsedToScaleValues = Math.min(minUsedToScaleValues, values[i]);
 			else if (values[i] < 0)
 				throw new IllegalArgumentException(
-						"SimpsonsDiversityIndex: transformation failed because a given values was < 0");
+						"SimpsonsIndex: transformation failed because a given values was < 0");
 
 		if (minUsedToScaleValues != Double.MAX_VALUE)
 			minUsedToScaleValues = 1 / minUsedToScaleValues;

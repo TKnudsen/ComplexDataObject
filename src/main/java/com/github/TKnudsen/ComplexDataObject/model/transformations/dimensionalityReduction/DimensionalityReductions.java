@@ -5,13 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: DimensionalityReductionTools
+ * Title: DimensionalityReductions
  * </p>
  * 
  * <p>
@@ -19,21 +20,15 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * results (mappings from highDim to lowDim).
  * 
  * <p>
- * Copyright: Copyright (c) 2012-2018 Juergen Bernard,
+ * Copyright: Copyright (c) 2012-2020 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public class DimensionalityReductionTools {
+public class DimensionalityReductions {
 
-	/**
-	 * @deprecated use DimensionalityReductions
-	 * @param <X>
-	 * @param mapping
-	 * @return
-	 */
 	public static <X> List<Double[]> mappingToCoordinatesList(Map<X, NumericalFeatureVector> mapping) {
 		List<Double[]> data = new ArrayList<>();
 
@@ -44,12 +39,6 @@ public class DimensionalityReductionTools {
 		return data;
 	}
 
-	/**
-	 * @deprecated use DimensionalityReductions
-	 * @param <X>
-	 * @param mapping
-	 * @return
-	 */
 	public static <X> Map<X, Double[]> mappingToCoordinatesMap(Map<X, NumericalFeatureVector> mapping) {
 		Map<X, Double[]> data = new LinkedHashMap<>();
 
@@ -60,12 +49,6 @@ public class DimensionalityReductionTools {
 		return data;
 	}
 
-	/**
-	 * @deprecated use DimensionalityReductions
-	 * @param <X>
-	 * @param mapping
-	 * @return
-	 */
 	public static <X> List<String> mappingToNamesList(Map<X, NumericalFeatureVector> mapping) {
 		List<String> data = new ArrayList<>();
 
@@ -78,9 +61,8 @@ public class DimensionalityReductionTools {
 
 	/**
 	 * statistics information for every output dimension. Used, e.g., to define axes
-	 * in a scatterplot.
+	 * in a scatter plot.
 	 * 
-	 * @deprecated use DimensionalityReductions
 	 * @param mapping
 	 * @return
 	 */
@@ -113,7 +95,6 @@ public class DimensionalityReductionTools {
 	 * min and max across all dimensions to preserve linearity. Modifies the given
 	 * output mapping.
 	 * 
-	 * @deprecated use DimensionalityReductions
 	 * @param mapping
 	 */
 	public static void normalizeMapping(Map<NumericalFeatureVector, NumericalFeatureVector> mapping) {
@@ -142,10 +123,12 @@ public class DimensionalityReductionTools {
 	 * @param inputFeatureVector
 	 * @param outputFeatureVector
 	 */
-	public static void synchronizeFeatureVectorMetadata(NumericalFeatureVector inputFeatureVector,
+	public static <X extends AbstractFeatureVector<?, ?>> void synchronizeFeatureVectorMetadata(X inputFeatureVector,
 			NumericalFeatureVector outputFeatureVector) {
+		
 		for (String attribute : inputFeatureVector.keySet())
 			outputFeatureVector.add(attribute, inputFeatureVector.getAttribute(attribute));
+		
 		outputFeatureVector.setMaster(inputFeatureVector);
 		outputFeatureVector.setName(inputFeatureVector.getName());
 		outputFeatureVector.setDescription(inputFeatureVector.getDescription());

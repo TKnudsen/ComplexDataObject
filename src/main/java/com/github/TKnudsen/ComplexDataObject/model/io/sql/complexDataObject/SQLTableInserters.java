@@ -12,31 +12,31 @@ import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLUtils;
 public class SQLTableInserters {
 
 	/**
+	 * hint: check if table exists
+	 * 
+	 * hint: check if missing columns need to be added first using
+	 * SQLTableCreator.addMissingColumns(...)
 	 * 
 	 * @param conn
 	 * @param schema
 	 * @param tableName
-	 * @param insertType         INSERT, INSERT IGNORE, REPLACE
+	 * @param insertType INSERT, INSERT IGNORE, REPLACE
 	 * @param cdos
-	 * @param checkIfTableExists
-	 * @param addMissingColumns  determines if columns missing in the table will be
-	 *                           inserted automatically (if possible/type known)
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataContainer cdos, boolean checkIfTableExists, boolean addMissingColumns) throws SQLException {
+			ComplexDataContainer cdos) throws SQLException {
 
-		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos),
-				checkIfTableExists, addMissingColumns);
+		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos));
 	}
 
 	/**
+	 * hint: check if table exists
 	 * 
 	 * @param conn
 	 * @param schema
 	 * @param tableName
-	 * @param insertType         INSERT, INSERT IGNORE, REPLACE
+	 * @param insertType INSERT, INSERT IGNORE, REPLACE
 	 * @param cdo
-	 * @param checkIfTableExists
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
 			ComplexDataObject cdo, boolean checkIfTableExists) throws SQLException {
@@ -44,7 +44,7 @@ public class SQLTableInserters {
 		// create key value pairs (attributes and values)
 		LinkedHashMap<String, Object> keyValuePairs = SQLUtils.createKeyValuePairs(cdo);
 
-		SQLTableInserter.insertRow(conn, schema, tableName, insertType, keyValuePairs, checkIfTableExists);
+		SQLTableInserter.insertRow(conn, schema, tableName, insertType, keyValuePairs);
 	}
 
 }

@@ -12,6 +12,8 @@ import org.apache.commons.math3.exception.NullArgumentException;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
+import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IntegerParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.LongParser;

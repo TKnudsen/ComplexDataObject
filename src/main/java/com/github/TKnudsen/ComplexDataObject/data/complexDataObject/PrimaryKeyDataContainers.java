@@ -40,7 +40,7 @@ public class PrimaryKeyDataContainers {
 
 		List<ComplexDataObject> mergedCDOs = new ArrayList<>();
 		for (String attributeValue : objects.keySet())
-			mergedCDOs.add(ComplexDataObjectTools.mergeObjects(objects.get(attributeValue)));
+			mergedCDOs.add(ComplexDataObjects.merge(objects.get(attributeValue)));
 
 		return new PrimaryKeyDataContainer(mergedCDOs, primaryKeyAttribute);
 	}

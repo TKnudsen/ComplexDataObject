@@ -427,14 +427,14 @@ public class MathFunctions {
 	 * @param ignoreNAN
 	 * @return
 	 */
-	public static Double getSum(Collection<Double> values, boolean ignoreNAN) {
+	public static Double getSum(Collection<? extends Number> values, boolean ignoreNAN) {
 		Double sum = 0.0;
 
-		for (Double d : values)
-			if (Double.isNaN(d) && ignoreNAN)
+		for (Number d : values)
+			if (Double.isNaN(d.doubleValue()) && ignoreNAN)
 				continue;
 			else
-				sum += d;
+				sum += d.doubleValue();
 
 		return sum;
 	}
@@ -445,7 +445,7 @@ public class MathFunctions {
 	 * @param values
 	 * @return
 	 */
-	public static boolean containsNaN(Collection<Number> values) {
+	public static boolean containsNaN(Collection<? extends Number> values) {
 		if (values == null)
 			return false;
 

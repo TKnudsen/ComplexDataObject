@@ -41,4 +41,13 @@ public class DataSchemas {
 		return map;
 	}
 
+	public static DataSchema create(Map<String, Class<?>> attributeCharacterization) {
+		DataSchema schema = new DataSchema();
+
+		for (String attribute : attributeCharacterization.keySet())
+			schema.add(attribute, attributeCharacterization.get(attribute));
+
+		return schema;
+	}
+
 }

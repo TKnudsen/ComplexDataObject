@@ -50,6 +50,7 @@ public class DateParser implements IObjectParser<Date> {
 		dateFormats.put("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyy-MM-dd HH:mm:ss");
 		dateFormats.put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMM yyyy HH:mm:ss");
 		dateFormats.put("^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMMM yyyy HH:mm:ss");
+		dateFormats.put("^\\d{1,2}-\\d{4}$", "MM-yyyy");
 
 		return dateFormats;
 	}
@@ -86,6 +87,8 @@ public class DateParser implements IObjectParser<Date> {
 		dateFormats.put("2020/11/19 13:04:05", "yyyy/MM/dd HH:mm:ss");
 		dateFormats.put("19 Nov 2020 13:04:05", "dd MMM yyyy HH:mm:ss");
 		dateFormats.put("19 November 2020 13:04:05", "dd MMMM yyyy HH:mm:ss");
+		dateFormats.put("04.1986", "MM-yyyy");
+		dateFormats.put("04-1986", "MM-yyyy");
 
 		return dateFormats;
 	}
