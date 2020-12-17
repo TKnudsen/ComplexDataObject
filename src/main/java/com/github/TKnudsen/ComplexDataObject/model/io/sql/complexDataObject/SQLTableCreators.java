@@ -21,4 +21,24 @@ public class SQLTableCreators {
 				primaryKeyAttributes);
 	}
 
+	/**
+	 * for cases where the SQL string is needed externally.
+	 * 
+	 * @param tableName
+	 * @param dataContainer
+	 * @param primaryKeyAttributes
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String createTableString(String tableName, ComplexDataContainer dataContainer,
+			List<String> primaryKeyAttributes) throws SQLException {
+
+		Map<String, Class<?>> dataSchema = dataContainer.getSchema();
+		// add ID to the schema
+		dataSchema.put("ID", Long.class);
+
+		return SQLTableCreator.createTableString(tableName, dataSchema, dataContainer::getAttributeValueCollection,
+				primaryKeyAttributes);
+	}
+
 }

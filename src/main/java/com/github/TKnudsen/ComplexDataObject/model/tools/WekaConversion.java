@@ -354,8 +354,8 @@ public class WekaConversion {
 		List<Object> labels = new ArrayList<>();
 		for (int i = 0; i < fvs.size(); i++)
 			if (fvs.get(i).getAttribute(classAttribute) == null)
-				throw new IllegalArgumentException(
-						"WekaConverter.getLabeledInstances: classAttribute not found for given FeatureVector.");
+				throw new IllegalArgumentException("WekaConverter.getLabeledInstances: classAttribute " + classAttribute
+						+ " not found for given FeatureVector.");
 			else if (fvs.get(i).getAttribute(classAttribute) instanceof String)
 				labels.add((String) fvs.get(i).getAttribute(classAttribute));
 			else

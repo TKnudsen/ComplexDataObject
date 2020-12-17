@@ -8,34 +8,31 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class SQLTableInserter {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
+	 * hint: check if table exists first.
+	 * 
+	 * hint: check if missing columns need to be added first using
+	 * SQLTableCreator.addMissingColumns(...)
 	 * 
 	 * @param conn
 	 * @param schema
 	 * @param tableName
 	 * @param insertType                 INSERT, INSERT IGNORE, REPLACE
 	 * @param listOfMapWithKeyValuePairs list means rows, map contains the key value
-	 *                                   pairs for every row.
-	 * @param addMissingColumns          determines if columns missing in the table
-	 *                                   will be inserted automatically (if
-	 *                                   possible/type known)
+	 *                                   pairs for every row. Attention: modifies
+	 *                                   the object if attributes are not in table
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean checkIfTableExists,
-			boolean addMissingColumns) throws SQLException {
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs) throws SQLException {
 
 		Objects.requireNonNull(conn);
 		Objects.requireNonNull(listOfMapWithKeyValuePairs);
@@ -43,57 +40,51 @@ public class SQLTableInserter {
 		System.out.print("SQLTableInserter.insertRows: inserting multiple rows in table " + tableName + "...");
 		long l = System.currentTimeMillis();
 
-		if (checkIfTableExists)
-			if (!SQLUtils.tableExists(conn, schema, tableName)) {
-				System.err.println("SQLTableInserter.insertRow: Table " + tableName + " in schema " + schema
-						+ " does not exist. stop.");
-				return;
-			}
+//		if (addMissingColumns) {
+//			// check whether all attributes are already in the database
+//			List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
+//			Collections.sort(columns);
+//
+//			Set<String> insertColumns = new HashSet<>();
+//			for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs)
+//				insertColumns.addAll(keyValuePairs.keySet());
+//
+//			boolean all = false;
+//			for (String attribute : insertColumns) {
+//				if (!columns.contains(attribute) && !all) {
+//					System.err.print("SQLTableInserter.insertRows: Table " + tableName + " in schema " + schema
+//							+ " does not contain attribute " + attribute + ". Trying to add column... ");
+//
+//					Class<?> javaClass = null;
+//					List<Object> values = new ArrayList<Object>();
+//					for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
+//						if (!keyValuePairs.containsKey(attribute))
+//							continue;
+//						if (keyValuePairs.get(attribute) == null)
+//							continue;
+//						if (javaClass == null)
+//							javaClass = keyValuePairs.get(attribute).getClass();
+//						else if (javaClass.equals(keyValuePairs.get(attribute).getClass()))
+//							throw new IllegalArgumentException("Attribute " + attribute
+//									+ " not in table, attempt to add column faile because the data was of different types ("
+//									+ javaClass + " and " + keyValuePairs.get(attribute).getClass() + ").");
+//						values.add(keyValuePairs.get(attribute));
+//					}
+//					String sql = SQLTableCreator.addColumnString(tableName, attribute, javaClass, values, columns);
+//					SQLTableCreator.addColumn(conn, sql);
+//
+//					System.err.println("finished without exceptions.");
+//				}
+//			}
+//		} else {
+		List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
 
-		if (addMissingColumns) {
-			// check whether all attributes are already in the database
-			List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
-			Collections.sort(columns);
-
-			Set<String> insertColumns = new HashSet<>();
-			for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs)
-				insertColumns.addAll(keyValuePairs.keySet());
-
-			boolean all = false;
-			for (String attribute : insertColumns) {
-				if (!columns.contains(attribute) && !all) {
-					System.err.print("SQLTableInserter.insertRows: Table " + tableName + " in schema " + schema
-							+ " does not contain attribute " + attribute + ". Trying to add column... ");
-
-					Class<?> javaClass = null;
-					List<Object> values = new ArrayList<Object>();
-					for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
-						if (!keyValuePairs.containsKey(attribute))
-							continue;
-						if (keyValuePairs.get(attribute) == null)
-							continue;
-						if (javaClass == null)
-							javaClass = keyValuePairs.get(attribute).getClass();
-						else if (javaClass.equals(keyValuePairs.get(attribute).getClass()))
-							throw new IllegalArgumentException("Attribute " + attribute
-									+ " not in table, attempt to add column faile because the data was of different types ("
-									+ javaClass + " and " + keyValuePairs.get(attribute).getClass() + ").");
-						values.add(keyValuePairs.get(attribute));
-					}
-					SQLTableCreator.addColumn(conn, schema, tableName, attribute, javaClass, values, columns);
-
-					System.err.println("finished without exceptions.");
-				}
-			}
-		} else {
-			List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
-
-			// remove attributes that cannot be inserted in columns
-			for (LinkedHashMap<String, Object> row : listOfMapWithKeyValuePairs)
-				for (String attribute : row.keySet())
-					if (!columns.contains(attribute))
-						row.remove(attribute);
-		}
+		// remove attributes that cannot be inserted in columns
+		for (LinkedHashMap<String, Object> row : listOfMapWithKeyValuePairs)
+			for (String attribute : row.keySet())
+				if (!columns.contains(attribute))
+					row.remove(attribute);
+//		}
 
 		int i = 0;
 		for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
@@ -101,13 +92,14 @@ public class SQLTableInserter {
 				if (i > 1)
 					System.out.print("[" + (i - 1) + "]");
 
-			insertRow(conn, schema, tableName, insertType, keyValuePairs, false);
+			insertRow(conn, schema, tableName, insertType, keyValuePairs);
 		}
 
 		System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 	}
 
 	/**
+	 * hint: check if table exists
 	 * 
 	 * @param conn
 	 * @param schema
@@ -119,24 +111,68 @@ public class SQLTableInserter {
 	 *                            into instead
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
-			LinkedHashMap<String, Object> keyValuePairs, boolean checkIfTableExists) throws SQLException {
+			LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
+
+		PreparedStatement pstmt = insertRowPreparedStatement(conn, schema, tableName, insertType, keyValuePairs);
+
+		if (pstmt == null)
+			return;
+
+		pstmt.execute();
+		pstmt.close();
+	}
+
+	/**
+	 * hint: check if table exists
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param insertType    INSERT, INSERT IGNORE, REPLACE
+	 * @param keyValuePairs contains column and value information for this row
+	 */
+	public static PreparedStatement insertRowPreparedStatement(Connection conn, String schema, String tableName,
+			String insertType, LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
 		PreparedStatement pstmt = null;
 
-		if (checkIfTableExists)
-			if (!SQLUtils.tableExists(conn, schema, tableName)) {
-				System.err.println("SQLTableInserter.insertRow: Table " + tableName + " in schema " + schema
-						+ " does not exist. skip.");
-				return;
-			}
-
-		String sql = rowToInsertString(tableName, insertType, keyValuePairs, true);
+		String sql = insertRowString(tableName, insertType, keyValuePairs, true);
 
 		pstmt = conn.prepareStatement(sql);
 
 		rowToPreparedStatement(pstmt, keyValuePairs);
 
-		pstmt.execute();
-		pstmt.close();
+		return pstmt;
+	}
+
+	/**
+	 * 
+	 * hint: check if table exists
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param insertType    INSERT, INSERT IGNORE, REPLACE
+	 * @param keyValuePairs contains column and value information for this row
+	 */
+	public static String insertRowPreparedStatementString(Connection conn, String schema, String tableName,
+			String insertType, LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
+		PreparedStatement pstmt = null;
+
+		String sql = insertRowString(tableName, insertType, keyValuePairs, true);
+
+		pstmt = conn.prepareStatement(sql);
+
+		rowToPreparedStatement(pstmt, keyValuePairs);
+
+		String pSQL = pstmt.toString();
+		// hack: remove the first part before the SQL query starts
+		if (pSQL.contains("ClientPreparedStatement: "))
+			pSQL = pSQL.substring(pSQL.indexOf("ClientPreparedStatement: ") + 25, pSQL.length());
+		else
+			throw new NullPointerException(
+					"SQLTableInserter.insertRowPreparedStatementString: unable to create SQL String for " + pSQL);
+
+		return pSQL;
 	}
 
 	/**
@@ -208,7 +244,7 @@ public class SQLTableInserter {
 	 * @param preparedStatement
 	 * @return
 	 */
-	private static String rowToInsertString(String tableName, String insertType,
+	public static String insertRowString(String tableName, String insertType,
 			LinkedHashMap<String, Object> keyValuePairs, boolean preparedStatement) {
 		String sql = insertType + " INTO `" + tableName + "`";
 
@@ -234,6 +270,7 @@ public class SQLTableInserter {
 	}
 
 	/**
+	 * hint: check if table exists
 	 * 
 	 * @param conn
 	 * @param schema
@@ -244,16 +281,9 @@ public class SQLTableInserter {
 	 * @param checkIfTableExists
 	 */
 	public static void insertColumnWise(Connection conn, String schema, String tableName, String insertType,
-			List<String> attributes, List<List<Object>> values, boolean checkIfTableExists) throws SQLException {
+			List<String> attributes, List<List<Object>> values) throws SQLException {
 
 		Statement stmt = null;
-		if (checkIfTableExists)
-			if (!SQLUtils.tableExists(conn, schema, tableName)) {
-				System.err.println("SQLTableInserter.insertRow: Table " + tableName + " in schema " + schema
-						+ " does not exist. stop.");
-				return;
-			}
-
 		stmt = conn.createStatement();
 		String sql = insertColumnWiseString(tableName, insertType, attributes, values);
 		stmt.executeUpdate(sql);

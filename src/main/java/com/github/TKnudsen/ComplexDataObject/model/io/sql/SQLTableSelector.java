@@ -55,15 +55,10 @@ public class SQLTableSelector {
 		System.out.print("SQLTableSelector.selectAllFromTable: selecting all rows from table " + tableName + " ...");
 		long l = System.currentTimeMillis();
 
-		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
-
-		PreparedStatement preparedStatement = null;
+		PreparedStatement preparedStatement = selectAllFromTablePreparedStatement(conn, tableName, orderAttribute,
+				order);
 		ResultSet resultSet = null;
 		try {
-			String sql = (orderAttribute == null) ? "SELECT * FROM " + tableName
-					: "SELECT * FROM " + tableName + " ORDER BY `" + orderAttribute + "` " + order.name();
-			preparedStatement = conn.prepareStatement(sql);
-
 			resultSet = preparedStatement.executeQuery();
 		} catch (SQLException e) {
 			System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
@@ -71,6 +66,7 @@ public class SQLTableSelector {
 			e.printStackTrace();
 		}
 
+		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
 		if (attributeCharacterization != null)
 			result.addAll(SQLUtils.interpreteResultSet(resultSet, attributeCharacterization));
 		else
@@ -84,6 +80,27 @@ public class SQLTableSelector {
 		System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param conn
+	 * @param tableName
+	 * @param orderAttribute can be null, then order will be ignored as well
+	 * @param order
+	 * @return
+	 * @throws SQLException
+	 * 
+	 */
+	public static synchronized PreparedStatement selectAllFromTablePreparedStatement(Connection conn, String tableName,
+			String orderAttribute, Order order) throws SQLException {
+
+		PreparedStatement preparedStatement = null;
+		String sql = (orderAttribute == null) ? "SELECT * FROM " + tableName
+				: "SELECT * FROM " + tableName + " ORDER BY `" + orderAttribute + "` " + order.name();
+		preparedStatement = conn.prepareStatement(sql);
+
+		return preparedStatement;
 	}
 
 	/**
@@ -164,7 +181,7 @@ public class SQLTableSelector {
 	 * @param tableName
 	 * @param columns
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) columname >='2012-12-25 00:00:00'. b)
+	 *                       example a) column name >='2012-12-25 00:00:00'. b)
 	 *                       searchColumn = 'searchQuery'. Make sure to use ' where
 	 *                       needed
 	 * 

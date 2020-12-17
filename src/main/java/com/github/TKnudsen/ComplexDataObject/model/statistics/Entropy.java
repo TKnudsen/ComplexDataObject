@@ -4,20 +4,14 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * <p>
- * Title: Entropy
- * </p>
+ * Calculates the entropy for various value distributions.
  *
  * <p>
- * Description: calculates the entropy for various value distributions.
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2020
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class Entropy {
 
@@ -28,14 +22,28 @@ public class Entropy {
 		return calculateEntropy(labelDistribution.values());
 	}
 
-	public static double calculateEntropy(Collection<Double> distribution) {
+//	public static double calculateEntropy(Collection<Double> distribution) {
+//		if (distribution == null || distribution.size() == 0)
+//			return 0;
+//
+//		double entropy = 0.0;
+//		for (Double d : distribution)
+//			if (d > 0)
+//				entropy -= (d * Math.log(d));
+//
+//		entropy /= Math.log(2.0);
+//
+//		return entropy;
+//	}
+
+	public static double calculateEntropy(Collection<? extends Number> distribution) {
 		if (distribution == null || distribution.size() == 0)
 			return 0;
 
 		double entropy = 0.0;
-		for (Double d : distribution)
-			if (d > 0)
-				entropy -= (d * Math.log(d));
+		for (Number d : distribution)
+			if (d.doubleValue() > 0)
+				entropy -= (d.doubleValue() * Math.log(d.doubleValue()));
 
 		entropy /= Math.log(2.0);
 
