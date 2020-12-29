@@ -18,14 +18,16 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	private Double preFilterOutlierStd = 10.0;
 
 	/**
-	 * outlier cropping level at the minimum side
+	 * outlier cropping level at the minimum side. The decision was made to go for
+	 * 2.96 instead of 1.96 to avoid too much scoring truncation impact by design
 	 */
-	protected Double outlierStd = 1.96;
+	protected Double outlierStd = 2.96;
 
 	/**
-	 * outlier cropping level at the maximum side
+	 * outlier cropping level at the maximum side. The decision was made to go for
+	 * 2.96 instead of 1.96 to avoid too much scoring truncation impact by design
 	 */
-	protected Double outlierStdTop = 1.96;
+	protected Double outlierStdTop = 2.96;
 
 	protected Double outlierPruningMinValue;
 	protected Double outlierPruningMaxValue;

@@ -102,7 +102,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		this.highIsGood = highIsGood;
 		this.weight = weight;
 
-		this.uncertaintyFunction = uncertaintyFunction;
+		if (uncertaintyFunction == null)
+			this.uncertaintyFunction = e -> {
+				return (e.getAttribute(attribute) == null) ? 1.0 : 0.0;
+			};
+		else
+			this.uncertaintyFunction = uncertaintyFunction;
 	}
 
 	protected abstract void refreshScoringFunction();

@@ -60,7 +60,18 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 		return super.add(cdo);
 	}
 
+	/**
+	 * 
+	 * @param primaryKey note: the primary key attribute does not need to be of type
+	 *                   String.
+	 * @return
+	 */
 	public ComplexDataObject get(Object primaryKey) {
+		if (getType(primaryKeyAttribute) != primaryKey.getClass())
+			System.err.println(
+					"PrimaryDataContainer - warning: object type of primaryKey does not match type of primary key attribute ("
+							+ getType(primaryKeyAttribute) + " vs. " + primaryKey.getClass() + ")");
+
 		return primaryKeysSelectedAttributesCDOMap.get(primaryKey);
 	}
 
