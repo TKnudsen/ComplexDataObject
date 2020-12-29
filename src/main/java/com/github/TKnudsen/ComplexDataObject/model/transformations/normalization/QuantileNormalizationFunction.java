@@ -130,6 +130,8 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 			return 0.0;
 		else if (t.doubleValue() >= getGlobalMax().doubleValue())
 			return 1.0;
+		if (Double.isNaN(t.doubleValue()))
+			return Double.NaN;
 
 		// iterate the ranking
 		double q = 1.0 / (double) (valueRanking.size() - 1);

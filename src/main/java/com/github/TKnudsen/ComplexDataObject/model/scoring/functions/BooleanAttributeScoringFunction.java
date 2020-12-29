@@ -71,7 +71,7 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		if (getQuantileNormalizationRate() > 0)
 			quantileNormalizationFunction = new QuantileNormalizationFunction(statisticsSupport, true);
 
-		normalizationFunction = new LinearNormalizationFunction(statisticsSupport, true);
+		normalizationFunction = new LinearNormalizationFunction(0.0, 1.0, true);
 
 		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
 				false);

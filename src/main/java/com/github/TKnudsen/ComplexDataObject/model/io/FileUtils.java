@@ -1,6 +1,9 @@
 package com.github.TKnudsen.ComplexDataObject.model.io;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -12,12 +15,12 @@ import java.io.File;
  * </p>
  * 
  * <p>
- * Copyright: (c) 2016-2019 Juergen Bernard,
+ * Copyright: (c) 2016-2020 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class FileUtils {
 
@@ -73,5 +76,78 @@ public class FileUtils {
 		if (printOut && deleteCount > 0)
 			System.out.println("FileUtils.clearFolder: cleared. " + deleteCount + " files deleted in folder "
 					+ folderName.getName());
+	}
+
+	/**
+	 * recursive method that retrieves all files in a given directory.
+	 * 
+	 * @param directoryName
+	 * @param files
+	 */
+	public static void listFilesOfDirectoryAndSubdirectories(String directoryName, List<File> files,
+			FilenameFilter filenameFilter, boolean querySubfolders) {
+		File directory = new File(directoryName);
+
+		File[] fList = directory.listFiles();
+		if (fList != null)
+			for (File file : fList) {
+				if (file.isFile()) {
+					if (filenameFilter == null)
+						files.add(file);
+					else if (filenameFilter.accept(directory, file.getName()))
+						files.add(file);
+				} else if (file.isDirectory() && querySubfolders) {
+					listFilesOfDirectoryAndSubdirectories(file.getAbsolutePath(), files, filenameFilter,
+							querySubfolders);
+				}
+			}
+	}
+
+	/**
+	 * file name is compatible to Windows file systems
+	 * 
+	 * @param raw
+	 * @return
+	 */
+	public static String createFileNameString(String raw) {
+		String ret = raw;
+
+		List<String> evilChars = evilCharsForFileNames();
+		for (String s : evilChars)
+			ret = ret.replace(s, "_");
+
+		ret = ret.replace("é", "e");
+
+		ret = ret.replaceAll("/", "_");
+
+		return ret;
+	}
+
+	/**
+	 * directory name is compatible to Windows file systems
+	 * 
+	 * @param raw
+	 * @return
+	 */
+	public static String createDirectoryNameString(String raw) {
+		String ret = raw;
+
+		List<String> evilChars = evilCharsForDirectoryNames();
+		for (String s : evilChars)
+			ret = ret.replace(s, "_");
+
+		ret = ret.replace("é", "e");
+
+		return ret;
+	}
+
+	private static List<String> evilCharsForFileNames() {
+		return Arrays.asList("#", "<", "$", "+", "%", ">", "!", "`", "&", "*", "‘", "|", "{", "?", "“", "=", "}", ":",
+				"\\", "@"); // "/",
+	}
+
+	private static List<String> evilCharsForDirectoryNames() {
+		return Arrays.asList("#", "<", "$", "+", "%", ">", "!", "`", "&", "*", "‘", "|", "{", "?", "“", "=", "}", // ":"
+				"\\", "@"); // "/",
 	}
 }

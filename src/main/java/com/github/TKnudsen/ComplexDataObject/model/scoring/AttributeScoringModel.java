@@ -137,7 +137,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 					true, 1.0, uncertaintyFunction);
 			break;
 		case "String":
-			f = new DoubleAttributePositiveScoringFunction(container, new NumerificationInputDialogFunction(true),
+			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true),
 					attribute, null, false, true, 1.0, uncertaintyFunction);
 			break;
 
