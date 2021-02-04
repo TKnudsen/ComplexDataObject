@@ -73,8 +73,11 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 
 		normalizationFunction = new LinearNormalizationFunction(0.0, 1.0, true);
 
-		scoreAverageWithoutMissingValues = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this,
+		scoreAverageWithoutMissingValues = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this,
 				false);
+
+		// clear scoresBuffer as it contains old missing value data now
+		scoresBuffer.clear();
 
 		if (Double.isNaN(scoreAverageWithoutMissingValues))
 			System.err.println(
@@ -86,29 +89,6 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		else
 			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 	}
-
-//	@Override
-//	public Double applyValue(Boolean value) {
-//		if (value == null)
-//			getScoreForMissingObjects();
-//
-//		double output = normalizationFunction.apply(boolToDouble(value)).doubleValue();
-//
-//		if (!isHighIsGood())
-//			output = 1 - output;
-//
-//		// decision: weight should be applied externally. This, the relative value
-//		// domain is preserved and guaranteed internally.
-//		return output; // * getWeight();
-//	}
-
-//	private Double boolToDouble(Boolean bool) {
-//		Objects.requireNonNull(bool);
-//
-//		if (bool)
-//			return 1.0;
-//		return 0.0;
-//	}
 
 	@Override
 	protected Double toDouble(Boolean t) {

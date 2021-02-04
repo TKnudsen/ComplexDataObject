@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.sql;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.DataTruncation;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +18,26 @@ public class SQLTableInserter {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean extendColumnCapacityIfNeeded)
+			throws SQLException {
+
+		try {
+			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs);
+		} catch (DataTruncation e) {
+			if (!extendColumnCapacityIfNeeded)
+				throw new IllegalArgumentException(
+						"SQLTableInserter: caught a data truncation exception with message " + e.getMessage());
+
+			String column = SQLUtils.mitigateDataTruncationError(conn, e, listOfMapWithKeyValuePairs, schema,
+					tableName);
+			// TODO risk of an infinite loop!
+			System.err.println("SQLTableInserter: data truncation error detected and column " + column
+					+ " extended respectively, re-trying to insertRows");
+			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, extendColumnCapacityIfNeeded);
+		}
+	}
+
 	/**
 	 * hint: check if table exists first.
 	 * 
@@ -29,9 +50,10 @@ public class SQLTableInserter {
 	 * @param insertType                 INSERT, INSERT IGNORE, REPLACE
 	 * @param listOfMapWithKeyValuePairs list means rows, map contains the key value
 	 *                                   pairs for every row. Attention: modifies
-	 *                                   the object if attributes are not in table
+	 *                                   the given object if attributes are not in
+	 *                                   table
 	 */
-	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
+	private static void insertRows(Connection conn, String schema, String tableName, String insertType,
 			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs) throws SQLException {
 
 		Objects.requireNonNull(conn);
@@ -40,43 +62,6 @@ public class SQLTableInserter {
 		System.out.print("SQLTableInserter.insertRows: inserting multiple rows in table " + tableName + "...");
 		long l = System.currentTimeMillis();
 
-//		if (addMissingColumns) {
-//			// check whether all attributes are already in the database
-//			List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
-//			Collections.sort(columns);
-//
-//			Set<String> insertColumns = new HashSet<>();
-//			for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs)
-//				insertColumns.addAll(keyValuePairs.keySet());
-//
-//			boolean all = false;
-//			for (String attribute : insertColumns) {
-//				if (!columns.contains(attribute) && !all) {
-//					System.err.print("SQLTableInserter.insertRows: Table " + tableName + " in schema " + schema
-//							+ " does not contain attribute " + attribute + ". Trying to add column... ");
-//
-//					Class<?> javaClass = null;
-//					List<Object> values = new ArrayList<Object>();
-//					for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
-//						if (!keyValuePairs.containsKey(attribute))
-//							continue;
-//						if (keyValuePairs.get(attribute) == null)
-//							continue;
-//						if (javaClass == null)
-//							javaClass = keyValuePairs.get(attribute).getClass();
-//						else if (javaClass.equals(keyValuePairs.get(attribute).getClass()))
-//							throw new IllegalArgumentException("Attribute " + attribute
-//									+ " not in table, attempt to add column faile because the data was of different types ("
-//									+ javaClass + " and " + keyValuePairs.get(attribute).getClass() + ").");
-//						values.add(keyValuePairs.get(attribute));
-//					}
-//					String sql = SQLTableCreator.addColumnString(tableName, attribute, javaClass, values, columns);
-//					SQLTableCreator.addColumn(conn, sql);
-//
-//					System.err.println("finished without exceptions.");
-//				}
-//			}
-//		} else {
 		List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
 
 		// remove attributes that cannot be inserted in columns
@@ -84,7 +69,6 @@ public class SQLTableInserter {
 			for (String attribute : row.keySet())
 				if (!columns.contains(attribute))
 					row.remove(attribute);
-//		}
 
 		int i = 0;
 		for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
@@ -94,6 +78,7 @@ public class SQLTableInserter {
 
 			insertRow(conn, schema, tableName, insertType, keyValuePairs);
 		}
+		System.out.print("[" + (i) + "] ");
 
 		System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 	}
@@ -295,11 +280,12 @@ public class SQLTableInserter {
 	 * @param tableName
 	 * @param insertType          INSERT, INSERT IGNORE, REPLACE
 	 * @param attributes
-	 * @param values
+	 * @param values              outer list is the rows, inner list the attribute
+	 *                            values
 	 * @param overwriteDuplicates
 	 * @return
 	 */
-	private static String insertColumnWiseString(String tableName, String insertType, List<String> attributes,
+	public static String insertColumnWiseString(String tableName, String insertType, List<String> attributes,
 			List<List<Object>> values) {
 		String sql = insertType + " INTO `" + tableName + "`";
 

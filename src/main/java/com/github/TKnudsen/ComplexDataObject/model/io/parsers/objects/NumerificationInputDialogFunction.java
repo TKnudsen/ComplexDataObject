@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
+
 public class NumerificationInputDialogFunction implements IObjectParser<Double> {
 
 	private Map<Object, Double> numerificationLookup = new HashMap<Object, Double>();
@@ -31,17 +33,61 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double> 
 	}
 
 	private Double retrieveNumber(Object t) {
-		String inputValue = JOptionPane.showInputDialog(
-				"User input required for object [" + t + "]. Please input a numerical value; 0,5 for zero dot five.");
+		long start = System.currentTimeMillis();
 
-		inputValue = inputValue.replace(".", ",");
+		DialogRunnable dialogRunnable = new DialogRunnable(t);
+		Thread thread = new Thread(dialogRunnable);
+		thread.start();
 
-		return doubleParser.apply(inputValue);
+		while (!dialogRunnable.isFinished() && System.currentTimeMillis() - start < 10000) {
+			Threads.sleep(250);
+//			System.out.println("NumerificationInputDialogFunction.retrieveNumber: waiting for user input");
+		}
+
+		double d = dialogRunnable.getValue();
+		thread.interrupt();
+		return d;
+	}
+
+	public Double addNumerification(Object object, Double value) {
+		return numerificationLookup.put(object, value);
 	}
 
 	@Override
 	public Class<Double> getOutputClassType() {
 		return Double.class;
+	}
+
+	private class DialogRunnable implements Runnable {
+		private final Object t;
+		private double d = Double.NaN;
+		private boolean finished = false;
+
+		DialogRunnable(Object t) {
+			this.t = t;
+		}
+
+		@Override
+		public void run() {
+			String inputValue = JOptionPane.showInputDialog("User input required for object [" + t
+					+ "]. Please input a numerical value; 0,5 for zero point five.");
+
+			if (inputValue != null) {
+				inputValue = inputValue.replace(".", ",");
+				d = doubleParser.apply(inputValue);
+			}
+
+			finished = true;
+		}
+
+		public double getValue() {
+			return d;
+		}
+
+		public boolean isFinished() {
+			return finished;
+		}
+
 	}
 
 }

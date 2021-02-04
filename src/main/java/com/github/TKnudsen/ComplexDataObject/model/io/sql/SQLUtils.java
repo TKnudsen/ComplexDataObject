@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchemaEntry;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
 
 public class SQLUtils {
 
@@ -276,6 +277,7 @@ public class SQLUtils {
 		for (int i = 0; i < columnNames.length; i++) {
 
 			String attribute = columnNames[i];
+			
 			switch (columnTypes[i]) {
 
 			case Types.INTEGER:
@@ -579,6 +581,76 @@ public class SQLUtils {
 		}
 
 		return keyValuePairs;
+	}
+
+	/**
+	 * can be applied when a data truncation error caused an SQLException. The
+	 * method identifies the attribute that was too short, identifies the necessary
+	 * size of the attribute/column (using the data container) and modifies the
+	 * target SQL table, respectively.
+	 * 
+	 * It is recommended to apply recursion and try the upstream operation again.
+	 * Sometimes it happens that multiple data truncations happen (different
+	 * columns).
+	 * 
+	 * @param e             SQLException possibly including the message of the
+	 *                      exception including "Data truncation: Data too long for
+	 *                      column '"
+	 * @param dataContainer data used to define the new size of the table column
+	 * @param schema        target Schema
+	 * @param tableName     target table name
+	 * @return column name that is extended in the database
+	 */
+	public static String mitigateDataTruncationError(Connection conn, SQLException e,
+			PrimaryKeyDataContainer dataContainer, String schema, String tableName) {
+		return mitigateDataTruncationError(conn, e, createKeyValuePairs(dataContainer), schema, tableName);
+	}
+
+	/**
+	 * can be applied when a data truncation error caused an SQLException. The
+	 * method identifies the attribute that was too short, identifies the necessary
+	 * size of the attribute/column (using the keyValuePairs) and modifies the
+	 * target SQL table, respectively.
+	 * 
+	 * It is recommended to apply recursion and try the upstream operation again.
+	 * Sometimes it happens that multiple data truncations happen (different
+	 * columns).
+	 * 
+	 * @param e             SQLException possibly including the message of the
+	 *                      exception including "Data truncation: Data too long for
+	 *                      column '"
+	 * @param keyValuePairs data used to define the new size of the table column
+	 * @param schema        target Schema
+	 * @param tableName     target table name
+	 * @return column name that is extended in the database
+	 */
+	public static String mitigateDataTruncationError(Connection conn, SQLException e,
+			List<LinkedHashMap<String, Object>> keyValuePairs, String schema, String tableName) {
+
+		String column = e.getLocalizedMessage();
+
+		if (column.contains("Data truncation: Data too long for column '")) {
+			column = column.replace("Data truncation: Data too long for column '", "");
+			column = column.substring(0, column.indexOf("' at row"));
+			column = column.trim();
+
+			int length = 20;
+			for (LinkedHashMap<String, Object> row : keyValuePairs)
+				if (row.get(column) != null)
+					length = Math.max(length, row.get(column).toString().length());
+
+			try {
+				System.err.println(
+						"SQLUtils: Data truncation (column size too short). Trying to modify column and upload the data again");
+				SQLTableAlternator.modifyColumnVarCharSize(conn, schema.toString(), tableName, column, length, true);
+
+				return column;
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return null;
 	}
 
 }

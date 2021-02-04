@@ -1,7 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeListener;
-import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
 
@@ -382,6 +380,18 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return parser;
 	}
 
+	public void setParser(IObjectParser<T> parser) {
+		this.parser = parser;
+
+		this.scoresBuffer.clear();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
 	public ComplexDataContainer getContainer() {
 		return container;
 	}
@@ -401,40 +411,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
-	}
-
-	/**
-	 * 
-	 * @param function
-	 * @param absoluteValues scores may be negative but may be needed in an absolute
-	 *                       way
-	 * @return
-	 */
-	public static double calculateAverageScoreWithoutMissingValues(AttributeScoringFunction<?> function,
-			boolean absoluteValues) {
-		Collection<Double> scores = new ArrayList<>();
-
-		for (ComplexDataObject cdo : function.getContainer()) {
-			Object o = cdo.getAttribute(function.getAttribute());
-
-			if (o == null)
-				continue;
-
-			if (o instanceof Number)
-				if (Double.isNaN(((Number) o).doubleValue()))
-					continue;
-
-			if (absoluteValues)
-				scores.add(Math.abs(function.apply(cdo)));
-			else
-				scores.add(function.apply(cdo));
-		}
-
-		if (scores.isEmpty())
-			return 0.0;
-
-		StatisticsSupport statistics = new StatisticsSupport(scores);
-		return statistics.getMean();
 	}
 
 	@Override

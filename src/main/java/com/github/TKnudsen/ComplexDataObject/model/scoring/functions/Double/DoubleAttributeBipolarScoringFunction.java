@@ -10,7 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
@@ -199,7 +199,10 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	}
 
 	protected double calculateAverageScore() {
-		double score = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, true);
+		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, true);
+
+		// clear scoresBuffer as it contains old missing value data now
+		scoresBuffer.clear();
 
 		if (Double.isNaN(score))
 			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
