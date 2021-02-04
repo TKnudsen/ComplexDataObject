@@ -23,7 +23,6 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.Numerifica
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributePositiveScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
@@ -133,8 +132,11 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 					true, 1.0, uncertaintyFunction);
 			break;
 		case "Integer":
-			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false,
+		case "Long":
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
 					true, 1.0, uncertaintyFunction);
+//			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false,
+//					true, 1.0, uncertaintyFunction);
 			break;
 		case "String":
 			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true),
@@ -142,9 +144,8 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 			break;
 
 		default:
-			System.err.println(
+			throw new IllegalArgumentException(
 					"AttributeScoringModel: unsupported data type: " + container.getType(attribute).getSimpleName());
-			break;
 		}
 
 		addAttributeScoringFunction(f);
@@ -189,10 +190,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	}
 
 	public boolean containsAttributeScoringFunction(String attribute) {
-		if (getAttributeScoringFunction(attribute) != null)
-			return true;
-
-		return false;
+		return getAttributeScoringFunction(attribute) != null;
 	}
 
 	public AttributeScoringFunction<?> getAttributeScoringFunction(String attribute) {

@@ -11,6 +11,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
@@ -37,7 +38,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	/**
 	 * if true, values that exactly match the neutral value will receive no quantile
 	 * normalization. Values that exactly match the outlier pruning levels will
-	 * receibe the defined {@link quantileNormalizationRate}. every value in between
+	 * receive the defined {@link quantileNormalizationRate}. every value in between
 	 * receives a ratio that is interpolated, accordingly.
 	 */
 	private boolean linearTransitionOfQuantileNormalizationRates = true;
@@ -128,7 +129,10 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	}
 
 	protected double calculateAverageScore() {
-		double score = AttributeScoringFunction.calculateAverageScoreWithoutMissingValues(this, false);
+		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, false);
+
+		// clear scoresBuffer as it contains old missing value data now
+		scoresBuffer.clear();
 
 		if (Double.isNaN(score))
 			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
@@ -284,6 +288,12 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		return outlierPruningMinValue;
 	}
 
+	/**
+	 * defines the lower boundary of the input value domain. Lower values will be
+	 * clamped.
+	 * 
+	 * @param outlierPruningMinValue
+	 */
 	public void setOutlierPruningMinValue(Double outlierPruningMinValue) {
 		this.outlierPruningMinValueExternal = outlierPruningMinValue;
 		this.outlierStd = null;
@@ -301,6 +311,12 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		return outlierPruningMaxValue;
 	}
 
+	/**
+	 * defines the upper boundary of the input value domain. Higher values will be
+	 * clamped.
+	 * 
+	 * @param outlierPruningMaxValue
+	 */
 	public void setOutlierPruningMaxValue(Double outlierPruningMaxValue) {
 		this.outlierPruningMaxValueExternal = outlierPruningMaxValue;
 		this.outlierStdTop = null;

@@ -53,11 +53,11 @@ public abstract class DimensionalityReduction<X> implements IDimensionalityReduc
 
 	@Override
 	public List<NumericalFeatureVector> transform(X inputObject) {
-		if (mapping == null)
+		if (getMapping() == null)
 			throw new NullPointerException("mapping is null: dimensionality-reduction model not calculated yet?");
 
-		if (mapping.get(inputObject) != null)
-			return Arrays.asList(new NumericalFeatureVector[] { mapping.get(inputObject) });
+		if (getMapping().get(inputObject) != null)
+			return Arrays.asList(new NumericalFeatureVector[] { getMapping().get(inputObject) });
 
 		System.err.println(
 				"DimensionalityRedutcion: feature vector identified that was not used for model building. null value added.");
@@ -79,13 +79,13 @@ public abstract class DimensionalityReduction<X> implements IDimensionalityReduc
 		if (inputObjects.size() == 0)
 			throw new IllegalArgumentException("DimensionalityReduction: input objects' size was 0");
 
-		if (mapping == null)
+		if (getMapping() == null)
 			throw new NullPointerException("mapping is null: dimensionality-reduction model not calculated yet?");
 
 		List<NumericalFeatureVector> output = new ArrayList<>();
 		for (X x : inputObjects)
-			if (mapping.containsKey(x))
-				output.add(mapping.get(x));
+			if (getMapping().containsKey(x))
+				output.add(getMapping().get(x));
 			else {
 				output.add(null);
 				System.err.println(

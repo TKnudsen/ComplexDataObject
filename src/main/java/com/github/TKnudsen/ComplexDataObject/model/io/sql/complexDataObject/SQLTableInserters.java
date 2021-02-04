@@ -24,9 +24,10 @@ public class SQLTableInserters {
 	 * @param cdos
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataContainer cdos) throws SQLException {
+			ComplexDataContainer cdos, boolean extendColumnCapacityIfNeeded) throws SQLException {
 
-		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos));
+		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos),
+				extendColumnCapacityIfNeeded);
 	}
 
 	/**
