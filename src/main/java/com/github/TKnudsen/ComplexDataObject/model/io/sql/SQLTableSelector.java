@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
@@ -192,6 +193,8 @@ public class SQLTableSelector {
 	 */
 	public static Collection<Collection<Object>> selectColumnsFromTable(Connection conn, String tableName,
 			List<String> columns, String searchString, String orderAttribute, Order order) throws SQLException {
+
+		Objects.requireNonNull(tableName);
 
 		Collection<Collection<Object>> values = new ArrayList<>();
 

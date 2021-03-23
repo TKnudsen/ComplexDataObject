@@ -25,12 +25,13 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttr
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 
 public final class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();
 
-	protected Double currentScoreMax = null;
+	private LinearNormalizationFunction normalizationFunction = null;
 
 	private Boolean validationMode = false;
 
@@ -64,7 +65,8 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 				System.out.println(MathFunctions.round(entry.getKey(), 3) + ":\t" + entry.getValue().getName() + ":\t"
 						+ entry.getValue().getAttribute("ISIN"));
 
-		currentScoreMax = cdoRanking.getLast().getKey();
+		normalizationFunction = new LinearNormalizationFunction(cdoRanking.getFirst().getKey(),
+				cdoRanking.getLast().getKey());
 
 		handleItemRankingChangeEvent(new ItemRankingChangeEvent(this, cdoRanking));
 
@@ -88,10 +90,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	public Double getScoreRelative(ComplexDataObject cdo) {
 		double score = getScore(cdo);
 
-		if (currentScoreMax != null)
-			return score / currentScoreMax;
-
-		return 0.0;
+		return (normalizationFunction != null) ? normalizationFunction.apply(Double.valueOf(score)).doubleValue() : 0.0;
 	}
 
 	public Double getUncertainty(ComplexDataObject cdo) {
@@ -285,7 +284,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	}
 
 	private final void handleAttributeScoringChangeEvent(AttributeScoringFunctionChangeEvent event) {
-		currentScoreMax = null;
+		normalizationFunction = null;
 
 		for (ChangeListener listener : changeListeners)
 			listener.stateChanged(event);

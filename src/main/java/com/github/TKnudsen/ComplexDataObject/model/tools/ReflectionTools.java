@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,19 +9,15 @@ import java.util.Map;
 
 /**
  * <p>
- * Title: ReflectionTools
- * </p>
- *
- * <p>
  * Description: little helpers when reflection is needed.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017-2018
+ * Copyright: Copyright (c) 2017-2021
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class ReflectionTools {
 
@@ -116,5 +113,22 @@ public class ReflectionTools {
 		}
 
 		return null;
+	}
+
+	/**
+	 * retrieves the folder location where the class is living in. Advantage: this
+	 * is the folder of the classe's library, not the folder of the executing
+	 * project.
+	 * 
+	 * @param c
+	 * @return
+	 */
+	public static String classLocation(Class<?> c) {
+		if (c == null)
+			return null;
+
+		URL url = c.getResource(c.getSimpleName() + ".class");
+		String folder = url.getFile();
+		return folder;
 	}
 }
