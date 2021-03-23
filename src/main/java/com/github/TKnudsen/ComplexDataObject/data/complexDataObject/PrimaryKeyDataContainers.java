@@ -15,7 +15,6 @@ public class PrimaryKeyDataContainers {
 		Objects.requireNonNull(cdo);
 
 		return new PrimaryKeyDataContainer(Arrays.asList(cdo), primaryKeyAttribute);
-
 	}
 
 	public static PrimaryKeyDataContainer mergeContainers(Collection<PrimaryKeyDataContainer> containers,

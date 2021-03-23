@@ -5,19 +5,19 @@ import java.util.List;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.examples.TitanicParser;
+import com.github.TKnudsen.ComplexDataObject.model.tools.ReflectionTools;
 
 /**
  * <p>
- * Title: Datasets provides Lists of ComplexDataObject instances for some given
- * data sets.
+ * provides ComplexDataObjects for data sets.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2020
+ * Copyright: Copyright (c) 2015-2021
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class DataSets {
 
@@ -26,8 +26,10 @@ public class DataSets {
 
 		TitanicParser p = new TitanicParser("", true);
 		try {
-			System.out.println("Working Directory = " + System.getProperty("user.dir"));
-			titanicData = p.parse("data/titanic_extended.txt");
+			String dataLocation = ReflectionTools.classLocation(ComplexDataObject.class);
+			dataLocation = dataLocation.substring(0, dataLocation.indexOf("/target"));
+			dataLocation += "/data/titanic_extended.txt";
+			titanicData = p.parse(dataLocation);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

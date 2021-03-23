@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,29 +12,23 @@ import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 
 /**
  * <p>
- * Title: ComplexDataContainerTools
- * </p>
- * 
- * <p>
  * Description: Little helpers for ComplexDataContainers
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017-2019
+ * Copyright: Copyright (c) 2017-2021
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class ComplexDataContainers {
 
 	public static List<ComplexDataObject> getObjectList(ComplexDataContainer container) {
 		List<ComplexDataObject> list = new ArrayList<>();
 
-		Iterator<ComplexDataObject> iterator = container.iterator();
-
-		while (iterator.hasNext())
-			list.add(iterator.next());
+		for (ComplexDataObject cdo : container)
+			list.add(cdo);
 
 		return list;
 	}

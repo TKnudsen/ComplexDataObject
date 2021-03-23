@@ -3,46 +3,47 @@ package com.github.TKnudsen.ComplexDataObject.model.io.csv;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * <p>
- * Title: CVSWriterTools
+ * Description: support functionality to facilitate .csv output
+ * 
+ * Possible add on: add encapsulation of special chars and comma
  * </p>
  * 
  * <p>
- * Description: support functionalty to facilitate .csv output
- * 
- * Possible addon: add encapsulation of special chars and comma
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
+ * Copyright: Copyright (c) 2018-2021
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class CSVWriterTools {
 
 	private static final char SEPARATOR = ',';
 
-	public static void writeToCSV(List<List<? extends Object>> linesOfObjects, String file) throws IOException {
+	public static void writeToCSV(Iterable<? extends Iterable<? extends Object>> linesOfObjects, String file)
+			throws IOException {
+		writeToCSV(linesOfObjects, file, SEPARATOR);
+	}
+
+	public static void writeToCSV(Iterable<? extends Iterable<? extends Object>> linesOfObjects, String file,
+			char separator) throws IOException {
 
 		Writer writer = createFileWriter(file);
 
-		for (List<? extends Object> objects : linesOfObjects)
-			writeLine(writer, objects);
+		for (Iterable<? extends Object> objects : linesOfObjects)
+			writeLine(writer, objects, separator);
 
 		writer.flush();
 		writer.close();
 	}
 
-	public static void writeLine(Writer writer, List<? extends Object> values) throws IOException {
+	public static void writeLine(Writer writer, Iterable<? extends Object> values) throws IOException {
 		writeLine(writer, values, SEPARATOR);
 	}
 
-	public static void writeLine(Writer writer, List<? extends Object> values, char separator) throws IOException {
+	public static void writeLine(Writer writer, Iterable<? extends Object> values, char separator) throws IOException {
 
 		boolean first = true;
 
@@ -62,7 +63,6 @@ public class CSVWriterTools {
 		sb.append("\n");
 		writer.append(sb.toString());
 	}
-	
 
 	private static String csvFormatSupport(String value) {
 		String output = value;
