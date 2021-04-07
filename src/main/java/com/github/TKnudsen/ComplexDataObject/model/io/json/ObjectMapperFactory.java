@@ -25,17 +25,19 @@ public class ObjectMapperFactory {
 
 	private static void initComplexDataObjectObjectMapper() {
 		complexDataObjectObjectMapper = new ObjectMapper();
+		
 		// complexDataObjectObjectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		complexDataObjectObjectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
 				DefaultTyping.NON_FINAL);
+		
 //		complexDataObjectObjectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, true);
 		complexDataObjectObjectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		complexDataObjectObjectMapper.configOverride(Map.class)
 				.setInclude(Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));
+		
 		complexDataObjectObjectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 		complexDataObjectObjectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
 		complexDataObjectObjectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-
 	}
 
 	public static ObjectMapper createComplexDataObjectObjectMapper(boolean ignoreUnknownProperties) {
