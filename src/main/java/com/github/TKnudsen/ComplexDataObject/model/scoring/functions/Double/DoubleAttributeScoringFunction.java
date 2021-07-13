@@ -121,11 +121,15 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 			System.err.println(
 					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");
 
-		Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
-		if (missingValueAvgScoreRatio == null || Double.isNaN(missingValueAvgScoreRatio))
-			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
-		else
-			scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
+		// determine internal missing value score
+		if (Double.isNaN(getScoreForMissingObjectsExternal())) {
+			Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
+			if (missingValueAvgScoreRatio == null || Double.isNaN(missingValueAvgScoreRatio))
+				scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
+			else
+				scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
+		} else
+			scoreForMissingObjects = getScoreForMissingObjectsExternal();
 	}
 
 	protected double calculateAverageScore() {

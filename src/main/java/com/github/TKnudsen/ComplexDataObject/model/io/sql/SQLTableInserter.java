@@ -18,12 +18,23 @@ public class SQLTableInserter {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param insertType
+	 * @param listOfMapWithKeyValuePairs
+	 * @param extendColumnCapacityIfNeeded
+	 * @param showTimingLog
+	 * @throws SQLException
+	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean extendColumnCapacityIfNeeded)
-			throws SQLException {
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean extendColumnCapacityIfNeeded,
+			boolean showTimingLog) throws SQLException {
 
 		try {
-			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs);
+			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, showTimingLog);
 		} catch (DataTruncation e) {
 			if (!extendColumnCapacityIfNeeded)
 				throw new IllegalArgumentException(
@@ -34,7 +45,8 @@ public class SQLTableInserter {
 			// TODO risk of an infinite loop!
 			System.err.println("SQLTableInserter: data truncation error detected and column " + column
 					+ " extended respectively, re-trying to insertRows");
-			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, extendColumnCapacityIfNeeded);
+			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, extendColumnCapacityIfNeeded,
+					showTimingLog);
 		}
 	}
 
@@ -54,12 +66,13 @@ public class SQLTableInserter {
 	 *                                   table
 	 */
 	private static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs) throws SQLException {
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean showTimingLog) throws SQLException {
 
 		Objects.requireNonNull(conn);
 		Objects.requireNonNull(listOfMapWithKeyValuePairs);
 
-		System.out.print("SQLTableInserter.insertRows: inserting multiple rows in table " + tableName + "...");
+		if (showTimingLog)
+			System.out.print("SQLTableInserter.insertRows: inserting multiple rows in table " + tableName + "...");
 		long l = System.currentTimeMillis();
 
 		List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
@@ -72,15 +85,18 @@ public class SQLTableInserter {
 
 		int i = 0;
 		for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
-			if (i++ % 100 == 0)
-				if (i > 1)
-					System.out.print("[" + (i - 1) + "]");
+			if (showTimingLog)
+				if (i++ % 100 == 0)
+					if (i > 1)
+						System.out.print("[" + (i - 1) + "]");
 
 			insertRow(conn, schema, tableName, insertType, keyValuePairs);
 		}
-		System.out.print("[" + (i) + "] ");
+		if (showTimingLog)
+			System.out.print("[" + (i) + "] ");
 
-		System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
+		if (showTimingLog)
+			System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 	}
 
 	/**

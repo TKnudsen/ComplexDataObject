@@ -6,18 +6,17 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
  * </p>
  * 
  * <p>
- * Parses Double values that input that contains abbreviations such as MIO and
- * BIO for million and billions. Important German and English abbreviations are
- * included.
+ * Parses values that contain abbreviations such as MIO and BIO for million and
+ * billions. Important German and English abbreviations are included.
  * </p>
  * 
  * <p>
- * Copyright: (c) 2016-2019 Juergen Bernard,
+ * Copyright: (c) 2016-2021 Juergen Bernard,
  * https://github.com/TKnudsen/ComplexDataObject
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 public class DoubleParserForNumberAbbreviations extends DoubleParser {
 
@@ -41,10 +40,12 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 		double multiply = 1.0;
 		if (s.contains("Mrd")) {
 			s = s.substring(0, s.indexOf("Mrd")).trim();
+			// German
 			multiply = 1000000000;
 		} else if (s.contains("Bio")) {
 			s = s.substring(0, s.indexOf("Bio")).trim();
-			multiply = 1000000000;
+			// German
+			multiply = 1000000000000L;
 		} else if (s.contains("Billion")) {
 			s = s.substring(0, s.indexOf("Billion")).trim();
 			multiply = 1000000000;
@@ -53,6 +54,7 @@ public class DoubleParserForNumberAbbreviations extends DoubleParser {
 			multiply = 1000000000;
 		} else if (s.contains("Mio")) {
 			s = s.substring(0, s.indexOf("Mio")).trim();
+			// German
 			multiply = 1000000;
 		} else if (s.contains("Million")) {
 			s = s.substring(0, s.indexOf("Million")).trim();
