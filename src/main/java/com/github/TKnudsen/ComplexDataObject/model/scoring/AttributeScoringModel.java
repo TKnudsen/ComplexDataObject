@@ -114,7 +114,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		this.addAttributeScoringFunction(container, attribute, null);
 	}
 
-	public void addAttributeScoringFunction(ComplexDataContainer container, String attribute,
+	public AttributeScoringFunction<?> addAttributeScoringFunction(ComplexDataContainer container, String attribute,
 			Function<ComplexDataObject, Double> uncertaintyFunction) {
 		Objects.requireNonNull(container);
 		Objects.requireNonNull(attribute);
@@ -148,6 +148,8 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		}
 
 		addAttributeScoringFunction(f);
+
+		return f;
 	}
 
 	public void addAttributeScoringFunction(AttributeScoringFunction<?> attributeScoringFunction) {

@@ -20,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class ComplexDataContainers {
 
@@ -31,6 +31,17 @@ public class ComplexDataContainers {
 			list.add(cdo);
 
 		return list;
+	}
+
+	public static ComplexDataContainer createComplexDataContainer(
+			Iterable<? extends ComplexDataObject> complexDataObjects) {
+
+		List<ComplexDataObject> list = new ArrayList<>();
+
+		for (ComplexDataObject cdo : complexDataObjects)
+			list.add(cdo);
+
+		return new ComplexDataContainer(list);
 	}
 
 	public static ComplexDataContainer createComplexDataContainer(ComplexDataObject cdo) {

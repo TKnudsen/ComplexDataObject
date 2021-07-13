@@ -18,6 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanPar
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DateParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IntegerParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.LongParser;
 
 /**
  * <p>
@@ -57,6 +58,7 @@ public abstract class ParserTools implements Serializable {
 
 	private static BooleanParser booleanParser = new BooleanParser();
 	private static IntegerParser integerParser = new IntegerParser();
+	private static LongParser longParser = new LongParser();
 	private static DoubleParser doubleParser = new DoubleParser();
 	private static DateParser dateParser = new DateParser();
 
@@ -78,6 +80,10 @@ public abstract class ParserTools implements Serializable {
 
 	public static synchronized Integer parseInteger(Object token) {
 		return integerParser.apply(token);
+	}
+
+	public static synchronized Long parseLong(Object token) {
+		return longParser.apply(token);
 	}
 
 	public static synchronized Double parseDouble(Object token) {

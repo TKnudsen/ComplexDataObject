@@ -53,7 +53,8 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		Full, Half, None
 	}
 
-	protected double scoreForMissingObjects = 0.2;
+	protected double scoreForMissingObjects = 0.0;
+	private double scoreForMissingObjectsExternal = Double.NaN;
 	private Double missingValueAvgScoreRatio = null;
 
 	@JsonIgnore
@@ -442,6 +443,22 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 //		else
 //			quantileBased = false;
 
+		this.scoresBuffer = new HashMap<>();
+
+		refreshScoringFunction();
+
+		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
+
+		notifyListeners(event);
+	}
+
+	public double getScoreForMissingObjectsExternal() {
+		return scoreForMissingObjectsExternal;
+	}
+
+	public void setScoreForMissingObjectsExternal(double scoreForMissingObjectsExternal) {
+		this.scoreForMissingObjectsExternal = scoreForMissingObjectsExternal;
+		
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();

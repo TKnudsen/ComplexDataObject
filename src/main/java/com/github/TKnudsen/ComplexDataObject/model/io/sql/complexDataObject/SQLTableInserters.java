@@ -20,14 +20,17 @@ public class SQLTableInserters {
 	 * @param conn
 	 * @param schema
 	 * @param tableName
-	 * @param insertType INSERT, INSERT IGNORE, REPLACE
+	 * @param insertType                   INSERT, INSERT IGNORE, REPLACE
 	 * @param cdos
+	 * @param extendColumnCapacityIfNeeded
+	 * @param showTimingLog
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataContainer cdos, boolean extendColumnCapacityIfNeeded) throws SQLException {
+			ComplexDataContainer cdos, boolean extendColumnCapacityIfNeeded, boolean showTimingLog)
+			throws SQLException {
 
 		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos),
-				extendColumnCapacityIfNeeded);
+				extendColumnCapacityIfNeeded, showTimingLog);
 	}
 
 	/**
