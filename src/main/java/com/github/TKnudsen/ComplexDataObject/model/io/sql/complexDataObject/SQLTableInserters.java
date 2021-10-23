@@ -26,11 +26,11 @@ public class SQLTableInserters {
 	 * @param showTimingLog
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataContainer cdos, boolean extendColumnCapacityIfNeeded, boolean showTimingLog)
-			throws SQLException {
+			ComplexDataContainer cdos, boolean extendColumnCapacityIfNeeded, boolean useFloatInsteadOfDouble,
+			boolean showTimingLog) throws SQLException {
 
 		SQLTableInserter.insertRows(conn, schema, tableName, insertType, SQLUtils.createKeyValuePairs(cdos),
-				extendColumnCapacityIfNeeded, showTimingLog);
+				extendColumnCapacityIfNeeded, useFloatInsteadOfDouble, showTimingLog);
 	}
 
 	/**
@@ -43,12 +43,12 @@ public class SQLTableInserters {
 	 * @param cdo
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataObject cdo, boolean checkIfTableExists) throws SQLException {
+			ComplexDataObject cdo, boolean checkIfTableExists, boolean useFloatInsteadOfDouble) throws SQLException {
 
 		// create key value pairs (attributes and values)
 		LinkedHashMap<String, Object> keyValuePairs = SQLUtils.createKeyValuePairs(cdo);
 
-		SQLTableInserter.insertRow(conn, schema, tableName, insertType, keyValuePairs);
+		SQLTableInserter.insertRow(conn, schema, tableName, insertType, keyValuePairs, useFloatInsteadOfDouble);
 	}
 
 }

@@ -18,6 +18,7 @@ public class SQLTableSelectors {
 	/**
 	 * 
 	 * @param conn
+	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param schema         the target schema that is selected from the database
 	 * @param orderAttribute
@@ -25,17 +26,18 @@ public class SQLTableSelectors {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String tableName, DataSchema schema,
-			String orderAttribute, Order order) throws SQLException {
-		Objects.requireNonNull(schema);
+	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String schema, String tableName,
+			DataSchema dataSchema, String orderAttribute, Order order) throws SQLException {
+		Objects.requireNonNull(dataSchema);
 
-		return SQLTableSelector.selectAllFromTable(conn, tableName, orderAttribute, order,
-				DataSchemas.getClassMap(schema));
+		return SQLTableSelector.selectAllFromTable(conn, schema, tableName, orderAttribute, order,
+				DataSchemas.getClassMap(dataSchema));
 	}
 
 	/**
 	 * 
 	 * @param conn
+	 * @param schema                    where the table lives in
 	 * @param tableName
 	 * @param attributeCharacterization the target schema that is selected from the
 	 *                                  database
@@ -44,23 +46,24 @@ public class SQLTableSelectors {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String tableName,
+	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String schema, String tableName,
 			Collection<DataSchemaEntry<?>> attributeCharacterization, String orderAttribute, Order order)
 			throws SQLException {
 		Objects.requireNonNull(attributeCharacterization);
 
-		return SQLTableSelector.selectAllFromTable(conn, tableName, orderAttribute, order,
+		return SQLTableSelector.selectAllFromTable(conn, schema, tableName, orderAttribute, order,
 				DataSchemas.getClassMap(attributeCharacterization));
 	}
 
 	/**
 	 * 
 	 * @param conn
+	 * @param schema                    where the table lives in
 	 * @param tableName
 	 * @param attributeCharacterization the target schema that is selected from the
 	 *                                  database
 	 * @param String                    searchString the WHERE condition (without
-	 *                                  WHERE). can be null. example a) columname
+	 *                                  WHERE). can be null. example a) column name
 	 *                                  >='2012-12-25 00:00:00'. b) searchColumn =
 	 *                                  'searchQuery'. Make sure to use ' where
 	 *                                  needed
@@ -69,10 +72,10 @@ public class SQLTableSelectors {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String tableName,
+	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String schema, String tableName,
 			Collection<DataSchemaEntry<?>> attributeCharacterization, String searchString, String orderAttribute,
 			Order order) throws SQLException {
-		return SQLTableSelector.selectFromTableWhere(conn, tableName, searchString, orderAttribute, order,
+		return SQLTableSelector.selectFromTableWhere(conn, schema, tableName, searchString, orderAttribute, order,
 				DataSchemas.getClassMap(attributeCharacterization));
 	}
 

@@ -25,21 +25,23 @@ public class SQLTableSelector {
 	/**
 	 * 
 	 * @param conn
+	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param orderAttribute can be null, then order will be ignored as well
 	 * @param order
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String tableName, String orderAttribute,
-			Order order) throws SQLException {
+	public static List<ComplexDataObject> selectAllFromTable(Connection conn, String schema, String tableName,
+			String orderAttribute, Order order) throws SQLException {
 
-		return selectAllFromTable(conn, tableName, orderAttribute, order, null);
+		return selectAllFromTable(conn, schema, tableName, orderAttribute, order, null);
 	}
 
 	/**
 	 * 
 	 * @param conn
+	 * @param schema                    where the table lives in
 	 * @param tableName
 	 * @param orderAttribute            can be null, then order will be ignored as
 	 *                                  well
@@ -50,14 +52,15 @@ public class SQLTableSelector {
 	 * @throws SQLException
 	 * 
 	 */
-	public static synchronized List<ComplexDataObject> selectAllFromTable(Connection conn, String tableName,
-			String orderAttribute, Order order, Map<String, Class<?>> attributeCharacterization) throws SQLException {
+	public static synchronized List<ComplexDataObject> selectAllFromTable(Connection conn, String schema,
+			String tableName, String orderAttribute, Order order, Map<String, Class<?>> attributeCharacterization)
+			throws SQLException {
 
 		System.out.print("SQLTableSelector.selectAllFromTable: selecting all rows from table " + tableName + " ...");
 		long l = System.currentTimeMillis();
 
-		PreparedStatement preparedStatement = selectAllFromTablePreparedStatement(conn, tableName, orderAttribute,
-				order);
+		PreparedStatement preparedStatement = selectAllFromTablePreparedStatement(conn, schema, tableName,
+				orderAttribute, order);
 		ResultSet resultSet = null;
 		try {
 			resultSet = preparedStatement.executeQuery();
@@ -86,6 +89,7 @@ public class SQLTableSelector {
 	/**
 	 * 
 	 * @param conn
+	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param orderAttribute can be null, then order will be ignored as well
 	 * @param order
@@ -93,12 +97,20 @@ public class SQLTableSelector {
 	 * @throws SQLException
 	 * 
 	 */
-	public static synchronized PreparedStatement selectAllFromTablePreparedStatement(Connection conn, String tableName,
-			String orderAttribute, Order order) throws SQLException {
+	public static synchronized PreparedStatement selectAllFromTablePreparedStatement(Connection conn, String schema,
+			String tableName, String orderAttribute, Order order) throws SQLException {
+
+		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
+				? PostgreSQL.schemaAndTableName(schema, tableName)
+				: tableName; // here the schema is already part of the connection
 
 		PreparedStatement preparedStatement = null;
-		String sql = (orderAttribute == null) ? "SELECT * FROM " + tableName
-				: "SELECT * FROM " + tableName + " ORDER BY `" + orderAttribute + "` " + order.name();
+		String sql = (orderAttribute == null) ? "SELECT * FROM `" + schemaAndTable + "`"
+				: "SELECT * FROM `" + schemaAndTable + "` ORDER BY `" + orderAttribute + "` " + order.name();
+
+		if (PostgreSQL.isPostgreSQLConnection(conn))
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
+
 		preparedStatement = conn.prepareStatement(sql);
 
 		return preparedStatement;
@@ -107,9 +119,10 @@ public class SQLTableSelector {
 	/**
 	 * 
 	 * @param conn
+	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) columname >='2012-12-25 00:00:00'. b)
+	 *                       example a) column name >='2012-12-25 00:00:00'. b)
 	 *                       searchColumn = 'searchQuery'. Make sure to use ' where
 	 *                       needed
 	 * @param orderAttribute can be null, then order will be ignored
@@ -117,18 +130,19 @@ public class SQLTableSelector {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String tableName, String searchString,
-			String orderAttribute, Order order) throws SQLException {
+	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String schema, String tableName,
+			String searchString, String orderAttribute, Order order) throws SQLException {
 
-		return selectFromTableWhere(conn, tableName, searchString, orderAttribute, order, null);
+		return selectFromTableWhere(conn, schema, tableName, searchString, orderAttribute, order, null);
 	}
 
 	/**
 	 * 
 	 * @param conn
+	 * @param schema                    name of the schema where the table lives in
 	 * @param tableName
 	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) columname >='2012-12-25
+	 *                                  null. example a) column name >='2012-12-25
 	 *                                  00:00:00'. b) searchColumn = 'searchQuery'.
 	 *                                  Make sure to use ' where needed
 	 * @param orderAttribute            can be null, then order will be ignored
@@ -138,20 +152,66 @@ public class SQLTableSelector {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String tableName, String searchString,
-			String orderAttribute, Order order, Map<String, Class<?>> attributeCharacterization) throws SQLException {
+	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String schema, String tableName,
+			String searchString, String orderAttribute, Order order, Map<String, Class<?>> attributeCharacterization)
+			throws SQLException {
+		return selectFromTableWhere(conn, schema, tableName, null, searchString, orderAttribute, order,
+				attributeCharacterization);
+	}
+
+	/**
+	 * 
+	 * @param conn
+	 * @param tableName
+	 * @param columns                   set of columns to be queried
+	 * @param searchString              the WHERE condition (without WHERE). can be
+	 *                                  null. example a) column name >='2012-12-25
+	 *                                  00:00:00'. b) searchColumn = 'searchQuery'.
+	 *                                  Make sure to use ' where needed
+	 * @param orderAttribute            can be null, then order will be ignored
+	 * @param order
+	 * @param attributeCharacterization the target schema that is selected from the
+	 *                                  database
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String schema, String tableName,
+			List<String> columns, String searchString, String orderAttribute, Order order,
+			Map<String, Class<?>> attributeCharacterization) throws SQLException {
+
+		Objects.requireNonNull(schema);
+		Objects.requireNonNull(tableName);
 
 		System.out.print("SQLTableSelector.selectFromTable: selecting all rows from table " + tableName + " ...");
 		long l = System.currentTimeMillis();
+
+		String fromString = columns == null ? "*" : "";
+		if (columns != null && !columns.isEmpty()) {
+			for (String column : columns)
+				fromString += (column + ", ");
+			fromString = fromString.substring(0, fromString.length() - 2);
+		}
+
+		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
+				? PostgreSQL.schemaAndTableName(schema, tableName)
+				: tableName; // here the schema is already part of the connection
 
 		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
 
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			String sql = (orderAttribute == null) ? "SELECT * FROM " + tableName + " WHERE " + searchString + " "
-					: "SELECT * FROM " + tableName + " WHERE " + searchString + " ORDER BY `" + orderAttribute + "` "
-							+ order.name();
+			String sql = (orderAttribute == null) ? "SELECT * FROM `" + schemaAndTable + "` WHERE PLACEHOLDER"
+					: "SELECT " + fromString + " FROM `" + schemaAndTable + "` WHERE PLACEHOLDER ORDER BY `"
+							+ orderAttribute + "` " + order.name();
+
+			if (PostgreSQL.isPostgreSQLConnection(conn))
+				sql = PostgreSQL.replaceMySQLQuotes(sql);
+
+			// the search string needs to be postgreSQL conform, values may have the other
+			// escape string in use (')
+			sql = sql.replace("PLACEHOLDER", searchString);
+
 			preparedStatement = conn.prepareStatement(sql);
 
 			resultSet = preparedStatement.executeQuery();
@@ -179,6 +239,7 @@ public class SQLTableSelector {
 	/**
 	 * 
 	 * @param conn
+	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param columns
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
@@ -191,10 +252,15 @@ public class SQLTableSelector {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static Collection<Collection<Object>> selectColumnsFromTable(Connection conn, String tableName,
-			List<String> columns, String searchString, String orderAttribute, Order order) throws SQLException {
+	public static Collection<Collection<Object>> selectColumnsFromTable(Connection conn, String schema,
+			String tableName, List<String> columns, String searchString, String orderAttribute, Order order)
+			throws SQLException {
 
 		Objects.requireNonNull(tableName);
+
+		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
+				? PostgreSQL.schemaAndTableName(schema, tableName)
+				: tableName; // here the schema is already part of the connection
 
 		Collection<Collection<Object>> values = new ArrayList<>();
 
@@ -206,13 +272,16 @@ public class SQLTableSelector {
 			query = query.substring(0, query.length() - 1);
 		} else
 			query += "*";
-		query += " FROM " + tableName;
+		query += " FROM `" + schemaAndTable + "`";
 
 		if (searchString != null)
 			query += (" WHERE " + searchString);
 
 		if (orderAttribute != null)
 			query += (" ORDER BY `" + orderAttribute + "` " + order.name());
+
+		if (PostgreSQL.isPostgreSQLConnection(conn))
+			query = PostgreSQL.replaceMySQLQuotes(query);
 
 		// create a statement
 		Statement stmt = conn.createStatement();
@@ -262,6 +331,10 @@ public class SQLTableSelector {
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = '" + schema + "'";
+
+			if (PostgreSQL.isPostgreSQLConnection(conn))
+				sql = PostgreSQL.replaceMySQLQuotes(sql);
+
 			preparedStatement = conn.prepareStatement(sql);
 
 			ResultSet resultSet = preparedStatement.executeQuery();

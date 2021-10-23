@@ -149,9 +149,9 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		if (!Double.isNaN(statisticsSupportPositive.getMean()))
 			normalizationFunctionPositive = new LinearNormalizationFunction(statisticsSupportPositive, true);
 		else
-			System.err.println(
-					getClass().getSimpleName() + ": negative value range did not contain entries for attribute "
-							+ getAttribute() + ". adjust neutral value");
+			System.err.println(getClass().getSimpleName()
+					+ ": positive value range above neutral value did not contain entries for attribute "
+					+ getAttribute() + ". check input data or adjust neutral value");
 
 		quantileNormalizationFunctionNegative = null;
 		normalizationFunctionNegative = null;
@@ -163,9 +163,9 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		if (!Double.isNaN(statisticsSupportNegative.getMean()) && statisticsSupportNegative.getCount() > 0)
 			normalizationFunctionNegative = new LinearNormalizationFunction(statisticsSupportNegative, true);
 		else
-			System.err.println(
-					getClass().getSimpleName() + ": negative value range did not contain entries for attribute "
-							+ getAttribute() + ". adjust neutral value");
+			System.err.println(getClass().getSimpleName()
+					+ ": negative value range below neutra value did not contain entries for attribute "
+					+ getAttribute() + ". check input data or adjust neutral value");
 
 		// close the region around 0.0
 		if (quantileNormalizationFunctionPositive != null)
@@ -180,10 +180,17 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 	@Override
 	protected double normalizeLinear(double value) {
-		if (Double.isNaN(neutralValue) || value >= neutralValue)
-			return normalizationFunctionPositive.apply(value).doubleValue();
-		else if (normalizationFunctionNegative != null)
-			return normalizationFunctionNegative.apply(value).doubleValue() - 1;
+		try {
+			if (Double.isNaN(neutralValue) || value >= neutralValue)
+				return normalizationFunctionPositive.apply(value).doubleValue();
+			else if (normalizationFunctionNegative != null)
+				return normalizationFunctionNegative.apply(value).doubleValue() - 1;
+		} catch (NullPointerException e) {
+			System.err.println(getClass().getSimpleName() + ".normalizeLinear did not work for value " + value
+					+ ", neutral value: " + neutralValue + ": normalization function null, returning 0.0 for attribute"
+					+ getAttribute());
+			return 0.0;
+		}
 
 		return Double.NaN;
 	}
@@ -223,7 +230,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 		return new StatisticsSupport(values);
 	}
-
+	
 	@Override
 	protected Double toDouble(Double t) {
 		return t;

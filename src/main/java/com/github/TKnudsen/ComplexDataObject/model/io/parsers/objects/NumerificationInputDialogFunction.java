@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
 
-public class NumerificationInputDialogFunction implements IObjectParser<Double> {
+public class NumerificationInputDialogFunction implements IObjectParser<Double>, INumerificationInput<Object> {
 
 	private Map<Object, Double> numerificationLookup = new HashMap<Object, Double>();
 	private DoubleParser doubleParser;
@@ -49,10 +49,6 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double> 
 		return d;
 	}
 
-	public Double addNumerification(Object object, Double value) {
-		return numerificationLookup.put(object, value);
-	}
-
 	@Override
 	public Class<Double> getOutputClassType() {
 		return Double.class;
@@ -88,6 +84,11 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double> 
 			return finished;
 		}
 
+	}
+
+	@Override
+	public Double addNumerification(Object object, double value) {
+		return numerificationLookup.put(object, value);
 	}
 
 }

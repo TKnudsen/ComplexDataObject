@@ -6,6 +6,7 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import com.github.TKnudsen.ComplexDataObject.data.DataSchemaEntry;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 
 public class SQLUtils {
 
@@ -76,37 +78,77 @@ public class SQLUtils {
 		Objects.requireNonNull(schema);
 		Objects.requireNonNull(tableName);
 
-		DatabaseMetaData dbm = conn.getMetaData();
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
-		ResultSet resultSet = dbm.getTables(null, schema, tableName, null);
+		if (postgreSQL) {
+			String sqlQuery = "			   SELECT EXISTS " + "(" + "	SELECT 1 " + "	FROM pg_tables"
+					+ "	WHERE schemaname = '" + schema + "'" + "	AND tablename = '" + tableName + "'" + ");";
 
-		try {
-			while (resultSet.next()) {
-				String cat = resultSet.getString("TABLE_CAT");
-				String schem = resultSet.getString("TABLE_SCHEM");
-				String name = resultSet.getString("TABLE_NAME");
-				// String type = resultSet.getString("TABLE_TYPE");
-				// String remarks = resultSet.getString("REMARKS");
+			ResultSet resultSet = null;
+			try {
+				PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
+				resultSet = preparedStatement.executeQuery();
+				List<ComplexDataObject> all = SQLUtils.interpreteResultSet(resultSet);
+				for (ComplexDataObject cdo : all)
+					return new BooleanParser().apply(cdo.getAttribute("exists"));
 
-				if (schema.toLowerCase().equals(cat)
-						|| schema.toLowerCase().equals(schem) && tableName.toLowerCase().equals(name))
-					return true;
+				System.out.println(all);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (resultSet != null)
+					resultSet.close();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (resultSet != null)
-				resultSet.close();
+
+		} else {
+			DatabaseMetaData dbm = conn.getMetaData();
+
+			ResultSet resultSet = dbm.getTables(null, schema, tableName, null);
+
+			try {
+				while (resultSet.next()) {
+					String cat = resultSet.getString("TABLE_CAT");
+					String schem = resultSet.getString("TABLE_SCHEM");
+					String name = resultSet.getString("TABLE_NAME");
+					// String type = resultSet.getString("TABLE_TYPE");
+					// String remarks = resultSet.getString("REMARKS");
+
+					if (!PostgreSQL.isPostgreSQLConnection(conn))
+						if (schema.toLowerCase().equals(cat)
+								|| schema.toLowerCase().equals(schem) && tableName.toLowerCase().equals(name))
+							return true;
+						else {
+						}
+					else
+						return (schema.equals(schem) && tableName.equals(name));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (resultSet != null)
+					resultSet.close();
+			}
 		}
 
 		return false;
 	}
 
-	public static String classToMySQLType(Class<?> javaClass, boolean primaryKey) {
-		return classToMySQLType(javaClass, null, primaryKey);
+	public static String classToSQLType(Class<?> javaClass, boolean primaryKey, boolean useFloatInsteadOfDouble,
+			boolean postgreSQL) {
+		return classToSQLType(javaClass, null, primaryKey, useFloatInsteadOfDouble, postgreSQL);
 	}
 
-	public static String classToMySQLType(Class<?> javaClass, Collection<Object> values, boolean primaryKey) {
+	/**
+	 * 
+	 * @param javaClass
+	 * @param values
+	 * @param primaryKey
+	 * @param useFloatInsteadOfDouble save space and represent double as float
+	 * @param postgreSQL              some types are different compared to mysql
+	 * @return
+	 */
+	public static String classToSQLType(Class<?> javaClass, Collection<Object> values, boolean primaryKey,
+			boolean useFloatInsteadOfDouble, boolean postgreSQL) {
 		Objects.requireNonNull(javaClass);
 
 		String c = javaClass.getSimpleName().toLowerCase();
@@ -126,32 +168,46 @@ public class SQLUtils {
 			sql = "INT";
 			break;
 		case "long":
-			sql = "BIGINT(19)";
+			if (!postgreSQL)
+				sql = "BIGINT(19)";
+			else
+				sql = "BIGINT";
 			break;
 		case "date":
 			sql = "DATE";
 			break;
 		case "float":
-			sql = "FLOAT";
+			if (!postgreSQL)
+				sql = "FLOAT";
+			else
+				sql = "FLOAT4"; // real
 			break;
 		case "double":
-			sql = "DOUBLE";
+			if (!postgreSQL)
+				sql = useFloatInsteadOfDouble ? "FLOAT" : "DOUBLE";
+			else
+				sql = useFloatInsteadOfDouble ? "FLOAT4" : "FLOAT8"; // double precision
 			break;
 		case "bigdecimal":
 			sql = "DECIMAL";
 			break;
 		case "string":
 			if (values == null)
-				sql = "BLOB";
+				if (!postgreSQL)
+					sql = "BLOB";
+				else
+					sql = "TEXT";
 			else {
 				int maxCount = 0;
 				for (Object v : values)
 					if (v != null)
 						maxCount = Math.max(maxCount, v.toString().length());
 				if (maxCount < 128)
-					sql = "VARCHAR (" + (int) (maxCount * 1.33) + ")";
-				else
+					sql = "VARCHAR (" + (int) (Math.max(maxCount * 1.33, 3)) + ")";
+				else if (!postgreSQL)
 					sql = "BLOB";
+				else
+					sql = "TEXT";
 			}
 			break;
 		default:
@@ -277,7 +333,7 @@ public class SQLUtils {
 		for (int i = 0; i < columnNames.length; i++) {
 
 			String attribute = columnNames[i];
-			
+
 			switch (columnTypes[i]) {
 
 			case Types.INTEGER:

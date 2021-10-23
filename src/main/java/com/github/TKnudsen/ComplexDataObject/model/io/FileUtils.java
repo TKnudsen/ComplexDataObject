@@ -81,14 +81,34 @@ public class FileUtils {
 	/**
 	 * recursive method that retrieves all files in a given directory.
 	 * 
-	 * @param directoryName
-	 * @param files
+	 * @param directoryName   where to look at
+	 * @param files           target list that is filled
+	 * @param filenameFilter  some filter for specific files matching the filter
+	 * @param querySubfolders as to whether or not all sub-folders shall be
+	 *                        traversed as well
+	 * @param showStatus      creates a dot for every 100 files if true
 	 */
 	public static void listFilesOfDirectoryAndSubdirectories(String directoryName, List<File> files,
 			FilenameFilter filenameFilter, boolean querySubfolders) {
+		listFilesOfDirectoryAndSubdirectories(directoryName, files, filenameFilter, querySubfolders, false);
+	}
+
+	/**
+	 * recursive method that retrieves all files in a given directory.
+	 * 
+	 * @param directoryName   where to look at
+	 * @param files           target list that is filled
+	 * @param filenameFilter  some filter for specific files matching the filter
+	 * @param querySubfolders as to whether or not all sub-folders shall be
+	 *                        traversed as well
+	 * @param showStatus      creates a dot for every 100 files if true
+	 */
+	public static void listFilesOfDirectoryAndSubdirectories(String directoryName, List<File> files,
+			FilenameFilter filenameFilter, boolean querySubfolders, boolean showStatus) {
 		File directory = new File(directoryName);
 
 		File[] fList = directory.listFiles();
+
 		if (fList != null)
 			for (File file : fList) {
 				if (file.isFile()) {
@@ -96,9 +116,11 @@ public class FileUtils {
 						files.add(file);
 					else if (filenameFilter.accept(directory, file.getName()))
 						files.add(file);
+					if (showStatus && files.size() % 100 == 0)
+						System.out.print(".");
 				} else if (file.isDirectory() && querySubfolders) {
 					listFilesOfDirectoryAndSubdirectories(file.getAbsolutePath(), files, filenameFilter,
-							querySubfolders);
+							querySubfolders, showStatus);
 				}
 			}
 	}
