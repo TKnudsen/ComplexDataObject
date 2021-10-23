@@ -19,8 +19,10 @@ import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
@@ -119,33 +121,20 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		Objects.requireNonNull(container);
 		Objects.requireNonNull(attribute);
 
-		AttributeScoringFunction<?> f = null;
+		AttributeScoringFunction<?> f = AttributeScoringFunctions.create(container, attribute, uncertaintyFunction);
 
-		switch (container.getType(attribute).getSimpleName()) {
-		case "Boolean":
-			f = new BooleanAttributeScoringFunction(container, new BooleanParser(), attribute, null, false, true, 1.0,
-					uncertaintyFunction);
-			break;
-		case "Double":
-			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
-					true, 1.0, uncertaintyFunction);
-			break;
-		case "Integer":
-		case "Long":
-			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
-					true, 1.0, uncertaintyFunction);
-//			f = new DoubleAttributePositiveScoringFunction(container, new DoubleParser(true), attribute, null, false,
-//					true, 1.0, uncertaintyFunction);
-			break;
-		case "String":
-			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true),
-					attribute, null, false, true, 1.0, uncertaintyFunction);
-			break;
+		addAttributeScoringFunction(f);
 
-		default:
-			throw new IllegalArgumentException(
-					"AttributeScoringModel: unsupported data type: " + container.getType(attribute).getSimpleName());
-		}
+		return f;
+	}
+
+	public AttributeScoringFunction<?> addAttributeScoringFunction(ComplexDataContainer container, String attribute,
+			Function<ComplexDataObject, Double> uncertaintyFunction, IObjectParser<Double> toDoubleParser) {
+		Objects.requireNonNull(container);
+		Objects.requireNonNull(attribute);
+
+		AttributeScoringFunction<?> f = AttributeScoringFunctions.create(container, attribute, uncertaintyFunction,
+				toDoubleParser);
 
 		addAttributeScoringFunction(f);
 

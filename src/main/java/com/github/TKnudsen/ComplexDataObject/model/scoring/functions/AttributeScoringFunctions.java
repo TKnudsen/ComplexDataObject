@@ -5,12 +5,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public class AttributeScoringFunctions {
@@ -76,7 +82,9 @@ public class AttributeScoringFunctions {
 			AttributeScoringFunction<Double> attributeScoringFunction) {
 
 		if (attributeScoringFunction.getParser() == null
-				|| !(attributeScoringFunction.getParser() instanceof NumerificationInputDialogFunction))
+				|| !(attributeScoringFunction.getParser() instanceof NumerificationInputDialogFunction
+						|| attributeScoringFunction.getContainer().getType(attributeScoringFunction.getAttribute())
+								.equals(String.class)))
 			throw new IllegalArgumentException(
 					"AttributeScoringFunctions.getAttributeCategories requires categorical input data that is mapped to Double using a NumerificationInputDialogFunction.");
 
@@ -96,5 +104,49 @@ public class AttributeScoringFunctions {
 		}
 
 		return map;
+	}
+
+	public static AttributeScoringFunction<?> create(ComplexDataContainer container, String attribute,
+			Function<ComplexDataObject, Double> uncertaintyFunction) {
+		Objects.requireNonNull(container);
+		Objects.requireNonNull(attribute);
+
+		AttributeScoringFunction<?> f = null;
+
+		switch (container.getType(attribute).getSimpleName()) {
+		case "Boolean":
+			f = new BooleanAttributeScoringFunction(container, new BooleanParser(), attribute, null, false, true, 1.0,
+					uncertaintyFunction);
+			break;
+		case "Double":
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
+					true, 1.0, uncertaintyFunction);
+			break;
+		case "Integer":
+		case "Long":
+			f = new DoubleAttributeBipolarScoringFunction(container, new DoubleParser(true), attribute, null, false,
+					true, 1.0, uncertaintyFunction);
+			break;
+		case "String":
+			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true),
+					attribute, null, false, true, 1.0, uncertaintyFunction);
+			break;
+
+		default:
+			throw new IllegalArgumentException(
+					"AttributeScoringModel: unsupported data type: " + container.getType(attribute).getSimpleName());
+		}
+
+		return f;
+	}
+
+	public static AttributeScoringFunction<?> create(ComplexDataContainer container, String attribute,
+			Function<ComplexDataObject, Double> uncertaintyFunction, IObjectParser<Double> toDoubleParser) {
+		Objects.requireNonNull(container);
+		Objects.requireNonNull(attribute);
+		Objects.requireNonNull(toDoubleParser);
+
+		return new DoubleAttributeBipolarScoringFunction(container, toDoubleParser, attribute, null, false, true, 1.0,
+				uncertaintyFunction);
 	}
 }

@@ -16,10 +16,35 @@ import java.util.function.Function;
 
 public class SQLTableCreator {
 
-	public static void createTable(Connection conn, String schema, String tableName,
-			Map<String, Class<?>> schemaEntries, List<String> primaryKeyAttributes) throws SQLException {
+	public static void createSchema(Connection conn, String schema) throws SQLException {
 
-		createTable(conn, schema, tableName, schemaEntries, null, primaryKeyAttributes);
+		// String sqlString = postgreSQL ? "CREATE SCHEMA \"" + schema + "\"" : "CREATE
+		// SCHEMA `" + schema + "`";
+		String sqlString = "CREATE SCHEMA `" + schema + "`";
+
+		if (PostgreSQL.isPostgreSQLConnection(conn))
+			sqlString = PostgreSQL.replaceMySQLQuotes(sqlString);
+
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlString);
+			System.out.println("SQLTableCreator.createSchema: schema " + schema + " created");
+		} catch (SQLException se) {
+//			se.printStackTrace();
+		} catch (Exception e) {
+//			e.printStackTrace();
+		} finally {
+			if (stmt != null)
+				stmt.close();
+		}
+	}
+
+	public static void createTable(Connection conn, String schema, String tableName,
+			Map<String, Class<?>> schemaEntries, List<String> primaryKeyAttributes, boolean useFloatInsteadOfDouble)
+			throws SQLException {
+
+		createTable(conn, schema, tableName, schemaEntries, null, primaryKeyAttributes, useFloatInsteadOfDouble);
 	}
 
 	/**
@@ -30,15 +55,21 @@ public class SQLTableCreator {
 	 * @param tableName
 	 * @param schemaEntries
 	 * @param valuesFunctions      optional, used to guess the size of columns in
-	 *                             the sql table.
+	 *                             the SQL table.
 	 * @param primaryKeyAttributes
 	 * @throws SQLException
 	 */
 	public static void createTable(Connection conn, String schema, String tableName,
 			Map<String, Class<?>> schemaEntries, Function<String, Collection<Object>> valuesFunctions,
-			List<String> primaryKeyAttributes) throws SQLException {
+			List<String> primaryKeyAttributes, boolean useFloatInsteadOfDouble) throws SQLException {
 
-		String sqlString = createTableString(tableName, schemaEntries, valuesFunctions, primaryKeyAttributes);
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
+
+		// test if schema exists
+		createSchema(conn, schema);
+
+		String sqlString = createTableString(schema, tableName, schemaEntries, valuesFunctions, primaryKeyAttributes,
+				useFloatInsteadOfDouble, postgreSQL);
 
 		createTable(conn, schema, tableName, sqlString);
 	}
@@ -65,8 +96,10 @@ public class SQLTableCreator {
 			System.out.println("done");
 		} catch (SQLException se) {
 			se.printStackTrace();
+			System.err.println("SQL STRING: " + sqlString);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.err.println("SQL STRING: " + sqlString);
 		} finally {
 			if (stmt != null)
 				stmt.close();
@@ -74,7 +107,8 @@ public class SQLTableCreator {
 	}
 
 	public static String createTableString(String tableName, Map<String, Class<?>> schemaEntries,
-			Function<String, Collection<Object>> attributeValueDistributions, List<String> primaryKeyAttributes) {
+			Function<String, Collection<Object>> attributeValueDistributions, List<String> primaryKeyAttributes,
+			boolean useFloatInsteadOfDouble, boolean postgreSQL) {
 
 		String sql = "CREATE TABLE `" + tableName + "` " + "(";
 
@@ -93,10 +127,11 @@ public class SQLTableCreator {
 				}
 
 			if (values != null)
-				typeString = SQLUtils.classToMySQLType(schemaEntries.get(entryName), values,
-						pkAttributes.contains(entryName));
+				typeString = SQLUtils.classToSQLType(schemaEntries.get(entryName), values,
+						pkAttributes.contains(entryName), useFloatInsteadOfDouble, postgreSQL);
 			else
-				typeString = SQLUtils.classToMySQLType(schemaEntries.get(entryName), pkAttributes.contains(entryName));
+				typeString = SQLUtils.classToSQLType(schemaEntries.get(entryName), pkAttributes.contains(entryName),
+						useFloatInsteadOfDouble, postgreSQL);
 
 			if (pkAttributes.contains(entryName)) {
 				sql += ("`" + entryName + "` " + typeString + " not NULL, ");
@@ -115,7 +150,23 @@ public class SQLTableCreator {
 
 		sql += ")";
 
+		if (postgreSQL)
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
+
 		return sql;
+	}
+
+	public static String createTableString(String schema, String tableName, Map<String, Class<?>> schemaEntries,
+			Function<String, Collection<Object>> attributeValueDistributions, List<String> primaryKeyAttributes,
+			boolean useFloatInsteadOfDouble, boolean postgreSQL) {
+		if (!postgreSQL)
+			return createTableString(schema + "." + tableName, schemaEntries, attributeValueDistributions,
+					primaryKeyAttributes, useFloatInsteadOfDouble, postgreSQL);
+
+		String sqlString = createTableString(schema + "\".\"" + tableName, schemaEntries, attributeValueDistributions,
+				primaryKeyAttributes, useFloatInsteadOfDouble, postgreSQL);
+
+		return sqlString;
 	}
 
 	/**
@@ -129,7 +180,8 @@ public class SQLTableCreator {
 	 * @throws SQLException
 	 */
 	public static String addColumnString(String tableName, String newColumnName, Class<?> javaClass,
-			Collection<Object> values, Iterable<String> existingColumns) throws SQLException {
+			Collection<Object> values, Iterable<String> existingColumns, boolean useFloatInsteadOfDouble,
+			boolean postgreSQL) throws SQLException {
 
 		Iterator<String> iterator = existingColumns.iterator();
 		String afterAColumnName = null;
@@ -144,7 +196,8 @@ public class SQLTableCreator {
 				break;
 		}
 
-		return addColumnString(tableName, newColumnName, javaClass, values, afterAColumnName);
+		return addColumnString(tableName, newColumnName, javaClass, values, afterAColumnName, useFloatInsteadOfDouble,
+				postgreSQL);
 	}
 
 	/**
@@ -157,16 +210,24 @@ public class SQLTableCreator {
 	 * @throws SQLException
 	 */
 	public static String addColumnString(String tableName, String columnName, Class<?> javaClass,
-			Collection<Object> values, String afterAColumnName) {
+			Collection<Object> values, String afterAColumnName, boolean useFloatInsteadOfDouble, boolean postgreSQL) {
 
-		System.out.print("SQLTableCreator.addColumn: Column " + columnName + " in table " + tableName + "...");
+		System.out.print("SQLTableCreator.addColumnString: Column " + columnName + " in table " + tableName + "...");
 
-		String typeString = SQLUtils.classToMySQLType(javaClass, values, false);
+		String typeString = SQLUtils.classToSQLType(javaClass, values, false, useFloatInsteadOfDouble, postgreSQL);
 
 		String sql = "ALTER TABLE `" + tableName + "` ADD COLUMN `" + columnName + "` " + typeString;
 
 		if (afterAColumnName != null)
-			sql += (" AFTER `" + afterAColumnName + "`");
+			if (!postgreSQL)
+				sql += (" AFTER `" + afterAColumnName + "`");
+			else
+				System.err.println(
+						"SQLTableCreator.addColumnString: postgreSQL does not allow adding columns AFTER others. column ordering request ignored for attribute "
+								+ afterAColumnName);
+
+		if (postgreSQL)
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
 		return sql;
 	}
@@ -210,7 +271,10 @@ public class SQLTableCreator {
 	 * @throws SQLException
 	 */
 	public static void addMissingColumns(Connection conn, String schema, String tableName,
-			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs) throws SQLException {
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean useFloatInsteadOfDouble)
+			throws SQLException {
+
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
 		// check whether all attributes are already in the database
 		List<String> columns = SQLTableSelector.columnNames(conn, schema, tableName);
@@ -223,7 +287,7 @@ public class SQLTableCreator {
 		boolean all = false;
 		for (String attribute : insertColumns) {
 			if (!columns.contains(attribute) && !all) {
-				System.err.print("SQLTableCreator.insertRows: Table " + tableName + " in schema " + schema
+				System.err.print("SQLTableCreator.addMissingColumns: Table " + tableName + " in schema " + schema
 						+ " does not contain attribute " + attribute + ". Trying to add column... ");
 
 				Class<?> javaClass = null;
@@ -241,7 +305,8 @@ public class SQLTableCreator {
 								+ javaClass + " and " + keyValuePairs.get(attribute).getClass() + ").");
 					values.add(keyValuePairs.get(attribute));
 				}
-				String sql = addColumnString(tableName, attribute, javaClass, values, columns);
+				String sql = addColumnString(tableName, attribute, javaClass, values, columns, useFloatInsteadOfDouble,
+						postgreSQL);
 				addColumn(conn, sql);
 
 				System.err.println("finished without exceptions.");

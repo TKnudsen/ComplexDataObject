@@ -14,6 +14,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeListener;
+import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
 
@@ -39,6 +40,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private boolean highIsGood;
 	private double weight;
 
+	private double missingValueRate;
 	protected double scoreAverageWithoutMissingValues;
 
 	protected double truncatedValueRate;
@@ -288,6 +290,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
+	public abstract StatisticsSupport getStatisticsSupport();
+
+	public double getMissingValueRate() {
+		return 1 - (getStatisticsSupport().getCount() / (double) getContainer().size());
+	}
+
 	public Double getMissingValueAvgScoreRatio() {
 		return missingValueAvgScoreRatio;
 	}
@@ -458,7 +466,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public void setScoreForMissingObjectsExternal(double scoreForMissingObjectsExternal) {
 		this.scoreForMissingObjectsExternal = scoreForMissingObjectsExternal;
-		
+
 		this.scoresBuffer = new HashMap<>();
 
 		refreshScoringFunction();

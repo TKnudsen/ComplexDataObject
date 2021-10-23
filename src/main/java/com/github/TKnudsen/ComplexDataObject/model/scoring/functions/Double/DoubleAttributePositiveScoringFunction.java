@@ -91,5 +91,5 @@ public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScori
 	public StatisticsSupport getStatisticsSupport() {
 		return statisticsSupport;
 	}
-
+	
 }

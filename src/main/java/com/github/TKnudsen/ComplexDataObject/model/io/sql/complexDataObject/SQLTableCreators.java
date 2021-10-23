@@ -11,14 +11,14 @@ import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableCreator;
 public class SQLTableCreators {
 
 	public static void createTable(Connection conn, String schema, String tableName, ComplexDataContainer dataContainer,
-			List<String> primaryKeyAttributes) throws SQLException {
+			List<String> primaryKeyAttributes, boolean useFloatInsteadOfDouble) throws SQLException {
 
 		Map<String, Class<?>> dataSchema = dataContainer.getSchema();
 		// add ID to the schema
 		dataSchema.put("ID", Long.class);
 
 		SQLTableCreator.createTable(conn, schema, tableName, dataSchema, dataContainer::getAttributeValueCollection,
-				primaryKeyAttributes);
+				primaryKeyAttributes, useFloatInsteadOfDouble);
 	}
 
 	/**
@@ -31,14 +31,15 @@ public class SQLTableCreators {
 	 * @throws SQLException
 	 */
 	public static String createTableString(String tableName, ComplexDataContainer dataContainer,
-			List<String> primaryKeyAttributes) throws SQLException {
+			List<String> primaryKeyAttributes, boolean useFloatInsteadOfDouble, boolean postgreSQL)
+			throws SQLException {
 
 		Map<String, Class<?>> dataSchema = dataContainer.getSchema();
 		// add ID to the schema
 		dataSchema.put("ID", Long.class);
 
 		return SQLTableCreator.createTableString(tableName, dataSchema, dataContainer::getAttributeValueCollection,
-				primaryKeyAttributes);
+				primaryKeyAttributes, useFloatInsteadOfDouble, postgreSQL);
 	}
 
 }

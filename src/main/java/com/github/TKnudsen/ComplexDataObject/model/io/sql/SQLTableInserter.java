@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,10 +32,11 @@ public class SQLTableInserter {
 	 */
 	public static void insertRows(Connection conn, String schema, String tableName, String insertType,
 			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean extendColumnCapacityIfNeeded,
-			boolean showTimingLog) throws SQLException {
+			boolean useFloatInsteadOfDouble, boolean showTimingLog) throws SQLException {
 
 		try {
-			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, showTimingLog);
+			insertRows(conn, schema, tableName, insertType, listOfMapWithKeyValuePairs, useFloatInsteadOfDouble,
+					showTimingLog);
 		} catch (DataTruncation e) {
 			if (!extendColumnCapacityIfNeeded)
 				throw new IllegalArgumentException(
@@ -66,7 +68,8 @@ public class SQLTableInserter {
 	 *                                   table
 	 */
 	private static void insertRows(Connection conn, String schema, String tableName, String insertType,
-			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean showTimingLog) throws SQLException {
+			List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs, boolean useFloatInsteadOfDouble,
+			boolean showTimingLog) throws SQLException {
 
 		Objects.requireNonNull(conn);
 		Objects.requireNonNull(listOfMapWithKeyValuePairs);
@@ -90,7 +93,7 @@ public class SQLTableInserter {
 					if (i > 1)
 						System.out.print("[" + (i - 1) + "]");
 
-			insertRow(conn, schema, tableName, insertType, keyValuePairs);
+			insertRow(conn, schema, tableName, insertType, keyValuePairs, useFloatInsteadOfDouble);
 		}
 		if (showTimingLog)
 			System.out.print("[" + (i) + "] ");
@@ -112,15 +115,78 @@ public class SQLTableInserter {
 	 *                            into instead
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
-			LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
+			LinkedHashMap<String, Object> keyValuePairs, boolean useFloatInsteadOfDouble) throws SQLException {
 
-		PreparedStatement pstmt = insertRowPreparedStatement(conn, schema, tableName, insertType, keyValuePairs);
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
+		String insertTypeInternal = insertType;
+		if (insertType.equals("REPLACE") && postgreSQL)
+			insertTypeInternal = "INSERT";
+
+		PreparedStatement pstmt = insertRowPreparedStatement(conn, schema, tableName, insertTypeInternal, keyValuePairs,
+				useFloatInsteadOfDouble);
 
 		if (pstmt == null)
 			return;
 
-		pstmt.execute();
-		pstmt.close();
+		try {
+			pstmt.execute();
+		} catch (Exception e) { // postgreSQL does not support REPLACE INTO. workaround...
+			if (e.getClass().getSimpleName().equals("PSQLException") && insertType.equals("REPLACE")) {
+				String errorMessage = e.getMessage();
+				if (errorMessage.contains("duplicate key value violates unique constraint")) {
+					List<String> pks = getPrimaryKeysFromErrorMessage(errorMessage, false);
+					List<String> values = getPrimaryKeysFromErrorMessage(errorMessage, true);
+
+					// delete original row
+					SQLTableDeleter.deleteTableRow(conn, PostgreSQL.schemaAndTableName(schema, tableName), pks, values);
+
+					// once again try to insert new row
+					pstmt.execute();
+				}
+			} else
+				throw e;
+		} finally {
+			pstmt.close();
+		}
+	}
+
+	/**
+	 * input syntax:
+	 * 
+	 * ERROR: duplicate key value violates unique constraint "tablename_pkey"
+	 * Detail: Key ("pk1", "pk2")=(v1, v2) already exists.
+	 * 
+	 * @param error
+	 * @param valuesInsteadOfKeys
+	 * @return
+	 */
+	private static List<String> getPrimaryKeysFromErrorMessage(String error, boolean valuesInsteadOfKeys) {
+		if (error == null)
+			return null;
+
+		String e = String.valueOf(error);
+		e = e.substring(e.indexOf("Detail: Key ") + 12, e.length());
+		e = e.substring(0, e.indexOf(" already exists")).trim();
+
+		int index = 0;
+		if (valuesInsteadOfKeys)
+			index = e.indexOf("(", 1);
+
+		String tokens = e.substring(index + 1, e.indexOf(")", index)).trim();
+
+		List<String> ret = new ArrayList<>();
+		while (tokens.contains(",")) {
+			String t = tokens.substring(0, tokens.indexOf(",")).trim();
+			t = t.replace("\"", ""); // error message comes with " escape quotes
+			ret.add(t);
+			tokens = tokens.substring(tokens.indexOf(",") + 1, tokens.length()).trim();
+		}
+
+		String t = tokens;
+		t = t.replace("\"", ""); // error message comes with " escape quotes
+		ret.add(t);
+
+		return ret;
 	}
 
 	/**
@@ -133,16 +199,66 @@ public class SQLTableInserter {
 	 * @param keyValuePairs contains column and value information for this row
 	 */
 	public static PreparedStatement insertRowPreparedStatement(Connection conn, String schema, String tableName,
-			String insertType, LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
+			String insertType, LinkedHashMap<String, Object> keyValuePairs, boolean useFloatInsteadOfDouble)
+			throws SQLException {
 		PreparedStatement pstmt = null;
 
-		String sql = insertRowString(tableName, insertType, keyValuePairs, true);
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
-		pstmt = conn.prepareStatement(sql);
+		if (!postgreSQL) {
+			String sql = insertRowString(conn, tableName, insertType, keyValuePairs, true);
 
-		rowToPreparedStatement(pstmt, keyValuePairs);
+			pstmt = conn.prepareStatement(sql);
 
-		return pstmt;
+			rowToPreparedStatement(pstmt, keyValuePairs, useFloatInsteadOfDouble, postgreSQL);
+
+			return pstmt;
+		} else {
+			String sqlString = insertRowString(conn, PostgreSQL.schemaAndTableName(schema, tableName), insertType,
+					keyValuePairs, true);
+
+			pstmt = conn.prepareStatement(sqlString);
+
+			rowToPreparedStatement(pstmt, keyValuePairs, useFloatInsteadOfDouble, postgreSQL);
+
+			return pstmt;
+		}
+	}
+
+	private static void addKeyValuePairToPreparedStatement(PreparedStatement pstmt, int index, Object value)
+			throws SQLException {
+		switch (value.getClass().getSimpleName().toLowerCase()) {
+		case "string":
+			pstmt.setString(index, (String) value);
+			break;
+		case "integer":
+			pstmt.setInt(index, (Integer) value);
+			break;
+		case "int":
+			pstmt.setInt(index, (Integer) value);
+			break;
+		case "boolean":
+			pstmt.setInt(index, (Integer) value);
+			break;
+		case "float":
+			pstmt.setFloat(index, (Float) value);
+			break;
+		case "double":
+			pstmt.setDouble(index, (Double) value);
+			break;
+		case "long":
+			pstmt.setDouble(index, (Long) value);
+			break;
+		case "bigdecimal":
+			pstmt.setBigDecimal(index, (BigDecimal) value);
+			break;
+		case "date":
+			pstmt.setDate(index, new java.sql.Date(((Date) value).getTime()));
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -156,14 +272,16 @@ public class SQLTableInserter {
 	 * @param keyValuePairs contains column and value information for this row
 	 */
 	public static String insertRowPreparedStatementString(Connection conn, String schema, String tableName,
-			String insertType, LinkedHashMap<String, Object> keyValuePairs) throws SQLException {
+			String insertType, LinkedHashMap<String, Object> keyValuePairs, boolean useFloatInsteadOfDouble)
+			throws SQLException {
+
 		PreparedStatement pstmt = null;
 
-		String sql = insertRowString(tableName, insertType, keyValuePairs, true);
+		String sql = insertRowString(conn, tableName, insertType, keyValuePairs, true);
 
 		pstmt = conn.prepareStatement(sql);
 
-		rowToPreparedStatement(pstmt, keyValuePairs);
+		rowToPreparedStatement(pstmt, keyValuePairs, useFloatInsteadOfDouble, PostgreSQL.isPostgreSQLConnection(conn));
 
 		String pSQL = pstmt.toString();
 		// hack: remove the first part before the SQL query starts
@@ -182,8 +300,8 @@ public class SQLTableInserter {
 	 * @param keyValuePairs
 	 * @throws SQLException
 	 */
-	private static void rowToPreparedStatement(PreparedStatement pstmt, LinkedHashMap<String, Object> keyValuePairs)
-			throws SQLException {
+	private static void rowToPreparedStatement(PreparedStatement pstmt, LinkedHashMap<String, Object> keyValuePairs,
+			boolean useFloatInsteadOfDouble, boolean postgreSQL) throws SQLException {
 		int index = 1;
 
 		for (String key : keyValuePairs.keySet()) {
@@ -196,7 +314,7 @@ public class SQLTableInserter {
 			else if (value instanceof Double && Double.isNaN((double) value))
 				pstmt.setNull(index++, Types.NULL);
 			else {
-				String type = SQLUtils.classToMySQLType(value.getClass(), false);
+				String type = SQLUtils.classToSQLType(value.getClass(), false, useFloatInsteadOfDouble, postgreSQL);
 				switch (type) {
 				case "BIT(1)":
 					pstmt.setBoolean(index++, (boolean) value);
@@ -210,13 +328,19 @@ public class SQLTableInserter {
 				case "BIGINT(19)":
 					pstmt.setLong(index++, (long) value);
 					break;
+				case "BIGINT":
+					pstmt.setLong(index++, (long) value);
+					break;
 				case "DATE":
 					pstmt.setDate(index++, new java.sql.Date(((Date) value).getTime()));
 					break;
 				case "FLOAT":
 					pstmt.setFloat(index++, (float) value);
 					break;
-				case "DOUBLE":
+				case "FLOAT4":
+					pstmt.setFloat(index++, (float) value);
+					break;
+				case "DOUBLE": // no need to check useFloatInsteadOfDouble
 					pstmt.setDouble(index++, (double) value);
 					break;
 				case "DECIMAL":
@@ -225,15 +349,20 @@ public class SQLTableInserter {
 				case "BLOB":
 					pstmt.setString(index++, (String) value);
 					break;
+				case "TEXT":
+					pstmt.setString(index++, (String) value);
+					break;
 				case "VARCHAR":
 					pstmt.setString(index++, (String) value);
 					break;
 
 				default:
-					System.out.println("SQLTableInserter: unknown SQL attribute type");
+					System.out.println("SQLTableInserter: unknown SQL attribute type: " + type);
 					break;
 				}
 			}
+
+//			System.out.println(index + ": " + key + " - " + value);
 		}
 	}
 
@@ -245,8 +374,9 @@ public class SQLTableInserter {
 	 * @param preparedStatement
 	 * @return
 	 */
-	public static String insertRowString(String tableName, String insertType,
+	public static String insertRowString(Connection conn, String tableName, String insertType,
 			LinkedHashMap<String, Object> keyValuePairs, boolean preparedStatement) {
+
 		String sql = insertType + " INTO `" + tableName + "`";
 
 		String attributes = "(";
@@ -267,6 +397,9 @@ public class SQLTableInserter {
 		values += ")";
 		sql += values;
 
+		if (PostgreSQL.isPostgreSQLConnection(conn))
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
+
 		return sql;
 	}
 
@@ -286,7 +419,9 @@ public class SQLTableInserter {
 
 		Statement stmt = null;
 		stmt = conn.createStatement();
-		String sql = insertColumnWiseString(tableName, insertType, attributes, values);
+		String sql = insertColumnWiseString(tableName, insertType, attributes, values,
+				PostgreSQL.isPostgreSQLConnection(conn));
+
 		stmt.executeUpdate(sql);
 		stmt.close();
 	}
@@ -302,7 +437,7 @@ public class SQLTableInserter {
 	 * @return
 	 */
 	public static String insertColumnWiseString(String tableName, String insertType, List<String> attributes,
-			List<List<Object>> values) {
+			List<List<Object>> values, boolean postgreSQL) {
 		String sql = insertType + " INTO `" + tableName + "`";
 
 		// add the attributes
@@ -326,6 +461,9 @@ public class SQLTableInserter {
 
 		rows = rows.substring(0, rows.length() - 1);
 		sql += rows;
+
+		if (postgreSQL)
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
 		return sql;
 	}

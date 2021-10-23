@@ -114,4 +114,9 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 		return quantileNormalizationFunction.apply(value).doubleValue();
 	}
 
+	@Override
+	public StatisticsSupport getStatisticsSupport() {
+		return statisticsSupport;
+	}
+
 }

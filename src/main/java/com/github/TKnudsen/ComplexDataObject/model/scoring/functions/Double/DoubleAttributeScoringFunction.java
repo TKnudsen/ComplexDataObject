@@ -244,8 +244,6 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		return (dq * localQuantileNormalizationRate + dl * (1 - localQuantileNormalizationRate));
 	}
 
-	public abstract StatisticsSupport getStatisticsSupport();
-
 	public Double getOutlierStd() {
 		return outlierStd;
 	}
