@@ -14,7 +14,8 @@ public class ComplexDataObjects {
 	/**
 	 * True if two KeyValueObjects have identical attributes and attribute values.
 	 * ID, name and description are ignored.
-	 * 
+	 *
+	 * @param u
 	 * @param v
 	 * @return
 	 */

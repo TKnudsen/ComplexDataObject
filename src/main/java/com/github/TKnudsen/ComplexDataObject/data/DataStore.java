@@ -111,6 +111,8 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 
 	/**
 	 * Adds new attributes of a given object.
+	 *
+	 * @param dataObject
 	 */
 	private void addAttributes(T dataObject) {
 		if (attributes == null)
@@ -138,7 +140,7 @@ public class DataStore<T extends IDObject> implements IDObject, ISelfDescription
 	/**
 	 * Adds an object to the data store.
 	 * 
-	 * @param dobj
+	 * @param dataObject
 	 * @return
 	 */
 	public boolean add(T dataObject) {

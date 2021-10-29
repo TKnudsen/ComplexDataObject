@@ -110,9 +110,7 @@ public class SQLTableInserter {
 	 * @param tableName
 	 * @param insertType          INSERT, INSERT IGNORE, REPLACE
 	 * @param keyValuePairs       contains column and value information for this row
-	 * @param checkIfTableExists  to ensure that no exception will be thrown
-	 * @param overwriteDuplicates insert strategy. overwriteDuplicates uses replace
-	 *                            into instead
+	 * @param useFloatInsteadOfDouble
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
 			LinkedHashMap<String, Object> keyValuePairs, boolean useFloatInsteadOfDouble) throws SQLException {
@@ -412,7 +410,6 @@ public class SQLTableInserter {
 	 * @param insertType         INSERT, INSERT IGNORE, REPLACE
 	 * @param attributes
 	 * @param values
-	 * @param checkIfTableExists
 	 */
 	public static void insertColumnWise(Connection conn, String schema, String tableName, String insertType,
 			List<String> attributes, List<List<Object>> values) throws SQLException {
@@ -433,7 +430,7 @@ public class SQLTableInserter {
 	 * @param attributes
 	 * @param values              outer list is the rows, inner list the attribute
 	 *                            values
-	 * @param overwriteDuplicates
+	 * @param postgreSQL
 	 * @return
 	 */
 	public static String insertColumnWiseString(String tableName, String insertType, List<String> attributes,

@@ -32,7 +32,7 @@ public class StandardDeviationOutlierTreatment extends AbstractOutlierTreatment 
 	/**
 	 * Removes/crops all feature values that are more than the given multiple of standard deviation away from the mean of their respective distribution.
 	 * 
-	 * @param d
+	 * @param multipleOfStandardDeviation
 	 */
 	public StandardDeviationOutlierTreatment(double multipleOfStandardDeviation) {
 		this.multipleOfStandardDeviation = multipleOfStandardDeviation;

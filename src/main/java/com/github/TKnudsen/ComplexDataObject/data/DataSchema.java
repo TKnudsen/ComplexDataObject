@@ -49,7 +49,7 @@ public class DataSchema {
 	/**
 	 * whether the DataSchemaEntry contains a given attribute.
 	 * 
-	 * @param key
+	 * @param attribute
 	 * @return
 	 */
 	public boolean contains(String attribute) {
@@ -161,7 +161,7 @@ public class DataSchema {
 	 * default value.
 	 * 
 	 * @param attribute    the attribute name
-	 * @param defaultValue the default value in case the
+	 * @param type
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> DataSchema add(String attribute, Class<T> type) {
@@ -189,8 +189,7 @@ public class DataSchema {
 	 * 
 	 * @param attribute    the attribute name
 	 * @param type         the expected data type.
-	 * @param defaultValue the default value in case the attribute is missing from a
-	 *                     data object.
+	 * @param dataSchema
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema) {

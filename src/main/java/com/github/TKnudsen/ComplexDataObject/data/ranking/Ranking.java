@@ -56,7 +56,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	/**
 	 * Fast way to add at the end of the Ranking. Tests if the sorting criterion is
 	 * fulfilled, otherwise the value is added at the correct position.
-	 * 
+	 *
+	 * @param t
 	 * @return
 	 */
 	public boolean addLast(T t) {
@@ -79,6 +80,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	/**
 	 * To preserve the sorting criterion addAll(int index, Collection<? extends T>
 	 * c) is mounted to addAll(Collection<? extends T> c).
+	 *
+	 * @param c
 	 */
 	public boolean addAll(int index, Collection<? extends T> c) {
 		return addAll(c);
@@ -88,6 +91,9 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	/**
 	 * Adds a value at a given index IF the sorting criterion is preserved. Else the
 	 * value is added that the correct index.
+	 *
+	 * @param index
+	 * @param t
 	 */
 	public void add(int index, T t) {
 		if (size() < index)
@@ -115,6 +121,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	@Override
 	/**
 	 * superclass is not visible
+	 *
+	 * @param index
 	 */
 	public T get(int index) {
 		if (size() < index)

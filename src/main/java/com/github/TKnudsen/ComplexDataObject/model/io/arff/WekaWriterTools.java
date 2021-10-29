@@ -34,8 +34,9 @@ public class WekaWriterTools {
 	 * 
 	 * TODO get rid of this extra class. use ARFWriter instead
 	 * 
-	 * @param instances
+	 * @param object
 	 * @param fileName
+	 * @param relationName
 	 * @throws IOException
 	 */
 	public static void writeToFile(ComplexDataObject object, String fileName, String relationName) throws IOException {
@@ -54,7 +55,7 @@ public class WekaWriterTools {
 	 * 
 	 * TODO get rid of this extra class. use ARFWriter instead
 	 * 
-	 * @param instances
+	 * @param objects
 	 * @param fileName
 	 * @throws IOException
 	 */
@@ -72,6 +73,7 @@ public class WekaWriterTools {
 	 * 
 	 * @param container
 	 * @param fileName
+	 * @param relationName
 	 * @throws IOException
 	 */
 	public static void writeToFile(ComplexDataContainer container, String fileName, String relationName)

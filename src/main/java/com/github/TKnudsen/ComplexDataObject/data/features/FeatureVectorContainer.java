@@ -75,10 +75,7 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	/**
 	 * Introduces or updates a new feature.
 	 *
-	 * @param featureName  the feature name
-	 * @param type         the expected data type.
-	 * @param defaultValue the default value in case the feature is missing from a
-	 *                     data object.
+	 * @param feature
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema addFeature(Feature<?> feature) {
@@ -100,9 +97,6 @@ public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> imple
 	 * Introduces or updates a feature.
 	 *
 	 * @param featureName  the feature name
-	 * @param type         the expected data type.
-	 * @param defaultValue the default value in case the feature is missing from a
-	 *                     data object.
 	 * @return the data schema instance for call-chaining.
 	 */
 	public FeatureSchema addFeature(String featureName, Class<Feature<?>> featureClass, FeatureType featureType) {

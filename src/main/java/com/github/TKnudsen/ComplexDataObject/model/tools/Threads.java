@@ -26,7 +26,7 @@ public class Threads {
 	 * Waits some seconds (delay). In addition, random creates some delta seconds.
 	 * 
 	 * @param delay  in seconds
-	 * @param random in seconds
+	 * @param randomInSeconds in seconds
 	 */
 	public static void sleepSeconds(double delay, double randomInSeconds) {
 		sleep(delay * 1000, randomInSeconds * 1000);

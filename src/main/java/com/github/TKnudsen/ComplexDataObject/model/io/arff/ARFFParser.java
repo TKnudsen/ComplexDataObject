@@ -23,7 +23,7 @@ import weka.core.Instances;
  * 
  * a flag can be set to assign IDs of ComplexDataObjects incrementally starting
  * with 0, reflecting the lines of instances within the arff file.
- * </p>
+ *
  * 
  * <p>
  * Copyright: Copyright (c) 2015-2020

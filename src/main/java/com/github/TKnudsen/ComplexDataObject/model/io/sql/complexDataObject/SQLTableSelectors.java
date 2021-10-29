@@ -62,7 +62,7 @@ public class SQLTableSelectors {
 	 * @param tableName
 	 * @param attributeCharacterization the target schema that is selected from the
 	 *                                  database
-	 * @param String                    searchString the WHERE condition (without
+	 * @param searchString              searchString the WHERE condition (without
 	 *                                  WHERE). can be null. example a) column name
 	 *                                  >='2012-12-25 00:00:00'. b) searchColumn =
 	 *                                  'searchQuery'. Make sure to use ' where

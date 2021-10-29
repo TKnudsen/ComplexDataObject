@@ -38,7 +38,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	/**
 	 * if true, values that exactly match the neutral value will receive no quantile
 	 * normalization. Values that exactly match the outlier pruning levels will
-	 * receive the defined {@link quantileNormalizationRate}. every value in between
+	 * receive the defined quantileNormalizationRate. every value in between
 	 * receives a ratio that is interpolated, accordingly.
 	 */
 	private boolean linearTransitionOfQuantileNormalizationRates = true;

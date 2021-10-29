@@ -48,8 +48,6 @@ public class GaussianIntegerWeightingFunction implements IIntegerWeightingKernel
 
 	/**
 	 * 
-	 * @param a
-	 * @param b
 	 * @param x
 	 * @return
 	 */
