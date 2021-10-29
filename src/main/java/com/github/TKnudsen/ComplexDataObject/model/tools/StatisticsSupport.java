@@ -240,7 +240,7 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 	 * Predicts if a given variable is discrete by examining the ratio
 	 * #uniques/#elements.
 	 * 
-	 * @param percent the variable which values are checked.
+	 * @param ratio the variable which values are checked.
 	 * @return true if the ratio is smaller than the given parameter (0.01 means
 	 *         1%).
 	 */

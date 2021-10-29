@@ -111,7 +111,7 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value <0 will achieve the int value 1. The remaining values
+	 * smallest double value less than 0 will achieve the int value 1. The remaining values
 	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
 	 * 
 	 * @param values
@@ -147,7 +147,7 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value <0 will achieve the int value 1. The remaining values
+	 * smallest double value less than 0 will achieve the int value 1. The remaining values
 	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
 	 * 
 	 * @param values

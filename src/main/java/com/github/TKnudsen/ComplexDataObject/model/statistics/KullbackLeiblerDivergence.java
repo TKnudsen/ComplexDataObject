@@ -15,7 +15,7 @@ package com.github.TKnudsen.ComplexDataObject.model.statistics;
  * of Mathematical Statistics. 22 (1): 79–86. doi:10.1214/aoms/1177729694. MR
  * 0039968.
  * 
- * Kullback, S. (1959), Information Theory and Statistics, John Wiley & Sons.
+ * Kullback, S. (1959), Information Theory and Statistics, John Wiley and Sons.
  * Republished by Dover Publications in 1968; reprinted in 1978: ISBN
  * 0-8446-5625-9.
  * </p>

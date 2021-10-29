@@ -47,7 +47,7 @@ public class FeatureSchema {
 	/**
 	 * Whether the FeatureSchemaEntry contains a given attribute.
 	 * 
-	 * @param key
+	 * @param attribute
 	 * @return
 	 */
 	public boolean contains(String attribute) {
@@ -134,8 +134,8 @@ public class FeatureSchema {
 	 * 
 	 * @param attribute
 	 *            the attribute name
-	 * @param defaultValue
-	 *            the default value in case the
+	 * @param type
+	 * @param featureType
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> FeatureSchema add(String attribute, Class<T> type, FeatureType featureType) {
@@ -149,9 +149,8 @@ public class FeatureSchema {
 	 *            the attribute name
 	 * @param type
 	 *            the expected data type.
-	 * @param defaultValue
-	 *            the default value in case the attribute is missing from a data
-	 *            object.
+	 * @param featureType
+	 * @param featureSchema
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> FeatureSchema add(String attribute, Class<T> type, FeatureType featureType, FeatureSchema featureSchema) {

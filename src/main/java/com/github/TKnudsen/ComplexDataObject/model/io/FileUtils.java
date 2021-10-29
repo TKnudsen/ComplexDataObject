@@ -86,7 +86,6 @@ public class FileUtils {
 	 * @param filenameFilter  some filter for specific files matching the filter
 	 * @param querySubfolders as to whether or not all sub-folders shall be
 	 *                        traversed as well
-	 * @param showStatus      creates a dot for every 100 files if true
 	 */
 	public static void listFilesOfDirectoryAndSubdirectories(String directoryName, List<File> files,
 			FilenameFilter filenameFilter, boolean querySubfolders) {

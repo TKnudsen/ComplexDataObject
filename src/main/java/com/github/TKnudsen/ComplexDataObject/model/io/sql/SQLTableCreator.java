@@ -207,7 +207,6 @@ public class SQLTableCreator {
 	 * @param javaClass
 	 * @param values
 	 * @param afterAColumnName can be null
-	 * @throws SQLException
 	 */
 	public static String addColumnString(String tableName, String columnName, Class<?> javaClass,
 			Collection<Object> values, String afterAColumnName, boolean useFloatInsteadOfDouble, boolean postgreSQL) {
@@ -264,10 +263,9 @@ public class SQLTableCreator {
 	 * adds missing columns to a table
 	 * 
 	 * @param conn
-	 * @param schema
 	 * @param tableName
-	 * @param insertType
 	 * @param listOfMapWithKeyValuePairs
+	 * @param useFloatInsteadOfDouble
 	 * @throws SQLException
 	 */
 	public static void addMissingColumns(Connection conn, String schema, String tableName,

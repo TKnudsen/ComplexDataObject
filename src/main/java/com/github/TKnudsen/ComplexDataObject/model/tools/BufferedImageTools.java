@@ -147,8 +147,8 @@ public class BufferedImageTools {
 	 * rescales a bufferedImage with the given properties.
 	 * 
 	 * @param source
-	 * @param targetWidth
-	 * @param targetHeight
+	 * @param factorX
+	 * @param factorY
 	 * @return
 	 */
 	public static BufferedImage rescale(BufferedImage source, double factorX, double factorY) {

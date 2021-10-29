@@ -24,7 +24,6 @@ public interface IProcessingUncertaintyMeasure<D, U extends IUncertainty<?>> {
 	 * 
 	 * @param originalData
 	 * @param processedData
-	 * @return
 	 */
 	public abstract void calculateUncertainty(D originalData, D processedData);
 

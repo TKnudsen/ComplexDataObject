@@ -9,9 +9,9 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * Allows the translation of all feature values by a given amount. Useful for
- * preventing illegal values for mathematical operations, e.g. values <= 0 when
- * applying log.
- * 
+ * preventing illegal values for mathematical operations, e.g. values smaller than or
+ * equal to 0 when applying log.
+ *
  * @author Christian Ritter
  *
  */

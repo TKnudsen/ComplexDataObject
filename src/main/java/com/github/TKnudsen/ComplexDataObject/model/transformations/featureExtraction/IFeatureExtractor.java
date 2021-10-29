@@ -10,7 +10,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
  * 
  * <p>
  * Description: Interface for the extraction of "one-value" information,
- * represented as a Feature<?>. Examples are statistical information, etc.
+ * represented as a Feature. Examples are statistical information, etc.
  * </p>
  * 
  * <p>

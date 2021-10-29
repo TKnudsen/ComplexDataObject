@@ -18,7 +18,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * Copyright: Copyright (c) 2017-2018
  * </p>
  * 
- * @author
+ * @author Juergen Bernard
  * @version 1.02
  */
 public class KeyValueProviders {

@@ -65,10 +65,8 @@ public abstract class ParserTools implements Serializable {
 	/**
 	 * Parses date-oriented tokens. Checks most of the popular date formats.
 	 * 
-	 * @param date token as String.
+	 * @param token token as String.
 	 * @return
-	 * @throws ParseException
-	 * @Deprecated use DateParser
 	 */
 	public static synchronized Date parseDate(Object token) {
 		return dateParser.apply(token);

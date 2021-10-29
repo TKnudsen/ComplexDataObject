@@ -28,7 +28,7 @@ public class DataSchemas {
 	 * enables the usage of DataSchema / DataSchemaEntry characteristics without the
 	 * need for the DataSchema / DataSchemaEntry classes.
 	 * 
-	 * @param dataSchema
+	 * @param schemaEntries
 	 * @return
 	 */
 	public static Map<String, Class<?>> getClassMap(Collection<DataSchemaEntry<?>> schemaEntries) {

@@ -107,7 +107,7 @@ public class DimensionalityReductionPipeline<X> {
 	/**
 	 * receive the low-dim representation of X
 	 * 
-	 * @param X
+	 * @param x
 	 * @return
 	 */
 	public NumericalFeatureVector getLowDimFeatureVector(X x) {

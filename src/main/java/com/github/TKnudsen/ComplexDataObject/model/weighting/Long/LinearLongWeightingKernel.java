@@ -9,7 +9,7 @@ package com.github.TKnudsen.ComplexDataObject.model.weighting.Long;
  * <br>
  * 
  * Linear kernel applied on long distances.
- * </p>
+ *
  * 
  * @author Juergen Bernard
  * 
