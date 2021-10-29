@@ -122,8 +122,8 @@ public class SQLTableSelector {
 	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) column name >='2012-12-25 00:00:00'. b)
-	 *                       searchColumn = 'searchQuery'. Make sure to use ' where
+	 *                       example a) column name greater or equals'2012-12-25 00:00:00'. b)
+	 *                       searchColumn equals 'searchQuery'. Make sure to use ' where
 	 *                       needed
 	 * @param orderAttribute can be null, then order will be ignored
 	 * @param order
@@ -142,8 +142,8 @@ public class SQLTableSelector {
 	 * @param schema                    name of the schema where the table lives in
 	 * @param tableName
 	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) column name >='2012-12-25
-	 *                                  00:00:00'. b) searchColumn = 'searchQuery'.
+	 *                                  null. example a) column name greater or equals'2012-12-25
+	 *                                  00:00:00'. b) searchColumn equals 'searchQuery'.
 	 *                                  Make sure to use ' where needed
 	 * @param orderAttribute            can be null, then order will be ignored
 	 * @param order
@@ -165,8 +165,8 @@ public class SQLTableSelector {
 	 * @param tableName
 	 * @param columns                   set of columns to be queried
 	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) column name >='2012-12-25
-	 *                                  00:00:00'. b) searchColumn = 'searchQuery'.
+	 *                                  null. example a) column name greater or equals'2012-12-25
+	 *                                  00:00:00'. b) searchColumn equals 'searchQuery'.
 	 *                                  Make sure to use ' where needed
 	 * @param orderAttribute            can be null, then order will be ignored
 	 * @param order
@@ -243,8 +243,8 @@ public class SQLTableSelector {
 	 * @param tableName
 	 * @param columns
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) column name >='2012-12-25 00:00:00'. b)
-	 *                       searchColumn = 'searchQuery'. Make sure to use ' where
+	 *                       example a) column name greater or equals'2012-12-25 00:00:00'. b)
+	 *                       searchColumn equals 'searchQuery'. Make sure to use ' where
 	 *                       needed
 	 * 
 	 * @param orderAttribute

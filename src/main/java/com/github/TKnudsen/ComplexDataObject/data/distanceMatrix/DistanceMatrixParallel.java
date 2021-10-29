@@ -8,8 +8,8 @@ import java.util.stream.IntStream;
 
 /**
  * Distance matrix implementation which allows the computation of pairwise
- * distances in a parallel way. Considerably faster for large matrices (large >=
- * 1000 items).
+ * distances in a parallel way. Considerably faster for large matrices (large
+ * greater or equals 1000 items).
  */
 public class DistanceMatrixParallel<T> implements IDistanceMatrix<T> {
 
