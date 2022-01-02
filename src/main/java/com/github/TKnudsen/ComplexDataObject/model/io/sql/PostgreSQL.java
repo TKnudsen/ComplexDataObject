@@ -31,6 +31,19 @@ public class PostgreSQL {
 		// .replace("'", "\""); // no, that's for values. keep those (!).
 	}
 
+	public static String quotationsForAttribute(String attribute) {
+		Objects.requireNonNull(attribute);
+
+		return "\"" + attribute + "\"";
+	}
+
+	public static String quotationsForValue(String value) {
+		if (value != null)
+			return "'" + value + "'";
+
+		return null;
+	}
+
 	public static String replaceMySQLAttributeTypes(String sqlString) {
 		if (sqlString == null)
 			return null;
