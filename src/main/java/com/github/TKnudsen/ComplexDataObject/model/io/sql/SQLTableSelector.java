@@ -122,9 +122,9 @@ public class SQLTableSelector {
 	 * @param schema         where the table lives in
 	 * @param tableName
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) column name greater or equals'2012-12-25 00:00:00'. b)
-	 *                       searchColumn equals 'searchQuery'. Make sure to use ' where
-	 *                       needed
+	 *                       example a) column name greater or equals'2012-12-25
+	 *                       00:00:00'. b) searchColumn equals 'searchQuery'. Make
+	 *                       sure to use ' where needed
 	 * @param orderAttribute can be null, then order will be ignored
 	 * @param order
 	 * @return
@@ -142,9 +142,10 @@ public class SQLTableSelector {
 	 * @param schema                    name of the schema where the table lives in
 	 * @param tableName
 	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) column name greater or equals'2012-12-25
-	 *                                  00:00:00'. b) searchColumn equals 'searchQuery'.
-	 *                                  Make sure to use ' where needed
+	 *                                  null. example a) column name greater or
+	 *                                  equals'2012-12-25 00:00:00'. b) searchColumn
+	 *                                  equals 'searchQuery'. Make sure to use '
+	 *                                  where needed
 	 * @param orderAttribute            can be null, then order will be ignored
 	 * @param order
 	 * @param attributeCharacterization the target schema that is selected from the
@@ -165,9 +166,10 @@ public class SQLTableSelector {
 	 * @param tableName
 	 * @param columns                   set of columns to be queried
 	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) column name greater or equals'2012-12-25
-	 *                                  00:00:00'. b) searchColumn equals 'searchQuery'.
-	 *                                  Make sure to use ' where needed
+	 *                                  null. example a) column name greater or
+	 *                                  equals'2012-12-25 00:00:00'. b) searchColumn
+	 *                                  equals 'searchQuery'. Make sure to use '
+	 *                                  where needed
 	 * @param orderAttribute            can be null, then order will be ignored
 	 * @param order
 	 * @param attributeCharacterization the target schema that is selected from the
@@ -188,7 +190,10 @@ public class SQLTableSelector {
 		String fromString = columns == null ? "*" : "";
 		if (columns != null && !columns.isEmpty()) {
 			for (String column : columns)
-				fromString += (column + ", ");
+				if (PostgreSQL.isPostgreSQLConnection(conn))
+					fromString += (PostgreSQL.quotationsForAttribute(column) + ", ");
+				else
+					fromString += (column + ", ");
 			fromString = fromString.substring(0, fromString.length() - 2);
 		}
 
@@ -210,7 +215,8 @@ public class SQLTableSelector {
 
 			// the search string needs to be postgreSQL conform, values may have the other
 			// escape string in use (')
-			sql = sql.replace("PLACEHOLDER", searchString);
+			String ss = PostgreSQL.replaceMySQLQuotes(searchString);
+			sql = sql.replace("PLACEHOLDER", ss);
 
 			preparedStatement = conn.prepareStatement(sql);
 
@@ -243,9 +249,9 @@ public class SQLTableSelector {
 	 * @param tableName
 	 * @param columns
 	 * @param searchString   the WHERE condition (without WHERE). can be null.
-	 *                       example a) column name greater or equals'2012-12-25 00:00:00'. b)
-	 *                       searchColumn equals 'searchQuery'. Make sure to use ' where
-	 *                       needed
+	 *                       example a) column name greater or equals'2012-12-25
+	 *                       00:00:00'. b) searchColumn equals 'searchQuery'. Make
+	 *                       sure to use ' where needed
 	 * 
 	 * @param orderAttribute
 	 * @param order
@@ -268,7 +274,10 @@ public class SQLTableSelector {
 		String query = "SELECT ";
 		if (columns != null && !columns.isEmpty()) {
 			for (String column : columns)
-				query += "`" + column + "`,";
+				if (PostgreSQL.isPostgreSQLConnection(conn))
+					query += (PostgreSQL.quotationsForAttribute(column) + ",");
+				else
+					query += "`" + column + "`,";
 			query = query.substring(0, query.length() - 1);
 		} else
 			query += "*";
