@@ -82,11 +82,24 @@ public class SQLTableCreator {
 	 */
 	public static void createTable(Connection conn, String schema, String tableName, String sqlString)
 			throws SQLException {
+		createTable(conn, schema, tableName, sqlString, true);
+	}
+
+	/**
+	 * 
+	 * @param conn
+	 * @param sqlString SQL string that will create the table
+	 * @throws SQLException
+	 */
+	public static void createTable(Connection conn, String schema, String tableName, String sqlString,
+			boolean printIfAlreadyExists) throws SQLException {
 
 		Statement stmt = null;
 		try {
 			if (SQLUtils.tableExists(conn, schema, tableName)) {
-				System.err.println("Table " + tableName + " in schema " + schema + " already exists - nothing to do.");
+				if (printIfAlreadyExists)
+					System.err.println(
+							"Table " + tableName + " in schema " + schema + " already exists - nothing to do.");
 				return;
 			}
 

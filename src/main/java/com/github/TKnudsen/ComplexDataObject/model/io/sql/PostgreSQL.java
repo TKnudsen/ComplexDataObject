@@ -1,6 +1,7 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.sql;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class PostgreSQL {
@@ -14,7 +15,22 @@ public class PostgreSQL {
 	public static boolean isPostgreSQLConnection(Connection conn) {
 		Objects.requireNonNull(conn);
 
-		return conn.getClass().toString().contains("postgresql");
+		// my connections pool connection
+		if (conn.getClass().toString().contains("postgresql"))
+			return true;
+		// Apache connections pool connection
+		if (conn.toString().contains("PostgreSQL JDBC Driver"))
+			return true;
+		// C3Po connection pool - may serve for other connections, too, but comes with
+		// an SQL exception
+		try {
+			if (conn.getMetaData().getDatabaseProductName().toString().contains("PostgreSQL"))
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	public static String schemaAndTableName(String schema, String tableName) {

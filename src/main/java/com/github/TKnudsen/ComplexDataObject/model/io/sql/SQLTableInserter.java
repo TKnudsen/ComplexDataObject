@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
+
 public class SQLTableInserter {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -108,8 +110,9 @@ public class SQLTableInserter {
 	 * @param conn
 	 * @param schema
 	 * @param tableName
-	 * @param insertType          INSERT, INSERT IGNORE, REPLACE
-	 * @param keyValuePairs       contains column and value information for this row
+	 * @param insertType              INSERT, INSERT IGNORE, REPLACE
+	 * @param keyValuePairs           contains column and value information for this
+	 *                                row
 	 * @param useFloatInsteadOfDouble
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
@@ -136,6 +139,12 @@ public class SQLTableInserter {
 					List<String> values = getPrimaryKeysFromErrorMessage(errorMessage, true);
 
 					// delete original row
+					// wait a bit, a lot of exceptions like these have happened in the past, needs
+					// refactoring on the long run:
+					// "An I/O error occurred while sending to the backend"
+					// java.net.SocketException: An established connection was aborted by the
+					// software in your host machine
+					Threads.sleep(5);
 					SQLTableDeleter.deleteTableRow(conn, PostgreSQL.schemaAndTableName(schema, tableName), pks, values);
 
 					// once again try to insert new row
@@ -407,7 +416,7 @@ public class SQLTableInserter {
 	 * @param conn
 	 * @param schema
 	 * @param tableName
-	 * @param insertType         INSERT, INSERT IGNORE, REPLACE
+	 * @param insertType INSERT, INSERT IGNORE, REPLACE
 	 * @param attributes
 	 * @param values
 	 */
@@ -426,10 +435,9 @@ public class SQLTableInserter {
 	/**
 	 * 
 	 * @param tableName
-	 * @param insertType          INSERT, INSERT IGNORE, REPLACE
+	 * @param insertType INSERT, INSERT IGNORE, REPLACE
 	 * @param attributes
-	 * @param values              outer list is the rows, inner list the attribute
-	 *                            values
+	 * @param values     outer list is the rows, inner list the attribute values
 	 * @param postgreSQL
 	 * @return
 	 */
