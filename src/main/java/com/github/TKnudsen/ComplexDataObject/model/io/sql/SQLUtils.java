@@ -156,7 +156,10 @@ public class SQLUtils {
 
 		switch (c) {
 		case "boolean":
-			sql = "BIT(1)";
+			if (!postgreSQL)
+				sql = "BIT(1)";
+			else
+				sql = "BOOLEAN";
 			break;
 		case "byte":
 			sql = "BIT(8)";

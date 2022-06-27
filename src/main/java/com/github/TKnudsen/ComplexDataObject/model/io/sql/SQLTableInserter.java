@@ -140,7 +140,7 @@ public class SQLTableInserter {
 
 					// delete original row
 					// wait a bit, a lot of exceptions like these have happened in the past, needs
-					// refactoring on the long run:
+					// re-factoring on the long run:
 					// "An I/O error occurred while sending to the backend"
 					// java.net.SocketException: An established connection was aborted by the
 					// software in your host machine
@@ -149,7 +149,13 @@ public class SQLTableInserter {
 
 					// once again try to insert new row
 					pstmt.execute();
-				}
+				} else if (errorMessage.contains("ERROR: value too long for type character varying(66)")) {
+					System.err.println(
+							"SQLTableInserter: Postgresql has problem with the length of a column - manual curation is required! Error message: "
+									+ errorMessage);
+					throw e;
+				} else
+					throw e;
 			} else
 				throw e;
 		} finally {
@@ -329,6 +335,9 @@ public class SQLTableInserter {
 				case "BIT(8)":
 					pstmt.setByte(index++, (byte) value);
 					break;
+				case "BOOLEAN":
+					pstmt.setBoolean(index++, (boolean) value);
+					break;
 				case "INT":
 					pstmt.setInt(index++, (int) value);
 					break;
@@ -364,7 +373,7 @@ public class SQLTableInserter {
 					break;
 
 				default:
-					System.out.println("SQLTableInserter: unknown SQL attribute type: " + type);
+					System.err.println("SQLTableInserter: unknown SQL attribute type: " + type);
 					break;
 				}
 			}
