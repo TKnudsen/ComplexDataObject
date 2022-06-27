@@ -62,11 +62,16 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 
 	/**
 	 * 
+	 * returns null if primaryKey is null.
+	 * 
 	 * @param primaryKey note: the primary key attribute does not need to be of type
 	 *                   String.
 	 * @return
 	 */
 	public ComplexDataObject get(Object primaryKey) {
+		if (primaryKey == null)
+			return null;
+
 		if (getType(primaryKeyAttribute) != primaryKey.getClass())
 			System.err.println(
 					"PrimaryDataContainer - warning: object type of primaryKey does not match type of primary key attribute ("
