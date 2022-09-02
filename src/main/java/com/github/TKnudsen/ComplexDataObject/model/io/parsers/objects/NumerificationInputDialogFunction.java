@@ -3,6 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
@@ -12,13 +13,26 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 	private Map<Object, Double> numerificationLookup = new HashMap<Object, Double>();
 	private DoubleParser doubleParser;
 
+	/**
+	 * allows to proceed an automatic process of no user input arrives after some
+	 * time. Default: 15sec.
+	 */
+	private final long maxWaitTimeUntilDialogKill;
+
 	@SuppressWarnings("unused")
 	private NumerificationInputDialogFunction() {
-		this(false);
+		this(false, 15000);
 	}
 
-	public NumerificationInputDialogFunction(boolean dotMeansThousands) {
+	/**
+	 * 
+	 * @param dotMeansThousands
+	 * @param maxWaitTimeUntilDialogKill in milliseconds
+	 */
+	public NumerificationInputDialogFunction(boolean dotMeansThousands, long maxWaitTimeUntilDialogKill) {
 		doubleParser = new DoubleParser(dotMeansThousands);
+
+		this.maxWaitTimeUntilDialogKill = maxWaitTimeUntilDialogKill;
 	}
 
 	@Override
@@ -39,9 +53,8 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 		Thread thread = new Thread(dialogRunnable);
 		thread.start();
 
-		while (!dialogRunnable.isFinished() && System.currentTimeMillis() - start < 10000) {
+		while (!dialogRunnable.isFinished() && System.currentTimeMillis() - start < maxWaitTimeUntilDialogKill) {
 			Threads.sleep(250);
-//			System.out.println("NumerificationInputDialogFunction.retrieveNumber: waiting for user input");
 		}
 
 		double d = dialogRunnable.getValue();
@@ -65,7 +78,10 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 
 		@Override
 		public void run() {
-			String inputValue = JOptionPane.showInputDialog("User input required for object [" + t
+			JFrame frame = new JFrame();
+			frame.setAlwaysOnTop(true);
+
+			String inputValue = JOptionPane.showInputDialog(frame, "User input required for object [" + t
 					+ "]. Please input a numerical value; 0,5 for zero point five.");
 
 			if (inputValue != null) {

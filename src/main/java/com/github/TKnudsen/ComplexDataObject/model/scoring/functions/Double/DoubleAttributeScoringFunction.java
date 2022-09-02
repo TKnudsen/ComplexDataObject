@@ -91,14 +91,15 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		initializeStdOutlierTreatment(doubleValues);
 //		}
 
-		truncatedValueRate = 0;
+		truncatedValueRateBottom = 0;
 		truncatedValueRateTop = 0;
 		if (outlierPruningMinValue != null && outlierPruningMaxValue != null) {
 			Collection<Double> afterO = new ArrayList<>();
 			for (Double d : doubleValues) {
 				double truncated = truncateOutlier(d);
 				if (truncated != d) {
-					truncatedValueRate++;
+					if (d < outlierPruningMinValue)
+						truncatedValueRateBottom++;
 					if (d > outlierPruningMaxValue)
 						truncatedValueRateTop++;
 				}
@@ -107,7 +108,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 			doubleValues = afterO;
 		}
 
-		truncatedValueRate /= doubleValues.size();
+		truncatedValueRateBottom /= doubleValues.size();
 		truncatedValueRateTop /= doubleValues.size();
 
 		// outlier-pruned value statistics
@@ -242,6 +243,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		double localQuantileNormalizationRate = Math.abs(normalizeLinear(value)) * getQuantileNormalizationRate();
 		return (dq * localQuantileNormalizationRate + dl * (1 - localQuantileNormalizationRate));
+
+//		return (dq * getQuantileNormalizationRate() + dl * (1 - getQuantileNormalizationRate()));
 	}
 
 	public Double getOutlierStd() {
@@ -287,7 +290,10 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	}
 
 	public Double getOutlierPruningMinValue() {
-		return outlierPruningMinValue;
+		if (outlierPruningMinValueExternal == null)
+			return outlierPruningMinValue;
+		else
+			return outlierPruningMinValueExternal;
 	}
 
 	/**
@@ -310,7 +316,10 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 	}
 
 	public Double getOutlierPruningMaxValue() {
-		return outlierPruningMaxValue;
+		if (outlierPruningMaxValueExternal == null)
+			return outlierPruningMaxValue;
+		else
+			return outlierPruningMaxValueExternal;
 	}
 
 	/**

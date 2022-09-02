@@ -165,11 +165,11 @@ public class SQLTableSelector {
 	 * @param conn
 	 * @param tableName
 	 * @param columns                   set of columns to be queried
-	 * @param searchString              the WHERE condition (without WHERE). can be
-	 *                                  null. example a) column name greater or
-	 *                                  equals'2012-12-25 00:00:00'. b) searchColumn
-	 *                                  equals 'searchQuery'. Make sure to use '
-	 *                                  where needed
+	 * @param searchString              the WHERE condition (without WHERE). has
+	 *                                  problems with null. example a) column name
+	 *                                  greater or equals'2012-12-25 00:00:00'. b)
+	 *                                  searchColumn equals 'searchQuery'. Make sure
+	 *                                  to use ' where needed
 	 * @param orderAttribute            can be null, then order will be ignored
 	 * @param order
 	 * @param attributeCharacterization the target schema that is selected from the

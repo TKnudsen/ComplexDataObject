@@ -43,7 +43,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private double missingValueRate;
 	protected double scoreAverageWithoutMissingValues;
 
-	protected double truncatedValueRate;
+	protected double truncatedValueRateBottom;
 	protected double truncatedValueRateTop;
 
 	@JsonIgnore
@@ -61,6 +61,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	@JsonIgnore
 	private List<AttributeScoringFunctionChangeListener> listeners = new ArrayList<AttributeScoringFunctionChangeListener>();
+	private boolean listenerNotificationInterrupted;
 
 	/**
 	 * can be used to improve calculation time by the cost of adding a state to the
@@ -227,8 +228,9 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	}
 
 	protected final void notifyListeners(AttributeScoringFunctionChangeEvent event) {
-		for (AttributeScoringFunctionChangeListener listener : listeners)
-			listener.attributeScoringFunctionChanged(event);
+		if (!isListenerNotificationInterrupted())
+			for (AttributeScoringFunctionChangeListener listener : listeners)
+				listener.attributeScoringFunctionChanged(event);
 	}
 
 	public String getAbbreviation() {
@@ -427,17 +429,18 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return getAttribute();
 	}
 
-	public double getTruncatedValueRate() {
-		return truncatedValueRate;
+	public double getTruncatedValueRateBottom() {
+		return truncatedValueRateBottom;
 	}
 
 	public double getTruncatedValueRateTop() {
 		return truncatedValueRateTop;
 	}
 
-	public void setTruncatedValueRateTop(double truncatedValueRateTop) {
-		this.truncatedValueRateTop = truncatedValueRateTop;
-	}
+	// cannot be set, is an internal statistics parameter
+//	public void setTruncatedValueRateTop(double truncatedValueRateTop) {
+//		this.truncatedValueRateTop = truncatedValueRateTop;
+//	}
 
 	public double getQuantileNormalizationRate() {
 		return quantileNormalizationRate;
@@ -474,5 +477,25 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
 
 		notifyListeners(event);
+	}
+
+	public boolean isListenerNotificationInterrupted() {
+		return listenerNotificationInterrupted;
+	}
+
+	public void setListenerNotificationInterrupted(boolean listenerNotificationInterrupted) {
+		boolean old = this.listenerNotificationInterrupted;
+	
+		this.listenerNotificationInterrupted = listenerNotificationInterrupted;
+	
+		if (old != listenerNotificationInterrupted && listenerNotificationInterrupted == false) {
+			this.scoresBuffer = new HashMap<>();
+
+			refreshScoringFunction();
+
+			AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, this);
+
+			notifyListeners(event);
+		}
 	}
 }

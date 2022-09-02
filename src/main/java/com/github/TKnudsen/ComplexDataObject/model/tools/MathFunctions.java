@@ -9,15 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * <p>
- * Description: little helpers when calculating math stuff.
+ * Description: little math helpers.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017-2018
+ * Copyright: Copyright (c) 2017-2022
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.07
+ * @version 1.08
  */
 public class MathFunctions {
 
@@ -32,6 +32,19 @@ public class MathFunctions {
 	 */
 	public static double linearScale(double min, double max, double value) {
 		return linearScale(min, max, value, false);
+	}
+
+	/**
+	 * scales a value w.r.t. a given minimum and maximum value. The value can be
+	 * outside the interval.
+	 * 
+	 * @param min
+	 * @param max
+	 * @param value
+	 * @return
+	 */
+	public static double linearScale(Number min, Number max, Number value) {
+		return linearScale(min.doubleValue(), max.doubleValue(), value.doubleValue(), false);
 	}
 
 	/**
