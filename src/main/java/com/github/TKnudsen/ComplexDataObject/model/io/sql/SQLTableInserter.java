@@ -149,10 +149,10 @@ public class SQLTableInserter {
 
 					// once again try to insert new row
 					pstmt.execute();
-				} else if (errorMessage.contains("ERROR: value too long for type character varying(66)")) {
-					System.err.println(
-							"SQLTableInserter: Postgresql has problem with the length of a column - manual curation is required! Error message: "
-									+ errorMessage);
+				} else if (errorMessage.contains("ERROR: value too long for type character varying")) {
+					System.err.println("SQLTableInserter.insertRow,  table " + tableName
+							+ ": Postgresql has problem with the length of a column - manual curation is required! Error message: "
+							+ errorMessage);
 					throw e;
 				} else
 					throw e;

@@ -9,15 +9,16 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.ReflectionTools;
 
 /**
  * <p>
- * provides ComplexDataObjects for data sets.
+ * provides ComplexDataObjects for data sets. Requires that ComplexDataObject is
+ * checked out.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2021
+ * Copyright: Copyright (c) 2015-2022
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class DataSets {
 
@@ -27,8 +28,17 @@ public class DataSets {
 		TitanicParser p = new TitanicParser("", true);
 		try {
 			String dataLocation = ReflectionTools.classLocation(ComplexDataObject.class);
-			dataLocation = dataLocation.substring(0, dataLocation.indexOf("/target"));
+			try {
+				dataLocation = dataLocation.substring(0, dataLocation.indexOf("/target"));
+			} catch (Exception e) {
+				if (dataLocation.indexOf(".m2") != -1) {
+					dataLocation = dataLocation.substring(dataLocation.indexOf(".m2"));
+					dataLocation += "ComplexDataObject";
+				}
+			}
+
 			dataLocation += "/data/titanic_extended.txt";
+			dataLocation = dataLocation.replace("%20", " ");
 			titanicData = p.parse(dataLocation);
 		} catch (IOException e) {
 			e.printStackTrace();

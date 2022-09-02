@@ -264,6 +264,9 @@ public class SQLTableCreator {
 //				System.err.println("SQLTableCreator.addColumn: Column " + columnName + " already in table " + tableName
 //						+ ", skip.");
 				System.err.println("SQLTableCreator.addColumn: column already in table, skip.");
+			} else if (e.getMessage().contains("column") && e.getMessage().endsWith("already exists")) {
+				System.out.println();
+				System.err.println("SQLTableCreator.addColumn: column already in table, skip.");
 			} else
 				e.printStackTrace();
 		} finally {

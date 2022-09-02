@@ -128,7 +128,7 @@ public class AttributeScoringFunctions {
 					true, 1.0, uncertaintyFunction);
 			break;
 		case "String":
-			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true),
+			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true, 25000),
 					attribute, null, false, true, 1.0, uncertaintyFunction);
 			break;
 
