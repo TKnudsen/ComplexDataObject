@@ -424,7 +424,8 @@ public class SQLUtils {
 				break;
 
 			case Types.TIMESTAMP:
-				map.put(attribute, resultSet.getTime(i + 1));
+				// map.put(attribute, resultSet.getTime(i + 1));
+				map.put(attribute, resultSet.getTimestamp(i + 1));
 				break;
 
 			case Types.BLOB:

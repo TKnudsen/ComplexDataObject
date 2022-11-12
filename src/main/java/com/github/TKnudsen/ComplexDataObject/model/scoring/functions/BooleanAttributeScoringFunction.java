@@ -73,12 +73,8 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 
 		normalizationFunction = new LinearNormalizationFunction(0.0, 1.0, true);
 
-		scoreAverageWithoutMissingValues = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this,
-				false);
-
-		// clear scoresBuffer as it contains old missing value data now
-		scoresBuffer.clear();
-
+		double scoreAverageWithoutMissingValues = AttributeScoringFunctions
+				.calculateAverageScoreWithoutMissingValues(this, false);
 		if (Double.isNaN(scoreAverageWithoutMissingValues))
 			System.err.println(
 					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");

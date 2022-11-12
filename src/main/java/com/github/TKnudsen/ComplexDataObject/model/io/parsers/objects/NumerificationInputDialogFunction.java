@@ -90,6 +90,19 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 			}
 
 			finished = true;
+			
+//			SwingUtilities.invokeLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					String inputValue = JOptionPane.showInputDialog(frame, "User input required for object [" + t
+//							+ "]. Please input a numerical value; 0,5 for zero point five.");
+//					if (inputValue != null) {
+//						inputValue = inputValue.replace(".", ",");
+//						d = doubleParser.apply(inputValue);
+//					}
+//					finished = true;
+//				}
+//			});
 		}
 
 		public double getValue() {

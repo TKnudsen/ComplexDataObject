@@ -116,8 +116,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		initializeNormalizationFunctions();
 
-		scoreAverageWithoutMissingValues = calculateAverageScore();
-
+		double scoreAverageWithoutMissingValues = AttributeScoringFunctions
+				.calculateAverageScoreWithoutMissingValues(this, false);
 		if (Double.isNaN(scoreAverageWithoutMissingValues))
 			System.err.println(
 					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");
@@ -131,18 +131,6 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 				scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
 		} else
 			scoreForMissingObjects = getScoreForMissingObjectsExternal();
-	}
-
-	protected double calculateAverageScore() {
-		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, false);
-
-		// clear scoresBuffer as it contains old missing value data now
-		scoresBuffer.clear();
-
-		if (Double.isNaN(score))
-			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
-
-		return score;
 	}
 
 	private Collection<Double> clampValues(Collection<Double> doubleValues, double std) {
@@ -241,10 +229,12 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		double dq = normalizeQuantiles(value);
 		double dl = normalizeLinear(value);
 
-		double localQuantileNormalizationRate = Math.abs(normalizeLinear(value)) * getQuantileNormalizationRate();
-		return (dq * localQuantileNormalizationRate + dl * (1 - localQuantileNormalizationRate));
+		// this is a version with reduced effect and was used as default for a while
+//		double localQuantileNormalizationRate = Math.abs(normalizeLinear(value)) * getQuantileNormalizationRate();
+//		return (dq * localQuantileNormalizationRate + dl * (1 - localQuantileNormalizationRate));
 
-//		return (dq * getQuantileNormalizationRate() + dl * (1 - getQuantileNormalizationRate()));
+		// this version has a strong effect, more what is expected
+		return (dq * getQuantileNormalizationRate() + dl * (1 - getQuantileNormalizationRate()));
 	}
 
 	public Double getOutlierStd() {

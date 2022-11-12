@@ -51,13 +51,14 @@ public class MinMaxNormalization implements INumericalFeatureVectorProcessor {
 					maxs[i] = v;
 			}
 		}
-		
+
 		for (NumericalFeatureVector fv : container) {
 			for (int i = 0; i < fv.sizeOfFeatures(); i++) {
 				if (i >= mins.length)
 					throw new IllegalArgumentException("Feature vectors have to match in size.");
 				double v = fv.get(i);
-				fv.getFeature(i).setFeatureValue(MathFunctions.linearScale(mins[i], maxs[i], v));
+				fv.getFeature(i)
+						.setFeatureValue(MathFunctions.linearScale(mins[i].doubleValue(), maxs[i].doubleValue(), v));
 			}
 		}
 	}
