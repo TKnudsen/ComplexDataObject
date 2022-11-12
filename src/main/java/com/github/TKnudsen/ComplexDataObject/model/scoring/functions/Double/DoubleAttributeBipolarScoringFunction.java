@@ -164,7 +164,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 			normalizationFunctionNegative = new LinearNormalizationFunction(statisticsSupportNegative, true);
 		else
 			System.err.println(getClass().getSimpleName()
-					+ ": negative value range below neutra value did not contain entries for attribute "
+					+ ": negative value range below neutral value did not contain entries for attribute "
 					+ getAttribute() + ". check input data or adjust neutral value");
 
 		// close the region around 0.0
@@ -208,8 +208,8 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	protected double calculateAverageScore() {
 		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, true);
 
-		// clear scoresBuffer as it contains old missing value data now
-		scoresBuffer.clear();
+//		// clear scoresBuffer as it contains old missing value data now
+//		scoresBuffer.clear();
 
 		if (Double.isNaN(score))
 			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");

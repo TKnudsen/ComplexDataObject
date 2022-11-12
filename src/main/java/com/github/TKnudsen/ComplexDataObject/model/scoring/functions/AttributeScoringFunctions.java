@@ -58,10 +58,8 @@ public class AttributeScoringFunctions {
 				if (Double.isNaN(((Number) o).doubleValue()))
 					continue;
 
-			if (absoluteValues)
-				scores.add(Math.abs(function.apply(cdo)));
-			else
-				scores.add(function.apply(cdo));
+			double value = (absoluteValues) ? Math.abs(function.apply(cdo)) : function.apply(cdo);
+			scores.add(value);
 		}
 
 		if (scores.isEmpty())

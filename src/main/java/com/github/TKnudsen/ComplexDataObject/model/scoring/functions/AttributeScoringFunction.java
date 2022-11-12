@@ -41,7 +41,6 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	private double weight;
 
 	private double missingValueRate;
-	protected double scoreAverageWithoutMissingValues;
 
 	protected double truncatedValueRateBottom;
 	protected double truncatedValueRateTop;
@@ -114,6 +113,13 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	protected abstract void refreshScoringFunction();
 
+	/**
+	 * the scoring function is applied for an external value. For this value no
+	 * uncertainty information can be considered.
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public Double applyValue(T value) {
 		return applyDoubleValue(toDouble(value));
 	}
@@ -127,14 +133,11 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		Double v = value;
 
-		// outlier treatment: no need since normalization will crop extremes
 		double output = normalize(v);
 
 		if (!isHighIsGood())
 			output = invertScore(output);
 
-		// decision: weight should be applied externally. Thus, the relative value
-		// domain is preserved and guaranteed internally.
 		return output; // * getWeight();
 	}
 
@@ -179,10 +182,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 				Double u = getUncertaintyFunction().apply(cdo);
 
 				if (u == null || Double.isNaN(u))
-					u = missingValueValue;
+					u = 0.25;
 
 				u = Math.max(0.0, Math.min(1.0, u));
 
+				// System.out.println("Vorher: " + MathFunctions.round(s, 2) + ", nachher: "
+				// + MathFunctions.round(s * (1 - u), 2) + ", u: " + MathFunctions.round(u, 2));
 				double sFinal = s * (1 - u);
 				if (uncertaintyConsideration.equals(UncertaintyConsideration.Half))
 					sFinal = s * (1 - u * 0.5);
@@ -251,7 +256,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public final void setHighIsGood(boolean highIsGood) {
 		this.highIsGood = highIsGood;
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -283,7 +288,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		else
 			this.quantileNormalizationRate = 0.0;
 
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -305,7 +310,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	public void setMissingValueAvgScoreRatio(Double missingValueAvgScoreRatio) {
 		this.missingValueAvgScoreRatio = missingValueAvgScoreRatio;
 
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -319,7 +324,17 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	}
 
 	public double getAverageScoreWithoutMissingValues() {
-		return scoreAverageWithoutMissingValues;
+		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, false);
+		if (Double.isNaN(score))
+			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
+		return score;
+	}
+
+	public double getAverageScoreImpactWithoutMissingValues() {
+		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, true);
+		if (Double.isNaN(score))
+			System.err.println(this.getClass().getSimpleName() + ": NaN value detected for the average score!");
+		return score;
 	}
 
 	public Function<ComplexDataObject, Double> getUncertaintyFunction() {
@@ -327,18 +342,18 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	}
 
 	public double getUncertainty(ComplexDataObject cdo) {
-		double missingValueValue = getScoreForMissingObjects();
-
-		Double u = missingValueValue;
-
+		Double u = 1.0;
 		if (getUncertaintyFunction() != null) {
 			u = getUncertaintyFunction().apply(cdo);
 
 			if (u == null || Double.isNaN(u))
-				u = missingValueValue;
+				u = 1.0;
 
 			u = Math.max(0.0, Math.min(1.0, u));
-		}
+		} else if (apply(cdo) == null)
+			u = 1.0;
+		else
+			u = 0.0;
 		return u;
 	}
 
@@ -454,7 +469,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 //		else
 //			quantileBased = false;
 
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -470,7 +485,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 	public void setScoreForMissingObjectsExternal(double scoreForMissingObjectsExternal) {
 		this.scoreForMissingObjectsExternal = scoreForMissingObjectsExternal;
 
-		this.scoresBuffer = new HashMap<>();
+		this.scoresBuffer.clear();
 
 		refreshScoringFunction();
 
@@ -485,11 +500,11 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	public void setListenerNotificationInterrupted(boolean listenerNotificationInterrupted) {
 		boolean old = this.listenerNotificationInterrupted;
-	
+
 		this.listenerNotificationInterrupted = listenerNotificationInterrupted;
-	
+
 		if (old != listenerNotificationInterrupted && listenerNotificationInterrupted == false) {
-			this.scoresBuffer = new HashMap<>();
+			this.scoresBuffer.clear();
 
 			refreshScoringFunction();
 
@@ -498,4 +513,5 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 			notifyListeners(event);
 		}
 	}
+
 }
