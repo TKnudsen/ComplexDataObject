@@ -5,6 +5,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
+import com.github.TKnudsen.ComplexDataObject.data.ranking.Rankings;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
@@ -21,11 +22,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2019
+ * Copyright: Copyright (c) 2016-2023
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class QuantileNormalizationFunction extends NormalizationFunction {
 
@@ -42,7 +43,7 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		super();
 	}
 
-	public QuantileNormalizationFunction(Collection<Number> values) {
+	public QuantileNormalizationFunction(Collection<? extends Number> values) {
 		super(values);
 
 		initializeRanking(values);
@@ -66,7 +67,7 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		initializeRanking(statisticsSupport.getValues());
 	}
 
-	private void initializeRanking(Collection<Number> values) {
+	private void initializeRanking(Collection<? extends Number> values) {
 		valueRanking = new Ranking<>();
 
 		for (Number value : values)
@@ -133,31 +134,44 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		if (Double.isNaN(t.doubleValue()))
 			return Double.NaN;
 
-		// iterate the ranking
-		double q = 1.0 / (double) (valueRanking.size() - 1);
+//		int interpolationSearch = Rankings.interpolationSearch(t, valueRanking, Double::doubleValue);
+		int binarySearch = Rankings.binarySearch(t, valueRanking, Double::doubleValue);
 
-		// speedup: lookup the index range
-		Integer startIndex = 0;
-		for (Double d : rankingLookup.keySet())
-			if (d <= t.doubleValue())
-				startIndex = rankingLookup.get(d);
+		if (binarySearch == -1) {
+			System.err.println("QuantileNormalizationFunction: unable to find quantile for value " + t);
+			return Double.NaN;
+		}
 
-		for (int i = startIndex; i < valueRanking.size(); i++)
-			if (t.doubleValue() < valueRanking.get(i))
-				return (double) (i - 1) / (double) (valueRanking.size() - 1) + q * 0.5;
-			else if (t.doubleValue() == valueRanking.get(i)) {
-				double lower = (double) (i) / (double) (valueRanking.size() - 1);
-				// check how many equal values exist
-				double upper = lower;
-				for (int j = i + 1; j < valueRanking.size(); j++)
-					if (t.doubleValue() == valueRanking.get(j))
-						upper = (double) (j) / (double) (valueRanking.size() - 1);
-					else
-						break;
-				return (lower + upper) * 0.5;
-			}
+		double res = binarySearch / (double) (valueRanking.size() - 1);
+		return res;
 
-		return Double.NaN;
+//		// iterate the ranking
+//		double q = 1.0 / (double) (valueRanking.size() - 1);
+//
+//		// speedup: lookup the index range
+//		Integer startIndex = 0;
+//		for (Double d : rankingLookup.keySet())
+//			if (d <= t.doubleValue())
+//				startIndex = rankingLookup.get(d);
+//			else
+//				break;
+//
+//		for (int i = startIndex; i < valueRanking.size(); i++)
+//			if (t.doubleValue() < valueRanking.get(i))
+//				return (double) (i - 1) / (double) (valueRanking.size() - 1) + q * 0.5;
+//			else if (t.doubleValue() == valueRanking.get(i)) {
+//				double lower = (double) (i) / (double) (valueRanking.size() - 1);
+//				// check how many equal values exist
+//				double upper = lower;
+//				for (int j = i + 1; j < valueRanking.size(); j++)
+//					if (t.doubleValue() == valueRanking.get(j))
+//						upper = (double) (j) / (double) (valueRanking.size() - 1);
+//					else
+//						break;
+//				return (lower + upper) * 0.5;
+//			}
+//
+//		return Double.NaN;
 	}
 
 }

@@ -136,7 +136,11 @@ public class SQLTableInserter {
 				String errorMessage = e.getMessage();
 				if (errorMessage.contains("duplicate key value violates unique constraint")) {
 					List<String> pks = getPrimaryKeysFromErrorMessage(errorMessage, false);
-					List<String> values = getPrimaryKeysFromErrorMessage(errorMessage, true);
+					// requires comma parsing which may lead to wrong tokenization
+//					List<String> values = getPrimaryKeysFromErrorMessage(errorMessage, true);
+					List<String> values = new ArrayList<>();
+					for (String pk : pks)
+						values.add(keyValuePairs.get(pk).toString()); // argh, to String conversion
 
 					// delete original row
 					// wait a bit, a lot of exceptions like these have happened in the past, needs

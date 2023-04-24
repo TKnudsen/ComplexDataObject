@@ -152,6 +152,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 		double missingValueValue = getScoreForMissingObjects();
 
+		if (cdo == null) {
+			System.err.println(getClass().getSimpleName()
+					+ ": ComplexDataObject input was null, returning missing value value " + missingValueValue);
+			return missingValueValue;
+		}
+
 		// check for missing attribute (never a good sign)
 		if (!cdo.keySet().contains(attribute)) {
 			if (Double.isNaN(missingValueValue))

@@ -169,12 +169,25 @@ public class SQLTableCreator {
 		return sql;
 	}
 
+	/**
+	 * 
+	 * @param schema                      not needed for non-postgreSQL calls, here
+	 *                                    the connection already includes the
+	 *                                    schema.
+	 * @param tableName
+	 * @param schemaEntries
+	 * @param attributeValueDistributions
+	 * @param primaryKeyAttributes
+	 * @param useFloatInsteadOfDouble
+	 * @param postgreSQL
+	 * @return
+	 */
 	public static String createTableString(String schema, String tableName, Map<String, Class<?>> schemaEntries,
 			Function<String, Collection<Object>> attributeValueDistributions, List<String> primaryKeyAttributes,
 			boolean useFloatInsteadOfDouble, boolean postgreSQL) {
 		if (!postgreSQL)
-			return createTableString(schema + "." + tableName, schemaEntries, attributeValueDistributions,
-					primaryKeyAttributes, useFloatInsteadOfDouble, postgreSQL);
+			return createTableString(tableName, schemaEntries, attributeValueDistributions, primaryKeyAttributes,
+					useFloatInsteadOfDouble, postgreSQL);
 
 		String sqlString = createTableString(schema + "\".\"" + tableName, schemaEntries, attributeValueDistributions,
 				primaryKeyAttributes, useFloatInsteadOfDouble, postgreSQL);
@@ -234,7 +247,7 @@ public class SQLTableCreator {
 			if (!postgreSQL)
 				sql += (" AFTER `" + afterAColumnName + "`");
 			else
-				System.err.println(
+				System.out.println(
 						"SQLTableCreator.addColumnString: postgreSQL does not allow adding columns AFTER others. column ordering request ignored for attribute "
 								+ afterAColumnName);
 

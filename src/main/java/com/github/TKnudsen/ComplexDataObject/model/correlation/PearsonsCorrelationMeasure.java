@@ -24,7 +24,7 @@ public class PearsonsCorrelationMeasure {
 	PearsonsCorrelation correlationMeasure = new PearsonsCorrelation();
 
 	/**
-	 * Measures the Pearson rank correlation for two given arrays. throws a
+	 * Measures the Pearson correlation for two given arrays. throws a
 	 * DimensionMismatchException if the two arrays do not have the same length (and
 	 * are not null).
 	 * 

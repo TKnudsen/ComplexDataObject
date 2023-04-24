@@ -90,7 +90,7 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 			}
 
 			finished = true;
-			
+
 //			SwingUtilities.invokeLater(new Runnable() {
 //				@Override
 //				public void run() {

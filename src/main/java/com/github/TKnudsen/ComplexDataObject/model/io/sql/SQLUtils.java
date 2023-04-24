@@ -81,7 +81,7 @@ public class SQLUtils {
 		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
 		if (postgreSQL) {
-			String sqlQuery = "			   SELECT EXISTS " + "(" + "	SELECT 1 " + "	FROM pg_tables"
+			String sqlQuery = "			   SELECT EXISTS " + "(" + "	SELECT " + "	FROM pg_tables"
 					+ "	WHERE schemaname = '" + schema + "'" + "	AND tablename = '" + tableName + "'" + ");";
 
 			ResultSet resultSet = null;
@@ -204,7 +204,7 @@ public class SQLUtils {
 				int maxCount = 0;
 				for (Object v : values)
 					if (v != null)
-						maxCount = Math.max(maxCount, v.toString().length());
+						maxCount = Math.max(maxCount, v.toString().length() + 1);
 				if (maxCount < 128)
 					sql = "VARCHAR (" + (int) (Math.max(maxCount * 1.33, 3)) + ")";
 				else if (!postgreSQL)
