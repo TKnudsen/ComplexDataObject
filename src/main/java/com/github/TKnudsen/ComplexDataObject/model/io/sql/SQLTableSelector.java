@@ -372,7 +372,8 @@ public class SQLTableSelector {
 
 		DatabaseMetaData metadata = conn.getMetaData();
 
-		ResultSet resultSet = metadata.getColumns(conn.getCatalog(), schema, tableName, null);
+		ResultSet resultSet = metadata.getColumns(conn.getCatalog(), schema,
+				PostgreSQL.isPostgreSQLConnection(conn) ? tableName : tableName, null);
 		while (resultSet.next()) {
 			String name = resultSet.getString("COLUMN_NAME");
 			columns.add(name);

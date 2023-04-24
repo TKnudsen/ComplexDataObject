@@ -43,7 +43,7 @@ public class SQLTableInserters {
 	 * @param cdo
 	 */
 	public static void insertRow(Connection conn, String schema, String tableName, String insertType,
-			ComplexDataObject cdo, boolean checkIfTableExists, boolean useFloatInsteadOfDouble) throws SQLException {
+			ComplexDataObject cdo, boolean useFloatInsteadOfDouble) throws SQLException {
 
 		// create key value pairs (attributes and values)
 		LinkedHashMap<String, Object> keyValuePairs = SQLUtils.createKeyValuePairs(cdo);

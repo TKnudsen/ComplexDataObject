@@ -21,8 +21,14 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 
 		this.primaryKeyAttribute = primaryKeyAttribute;
 
-		for (ComplexDataObject cdo : objects)
-			primaryKeysSelectedAttributesCDOMap.put(cdo.getAttribute(primaryKeyAttribute), cdo);
+		for (ComplexDataObject cdo : objects) {
+			Object pk = cdo.getAttribute(primaryKeyAttribute);
+			if (pk == null)
+				System.err.println(
+						"PrimaryKeyDataContainer: warning for a ComplexDataObject that does not contain a value for primary key "
+								+ primaryKeyAttribute);
+			primaryKeysSelectedAttributesCDOMap.put(pk, cdo);
+		}
 	}
 
 	public PrimaryKeyDataContainer(ComplexDataObject cdo, String primaryKeyAttribute) {

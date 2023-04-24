@@ -3,7 +3,9 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
@@ -17,14 +19,9 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.BooleanAttributeScoringFunction;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
@@ -32,6 +29,7 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
 public final class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();
+	private Map<String, AttributeScoringFunction<?>> attributeScoringFunctionsLookup = new HashMap<>();
 
 	private LinearNormalizationFunction normalizationFunction = null;
 
@@ -143,6 +141,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 
 	public void addAttributeScoringFunction(AttributeScoringFunction<?> attributeScoringFunction) {
 		this.attributeScoringFunctions.add(attributeScoringFunction);
+		this.attributeScoringFunctionsLookup.put(attributeScoringFunction.getAttribute(), attributeScoringFunction);
 		attributeScoringFunction.addAttributeScoringChangeListener(this);
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this,
@@ -152,8 +151,10 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 
 	public void addAttributeScoringFunctions(List<AttributeScoringFunction<?>> attributeScoringFunctions) {
 		this.attributeScoringFunctions.addAll(attributeScoringFunctions);
-		for (AttributeScoringFunction<?> attributeScoringFunction : this.attributeScoringFunctions)
+		for (AttributeScoringFunction<?> attributeScoringFunction : this.attributeScoringFunctions) {
+			this.attributeScoringFunctionsLookup.put(attributeScoringFunction.getAttribute(), attributeScoringFunction);
 			attributeScoringFunction.addAttributeScoringChangeListener(this);
+		}
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, null, null);
 		handleAttributeScoringChangeEvent(event);
@@ -167,6 +168,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 				f = attributeScoringFunctions.remove(i);
 				i--;
 			}
+		this.attributeScoringFunctionsLookup.remove(attribute);
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, attribute, f);
 		handleAttributeScoringChangeEvent(event);
@@ -174,6 +176,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 
 	public void clearAttributeScoringFunctions() {
 		attributeScoringFunctions.clear();
+		attributeScoringFunctionsLookup.clear();
 
 		AttributeScoringFunctionChangeEvent event = new AttributeScoringFunctionChangeEvent(this, null, null);
 		handleAttributeScoringChangeEvent(event);
@@ -184,10 +187,11 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	}
 
 	public AttributeScoringFunction<?> getAttributeScoringFunction(String attribute) {
-		for (int i = 0; i < attributeScoringFunctions.size(); i++)
-			if (attributeScoringFunctions.get(i).getAttribute().equals(attribute))
-				return attributeScoringFunctions.get(i);
-		return null;
+//		for (int i = 0; i < attributeScoringFunctions.size(); i++)
+//			if (attributeScoringFunctions.get(i).getAttribute().equals(attribute))
+//				return attributeScoringFunctions.get(i);
+		return attributeScoringFunctionsLookup.get(attribute);
+//		return null;
 	}
 
 	public List<AttributeScoringFunction<?>> getAttributeScoringFunctions() {

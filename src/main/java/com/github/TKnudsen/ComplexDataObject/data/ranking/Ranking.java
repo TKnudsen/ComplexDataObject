@@ -42,6 +42,11 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 
 	@Override
 	public boolean add(T t) {
+
+		if (!isEmpty() && Rankings.addFast(this, t))
+			return true;
+
+		// this implementation maintains the order
 		for (int i = 0; i < this.size(); i++) {
 			if (t.compareTo(get(i)) < 0) {
 				// using super avoids endless loops
@@ -91,6 +96,8 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 	/**
 	 * Adds a value at a given index IF the sorting criterion is preserved. Else the
 	 * value is added that the correct index.
+	 * 
+	 * Never a good sign if the add(t) method is called.
 	 *
 	 * @param index
 	 * @param t

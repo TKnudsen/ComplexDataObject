@@ -13,6 +13,7 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
+import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ public class DimensionalityReductionPipeline<X> {
 		if (dataToFeatureVectorsMapping == null) {
 			dataToFeatureVectorsMapping = new HashMap<X, NumericalFeatureVector>();
 
-			ArrayList<X> dataList = new ArrayList<>(data);
+			List<X> dataList = new ArrayList<>(data);
 			List<NumericalFeatureVector> transform = descriptor.transform(dataList);
 
 			for (int i = 0; i < transform.size(); i++) {
@@ -195,7 +196,8 @@ public class DimensionalityReductionPipeline<X> {
 			if (dimOutput.size() > 0) {
 				Function<X, Double> function = new Function<X, Double>() {
 
-					NormalizationFunction normalization = new LinearNormalizationFunction(dimOutput, true);
+					NormalizationFunction n1 = new LinearNormalizationFunction(dimOutput, true);
+					NormalizationFunction n2 = new QuantileNormalizationFunction(dimOutput);
 
 					@Override
 					public Double apply(X t) {
@@ -204,7 +206,8 @@ public class DimensionalityReductionPipeline<X> {
 						if (getLowDimFeatureVector(t).getDimensions() < dim)
 							return 0.0;
 						double d = getLowDimFeatureVector(t).get(dim);
-						return normalization.apply(d).doubleValue();
+						double out = (n1.apply(d).doubleValue() * 0.75 + n2.apply(d).doubleValue() * 0.25);
+						return out;
 					}
 				};
 
