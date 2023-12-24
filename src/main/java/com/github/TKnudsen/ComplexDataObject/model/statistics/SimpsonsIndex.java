@@ -65,6 +65,10 @@ public class SimpsonsIndex {
 			totalNumber += distribution[i];
 		}
 
+		// bug fix
+		if (totalNumber == 1 && distribution.length > 1)
+			return 1.0;
+
 		if (totalNumber < 2)
 			return 0.0;
 		else
@@ -111,8 +115,9 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value less than 0 will achieve the int value 1. The remaining values
-	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
+	 * smallest double value less than 0 will achieve the int value 1. The remaining
+	 * values will be rescaled with the same factor (linear transformation). 0
+	 * remains 0.
 	 * 
 	 * @param values
 	 * @return
@@ -147,8 +152,9 @@ public class SimpsonsIndex {
 
 	/**
 	 * converts a double distribution to a Simpsonizable int distribution. The
-	 * smallest double value less than 0 will achieve the int value 1. The remaining values
-	 * will be rescaled with the same factor (linear transformation). 0 remains 0.
+	 * smallest double value less than 0 will achieve the int value 1. The remaining
+	 * values will be rescaled with the same factor (linear transformation). 0
+	 * remains 0.
 	 * 
 	 * @param values
 	 * @return

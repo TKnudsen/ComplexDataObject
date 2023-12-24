@@ -2,6 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.model.io.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 
 public class PostgreSQL {
@@ -73,6 +74,38 @@ public class PostgreSQL {
 		ret = ret.replace("double", "FLOAT8");
 
 		return ret;
+	}
+
+	public static void dropColumn(Connection conn, String schema, String tableName, String columnName) {
+
+		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
+				? PostgreSQL.schemaAndTableName(schema, tableName)
+				: tableName; // here the schema is already part of the connection
+
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "ALTER TABLE `" + schemaAndTable + "` DROP COLUMN `" + columnName + "`";
+
+			if (PostgreSQL.isPostgreSQLConnection(conn))
+				sql = PostgreSQL.replaceMySQLQuotes(sql);
+
+			stmt.executeUpdate(sql);
+
+			System.out.println("PostgreSQL.dropColumn: Column " + columnName + " in Table " + tableName + " in Schema "
+					+ schema + " dropped");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println("PostgreSQL.dropColumn: Column " + columnName + " in Table " + tableName + " in Schema "
+					+ schema + " not successful");
+		} finally {
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 }

@@ -65,7 +65,7 @@ public class LinearNormalizationFunction extends NormalizationFunction {
 		double scaled = MathFunctions.linearScale(getGlobalMin().doubleValue(), getGlobalMax().doubleValue(),
 				value.doubleValue(), isLimitToBounds());
 
-		return new Double(scaled);
+		return Double.valueOf(scaled);
 	}
 
 }

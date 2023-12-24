@@ -15,6 +15,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.DataSchemaEntry;
@@ -29,11 +31,14 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableSelector.Order;
 
 public class SQLUtils {
 
 	public static String columnQuote = "`";
 	public static String valueQuote = "'";
+
+	private static BooleanParser booleanParser = new BooleanParser();
 
 	/**
 	 * creates a new database / schema if not exists
@@ -281,38 +286,39 @@ public class SQLUtils {
 
 		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
 
-		try {
-			ResultSetMetaData rsmd = resultSet.getMetaData();
-			String[] columnNames = new String[rsmd.getColumnCount()];
-			int[] columnTypes = new int[rsmd.getColumnCount()];
+		if (resultSet != null)
+			try {
+				ResultSetMetaData rsmd = resultSet.getMetaData();
+				String[] columnNames = new String[rsmd.getColumnCount()];
+				int[] columnTypes = new int[rsmd.getColumnCount()];
 
-			for (int i = 0; i < columnNames.length; i++) {
-				columnNames[i] = rsmd.getColumnLabel(i + 1);
-				columnTypes[i] = rsmd.getColumnType(i + 1);
-			}
-
-			while (resultSet.next()) {
-				Long id = null;
-				try {
-					resultSet.findColumn("ID");
-					id = resultSet.getLong("ID");
-				} catch (SQLException sqlex) {
+				for (int i = 0; i < columnNames.length; i++) {
+					columnNames[i] = rsmd.getColumnLabel(i + 1);
+					columnTypes[i] = rsmd.getColumnType(i + 1);
 				}
 
-				ComplexDataObject cdo = (id == null) ? new ComplexDataObject() : new ComplexDataObject(id);
+				while (resultSet.next()) {
+					Long id = null;
+					try {
+						resultSet.findColumn("ID");
+						id = resultSet.getLong("ID");
+					} catch (SQLException sqlex) {
+					}
 
-				LinkedHashMap<String, Object> map = interpreteResultSetRow(resultSet, columnNames, columnTypes);
-				for (String attribute : map.keySet())
-					if (attribute.equals("ID"))
-						continue;
-					else
-						cdo.add(attribute, map.get(attribute));
+					ComplexDataObject cdo = (id == null) ? new ComplexDataObject() : new ComplexDataObject(id);
 
-				result.add(cdo);
+					LinkedHashMap<String, Object> map = interpreteResultSetRow(resultSet, columnNames, columnTypes);
+					for (String attribute : map.keySet())
+						if (attribute.equals("ID"))
+							continue;
+						else
+							cdo.add(attribute, map.get(attribute));
+
+					result.add(cdo);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
 		return result;
 	}
@@ -708,6 +714,282 @@ public class SQLUtils {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * only tested for postgresql
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param dataPerAttribute
+	 * @return
+	 */
+	public static boolean rowExists(Connection conn, String schema, String tableName,
+			Map<String, Object> dataPerAttribute) {
+
+		if (dataPerAttribute == null || dataPerAttribute.isEmpty())
+			return false;
+
+		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
+				? PostgreSQL.schemaAndTableName(schema, tableName)
+				: tableName; // here the schema is already part of the connection
+
+		PreparedStatement preparedStatement = null;
+
+		String where = "";
+		for (String attribute : dataPerAttribute.keySet()) {
+			if (!where.equals(""))
+				where += " and ";
+			where += (attribute + "='" + dataPerAttribute.get(attribute) + "'");
+		}
+
+		String sql = "select exists(select 1 from `" + schemaAndTable + "` where " + where + ")";
+
+		if (PostgreSQL.isPostgreSQLConnection(conn))
+			sql = PostgreSQL.replaceMySQLQuotes(sql);
+
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
+			result.addAll(SQLUtils.interpreteResultSet(resultSet));
+
+			if (resultSet != null)
+				resultSet.close();
+			if (preparedStatement != null)
+				preparedStatement.close();
+
+			if (result != null && !result.isEmpty())
+				if (result.get(0).getAttribute("exists") != null)
+					return booleanParser.apply(result.get(0).getAttribute("exists"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Identifies duplicates by checking against values of table primary keys.
+	 * 
+	 * Note: only tested for postgresql.
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param dataPerAttribute
+	 * @return boolean per object in the container (e.g., supposed to become a row
+	 *         in an insert workflow)
+	 * @throws SQLException
+	 */
+	public static Map<ComplexDataObject, Boolean> rowsExist(Connection conn, String schema, String tableName,
+			ComplexDataContainer container) throws SQLException {
+
+		if (container == null)
+			return null;
+
+		List<String> pks = primaryKeysForTable(conn, schema, tableName);
+
+		return rowsExist(conn, schema, tableName, pks, container);
+	}
+
+	/**
+	 * Identifies duplicates by checking against values of table primary keys.
+	 * Supports checks for multiple primary keys.
+	 * 
+	 * Note: only tested for postgresql.
+	 * 
+	 * @param conn
+	 * @param schema
+	 * @param tableName
+	 * @param dataPerAttribute
+	 * @param primaryKeys      the primary keys of the table, if known
+	 * @return boolean per object in the container (e.g., supposed to become a row
+	 *         in an insert workflow)
+	 * @throws SQLException
+	 */
+	public static Map<ComplexDataObject, Boolean> rowsExist(Connection conn, String schema, String tableName,
+			List<String> primaryKeys, ComplexDataContainer container) throws SQLException {
+
+		if (container == null)
+			return null;
+
+		if (primaryKeys == null || primaryKeys.isEmpty())
+			return null;
+
+		Map<ComplexDataObject, Boolean> existsMap = new HashMap<>();
+
+		Collection<Collection<Object>> pksValues = SQLTableSelector.selectColumnsFromTable(conn, schema, tableName,
+				primaryKeys, null, null, Order.ASC);
+
+		Map<Object, List<Collection<Object>>> pkValuesIndex = new HashMap<>();
+		for (Collection<Object> pkValues : pksValues) {
+			Object firstPKValue = pkValues.iterator().next();
+			if (!pkValuesIndex.containsKey(firstPKValue))
+				pkValuesIndex.put(firstPKValue, new ArrayList<>());
+			pkValuesIndex.get(firstPKValue).add(pkValues);
+		}
+
+		for (ComplexDataObject cdo : container) {
+			String firstPKAttribute = primaryKeys.get(0);
+			Object firstPKvalue = cdo.getAttribute(firstPKAttribute);
+
+			if (firstPKvalue != null) {
+				if (pkValuesIndex.containsKey(firstPKvalue)) {
+					// check for all rows which match the first primary key value
+					List<Collection<Object>> collection = pkValuesIndex.get(firstPKvalue);
+					for (Collection<Object> pksCombi : collection) {
+						int i = 0;
+						for (Object pk : pksCombi) {
+							if (!cdo.getAttribute(primaryKeys.get(i)).equals(pk))
+								break;
+							// check if also the last criterion is met
+							else if (i == primaryKeys.size() - 1)
+								existsMap.put(cdo, true);
+							i++;
+						}
+					}
+				}
+			}
+
+			if (!existsMap.containsKey(cdo))
+				existsMap.put(cdo, false);
+		}
+
+		return existsMap;
+	}
+
+	public static List<String> primaryKeysForTable(Connection conn, String schema, String tableName) {
+		List<String> pks = new ArrayList<>();
+
+		Map<String, List<String>> primaryKeysForTables = primaryKeysForTables(conn, schema);
+		if (primaryKeysForTables == null)
+			return pks;
+
+		return primaryKeysForTables.get(tableName);
+
+//		PreparedStatement preparedStatement = null;
+//
+//		String sql = "SELECT c.column_name, c.data_type\r\n" + "FROM information_schema.table_constraints tc \r\n"
+//				+ "JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name) \r\n"
+//				+ "JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema\r\n"
+//				+ "  AND tc.table_name = c.table_name AND ccu.column_name = c.column_name\r\n"
+//				+ "WHERE constraint_type = 'PRIMARY KEY' and tc.table_name = '" + tableName + "';";
+//
+//		sql = "select tab.table_schema," + "       tab.table_name," + "       tco.constraint_name,"
+//				+ "       string_agg(kcu.column_name, ', ') as key_columns" + "from information_schema.tables tab"
+//				+ "left join information_schema.table_constraints tco"
+//				+ "          on tco.table_schema = tab.table_schema" + "          and tco.table_name = tab.table_name"
+//				+ "          and tco.constraint_type = 'PRIMARY KEY'"
+//				+ "left join information_schema.key_column_usage kcu "
+//				+ "          on kcu.constraint_name = tco.constraint_name"
+//				+ "          and kcu.constraint_schema = tco.constraint_schema"
+//				+ "          and kcu.constraint_name = tco.constraint_name"
+//				+ "where tab.table_schema not in ('pg_catalog', 'information_schema')"
+//				+ "      and tab.table_type = 'BASE TABLE'" + "group by tab.table_schema," + "         tab.table_name,"
+//				+ "         tco.constraint_name" + "order by tab.table_schema," + "         tab.table_name";
+//
+//		try {
+//			preparedStatement = conn.prepareStatement(sql);
+//
+//			ResultSet resultSet = preparedStatement.executeQuery();
+//
+//			List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
+//
+//			result.addAll(SQLUtils.interpreteResultSet(resultSet));
+//
+//			for (ComplexDataObject cdo : result) {
+//				Object sch = cdo.getAttribute("table_schema");
+//				Object tab = cdo.getAttribute("table_name");
+//				if (sch != null && sch.equals(schema))
+//					if (tab != null && tab.equals(tableName)) {
+//						System.out.println(cdo);
+//					}
+//			}
+//
+////			// transform into return type
+////			List<String> pks = new ArrayList<>();
+////			for (ComplexDataObject cdo : result) {
+////				String pk = cdo.getAttribute("column_name").toString();
+////				if (!pks.contains(pk))
+////					pks.add(pk);
+////			}
+//
+//			if (resultSet != null)
+//				resultSet.close();
+//			if (preparedStatement != null)
+//				preparedStatement.close();
+//
+//			return pks;
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return null;
+	}
+
+	public static Map<String, List<String>> primaryKeysForTables(Connection conn, String schema) {
+
+		PreparedStatement preparedStatement = null;
+
+//		String sql = "select tc.table_schema, tc.table_name, kc.column_name\r\n"
+//				+ "from information_schema.table_constraints tc\r\n"
+//				+ "  join information_schema.key_column_usage kc \r\n"
+//				+ "    on kc.table_name = tc.table_name and kc.table_schema = tc.table_schema and kc.constraint_name = tc.constraint_name\r\n"
+//				+ "where tc.constraint_type = 'PRIMARY KEY'\r\n" + "  and kc.ordinal_position is not null\r\n"
+//				+ "order by tc.table_schema,\r\n" + "         tc.table_name,\r\n"
+//				+ "         kc.position_in_unique_constraint;";
+
+		String sql = "select tab.table_schema, tab.table_name, tco.constraint_name, string_agg(kcu.column_name, ', ') as key_columns from information_schema.tables tab left join information_schema.table_constraints tco on tco.table_schema = tab.table_schema and tco.table_name = tab.table_name and tco.constraint_type = 'PRIMARY KEY' left join information_schema.key_column_usage kcu on kcu.constraint_name = tco.constraint_name and kcu.constraint_schema = tco.constraint_schema and kcu.constraint_name = tco.constraint_name where tab.table_schema not in ('pg_catalog', 'information_schema') and tab.table_type = 'BASE TABLE' group by tab.table_schema, tab.table_name, tco.constraint_name order by tab.table_schema, tab.table_name";
+
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
+
+			result.addAll(SQLUtils.interpreteResultSet(resultSet));
+
+			// transform into return type
+			Map<String, List<String>> map = new LinkedHashMap<>();
+
+			for (ComplexDataObject cdo : result) {
+				Object sch = cdo.getAttribute("table_schema");
+				if (sch != null && sch.equals(schema)) {
+					Object tab = cdo.getAttribute("table_name");
+					if (tab != null && cdo.getAttribute("key_columns") != null) {
+						String pkks = cdo.getAttribute("key_columns").toString();
+						List<String> pks = new ArrayList<>();
+						if (pkks != null && pkks.length() > 0) {
+							while (pkks.length() > 0) {
+								if (pkks.contains(",")) {
+									pks.add(pkks.substring(0, pkks.indexOf(",")).trim());
+									pkks = pkks.substring(pkks.indexOf(",") + 1, pkks.length()).trim();
+								} else {
+									pks.add(pkks.trim());
+									pkks = "";
+								}
+							}
+						}
+						map.put(tab.toString(), pks);
+					}
+				}
+			}
+
+			if (resultSet != null)
+				resultSet.close();
+			if (preparedStatement != null)
+				preparedStatement.close();
+
+			return map;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		return null;

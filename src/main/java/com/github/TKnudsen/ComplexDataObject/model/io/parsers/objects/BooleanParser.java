@@ -23,7 +23,7 @@ public class BooleanParser implements IObjectParser<Boolean> {
 	@Override
 	public Boolean apply(Object object) {
 		if (object instanceof Boolean)
-			return new Boolean((boolean) object);
+			return (boolean) object;
 
 		if (object instanceof Integer)
 			if ((Integer) object == 0)
