@@ -82,7 +82,7 @@ public class ZScoreNormalizationFunction implements Function<Number, Number> {
 	@Override
 	public Number apply(Number t) {
 		if (std.doubleValue() == 0.0)
-			return Double.NaN;
+			return t.doubleValue() - mean.doubleValue();
 
 		return (t.doubleValue() - mean.doubleValue()) / std.doubleValue();
 	}

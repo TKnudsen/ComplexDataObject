@@ -41,6 +41,13 @@ public class DimensionalityReductionPipeline<X> {
 	private final IDescriptor<X, NumericalFeatureVector> descriptor;
 	private final Collection<X> data;
 
+	/**
+	 * 0.5 means that 50% of the final positioning of output dimensions is
+	 * determined by a quantile normalization. Helps to remove mitigate outliers and
+	 * reduce overplotting.
+	 */
+	private double quantileNormalizationRatio = 0.25;
+
 	private IDimensionalityReduction<NumericalFeatureVector, NumericalFeatureVector> dimensionalityReduction;
 
 	private Map<X, NumericalFeatureVector> dataToFeatureVectorsMapping;
@@ -175,6 +182,8 @@ public class DimensionalityReductionPipeline<X> {
 
 		lowDimRelativeWorldCoordinates = new TreeMap<>();
 
+		final double quantileNormalizationRatio = Math.min(1.0, Math.max(0.0, this.quantileNormalizationRatio));
+
 		SortedMap<Integer, Collection<Double>> dimensionsOutput = new TreeMap<Integer, Collection<Double>>();
 
 		for (X x : data) {
@@ -206,7 +215,10 @@ public class DimensionalityReductionPipeline<X> {
 						if (getLowDimFeatureVector(t).getDimensions() < dim)
 							return 0.0;
 						double d = getLowDimFeatureVector(t).get(dim);
-						double out = (n1.apply(d).doubleValue() * 0.75 + n2.apply(d).doubleValue() * 0.25);
+
+						double out = (quantileNormalizationRatio == 0.0) ? n1.apply(d).doubleValue()
+								: (n1.apply(d).doubleValue() * (1.0 - quantileNormalizationRatio)
+										+ n2.apply(d).doubleValue() * quantileNormalizationRatio);
 						return out;
 					}
 				};
@@ -214,5 +226,13 @@ public class DimensionalityReductionPipeline<X> {
 				lowDimRelativeWorldCoordinates.put(dim, function);
 			}
 		}
+	}
+
+	public double getQuantileNormalizationRatio() {
+		return quantileNormalizationRatio;
+	}
+
+	public void setQuantileNormalizationRatio(double quantileNormalizationRatio) {
+		this.quantileNormalizationRatio = quantileNormalizationRatio;
 	}
 }

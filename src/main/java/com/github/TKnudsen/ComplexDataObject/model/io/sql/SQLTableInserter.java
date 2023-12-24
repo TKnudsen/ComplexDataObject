@@ -135,21 +135,19 @@ public class SQLTableInserter {
 			if (e.getClass().getSimpleName().equals("PSQLException") && insertType.equals("REPLACE")) {
 				String errorMessage = e.getMessage();
 				if (errorMessage.contains("duplicate key value violates unique constraint")) {
+					System.err.println(errorMessage);
+					System.err.println("SQLTableInserter.insertRow,  table " + tableName
+							+ ": Postgresql has insert on duplicate problem and will delete the existing row and try it again...");
+
 					List<String> pks = getPrimaryKeysFromErrorMessage(errorMessage, false);
-					// requires comma parsing which may lead to wrong tokenization
-//					List<String> values = getPrimaryKeysFromErrorMessage(errorMessage, true);
 					List<String> values = new ArrayList<>();
 					for (String pk : pks)
-						values.add(keyValuePairs.get(pk).toString()); // argh, to String conversion
+						values.add(keyValuePairs.get(pk).toString());
 
 					// delete original row
 					// wait a bit, a lot of exceptions like these have happened in the past, needs
-					// re-factoring on the long run:
-					// "An I/O error occurred while sending to the backend"
-					// java.net.SocketException: An established connection was aborted by the
-					// software in your host machine
 					Threads.sleep(5);
-					SQLTableDeleter.deleteTableRow(conn, PostgreSQL.schemaAndTableName(schema, tableName), pks, values);
+					SQLTableDeleter.deleteTableRow(conn, schema, tableName, pks, values);
 
 					// once again try to insert new row
 					pstmt.execute();

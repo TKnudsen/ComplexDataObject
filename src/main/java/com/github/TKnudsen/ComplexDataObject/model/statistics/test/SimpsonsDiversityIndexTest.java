@@ -12,16 +12,25 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.SimpsonsIndex;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2017
+ * Copyright: Copyright (c) 2016-2023
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.01
+ * @version 1.02
  */
 public class SimpsonsDiversityIndexTest {
 
 	public static void main(String args[]) {
+		test3();
+	}
 
+	private static void test1() {
+		int[] distribution = new int[] { 1, 2, 1, 1, 1 };
+		System.out
+				.println("Simpsons Diversity Index: " + SimpsonsIndex.calculateSimpsonsIndexOfDiversity(distribution));
+	}
+
+	private static void test2() {
 		// you should use integers. iff the index is use for double values this
 		// is how the index can be addressed.
 		double[] probability = new double[5];
@@ -32,14 +41,25 @@ public class SimpsonsDiversityIndexTest {
 		probability[4] = 0.1;
 
 		int[] distribution = SimpsonsIndex.transformToIntDistribution(probability);
-		
-		distribution[0] = 1;
-		distribution[1] = 2;
-		distribution[2] = 1;
-		distribution[3] = 1;
-		distribution[4] = 1;
 
-		System.out.println("Simpsons Diversity Index: " + SimpsonsIndex.calculateSimpsonsIndexOfDiversity(distribution));
+		System.out
+				.println("Simpsons Diversity Index: " + SimpsonsIndex.calculateSimpsonsIndexOfDiversity(distribution));
+	}
+
+	private static void test3() {
+		// you should use integers. iff the index is use for double values this
+		// is how the index can be addressed.
+		double[] probability = new double[5];
+		probability[0] = 0.0;
+		probability[1] = 0.0;
+		probability[2] = 0.0;
+		probability[3] = 0.0;
+		probability[4] = 100.0;
+
+		int[] distribution = SimpsonsIndex.transformToIntDistribution(probability);
+
+		System.out
+				.println("Simpsons Diversity Index: " + SimpsonsIndex.calculateSimpsonsIndexOfDiversity(distribution));
 	}
 
 }

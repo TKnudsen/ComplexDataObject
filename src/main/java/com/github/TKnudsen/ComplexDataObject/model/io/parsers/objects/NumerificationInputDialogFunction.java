@@ -40,8 +40,10 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 		if (t == null)
 			return Double.NaN;
 
-		if (numerificationLookup.get(t) == null)
+		if (numerificationLookup.get(t) == null) {
+			System.out.println("NumerificationInputDialogFunction: number needed for category " + t);
 			numerificationLookup.put(t, retrieveNumber(t));
+		}
 
 		return numerificationLookup.get(t);
 	}
@@ -54,6 +56,7 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 		thread.start();
 
 		while (!dialogRunnable.isFinished() && System.currentTimeMillis() - start < maxWaitTimeUntilDialogKill) {
+			// dialog does not work because the thread does not finish through sleep
 			Threads.sleep(250);
 		}
 

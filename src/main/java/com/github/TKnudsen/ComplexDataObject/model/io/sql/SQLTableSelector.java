@@ -372,13 +372,19 @@ public class SQLTableSelector {
 
 		DatabaseMetaData metadata = conn.getMetaData();
 
-		ResultSet resultSet = metadata.getColumns(conn.getCatalog(), schema,
-				PostgreSQL.isPostgreSQLConnection(conn) ? tableName : tableName, null);
+		ResultSet resultSet = metadata.getColumns(conn.getCatalog(), schema, tableName, null);
 		while (resultSet.next()) {
 			String name = resultSet.getString("COLUMN_NAME");
 			columns.add(name);
 		}
 
+		if (columns.isEmpty()) {
+			resultSet = metadata.getColumns(conn.getCatalog(), schema, tableName.toLowerCase(), null);
+			while (resultSet.next()) {
+				String name = resultSet.getString("COLUMN_NAME");
+				columns.add(name);
+			}
+		}
 		return columns;
 	}
 

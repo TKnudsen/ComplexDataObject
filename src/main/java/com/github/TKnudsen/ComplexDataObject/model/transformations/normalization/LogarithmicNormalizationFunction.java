@@ -20,11 +20,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2019
+ * Copyright: Copyright (c) 2016-2023
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class LogarithmicNormalizationFunction extends NormalizationFunction {
 
@@ -65,6 +65,6 @@ public class LogarithmicNormalizationFunction extends NormalizationFunction {
 		double scaled = MathFunctions.logarithmicScale(getGlobalMin().doubleValue(), getGlobalMax().doubleValue(),
 				value.doubleValue(), isLimitToBounds());
 
-		return new Double(scaled);
+		return Double.valueOf(scaled);
 	}
 }

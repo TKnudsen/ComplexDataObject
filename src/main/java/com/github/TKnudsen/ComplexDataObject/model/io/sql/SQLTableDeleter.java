@@ -72,27 +72,51 @@ public class SQLTableDeleter {
 	 * TODO add schema for postgreSQL
 	 * 
 	 * @param conn
-	 * @param table
+	 * @param tableName
 	 * @param columns
 	 * @param queryObjects
 	 * @throws SQLException
 	 */
-	public static void deleteTableRow(Connection conn, String table, List<String> columns, List<String> queryObjects)
-			throws SQLException {
-
+	public static void deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
+			List<String> queryObjects) throws SQLException {
+		Objects.requireNonNull(tableName);
 		Objects.requireNonNull(columns);
 		Objects.requireNonNull(queryObjects);
 		if (columns.size() != queryObjects.size())
 			throw new IllegalArgumentException(
 					"SQLTableDeleter.deleteTableRow: where clauses and query objects must have same size");
 
-		String sql = "DELETE FROM `" + table + "` WHERE ";
+		boolean postgres = PostgreSQL.isPostgreSQLConnection(conn);
+
+		// TODO find out why schema "public" is not needed in postgres "tableName" but
+		// others like "prices" are (prices.tableName; without "" by the way). Is it due
+		// to the name public? or is there an active/default
+		// schema which would be the public in this case?
+
+		// TODO find out why schema Attributes requires "Attributes"."tablename".
+
+		String sql = null;
+		if (postgres && schema != null) {
+			if (schema.equals("public"))
+				sql = "DELETE FROM `" + tableName + "` WHERE ";
+			else if (schema.equals("Attributes"))
+				sql = "DELETE FROM `" + PostgreSQL.schemaAndTableName(schema, tableName) + "` WHERE ";
+//			else
+//				sql = "DELETE FROM " + schema + "." + tableName + " WHERE ";
+			else
+				sql = "DELETE FROM `" + PostgreSQL.schemaAndTableName(schema, tableName) + "` WHERE ";
+		} else
+			sql = "DELETE FROM `" + tableName + "` WHERE ";
+
+//		String sql = (postgres && schema != null && !schema.equals("public") && !schema.equals("Attributes"))
+//				? "DELETE FROM " + schema + "." + tableName + " WHERE "
+//				: "DELETE FROM `" + tableName + "` WHERE ";
 
 		for (int i = 0; i < columns.size(); i++)
-			sql += ("`" + columns.get(i) + "` = '" + queryObjects.get(i) + "' and");
-		sql = sql.substring(0, sql.length() - 4); // get rid of tail-and
+			sql += ("`" + columns.get(i) + "` = '" + queryObjects.get(i) + "' and ");
+		sql = sql.substring(0, sql.length() - 5); // get rid of tail-and
 
-		if (PostgreSQL.isPostgreSQLConnection(conn))
+		if (postgres)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
 		PreparedStatement preparedStmt = conn.prepareStatement(sql);

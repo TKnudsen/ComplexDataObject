@@ -250,7 +250,7 @@ public class SQLTableCreator {
 				System.out.println(
 						"SQLTableCreator.addColumnString: postgreSQL does not allow adding columns AFTER others. column ordering request ignored for attribute "
 								+ afterAColumnName);
-
+		
 		if (postgreSQL)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 

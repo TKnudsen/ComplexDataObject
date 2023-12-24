@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.github.tknudsen</groupId>
 	<artifactId>complex-data-object</artifactId>
 	<version>0.2.15-SNAPSHOT</version>
-
 	<name>ComplexDataObject</name>
 	<description>A library that models real-world objects in Java, referred to as ComplexDataObjects. Other features: IO and preprocessing of ComplexDataObjects.</description>
 	<url>https://github.com/TKnudsen/ComplexDataObject</url>
-
 	<licenses>
 		<license>
 			<name>Apache License 2.0</name>
 			<url>http://www.spdx.org/licenses/Apache-2.0</url>
 		</license>
 	</licenses>
-
 	<scm>
 		<url>https://github.com/TKnudsen/ComplexDataObject</url>
 		<connection>https://github.	com/TKnudsen/ComplexDataObject.git</connection>
 		<developerConnection>https://github.com/TKnudsen/ComplexDataObject.git</developerConnection>
 	</scm>
-
 	<developers>
 		<developer>
 			<id>tknudsen</id>
@@ -31,7 +25,6 @@
 			<email>mail@juergen-bernard.de</email>
 		</developer>
 	</developers>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -42,13 +35,11 @@
 			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-
 	<properties>
 		<project.build.sourceEncoding>cp1250</project.build.sourceEncoding>
 		<maven-compiler-plugin.source>1.8</maven-compiler-plugin.source>
 		<maven-compiler-plugin.target>1.8</maven-compiler-plugin.target>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -62,7 +53,6 @@
 			<version>3.11.0</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-stable</artifactId>
@@ -71,7 +61,8 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20160810</version>
+			<!--<version>20160810</version>-->
+			<version>20230227</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -124,8 +115,6 @@
 			<version>1.7</version>
 		</dependency>
 	</dependencies>
-
-
 	<build>
 		<plugins>
 			<plugin>
@@ -137,7 +126,6 @@
 					<target>${maven-compiler-plugin.target}</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -216,7 +204,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>local</id>
@@ -234,7 +221,6 @@
 				</repository>
 			</repositories>
 		</profile>
-
 		<profile>
 			<id>release</id>
 			<properties>
