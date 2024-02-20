@@ -2,9 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -16,6 +19,7 @@ import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,11 +35,11 @@ import javax.imageio.ImageIO;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2019
+ * Copyright: Copyright (c) 2016-2023
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class BufferedImageTools {
 
@@ -144,6 +148,27 @@ public class BufferedImageTools {
 	}
 
 	/**
+	 * 
+	 * @param src
+	 * @param w
+	 * @param h
+	 * @return
+	 */
+	public static BufferedImage resizeFast(BufferedImage src, int w, int h) {
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		int x, y;
+		int ww = src.getWidth();
+		int hh = src.getHeight();
+		for (x = 0; x < w; x++) {
+			for (y = 0; y < h; y++) {
+				int col = src.getRGB(x * ww / w, y * hh / h);
+				img.setRGB(x, y, col);
+			}
+		}
+		return img;
+	}
+
+	/**
 	 * rescales a bufferedImage with the given properties.
 	 * 
 	 * @param source
@@ -174,7 +199,32 @@ public class BufferedImageTools {
 		try {
 			img = ImageIO.read(file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			Threads.sleep(50);
+			return loadBufferedImage(file, 2);
+		} catch (ConcurrentModificationException e) {
+			// e.printStackTrace();
+			Threads.sleep(50);
+			return loadBufferedImage(file, 2);
+		}
+		return img;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	private static BufferedImage loadBufferedImage(File file, int rec) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(file);
+		} catch (IOException e) {
+			System.err.println("BufferedImageTools.loadBufferedImage: attempt no. " + rec);
+			if (rec > 10)
+				e.printStackTrace();
+			Threads.sleep(50);
+			return loadBufferedImage(file, rec++);
 		}
 		return img;
 	}
@@ -192,6 +242,7 @@ public class BufferedImageTools {
 			try {
 				bufferedImage = loadBufferedImage(imageFile);
 			} catch (IndexOutOfBoundsException iobe) {
+				System.out.println("BufferedImageTools.loadImage: exception for file " + imageFile);
 				iobe.printStackTrace();
 			}
 		}
@@ -280,5 +331,41 @@ public class BufferedImageTools {
 				hash = 31 * hash + img.getRGB(x, y);
 
 		return hash;
+	}
+
+	/**
+	 * see
+	 * https://stackoverflow.com/questions/18800717/convert-text-content-to-image
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static BufferedImage stringToBufferedimage(String string) {
+		BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = img.createGraphics();
+		Font font = new Font("Arial", Font.PLAIN, 48);
+		g2d.setFont(font);
+		FontMetrics fm = g2d.getFontMetrics();
+		int width = fm.stringWidth(string);
+		int height = fm.getHeight();
+		g2d.dispose();
+
+		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		g2d = img.createGraphics();
+		g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		g2d.setFont(font);
+		fm = g2d.getFontMetrics();
+		g2d.setColor(Color.WHITE);
+		g2d.drawString(string, 0, fm.getAscent());
+		g2d.dispose();
+
+		return img;
 	}
 }
