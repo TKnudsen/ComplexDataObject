@@ -32,8 +32,8 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 	private Ranking<Double> valueRanking;
 
-	// TODO replace by interpolation search
-	private SortedMap<Double, Integer> rankingLookup;
+//	// TODO replace by interpolation search
+//	private SortedMap<Double, Integer> rankingLookup;
 
 	/**
 	 * for serialization purposes only
@@ -73,7 +73,7 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		for (Number value : values)
 			valueRanking.add(value.doubleValue());
 
-		refreshRankingLookup();
+//		refreshRankingLookup();
 	}
 
 	private void initializeRanking(double[] values) {
@@ -82,15 +82,15 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		for (double value : values)
 			valueRanking.add(value);
 
-		refreshRankingLookup();
+//		refreshRankingLookup();
 	}
 
-	private final void refreshRankingLookup() {
-		rankingLookup = new TreeMap<Double, Integer>();
-
-		for (int i = 0; i < valueRanking.size(); i += 50)
-			rankingLookup.put(valueRanking.get(i), i);
-	}
+//	private final void refreshRankingLookup() {
+//		rankingLookup = new TreeMap<Double, Integer>();
+//
+//		for (int i = 0; i < valueRanking.size(); i += 50)
+//			rankingLookup.put(valueRanking.get(i), i);
+//	}
 
 	@Override
 	public void setGlobalMin(Number globalMin) {

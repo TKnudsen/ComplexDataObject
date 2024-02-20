@@ -69,7 +69,7 @@ public class SQLTableDeleter {
 	}
 
 	/**
-	 * TODO add schema for postgreSQL
+	 * @deprecated use the method with the showTimingLog parameter
 	 * 
 	 * @param conn
 	 * @param tableName
@@ -79,12 +79,30 @@ public class SQLTableDeleter {
 	 */
 	public static void deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
 			List<String> queryObjects) throws SQLException {
+		deleteTableRow(conn, schema, tableName, columns, queryObjects, false);
+	}
+
+	/**
+	 * TODO add schema for postgreSQL
+	 * 
+	 * @param conn
+	 * @param tableName
+	 * @param columns
+	 * @param queryObjects
+	 * @throws SQLException
+	 */
+	public static void deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
+			List<String> queryObjects, boolean showTimingLog) throws SQLException {
 		Objects.requireNonNull(tableName);
 		Objects.requireNonNull(columns);
 		Objects.requireNonNull(queryObjects);
 		if (columns.size() != queryObjects.size())
 			throw new IllegalArgumentException(
 					"SQLTableDeleter.deleteTableRow: where clauses and query objects must have same size");
+
+		if (showTimingLog)
+			System.out.print("SQLTableDeleter.deleteTableRow: deleting rows in table " + tableName + "...");
+		long l = System.currentTimeMillis();
 
 		boolean postgres = PostgreSQL.isPostgreSQLConnection(conn);
 
@@ -122,5 +140,8 @@ public class SQLTableDeleter {
 		PreparedStatement preparedStmt = conn.prepareStatement(sql);
 		preparedStmt.execute();
 		preparedStmt.close();
+
+		if (showTimingLog)
+			System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 	}
 }
