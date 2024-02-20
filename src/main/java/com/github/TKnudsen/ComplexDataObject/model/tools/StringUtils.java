@@ -41,31 +41,31 @@ public class StringUtils {
 	/**
 	 * simple similarity measure based on the ratio of matching substrings
 	 * 
-	 * @param s1
-	 * @param s2
-	 * @param length length of substring
+	 * @param query
+	 * @param target
+	 * @param length length of substring that is used as sliding window kernel
 	 * @return
 	 */
-	public static double subStringSimilarity(String s1, String s2, int length) {
-		if (s1 == null || s2 == null)
+	public static double subStringSimilarity(String query, String target, int length) {
+		if (query == null || target == null)
 			return 0.0;
-		if (s1.length() == 0 || s2.length() == 0)
+		if (query.length() == 0 || target.length() == 0)
 			return 0.0;
 
-		int l = Math.max(length, 1);
-		l = Math.min(length, Math.min(s1.length(), s2.length()));
+		int kernel = Math.max(length, 1);
+		kernel = Math.min(length, Math.min(query.length(), target.length()));
 
 		double count = 0;
 		double matches = 0;
-		for (int i = 0; i <= s1.length() - l; i++) {
-			for (int j = 0; j <= s2.length() - l; j++)
-				if (s1.regionMatches(true, i, s2, j, l)) {
+		for (int i = 0; i <= query.length() - kernel; i++) {
+			for (int j = 0; j <= target.length() - kernel; j++)
+				if (query.regionMatches(true, i, target, j, kernel)) {
 					matches++;
 					break;
 				}
 			count++;
 		}
 
-		return matches / count;
+		return count > 0 ? matches / count : 0.0;
 	}
 }

@@ -47,7 +47,7 @@ public class SQLTableDeleters {
 					columns.add(a);
 					queryObjects.add(cdo.getAttribute(a) != null ? cdo.getAttribute(a).toString() : null);
 				}
-				SQLTableDeleter.deleteTableRow(conn, schema, tableName, columns, queryObjects);
+				SQLTableDeleter.deleteTableRow(conn, schema, tableName, columns, queryObjects, true);
 				removals++;
 				System.out.print(".");
 			}

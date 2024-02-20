@@ -147,7 +147,7 @@ public class SQLTableInserter {
 					// delete original row
 					// wait a bit, a lot of exceptions like these have happened in the past, needs
 					Threads.sleep(5);
-					SQLTableDeleter.deleteTableRow(conn, schema, tableName, pks, values);
+					SQLTableDeleter.deleteTableRow(conn, schema, tableName, pks, values, true);
 
 					// once again try to insert new row
 					pstmt.execute();
