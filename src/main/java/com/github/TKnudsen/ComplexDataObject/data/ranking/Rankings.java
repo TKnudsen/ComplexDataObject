@@ -230,16 +230,20 @@ public class Rankings {
 //			index = 0;
 
 		int index = -1;
-		if (ranking.isEmpty() || ranking.getFirst().getKey().doubleValue() >= entry.getKey().doubleValue())
+		if (ranking.isEmpty() || ranking.getFirst().getKey().doubleValue() > entry.getKey().doubleValue())
+			index = 0;
+		else if (ranking.isEmpty() || ranking.getFirst().getKey().doubleValue() == entry.getKey().doubleValue()
+				&& ranking.getFirst().getKey().doubleValue() != -0.0)// -0.0 vs. 0.0 comparison
 			index = 0;
 		else if (ranking.getLast().getKey().doubleValue() <= entry.getKey().doubleValue())
 			index = ranking.size();
 		else {
 			index = binarySearch(entry.getKey(), ranking, e -> e.getKey().doubleValue());
-			if (index == -1)
-				throw new IllegalArgumentException(
-						"Rankings.addFast: problems with adding entry with key " + entry.getKey());
 		}
+
+		if (index == -1)
+			throw new IllegalArgumentException(
+					"Rankings.addFast: problems with adding entry with key " + entry.getKey());
 
 		ranking.add(index, entry);
 	}
