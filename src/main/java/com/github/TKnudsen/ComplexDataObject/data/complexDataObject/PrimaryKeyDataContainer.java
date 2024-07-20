@@ -7,6 +7,27 @@ import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.DataContainers;
 
+/**
+ * <p>
+ * Title: PrimaryKeyDataContainer
+ * </p>
+ * 
+ * <p>
+ * Description: PrimaryKeyDataContainer stores and manages ComplexDataObjects.
+ * 
+ * A DataSchema contains all keys of the ComplexDataObjects.
+ * 
+ * The primary key specifics enables the quick lookup of objects with
+ * primary-key characteristics.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2020-2024
+ * </p>
+ * 
+ * @author Juergen Bernard
+ * @version 1.02
+ */
 public class PrimaryKeyDataContainer extends ComplexDataContainer {
 
 	private final String primaryKeyAttribute;
@@ -78,10 +99,12 @@ public class PrimaryKeyDataContainer extends ComplexDataContainer {
 		if (primaryKey == null)
 			return null;
 
-		if (getType(primaryKeyAttribute) != primaryKey.getClass())
-			System.err.println(
-					"PrimaryDataContainer - warning: object type of primaryKey does not match type of primary key attribute ("
-							+ getType(primaryKeyAttribute) + " vs. " + primaryKey.getClass() + ")");
+		// convenient functionality that, in the end, cost some milliseconds every time
+		// if (getType(primaryKeyAttribute) != primaryKey.getClass())
+		// System.err.println(
+		// "PrimaryDataContainer - warning: object type of primaryKey does not match
+		// type of primary key attribute ("
+		// + getType(primaryKeyAttribute) + " vs. " + primaryKey.getClass() + ")");
 
 		return primaryKeysSelectedAttributesCDOMap.get(primaryKey);
 	}
