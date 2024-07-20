@@ -65,6 +65,7 @@ public class MixedDataFeatureTools {
 	 */
 	public static MixedDataFeatureVector convert(NumericalFeatureVector fv) {
 		List<MixedDataFeature> features = new ArrayList<>();
+		
 		for (String featureName : fv.getFeatureKeySet()) {
 			NumericalFeature feature = fv.getFeature(featureName);
 			if (feature == null)

@@ -2,7 +2,7 @@ package com.github.TKnudsen.ComplexDataObject.data.features.mixedData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.AbstractFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.data.features.Feature;
@@ -17,14 +17,17 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
  * Description: AlgorithmDataObject representation for mixed data involving
  * Double, String, and Boolean. Used for objects containing numerical,
  * categorical, and binary attributes.
+ * 
+ * Update: featuresMap does not need to be sorted any more. Improves
+ * performance.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
 
 public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedDataFeature> {
@@ -37,7 +40,12 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 		super(features);
 	}
 
-	public MixedDataFeatureVector(SortedMap<String, MixedDataFeature> featuresMap) {
+	/**
+	 * 
+	 * @param featuresMap Update: featuresMap does not need to be sorted any more.
+	 *                    Improves performance.
+	 */
+	public MixedDataFeatureVector(Map<String, MixedDataFeature> featuresMap) {
 		super(featuresMap);
 	}
 
