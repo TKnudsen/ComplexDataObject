@@ -48,6 +48,7 @@ public class DateParser implements IObjectParser<Date> {
 		dateFormats.put("^\\d{8}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyyMMdd HH:mm:ss");
 		dateFormats.put("^\\d{1,2}-\\d{1,2}-\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd-MM-yyyy HH:mm:ss");
 		dateFormats.put("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyy-MM-dd HH:mm:ss");
+		dateFormats.put("^\\d{4}:\\d{1,2}:\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyy:MM:dd HH:mm:ss");
 		dateFormats.put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMM yyyy HH:mm:ss");
 		dateFormats.put("^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMMM yyyy HH:mm:ss");
 		dateFormats.put("^\\d{1,2}-\\d{4}$", "MM-yyyy");
@@ -66,6 +67,7 @@ public class DateParser implements IObjectParser<Date> {
 		dateFormats.put("19/11/2020", "dd/MM/yyyy");
 		dateFormats.put("19\\11\\2020", "dd\\MM\\yyyy");
 		dateFormats.put("2020-11-19", "yyyy-MM-dd");
+		dateFormats.put("2020:11:19", "yyyy:MM:dd");
 		dateFormats.put("2020-11", "yyyy-MM");
 		dateFormats.put("2020/11/19", "yyyy/MM/dd");
 		dateFormats.put("2020-11-19", "yyyy-MM-dd");
@@ -111,7 +113,8 @@ public class DateParser implements IObjectParser<Date> {
 
 	private static SimpleDateFormat zzz = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 	private static DateFormat ISO0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-	private static DateFormat ISO1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat ISO1a = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat ISO1b = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 	private static DateFormat IS02 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static DateFormat IS03 = new SimpleDateFormat("yyyy-MM-dd HH");
 	private static DateFormat IS04 = new SimpleDateFormat("yyyy-MM-dd");
@@ -155,7 +158,6 @@ public class DateParser implements IObjectParser<Date> {
 
 		if (dateFormatString != null) {
 			DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-
 			try {
 				synchronized (dateFormat) {
 					date = dateFormat.parse(pruned);
@@ -172,15 +174,23 @@ public class DateParser implements IObjectParser<Date> {
 					}
 				} catch (ParseException pe0) {
 				}
-			else if (pruned.length() == 19)
+			else if (pruned.length() == 19) {
 				try {
 					// 2007-01-01 00:00:00
-					synchronized (ISO1) {
-						date = ISO1.parse(pruned);
+					synchronized (ISO1a) {
+						date = ISO1a.parse(pruned);
 					}
 				} catch (ParseException pe8) {
 				}
-			else if (pruned.length() == 16)
+				if (date == null)
+					try {
+						// 2007:01:01 00:00:00
+						synchronized (ISO1b) {
+							date = ISO1b.parse(pruned);
+						}
+					} catch (ParseException pe8) {
+					}
+			} else if (pruned.length() == 16)
 				try {
 					// 2007-01-01 00:00
 					synchronized (IS02) {
