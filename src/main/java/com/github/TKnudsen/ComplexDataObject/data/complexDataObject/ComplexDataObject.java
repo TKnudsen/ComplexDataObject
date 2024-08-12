@@ -19,16 +19,13 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2019
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.08
+ * @version 1.09
  */
 public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
-
-//	protected String name;
-//	protected String description;
 
 	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
@@ -52,9 +49,6 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	public ComplexDataObject(String name, String description) {
 		super();
 
-//		this.name = name;
-//		this.description = description;
-
 		// attribute schema will characterize attributes as String
 		add("Name", "no name");
 		add("Description", "no description");
@@ -65,9 +59,6 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	public ComplexDataObject(Long ID, String name, String description) {
 		super(ID);
-
-//		this.name = name;
-//		this.description = description;
 
 		// attribute schema will characterize attributes as String
 		add("Name", "no name");
@@ -95,9 +86,6 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	@Override
 	public String getName() {
-//		if (name != null)
-//			return name;
-
 		if (getAttribute("Name") != null)
 			return getAttribute("Name").toString();
 
@@ -105,16 +93,11 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	public void setName(String name) {
-//		this.name = name;
-
 		this.add("Name", name);
 	}
 
 	@Override
 	public String getDescription() {
-//		if (description != null)
-//			return description;
-
 		if (getAttribute("Description") != null)
 			return getAttribute("Description").toString();
 
@@ -122,8 +105,6 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	}
 
 	public void setDescription(String description) {
-//		this.description = description;
-
 		this.add("Description", description);
 	}
 

@@ -18,14 +18,17 @@ import de.javagl.nd.tuples.d.DoubleTuple;
  * Description: Numerical representation of a high-dimensional object. Can be
  * used for algorithmic models applied in data mining, machine learning,
  * information retrieval, etc.
+ * 
+ * Update: featuresMap does not need to be sorted any more. Improves
+ * performance.
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2015-2017
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
 
 public class NumericalFeatureVector extends AbstractFeatureVector<Double, NumericalFeature> implements DoubleTuple {
@@ -42,6 +45,11 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 		super(features);
 	}
 
+	/**
+	 * 
+	 * @param featuresMap Update: featuresMap does not need to be sorted any more.
+	 *                    Improves performance.
+	 */
 	public NumericalFeatureVector(SortedMap<String, NumericalFeature> featuresMap) {
 		super(featuresMap);
 	}
@@ -62,8 +70,8 @@ public class NumericalFeatureVector extends AbstractFeatureVector<Double, Numeri
 	}
 
 	/**
-	 * Conversion to primitive double format. Algorithms require the
-	 * (traditional) version of double vectors.
+	 * Conversion to primitive double format. Algorithms require the (traditional)
+	 * version of double vectors.
 	 *
 	 * @return
 	 */

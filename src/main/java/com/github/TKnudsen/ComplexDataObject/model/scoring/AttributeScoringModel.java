@@ -1,7 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.scoring;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.function.Function;
 
 import javax.swing.event.ChangeListener;
 
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
@@ -22,7 +19,6 @@ import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
-import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 
@@ -198,30 +194,39 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		return new CopyOnWriteArrayList<AttributeScoringFunction<?>>(attributeScoringFunctions);
 	}
 
+	/**
+	 * @deprecated use AttributeScoringModels.getAttributeScoringCorrelation
+	 * @param container
+	 * @param f1
+	 * @param f2
+	 * @param minimumSize default: 2 (leading to a perfect correlation though)
+	 * @return
+	 */
 	public double getAttributeScoringCorrelation(ComplexDataContainer container, AttributeScoringFunction<?> f1,
-			AttributeScoringFunction<?> f2) {
+			AttributeScoringFunction<?> f2, int minimumSize) {
+		return AttributeScoringModels.getAttributeScoringCorrelation(container, f1, f2, true, false, minimumSize);
 
-		Collection<Double> values1 = new ArrayList<>();
-		Collection<Double> values2 = new ArrayList<>();
-
-		for (ComplexDataObject cdo : container) {
-			double v1 = f1.apply(cdo);
-			double v2 = f2.apply(cdo);
-
-			if (!Double.isNaN(v1) && !Double.isNaN(v2)) {
-				values1.add(v1);
-				values2.add(v2);
-			}
-		}
-
-		PearsonsCorrelation pc = new PearsonsCorrelation();
-		double[] xArray = DataConversion.toPrimitives(values1);
-		double[] yArray = DataConversion.toPrimitives(values2);
-
-		if (xArray.length < 2 || yArray.length < 2)
-			return 0.0;
-
-		return pc.correlation(xArray, yArray);
+//		Collection<Double> values1 = new ArrayList<>();
+//		Collection<Double> values2 = new ArrayList<>();
+//
+//		for (ComplexDataObject cdo : container) {
+//			double v1 = f1.apply(cdo);
+//			double v2 = f2.apply(cdo);
+//
+//			if (!Double.isNaN(v1) && !Double.isNaN(v2)) {
+//				values1.add(v1);
+//				values2.add(v2);
+//			}
+//		}
+//
+//		PearsonsCorrelation pc = new PearsonsCorrelation();
+//		double[] xArray = DataConversion.toPrimitives(values1);
+//		double[] yArray = DataConversion.toPrimitives(values2);
+//
+//		if (xArray.length < 2 || yArray.length < 2)
+//			return 0.0;
+//
+//		return pc.correlation(xArray, yArray);
 	}
 
 	public List<String> getAttributes() {

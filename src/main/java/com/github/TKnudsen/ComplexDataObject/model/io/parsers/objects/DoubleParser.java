@@ -36,8 +36,8 @@ public class DoubleParser implements IObjectParser<Double> {
 		if (object == null)
 			return Double.NaN;
 
-		if (object instanceof Double)
-			return (Double) object;
+		if (object instanceof Number)
+			return ((Number) object).doubleValue();
 
 		String stringValue = String.valueOf(object).toLowerCase();
 
