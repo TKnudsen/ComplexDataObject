@@ -20,13 +20,13 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	/**
 	 * outlier cropping level at the minimum side. The decision was made to go for
-	 * 2.96 instead of 1.96 to avoid too much scoring truncation impact by design
+	 * 2.96 instead of 1.96 to avoid too much scoring truncation
 	 */
 	protected Double outlierStd = 2.96;
 
 	/**
 	 * outlier cropping level at the maximum side. The decision was made to go for
-	 * 2.96 instead of 1.96 to avoid too much scoring truncation impact by design
+	 * 2.96 instead of 1.96 to avoid too much scoring truncation
 	 */
 	protected Double outlierStdTop = 2.96;
 
@@ -85,11 +85,8 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 		// raw value statistics
 		initializeRawValuesStatisticsSupport(doubleValues);
 
-		// !isQuantileBased()
-//		if (outlierStd != null && !Double.isNaN(outlierStd) && outlierStdTop != null && !Double.isNaN(outlierStdTop)) {
 		doubleValues = clampValues(doubleValues, 10.0);
 		initializeStdOutlierTreatment(doubleValues);
-//		}
 
 		truncatedValueRateBottom = 0;
 		truncatedValueRateTop = 0;
@@ -118,18 +115,11 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		double scoreAverageWithoutMissingValues = AttributeScoringFunctions
 				.calculateAverageScoreWithoutMissingValues(this, false);
-		if (Double.isNaN(scoreAverageWithoutMissingValues))
-			System.err.println(
-					this.getClass().getSimpleName() + ": NaN value detected for the scoreAverageWithoutMissingValues!");
 
 		// determine internal missing value score
-		if (Double.isNaN(getScoreForMissingObjectsExternal())) {
-			Double missingValueAvgScoreRatio = getMissingValueAvgScoreRatio();
-			if (missingValueAvgScoreRatio == null || Double.isNaN(missingValueAvgScoreRatio))
-				scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
-			else
-				scoreForMissingObjects = scoreAverageWithoutMissingValues * missingValueAvgScoreRatio;
-		} else
+		if (Double.isNaN(getScoreForMissingObjectsExternal()))
+			scoreForMissingObjects = scoreAverageWithoutMissingValues * 0.5;
+		else
 			scoreForMissingObjects = getScoreForMissingObjectsExternal();
 	}
 

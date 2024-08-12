@@ -22,6 +22,9 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  * A: 100PS, B: 200PS.
  * </p>
  * 
+ * TODO check if this is still used. seems like these two functionalities
+ * deserve their own resources.
+ * 
  * <p>
  * Copyright: Copyright (c) 2018
  * </p>
@@ -64,9 +67,8 @@ public class AttributeValueDistribution<T> extends ComplexDataObject implements 
 	/**
 	 * 
 	 * @param identifier
-	 * @param value
-	 *            must not be null. otherwise JSON reader will interpret the value
-	 *            as string.
+	 * @param value      must not be null. otherwise JSON reader will interpret the
+	 *                   value as string.
 	 */
 	public void setPriorization(String identifier, double value) {
 		if (Double.isNaN((double) value)) {

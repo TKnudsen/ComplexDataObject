@@ -68,6 +68,11 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 		setDescription(description);
 	}
 
+	/**
+	 * @deprecated not called, and only does similar things like the
+	 *             toLineString(String attribute) method in the super class.
+	 * @return
+	 */
 	public String toStringInLine() {
 		String output = "";
 		for (String key : attributes.keySet())
