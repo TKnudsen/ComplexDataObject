@@ -2,12 +2,11 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
@@ -23,14 +22,17 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * <p>
  * Description: general feature representation of a given object. Provides basic
  * attributes and functionality.
+ * 
+ * Update: featuresMap does not need to be sorted any more. Improves
+ * performance.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Copyright: Copyright (c) 2016-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object>
 		implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
@@ -43,7 +45,15 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	protected List<F> featuresList;
 
-	protected SortedMap<String, F> featuresMap;
+	/**
+	 * TODO recommendation to replace the SortedMap criterion by a simple Map
+	 * criterion. This will increase performance.
+	 * 
+	 * Though, it needs to be checked if an external source expects a sorted
+	 * keySet(). Ongoing process.
+	 */
+	// protected SortedMap<String, F> featuresMap;
+	protected Map<String, F> featuresMap;
 
 	protected AbstractFeatureVector() {
 		featuresList = new ArrayList<>();
@@ -60,7 +70,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		generalizeFromArray(features);
 	}
 
-	public AbstractFeatureVector(SortedMap<String, F> featuresMap) {
+	/**
+	 * 
+	 * @param featuresMap Update: featuresMap does not need to be sorted any more.
+	 *                    Improves performance.
+	 */
+
+	public AbstractFeatureVector(Map<String, F> featuresMap) {
 		this.featuresMap = featuresMap;
 
 		generalizeFromMap();
@@ -75,7 +91,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList == null)
 			return;
 
-		featuresMap = new TreeMap<>();
+		featuresMap = new HashMap<>();
 
 		for (int i = 0; i < featuresList.size(); i++)
 			if (featuresList.get(i) != null && featuresList.get(i).getFeatureName() != null)
@@ -114,7 +130,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 	}
 
 	protected void generalizeFromList() {
-		featuresMap = new TreeMap<>();
+		featuresMap = new HashMap<>();
 
 		for (F feature : featuresList)
 			featuresMap.put(feature.getFeatureName(), feature);
@@ -199,7 +215,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList == null)
 			featuresList = new ArrayList<>();
 		if (featuresMap == null)
-			featuresMap = new TreeMap<>();
+			featuresMap = new HashMap<>();
 
 		if (!featuresList.contains(feature))
 			for (int i = 0; i < featuresList.size(); i++)
@@ -224,7 +240,7 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList == null)
 			featuresList = new ArrayList<>();
 		if (featuresMap == null)
-			featuresMap = new TreeMap<>();
+			featuresMap = new HashMap<>();
 
 		if (!featuresList.contains(feature))
 			for (int i = 0; i < featuresList.size(); i++)

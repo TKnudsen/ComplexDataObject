@@ -147,4 +147,75 @@ public class AttributeScoringFunctions {
 		return new DoubleAttributeBipolarScoringFunction(container, toDoubleParser, attribute, null, false, true, 1.0,
 				uncertaintyFunction);
 	}
+
+	/**
+	 * uses the scores of an attribute scoring function for a data set and computes
+	 * the impact. The impact sums up the absolute scores and divides it by item
+	 * count, reflecting the numerical amount of scores that is introduced by an ASF
+	 * in a ranking system.
+	 * 
+	 * @param function
+	 * @param items
+	 * @param negativeScoresImpactIsDoubled in case negative scores are of greater
+	 *                                      importance
+	 * @return
+	 */
+	public static double calculateImpact(AttributeScoringFunction<?> function, Iterable<ComplexDataObject> items,
+			boolean negativeScoresImpactIsDoubled) {
+		double impact = 0.0;
+		double count = 0.0;
+
+		for (ComplexDataObject cdo : items) {
+			Double score = function.apply(cdo);
+
+			if (Double.isNaN(score))
+				System.err.println(
+						"AttributeScoringFunctions: function returned NaN for item. that should never be the case");
+			else {
+				if (score >= 0)
+					impact += score * function.getWeight();
+				else if (negativeScoresImpactIsDoubled)
+					impact += Math.abs(score * function.getWeight() * 2);
+				else
+					impact += Math.abs(score * function.getWeight());
+				count++;
+			}
+		}
+
+		if (count > 0)
+			impact /= count;
+
+		return impact;
+	}
+
+//	public static double calculateUniqueness(AttributeScoringFunction<?> function,
+//			Iterable<AttributeScoringFunction<?>> functions, Iterable<ComplexDataObject> items,
+//			boolean considerImpact) {
+//		double impact = 0.0;
+//		double count = 0.0;
+//		
+//		
+//
+//		for (ComplexDataObject cdo : items) {
+//			Double score = function.apply(cdo);
+//
+//			if (Double.isNaN(score))
+//				System.err.println(
+//						"AttributeScoringFunctions: function returned NaN for item. that should never be the case");
+//			else {
+//				if (score >= 0)
+//					impact += score * function.getWeight();
+//				else if (negativeScoresImpactIsDoubled)
+//					impact += Math.abs(score * function.getWeight() * 2);
+//				else
+//					impact += Math.abs(score * function.getWeight());
+//				count++;
+//			}
+//		}
+//
+//		if (count > 0)
+//			impact /= count;
+//
+//		return impact;
+//	}
 }

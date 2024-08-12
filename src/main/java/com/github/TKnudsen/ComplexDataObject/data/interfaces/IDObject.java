@@ -19,6 +19,14 @@ package com.github.TKnudsen.ComplexDataObject.data.interfaces;
  */
 public interface IDObject {
 
+	/**
+	 * I regret that I found it necessary to have an ID field/attribute present
+	 * always. In practice, even ID-based usage forms simply define a primary key
+	 * attribute and do not make use of the ID attribute.
+	 * 
+	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
+	 */
+
 	public long getID();
 
 	public int hashCode();

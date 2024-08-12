@@ -18,6 +18,7 @@ import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -35,11 +36,11 @@ import javax.imageio.ImageIO;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2016-2023
+ * Copyright: Copyright (c) 2016-2024
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class BufferedImageTools {
 
@@ -367,5 +368,23 @@ public class BufferedImageTools {
 		g2d.dispose();
 
 		return img;
+	}
+
+	/**
+	 * download an Image from a given web URL
+	 * 
+	 * @param imageUrl the URL in the web where the image is living
+	 * @return BufferedImage
+	 */
+	public static Image downloadImage(String imageUrl) {
+		try {
+			URL url = new URL(imageUrl);
+			BufferedImage image = ImageIO.read(url);
+			return image;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

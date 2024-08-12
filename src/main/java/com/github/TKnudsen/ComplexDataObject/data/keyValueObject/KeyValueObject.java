@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
@@ -22,18 +20,36 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2019
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 
 public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String> {
 
+	/**
+	 * I regret that I found it necessary to have an ID field/attribute present
+	 * always. In practice, even ID-based usage forms simply define a primary key
+	 * attribute and do not make use of the ID attribute.
+	 * 
+	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
+	 */
+
 	protected long ID;
 
-	protected SortedMap<String, V> attributes = new TreeMap<String, V>();
+	/**
+	 * map with the attributes of the KeyValueObject. Historically, this was
+	 * implemented as a SortedMap, even if this is not visible and exploited from
+	 * the outside.
+	 * 
+	 * The decision was to go for a Map/HashMap implementation for performance
+	 * reasons. In the unexpected case that errors such as sorted-attribute
+	 * expectations occur, this decision may need to be reverted.
+	 */
+	// protected SortedMap<String, V> attributes = new TreeMap<String, V>();
+	protected Map<String, V> attributes = new HashMap<>();
 
 	public KeyValueObject() {
 		this.ID = MathFunctions.randomLong();
@@ -51,6 +67,13 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	@Override
+	/**
+	 * I regret that I found it necessary to have an ID field/attribute present
+	 * always. In practice, even ID-based usage forms simply define a primary key
+	 * attribute and do not make use of the ID attribute.
+	 * 
+	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
+	 */
 	public long getID() {
 		return ID;
 	}
@@ -69,9 +92,6 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 			return false;
 		}
 		final KeyValueObject<?> other = (KeyValueObject<?>) obj;
-
-		// if (this.ID != other.getID())
-		// return false;
 
 		return this.hashCode() == other.hashCode() ? true : false;
 	}
@@ -101,7 +121,7 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 
 		return true;
 	}
-	
+
 	public boolean containsAttribute(String attribute) {
 		return attributes.containsKey(attribute);
 	}
