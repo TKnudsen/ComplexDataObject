@@ -12,11 +12,14 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParsers;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public class AttributeScoringFunctions {
@@ -66,7 +69,12 @@ public class AttributeScoringFunctions {
 			return 0.0;
 
 		StatisticsSupport statistics = new StatisticsSupport(scores);
-		return statistics.getMean();
+
+		double score = statistics.getMean();
+		if (Double.isNaN(score))
+			System.err.println(
+					"AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues: NaN value detected for the average score!");
+		return score;
 	}
 
 	/**
@@ -150,9 +158,8 @@ public class AttributeScoringFunctions {
 
 	/**
 	 * uses the scores of an attribute scoring function for a data set and computes
-	 * the impact. The impact sums up the absolute scores and divides it by item
-	 * count, reflecting the numerical amount of scores that is introduced by an ASF
-	 * in a ranking system.
+	 * the impact. The impact sums up the absolute scores, reflecting the numerical
+	 * amount of scores introduced by an ASF to a ranking system.
 	 * 
 	 * @param function
 	 * @param items
@@ -163,7 +170,6 @@ public class AttributeScoringFunctions {
 	public static double calculateImpact(AttributeScoringFunction<?> function, Iterable<ComplexDataObject> items,
 			boolean negativeScoresImpactIsDoubled) {
 		double impact = 0.0;
-		double count = 0.0;
 
 		for (ComplexDataObject cdo : items) {
 			Double score = function.apply(cdo);
@@ -178,44 +184,105 @@ public class AttributeScoringFunctions {
 					impact += Math.abs(score * function.getWeight() * 2);
 				else
 					impact += Math.abs(score * function.getWeight());
-				count++;
 			}
 		}
-
-		if (count > 0)
-			impact /= count;
 
 		return impact;
 	}
 
-//	public static double calculateUniqueness(AttributeScoringFunction<?> function,
-//			Iterable<AttributeScoringFunction<?>> functions, Iterable<ComplexDataObject> items,
-//			boolean considerImpact) {
-//		double impact = 0.0;
-//		double count = 0.0;
-//		
-//		
-//
-//		for (ComplexDataObject cdo : items) {
-//			Double score = function.apply(cdo);
-//
-//			if (Double.isNaN(score))
-//				System.err.println(
-//						"AttributeScoringFunctions: function returned NaN for item. that should never be the case");
-//			else {
-//				if (score >= 0)
-//					impact += score * function.getWeight();
-//				else if (negativeScoresImpactIsDoubled)
-//					impact += Math.abs(score * function.getWeight() * 2);
-//				else
-//					impact += Math.abs(score * function.getWeight());
-//				count++;
-//			}
-//		}
-//
-//		if (count > 0)
-//			impact /= count;
-//
-//		return impact;
-//	}
+	/**
+	 * uses the scores of an attribute scoring function for a data set and computes
+	 * the impact. The impact sums up the absolute scores, reflecting the numerical
+	 * amount of scores introduced by an ASF to a ranking system.
+	 * 
+	 * @param function
+	 * @param items
+	 * @param negativeScoresImpactIsDoubled in case negative scores are of greater
+	 *                                      importance
+	 * @return
+	 */
+	public static double[] calculateImpactWithMissingValueImpact(AttributeScoringFunction<?> function,
+			Iterable<ComplexDataObject> items, boolean negativeScoresImpactIsDoubled) {
+		double impact = 0.0;
+		double impactMV = 0.0;
+
+		for (ComplexDataObject cdo : items) {
+			Object o = cdo.getAttribute(function.getAttribute());
+			Double value;
+			if (o instanceof Number)
+				value = DoubleParsers.apply(o);
+			else
+				value = o == null ? null : 1.0;
+
+			Double score = function.apply(cdo);
+
+			if (Double.isNaN(score))
+				System.err.println(
+						"AttributeScoringFunctions: function returned NaN for item. that should never be the case");
+			else {
+				if (score >= 0)
+					impact += score * function.getWeight();
+				else if (negativeScoresImpactIsDoubled)
+					impact += Math.abs(score * function.getWeight() * 2);
+				else
+					impact += Math.abs(score * function.getWeight());
+
+				if (value == null || Double.isNaN(value)) {
+					if (score >= 0)
+						impactMV += score * function.getWeight();
+					else if (negativeScoresImpactIsDoubled)
+						impactMV += Math.abs(score * function.getWeight() * 2);
+					else
+						impactMV += Math.abs(score * function.getWeight());
+				}
+
+			}
+		}
+
+		return new double[] { MathFunctions.round(impact, 3), MathFunctions.round(impactMV, 3) };
+	}
+
+	/**
+	 * 
+	 * @param dataContainer        data container where the uncertainty attribute is
+	 *                             in. Not (necessarily) the container where the ASF
+	 *                             attribute is in.
+	 * @param uncertaintyAttribute typically the attribute plus an uncertainty
+	 *                             identifier such as attributeX[u]
+	 * @return
+	 */
+	public static Function<ComplexDataObject, Double> createUncertaintyFunction(PrimaryKeyDataContainer dataContainer,
+			String uncertaintyAttribute) {
+
+		if (dataContainer == null)
+			return null;
+		if (uncertaintyAttribute == null)
+			return null;
+		if (!dataContainer.containsAttribute(uncertaintyAttribute)) {
+			System.err.println("AttributeScoringFunctions.createUncertaintyFunction: uncertainty attribute ("
+					+ uncertaintyAttribute + ") not part of the data container");
+			return null;
+		}
+
+		if (dataContainer.containsAttribute(uncertaintyAttribute)) {
+			Function<ComplexDataObject, Double> f = new Function<ComplexDataObject, Double>() {
+
+				DoubleParser doubleParser = new DoubleParser(true);
+
+				@Override
+				public Double apply(ComplexDataObject cdo) {
+					Object value = cdo.getAttribute(uncertaintyAttribute);
+					if (value == null)
+						value = 1.0;
+					if (value instanceof Double)
+						return (Double) value;
+					return doubleParser.apply(value);
+				}
+			};
+
+			return f;
+		} else
+			return null;
+	}
+
 }

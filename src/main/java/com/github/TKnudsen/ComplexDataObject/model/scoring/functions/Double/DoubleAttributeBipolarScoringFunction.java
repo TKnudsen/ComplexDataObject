@@ -163,7 +163,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 		if (!Double.isNaN(statisticsSupportNegative.getMean()) && statisticsSupportNegative.getCount() > 0)
 			normalizationFunctionNegative = new LinearNormalizationFunction(statisticsSupportNegative, true);
 		else
-			System.err.println(getClass().getSimpleName()
+ 			System.err.println(getClass().getSimpleName()
 					+ ": negative value range below neutral value did not contain entries for attribute "
 					+ getAttribute() + ". check input data or adjust neutral value");
 

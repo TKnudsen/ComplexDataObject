@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
@@ -183,7 +185,9 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	@Override
 	public String toString() {
 		String output = "";
-		for (String key : attributes.keySet())
+
+		SortedSet<String> a = new TreeSet<>(attributes.keySet());
+		for (String key : a)
 			output += (toLineString(key) + "\n");
 		return output;
 	}

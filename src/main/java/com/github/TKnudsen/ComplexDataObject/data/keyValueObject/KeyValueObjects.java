@@ -1,28 +1,23 @@
 package com.github.TKnudsen.ComplexDataObject.data.keyValueObject;
 
-import java.util.SortedMap;
-
 public class KeyValueObjects {
 	/**
-	 * True if two KeyValueObjects have identical attributes and attribute values.
-	 * ID, name and description are ignored.
+	 * True if two KeyValueObjects have identical keys and attribute values. ID,
+	 * name and description are ignored.
 	 *
 	 * @param u
 	 * @param v
 	 * @return
 	 */
 	public static <V> boolean equalValues(KeyValueObject<V> u, KeyValueObject<V> v) {
-		if (v == null) {
-			return false;
-		}
-		SortedMap<String, V> uAttributes = u.attributes;
-		SortedMap<String, V> vAttributes = v.attributes;
-
-		if (!uAttributes.equals(vAttributes))
+		if (v == null)
 			return false;
 
-		for (String attribute : uAttributes.keySet())
-			if (!u.getAttribute(attribute).equals(v.getAttribute(attribute)))
+		if (!u.attributes.keySet().equals(v.attributes.keySet()))
+			return false;
+
+		for (String key : u.attributes.keySet())
+			if (!u.getAttribute(key).equals(v.getAttribute(key)))
 				return false;
 
 		return true;

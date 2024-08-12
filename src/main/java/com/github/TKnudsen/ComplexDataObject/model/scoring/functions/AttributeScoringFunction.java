@@ -56,6 +56,9 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	protected double scoreForMissingObjects = 0.0;
 	private double scoreForMissingObjectsExternal = Double.NaN;
+	/**
+	 * @deprecated what was this good for?
+	 */
 	private Double missingValueAvgScoreRatio = null;
 
 	@JsonIgnore
@@ -309,10 +312,18 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return 1 - (getStatisticsSupport().getCount() / (double) getContainer().size());
 	}
 
+	/**
+	 * @deprecated what was this good for?
+	 * @return
+	 */
 	public Double getMissingValueAvgScoreRatio() {
 		return missingValueAvgScoreRatio;
 	}
 
+	/**
+	 * @deprecated what was this good for?
+	 * @param missingValueAvgScoreRatio
+	 */
 	public void setMissingValueAvgScoreRatio(Double missingValueAvgScoreRatio) {
 		this.missingValueAvgScoreRatio = missingValueAvgScoreRatio;
 
@@ -329,6 +340,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return scoreForMissingObjects;
 	}
 
+	/**
+	 * @deprecated use
+	 *             AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues
+	 *             instead
+	 * @return
+	 */
 	public double getAverageScoreWithoutMissingValues() {
 		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, false);
 		if (Double.isNaN(score))
@@ -336,6 +353,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		return score;
 	}
 
+	/**
+	 * @deprecated use
+	 *             AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues
+	 *             instead
+	 * @return
+	 */
 	public double getAverageScoreImpactWithoutMissingValues() {
 		double score = AttributeScoringFunctions.calculateAverageScoreWithoutMissingValues(this, true);
 		if (Double.isNaN(score))
