@@ -35,7 +35,7 @@ public class SQLTableDeleters {
 
 		Map<ComplexDataObject, Boolean> rowsExist = SQLUtils.rowsExist(conn, schema, tableName, pks, dataContainer);
 
-		System.out.print("duplicate check done in " + (System.currentTimeMillis() - l) + " ms... ");
+		System.out.print("... duplicate check done in " + (System.currentTimeMillis() - l) + " ms. ");
 		l = System.currentTimeMillis();
 
 		int removals = 0;
@@ -47,14 +47,13 @@ public class SQLTableDeleters {
 					columns.add(a);
 					queryObjects.add(cdo.getAttribute(a) != null ? cdo.getAttribute(a).toString() : null);
 				}
-				SQLTableDeleter.deleteTableRow(conn, schema, tableName, columns, queryObjects, true);
+				SQLTableDeleter.deleteTableRow(conn, schema, tableName, columns, queryObjects, false);
 				removals++;
 				System.out.print(".");
 			}
 		}
-		System.out.println();
-		System.out.println("SQLTableDeleters.removeDuplicateRows... removal of " + removals
-				+ " duplicates done in another " + (System.currentTimeMillis() - l) + " ms");
+		System.out.println("... removal of " + removals + " duplicate(s) done in another "
+				+ (System.currentTimeMillis() - l) + " ms");
 
 		return removals;
 	}

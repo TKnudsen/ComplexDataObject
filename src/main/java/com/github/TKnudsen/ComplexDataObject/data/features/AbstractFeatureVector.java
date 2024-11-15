@@ -25,6 +25,9 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * 
  * Update: featuresMap does not need to be sorted any more. Improves
  * performance.
+ * 
+ * Update: Changed KeyValueObject<Object> to the non-generic KeyValueObject
+ * form.
  * </p>
  * 
  * <p>
@@ -32,9 +35,9 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.07
  */
-public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject<Object>
+public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject
 		implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
 
 	private String name;

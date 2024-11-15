@@ -16,13 +16,13 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2016
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.0
+ * @version 1.02
  */
-public interface IKeyValueObjectParser<O, KV extends KeyValueObject<O>> {
+public interface IKeyValueObjectParser<KV extends KeyValueObject> {
 
 	/**
 	 * Parses a data file and returns an List of KeyValueObjects.

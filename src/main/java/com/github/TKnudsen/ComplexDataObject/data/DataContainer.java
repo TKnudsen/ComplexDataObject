@@ -1,60 +1,188 @@
 package com.github.TKnudsen.ComplexDataObject.data;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Stores and manages collections of IDObjects. A DataSchema manages the
- * keys/attributes of the collection iff the objects are instanceOf
- * IKeyValueProvider.
+ * Stores and manages collections of IKeyValueProvider objects, such as
+ * ComplexDataObjects.
+ * 
+ * A DataSchema manages the keys/attributes of the collection.
+ * 
+ * A primary key attribute allows managing objects using a primary key. The ID
+ * attribute is the historic default, but it can also be an attribute defined in
+ * the constructor, such as the "ISIN" for stocks. Attention: do not use
+ * attributes with non-categorical values, such as continuous numbers
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2020
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.06
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
-	private LinkedHashMap<Long, T> objectsMap = new LinkedHashMap<Long, T>();
+	protected static final String ID_ATTRIBUTE = "ID";
 
-	protected Map<String, Map<Long, Object>> attributeValues = new TreeMap<String, Map<Long, Object>>();
+	/**
+	 * attribute that defines the primary key of objects. Historic default:
+	 * ID_ATTRIBUTE.
+	 */
+	private final String primaryKeyAttribute;
+
+	/**
+	 * needed in case that the ID is used as primary key. Then the getID function
+	 * needs to be called once.
+	 */
+	private final boolean ID_as_PK;
+
+	private Map<Object, T> objectsMap = new HashMap<>();
+
+	/**
+	 * Map of attributes, each storing a Map of T and corresponding attribute vales.
+	 */
+
+	protected Map<String, Map<T, Object>> attributeValues = new TreeMap<String, Map<T, Object>>();
 
 	protected DataSchema dataSchema;
 
+	/**
+	 * @deprecated while based on a useful principle, practical use of DataContainer
+	 *             has shown that constructors always accept objects, not data
+	 *             schemas.
+	 * @param dataSchema
+	 */
 	public DataContainer(DataSchema dataSchema) {
+		this(dataSchema, ID_ATTRIBUTE);
+	}
+
+	/**
+	 * @deprecated while based on a useful principle, practical use of DataContainer
+	 *             has shown that constructors always accept objects, not data
+	 *             schemas.
+	 * 
+	 * @param dataSchema
+	 * @param primaryKeyAttribute A primary key attribute that allows managing
+	 *                            objects having a primary key. The ID attribute is
+	 *                            the historic default, but it can also be any other
+	 *                            attribute defined here, such as the "ISIN" for
+	 *                            stocks. Attention: do not use attributes with
+	 *                            non-categorical values, such as continuous
+	 *                            numbers.
+	 */
+	public DataContainer(DataSchema dataSchema, String primaryKeyAttribute) {
+		if (primaryKeyAttribute == null) {
+			System.err.println(this.getClass().getSimpleName()
+					+ ": warning for a primary key attribute that is null. The container will use the ID attribute (historic default) instead");
+			this.primaryKeyAttribute = ID_ATTRIBUTE;
+		} else
+			this.primaryKeyAttribute = primaryKeyAttribute;
+		this.ID_as_PK = this.primaryKeyAttribute.equals(ID_ATTRIBUTE);
+
 		this.dataSchema = dataSchema;
 	}
 
+	/**
+	 * @deprecated Use the Iterable<T> constructor instead. Storage in the data
+	 *             container now works with the objects directly, IDs have been
+	 *             taken out of business.
+	 * @param objectsMap
+	 */
 	public DataContainer(Map<Long, T> objectsMap) {
-		this.objectsMap.putAll(objectsMap);
+		this(objectsMap.values(), ID_ATTRIBUTE);
+	}
 
-		dataSchema = new DataSchema();
-		for (Long ID : objectsMap.keySet())
-			extendDataSchema(objectsMap.get(ID));
+	public DataContainer(T object) {
+		this(Arrays.asList(object), ID_ATTRIBUTE);
+	}
 
-		for (String attribute : getAttributeNames())
-			calculateEntities(attribute);
+	public DataContainer(T object, String primaryKeyAttribute) {
+		this(Arrays.asList(object), primaryKeyAttribute);
 	}
 
 	public DataContainer(Iterable<T> objects) {
+		this(objects, ID_ATTRIBUTE);
+	}
+
+	/**
+	 * 
+	 * @param objects
+	 * @param primaryKeyAttribute A primary key attribute that allows managing
+	 *                            objects having a primary key. The ID attribute is
+	 *                            the historic default, but it can also be any other
+	 *                            attribute defined here, such as the "ISIN" for
+	 *                            stocks. Attention: do not use attributes with
+	 *                            non-categorical values, such as continuous
+	 *                            numbers.
+	 */
+	public DataContainer(Iterable<T> objects, String primaryKeyAttribute) {
+		if (primaryKeyAttribute == null)
+			throw new IllegalArgumentException(this.getClass().getSimpleName()
+					+ ": warning for a primary key attribute that is null. The container will use the ID attribute (historic default) instead");
+
+		this.primaryKeyAttribute = primaryKeyAttribute;
+		this.ID_as_PK = this.primaryKeyAttribute.equals(ID_ATTRIBUTE);
+
 		dataSchema = new DataSchema();
+
 		for (T object : objects) {
-			objectsMap.put(object.getID(), object);
+			Object pk = getPrimaryKey(object);
+			if (pk == null)
+				System.err.println(this.getClass().getSimpleName()
+						+ ": warning for an input object with primary key that is null: " + primaryKeyAttribute);
+
+			if (objectsMap.containsKey(pk))
+				System.err.println(this.getClass().getSimpleName()
+						+ ": warning for an input object with primary key that is already existing: "
+						+ primaryKeyAttribute);
+
+			objectsMap.put(pk, object);
+
 			extendDataSchema(object);
 		}
 
 		for (String attribute : getAttributeNames())
 			calculateEntities(attribute);
+	}
+
+	/**
+	 * utility method that provides the primary key (value) for the primary key
+	 * attribute. Default: ID is the primary key attribute. Historic problem here:
+	 * the getID method needs to be triggered such that the getAttribute(ID) will
+	 * provide a (lazily computed) primary key value.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	private Object getPrimaryKey(T object) {
+		if (object == null)
+			return null;
+
+		if (this.ID_as_PK)
+			object.getID();
+
+		return object.getAttribute(this.primaryKeyAttribute);
+	}
+
+	/**
+	 * fast method to check if an object (represented through its primary key -
+	 * default: the ID) is contained in the container.
+	 * 
+	 * @param primaryKey
+	 * @return
+	 */
+	public boolean contains(Object primaryKey) {
+		return objectsMap.containsKey(primaryKey);
 	}
 
 	/**
@@ -64,7 +192,13 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	 * @return
 	 */
 	public boolean add(T object) {
-		objectsMap.put(object.getID(), object);
+		Object pk = getPrimaryKey(object);
+		if (pk == null)
+			throw new IllegalArgumentException(this.getClass().getSimpleName()
+					+ ": object did not have the necessary primary key attribute " + primaryKeyAttribute);
+
+		objectsMap.put(pk, object);
+
 		extendDataSchema(object);
 
 		for (String attribute : getAttributeNames())
@@ -74,12 +208,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	protected final void extendDataSchema(T object) {
-		if (object instanceof IKeyValueProvider) {
-			IKeyValueProvider<?> keyValueProvider = (IKeyValueProvider<?>) object;
-			for (String string : keyValueProvider.keySet())
-				if (!dataSchema.contains(string) && keyValueProvider.getAttribute(string) != null)
-					dataSchema.add(string, keyValueProvider.getAttribute(string).getClass());
-		}
+		for (String string : object.keySet())
+			if (!dataSchema.contains(string) && object.getAttribute(string) != null)
+				dataSchema.add(string, object.getAttribute(string).getClass());
 	}
 
 	/**
@@ -108,8 +239,21 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	/**
-	 * Remove functionality. For test purposes. Maybe this functionality will be
-	 * removed sometime.
+	 * 
+	 * returns null if primary Key is null.
+	 * 
+	 * @param primaryKey
+	 * @return
+	 */
+	public T get(Object primaryKey) {
+		if (primaryKey == null)
+			return null;
+
+		return objectsMap.get(primaryKey);
+	}
+
+	/**
+	 * Remove functionality for objects that are contained in the container.
 	 * 
 	 * @param object
 	 * @return
@@ -118,16 +262,16 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		if (object == null)
 			return false;
 
-		long id = object.getID();
-		if (!objectsMap.containsKey(id))
+		Object pk = getPrimaryKey(object);
+		if (!objectsMap.containsKey(pk))
 			return false;
 
 		for (String attribute : attributeValues.keySet()) {
 			if (attributeValues.get(attribute) != null)
-				attributeValues.get(attribute).remove(id);
+				attributeValues.get(attribute).remove(object);
 		}
 
-		objectsMap.remove(id);
+		objectsMap.remove(object);
 
 		return true;
 	}
@@ -155,7 +299,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 	public Boolean isNumeric(String attribute) {
 		if (!dataSchema.contains(attribute)) {
-			System.err.println("ComplexDataContainer.isNumeric(attribute): attribute does not exist.");
+			System.err.println(this.getClass().getSimpleName() + ".isNumeric(attribute): attribute " + attribute
+					+ " does not exist.");
 			return false;
 		}
 		if (Number.class.isAssignableFrom(dataSchema.getType(attribute)))
@@ -175,12 +320,28 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return dataSchema.getAttributeNames();
 	}
 
+	/**
+	 * @deprecated Use getAttributeValueCollection instead.
+	 * 
+	 * @param attribute
+	 * @return
+	 */
 	public Map<Long, Object> getAttributeValues(String attribute) {
-		return attributeValues.get(attribute);
+		Map<Long, Object> result = new HashMap<>();
+		for (T t : attributeValues.get(attribute).keySet())
+			result.put(t.getID(), t);
+
+		return result;
 	}
 
 	public Collection<Object> getAttributeValueCollection(String attribute) {
-		return attributeValues.get(attribute).values();
+		if (attributeValues.containsKey(attribute))
+			if (attributeValues.get(attribute) != null)
+				return attributeValues.get(attribute).values();
+
+		System.err.println(getClass().getSimpleName() + ".getAttributeValueCollection: attribute " + attribute
+				+ " not part of the attribute set");
+		return null;
 	}
 
 	public Class<?> getType(String attribute) {
@@ -200,8 +361,13 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public boolean contains(T object) {
-		if (objectsMap.containsKey(object.getID()))
+		if (object == null)
+			return false;
+
+		Object pk = getPrimaryKey(object);
+		if (objectsMap.containsKey(pk))
 			return true;
+
 		return false;
 	}
 
@@ -210,13 +376,12 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	protected void calculateEntities(String attribute) {
-		Map<Long, Object> ent = new HashMap<Long, Object>();
+		Map<T, Object> ent = new HashMap<T, Object>();
 
 		Iterator<T> iterator = iterator();
 		while (iterator.hasNext()) {
 			T o = iterator.next();
-			if (o instanceof IKeyValueProvider)
-				ent.put(o.getID(), o.getAttribute(attribute));
+			ent.put(o, o.getAttribute(attribute));
 		}
 
 		this.attributeValues.put(attribute, ent);
@@ -233,8 +398,16 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public int size() {
-		if (objectsMap == null)
+		if (objectsMap == null || objectsMap.isEmpty())
 			return 0;
 		return objectsMap.size();
+	}
+
+	public String getPrimaryKeyAttribute() {
+		return primaryKeyAttribute;
+	}
+
+	public Set<Object> primaryKeySet() {
+		return this.objectsMap.keySet();
 	}
 }

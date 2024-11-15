@@ -44,6 +44,11 @@ public class ComplexDataContainers {
 		return new ComplexDataContainer(list);
 	}
 
+	/**
+	 * @deprecated create ComplexDataContainer directly, with the new constructor.
+	 * @param cdo
+	 * @return
+	 */
 	public static ComplexDataContainer createComplexDataContainer(ComplexDataObject cdo) {
 		Objects.requireNonNull(cdo);
 
@@ -95,6 +100,22 @@ public class ComplexDataContainers {
 		for (String attributeValue : objects.keySet())
 			mergedCDOs.add(ComplexDataObjects.merge(objects.get(attributeValue)));
 
-		return new ComplexDataContainer(mergedCDOs);
+		return new ComplexDataContainer(mergedCDOs, primaryAttribute);
+	}
+
+	/**
+	 * 
+	 * Removes the ComplexDataContainer as a listener from the ComplexDataObjects it
+	 * contains.
+	 * 
+	 * Very useful if a ComplexDataContainer is at the end of life, wants to go into
+	 * the garbage container, but can't, due to the references from the
+	 * ComplexDataObjects to their listening container.
+	 * 
+	 * @param container
+	 */
+	public static void removeAsListener(ComplexDataContainer container) {
+		for (ComplexDataObject cdo : container)
+			cdo.removeComplexDataObjectListener(container);
 	}
 }

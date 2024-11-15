@@ -18,11 +18,11 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017-2020
+ * Copyright: Copyright (c) 2017-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class JSONLoader {
 
@@ -40,8 +40,39 @@ public class JSONLoader {
 		return null;
 	}
 
+	/**
+	 * old load from file version that does not ask if an exception shall be caught
+	 * internally.
+	 * 
+	 * @deprecated use the two-parameter version that asks if the exception shall be
+	 *             caught internally.
+	 * @param file
+	 * @return
+	 */
 	public static ComplexDataObject loadFromFile(String file) {
+		try {
+			return loadFromFile(file, true);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param file           the file location, including the file ending.
+	 * @param catchException allows non-interrupted execution if the exception shall
+	 *                       be caught in here no matter what. Recommended default:
+	 *                       false
+	 * @return
+	 * @throws IOException
+	 */
+	public static ComplexDataObject loadFromFile(String file, boolean catchException) throws IOException {
 		ComplexDataObject complexDataObject;
+
+		if (!catchException)
+			return mapper.readValue(new File(file), ComplexDataObject.class);
 		try {
 			complexDataObject = mapper.readValue(new File(file), ComplexDataObject.class);
 			return complexDataObject;

@@ -14,12 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2015-2018
+ * Copyright: Copyright (c) 2015-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
  */
-public interface ComplexDataObjectParser extends IKeyValueObjectParser<Object, ComplexDataObject>, ISelfDescription {
+public interface ComplexDataObjectParser extends IKeyValueObjectParser<ComplexDataObject>, ISelfDescription {
 
 }

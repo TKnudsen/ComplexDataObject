@@ -51,7 +51,13 @@ public class JSON_IO_Tester {
 		// load ComplexDataObject
 		ComplexDataObject loadConfigsFromString = JSONLoader.loadFromString(JSONString);
 		System.out.println(loadConfigsFromString);
-		ComplexDataObject loadConfigsFromFile = JSONLoader.loadFromFile(file);
+		System.out.println("DEBUG: accessing JSONLoader.loadFromFile for file " + file);
+		ComplexDataObject loadConfigsFromFile = null;
+		try {
+			loadConfigsFromFile = JSONLoader.loadFromFile(file, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.out.println(loadConfigsFromFile);
 
 		List<NumericalFeature> features = new ArrayList<>();

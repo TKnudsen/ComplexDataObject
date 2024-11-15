@@ -52,9 +52,7 @@ public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Bo
 
 	@Override
 	protected void refreshScoringFunction() {
-		Map<Long, Object> attributeValues = getContainer().getAttributeValues(getAttribute());
-
-		Collection<Object> values = attributeValues.values();
+		Collection<Object> values = getContainer().getAttributeValueCollection(getAttribute());
 
 		List<Double> doubleValues = new ArrayList<>();
 

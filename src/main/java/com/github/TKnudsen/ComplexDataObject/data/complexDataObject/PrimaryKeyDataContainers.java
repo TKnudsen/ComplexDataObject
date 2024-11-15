@@ -10,6 +10,15 @@ import java.util.Objects;
 
 public class PrimaryKeyDataContainers {
 
+	/**
+	 * can be done with the new ComplexDataContainer constructor now.
+	 * PrimaryKeyDataContainer is also deprecated, as the primary key idea is now
+	 * already provided with DataContainer.
+	 * 
+	 * @param containers
+	 * @param primaryKeyAttribute
+	 * @return
+	 */
 	public static PrimaryKeyDataContainer createPrimaryKeyDataContainer(ComplexDataObject cdo,
 			String primaryKeyAttribute) {
 		Objects.requireNonNull(cdo);
@@ -17,6 +26,13 @@ public class PrimaryKeyDataContainers {
 		return new PrimaryKeyDataContainer(Arrays.asList(cdo), primaryKeyAttribute);
 	}
 
+	/**
+	 * can be done with ComplexDataContainers.mergeContainers now
+	 * 
+	 * @param containers
+	 * @param primaryKeyAttribute
+	 * @return
+	 */
 	public static PrimaryKeyDataContainer mergeContainers(Collection<PrimaryKeyDataContainer> containers,
 			String primaryKeyAttribute) {
 

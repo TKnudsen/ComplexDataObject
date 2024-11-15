@@ -10,20 +10,27 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017
+ * Copyright: Copyright (c) 2017-2024
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 public class StringUtils {
 
 	public static void main(String[] args) {
-		double value = 66.3363456;
-		System.out.println(value);
+		int count = 10000000;
+		int length = 4;
+		String s1 = "Subset AutomSystemsotive Components";
+		String s2 = "SubsetSub Components and Systems";
 
-		String trunc = StringUtils.truncateDouble(value, 3);
-		System.out.println(trunc);
+		long l = System.currentTimeMillis();
+
+		for (int i = 0; i < count; i++)
+			subStringSimilarity(s1, s2, length);
+		System.out.println("subStringSimilarity took " + (System.currentTimeMillis() - l) + " ms");
+
+		System.out.println();
 	}
 
 	public static String truncateDouble(double value, int decimals) {
@@ -47,25 +54,43 @@ public class StringUtils {
 	 * @return
 	 */
 	public static double subStringSimilarity(String query, String target, int length) {
-		if (query == null || target == null)
-			return 0.0;
-		if (query.length() == 0 || target.length() == 0)
+		if (query == null || target == null || query.length() == 0 || target.length() == 0)
 			return 0.0;
 
-		int kernel = Math.max(length, 1);
-		kernel = Math.min(length, Math.min(query.length(), target.length()));
+		int kernel = Math.min(length, Math.min(query.length(), target.length()));
+		int totalWindows = query.length() - kernel + 1;
 
-		double count = 0;
-		double matches = 0;
+		int matches = 0;
 		for (int i = 0; i <= query.length() - kernel; i++) {
-			for (int j = 0; j <= target.length() - kernel; j++)
-				if (query.regionMatches(true, i, target, j, kernel)) {
-					matches++;
-					break;
-				}
-			count++;
+			String windowQuery = query.substring(i, i + kernel);
+			int index = target.indexOf(windowQuery);
+			if (index != -1 && index + kernel <= target.length())
+				matches++;
+
 		}
 
-		return count > 0 ? matches / count : 0.0;
+		return totalWindows > 0 ? (double) matches / totalWindows : 0.0;
+
+		// old version, ten times slower
+		// if (query == null || target == null)
+		// return 0.0;
+		// if (query.length() == 0 || target.length() == 0)
+		// return 0.0;
+		//
+		// int kernel = Math.max(length, 1);
+		// kernel = Math.min(length, Math.min(query.length(), target.length()));
+		//
+		// double count = 0;
+		// double matches = 0;
+		// for (int i = 0; i <= query.length() - kernel; i++) {
+		// for (int j = 0; j <= target.length() - kernel; j++)
+		// if (query.regionMatches(true, i, target, j, kernel)) {
+		// matches++;
+		// break;
+		// }
+		// count++;
+		// }
+		//
+		// return count > 0 ? matches / count : 0.0;
 	}
 }

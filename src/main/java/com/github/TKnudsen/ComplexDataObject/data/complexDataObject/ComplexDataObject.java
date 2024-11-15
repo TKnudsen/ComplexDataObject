@@ -11,11 +11,14 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>
- * Description: ComplexDataObject is a key-value store that can be used to model
- * complex real-world objects.
+ * ComplexDataObject is a key-value store that can be used to describe complex
+ * real-world objects.
  * 
  * For the use of ComplexDataObject in combination with DB solutions some
  * constructors allow the definition of the ID from an external competence.
+ * 
+ * Update: Changed KeyValueObject<Object> to the non-generic KeyValueObject
+ * form.
  * </p>
  * 
  * <p>
@@ -23,9 +26,15 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.09
+ * @version 1.10
  */
-public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDescription {
+public class ComplexDataObject extends KeyValueObject implements ISelfDescription {
+
+	@JsonIgnore
+	protected static String NAME = "Name";
+
+	@JsonIgnore
+	protected static String DESCRIPTION = "Description";
 
 	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
@@ -33,36 +42,37 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 	public ComplexDataObject() {
 		super();
 
-		// attribute schema will identify attributes as String
-		add("Name", "no name");
-		add("Description", "no description");
+		add(NAME, "no name");
+
+		// getting rid of the description field
+		// add(DESCRIPTION, "no description");
 	}
 
 	public ComplexDataObject(long ID) {
 		super(ID);
 
-		// attribute schema will identify attributes as String
-		add("Name", "no name");
-		add("Description", "no description");
+		add(NAME, "no name");
+
+		// getting rid of the description field
+		// add(DESCRIPTION, "no description");
+	}
+
+	public ComplexDataObject(String name) {
+		this(name, null);
 	}
 
 	public ComplexDataObject(String name, String description) {
 		super();
 
-		// attribute schema will characterize attributes as String
-		add("Name", "no name");
-		add("Description", "no description");
+		if (name != null)
+			setName(name);
 
-		setName(name);
-		setDescription(description);
+		if (description != null)
+			setDescription(description);
 	}
 
 	public ComplexDataObject(Long ID, String name, String description) {
 		super(ID);
-
-		// attribute schema will characterize attributes as String
-		add("Name", "no name");
-		add("Description", "no description");
 
 		setName(name);
 		setDescription(description);
@@ -83,7 +93,7 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	@Override
 	public String toString() {
-		String output = "Name: " + getName() + "\n";
+		String output = "Name: " + getName() + ", with " + attributes.size() + " attributes" + "\n";
 		output += super.toString();
 
 		return output;
@@ -91,26 +101,27 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 
 	@Override
 	public String getName() {
-		if (getAttribute("Name") != null)
-			return getAttribute("Name").toString();
+		if (getAttribute(NAME) != null)
+			return getAttribute(NAME).toString();
 
-		return String.valueOf(getID());
+		// return String.valueOf(getID());
+		return "no name";
 	}
 
 	public void setName(String name) {
-		this.add("Name", name);
+		this.add(NAME, name);
 	}
 
 	@Override
 	public String getDescription() {
-		if (getAttribute("Description") != null)
-			return getAttribute("Description").toString();
+		if (getAttribute(DESCRIPTION) != null)
+			return getAttribute(DESCRIPTION).toString();
 
-		return "no description for " + getName();
+		return "no description ";
 	}
 
 	public void setDescription(String description) {
-		this.add("Description", description);
+		this.add(DESCRIPTION, description);
 	}
 
 	@Override
@@ -154,6 +165,11 @@ public class ComplexDataObject extends KeyValueObject<Object> implements ISelfDe
 			listeners.remove(listener);
 
 		this.listeners.add(listener);
+	}
+
+	public void removeComplexDataObjectListener(IComplexDataObjectListener listener) {
+		if (listeners.contains(listener))
+			listeners.remove(listener);
 	}
 
 	private final void fireAttributeValueChanged(String attribute) {
