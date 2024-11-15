@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
@@ -19,6 +18,8 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * <p>
  * Description: Basic data structure for an objects with keys/attributes and
  * values/objects.
+ * 
+ * Update: Changed KeyValueObject<V> to the non-generic KeyValueObject form
  * </p>
  * 
  * <p>
@@ -29,17 +30,17 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * @version 1.04
  */
 
-public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String> {
+public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<String> {
 
 	/**
 	 * I regret that I found it necessary to have an ID field/attribute present
 	 * always. In practice, even ID-based usage forms simply define a primary key
 	 * attribute and do not make use of the ID attribute.
 	 * 
-	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
+	 * Prepare for its deletion and replacement by a standard attribute.
 	 */
-
-	protected long ID;
+	// protected long ID;
+	public final String ID = "ID";
 
 	/**
 	 * map with the attributes of the KeyValueObject. Historically, this was
@@ -50,22 +51,32 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	 * reasons. In the unexpected case that errors such as sorted-attribute
 	 * expectations occur, this decision may need to be reverted.
 	 */
-	// protected SortedMap<String, V> attributes = new TreeMap<String, V>();
-	protected Map<String, V> attributes = new HashMap<>();
+	// protected SortedMap<String, Object> attributes = new TreeMap<String,
+	// Object>();
+	protected Map<String, Object> attributes = new HashMap<>();
 
 	public KeyValueObject() {
-		this.ID = MathFunctions.randomLong();
 	}
 
+	/**
+	 * @deprecated better add IDs as key-value pairs.
+	 * 
+	 * @param ID use add(KeyValueObject.ID, yourID) instead
+	 */
 	public KeyValueObject(long ID) {
-		this.ID = ID;
+		attributes.put(this.ID, ID);
 	}
 
+	/**
+	 * @deprecated better add IDs as key-value pairs.
+	 * 
+	 * @param ID use add(KeyValueObject.ID, yourID) instead
+	 */
 	public KeyValueObject(Long ID) {
 		if (ID == null)
 			throw new IllegalArgumentException("ID was null");
 
-		this.ID = ID.longValue();
+		attributes.put(this.ID, ID.longValue());
 	}
 
 	@Override
@@ -74,51 +85,58 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	 * always. In practice, even ID-based usage forms simply define a primary key
 	 * attribute and do not make use of the ID attribute.
 	 * 
-	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
+	 * @deprecated Prepare to make it protected. The primary key should not need to
+	 *             be limited to the type long.
 	 */
 	public long getID() {
-		return ID;
+		if (!keySet().contains(this.ID))
+			attributes.put(this.ID, MathFunctions.randomLong());
+
+		if (!(getAttribute(this.ID) instanceof Number))
+			attributes.put(this.ID, MathFunctions.randomLong());
+
+		return ((Number) getAttribute(this.ID)).longValue();
 	}
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(ID);
+		return Long.hashCode(getID());
 	}
 
 	@Override
+	/**
+	 * Revised version does not instantiate a KeyValueObject any more for the other
+	 * object
+	 */
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final KeyValueObject<?> other = (KeyValueObject<?>) obj;
 
-		return this.hashCode() == other.hashCode() ? true : false;
+		if (getClass() != obj.getClass())
+			return false;
+
+		return this.hashCode() == ((KeyValueObject) obj).hashCode() ? true : false;
 	}
 
 	/**
-	 * Is true if the ComplexDataObject and a given Object have identical attributes
-	 * and attribute values. ID, name and description are ignored.
+	 * True if this and an object have identical attributes and values. Revised
+	 * version does not instantiate a KeyValueObject any more for the other object.
 	 * 
 	 * @param obj
 	 * @return
 	 */
 	public boolean equalValues(Object obj) {
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		final ComplexDataObject other = (ComplexDataObject) obj;
 
-		Set<String> keys = attributes.keySet();
-		keys.addAll(other.keySet());
+		if (!this.keySet().equals(((KeyValueObject) obj).keySet()))
+			return false;
 
-		for (String string : keys)
-			if (!getAttribute(string).equals(other.getAttribute(string)))
+		for (String string : keySet())
+			if (!getAttribute(string).equals(((KeyValueObject) obj).getAttribute(string)))
 				return false;
 
 		return true;
@@ -129,12 +147,12 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	@Override
-	public void add(String attribute, V value) {
+	public void add(String attribute, Object value) {
 		attributes.put(attribute, value);
 	}
 
 	@Override
-	public V getAttribute(String attribute) {
+	public Object getAttribute(String attribute) {
 		return attributes.get(attribute);
 	}
 
@@ -153,10 +171,8 @@ public class KeyValueObject<V> implements IKeyValueProvider<V>, Iterable<String>
 	}
 
 	@Override
-	public V removeAttribute(String attribute) {
-		if (attributes.get(attribute) != null)
-			return attributes.remove(attribute);
-		return null;
+	public Object removeAttribute(String attribute) {
+		return attributes.remove(attribute);
 	}
 
 	@Override

@@ -2,11 +2,15 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Copyright: Copyright (c) 2018-2020
+ * 
+ * Decision: if the parser discovers a numeric input object, it returns the
+ * object as long, but does not create a new Long instance.
+ * 
+ * Copyright: Copyright (c) 2018-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.03
+ * @version 1.04
  */
 
 public class LongParser implements IObjectParser<Long> {
@@ -16,15 +20,11 @@ public class LongParser implements IObjectParser<Long> {
 		if (object == null)
 			return null;
 
-		if (object instanceof Long)
-			return new Long((long) object);
-
 		if (object instanceof Number) {
-			Number n = (Number) object;
-			if (Double.isNaN(n.doubleValue()))
+			if (Double.isNaN(((Number) object).doubleValue()))
 				return null;
 			else
-				return new Long(((Number) object).longValue());
+				return ((Number) object).longValue();
 		}
 
 		if (object instanceof Boolean)

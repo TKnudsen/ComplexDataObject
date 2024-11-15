@@ -3,7 +3,6 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
@@ -70,9 +69,7 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 	@Override
 	protected void refreshScoringFunction() {
-		Map<Long, Object> attributeValues = getContainer().getAttributeValues(getAttribute());
-
-		Collection<Object> values = attributeValues.values();
+		Collection<Object> values = getContainer().getAttributeValueCollection(getAttribute());
 
 		Collection<Double> doubleValues = new ArrayList<>();
 

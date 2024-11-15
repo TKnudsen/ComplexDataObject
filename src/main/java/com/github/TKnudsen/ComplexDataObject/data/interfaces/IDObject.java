@@ -11,11 +11,11 @@ package com.github.TKnudsen.ComplexDataObject.data.interfaces;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2011-2016
+ * Copyright: Copyright (c) 2011-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public interface IDObject {
 
@@ -26,7 +26,6 @@ public interface IDObject {
 	 * 
 	 * @deprecated Prepare for its deletion and replacement by a standard attribute.
 	 */
-
 	public long getID();
 
 	public int hashCode();

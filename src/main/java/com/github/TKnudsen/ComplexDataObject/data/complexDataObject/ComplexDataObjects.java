@@ -7,20 +7,22 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObjects;
-
 public class ComplexDataObjects {
 
 	/**
 	 * True if two KeyValueObjects have identical attributes and attribute values.
 	 * ID, name and description are ignored.
 	 *
+	 * @deprecated use one of the two instances and ask for u.equalValues(v)
 	 * @param u
 	 * @param v
 	 * @return
 	 */
 	public static boolean equalValues(ComplexDataObject u, ComplexDataObject v) {
-		return KeyValueObjects.equalValues(u, v);
+		if (u == null)
+			return false;
+
+		return u.equalValues(v);
 	}
 
 	public static ComplexDataObject clone(ComplexDataObject object) {
