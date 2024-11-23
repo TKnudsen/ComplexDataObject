@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParsers;
@@ -251,7 +250,7 @@ public class AttributeScoringFunctions {
 	 *                             identifier such as attributeX[u]
 	 * @return
 	 */
-	public static Function<ComplexDataObject, Double> createUncertaintyFunction(PrimaryKeyDataContainer dataContainer,
+	public static Function<ComplexDataObject, Double> createUncertaintyFunction(ComplexDataContainer dataContainer,
 			String uncertaintyAttribute) {
 
 		if (dataContainer == null)

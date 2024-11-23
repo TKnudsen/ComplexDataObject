@@ -12,15 +12,19 @@ import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 
 /**
  * <p>
- * Description: Little helpers for ComplexDataContainers
+ * Description: Little helpers for ComplexDataContainers. Note that
+ * ComplexDataContainer is now more powerful: it has a primaryKeyAttribute
+ * extension that shall be used if the primary key attribute is to be determined
+ * explicitly. Also, new constructors are available, making several methods here
+ * obsolete.
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2017-2021
+ * Copyright: Copyright (c) 2017-2024
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.05
+ * @version 1.06
  */
 public class ComplexDataContainers {
 
@@ -33,6 +37,13 @@ public class ComplexDataContainers {
 		return list;
 	}
 
+	/**
+	 * @deprecated create ComplexDataContainer directly, with the new constructor.
+	 *             Note that it is preferable to determine the primary key with a
+	 *             second constructor parameter
+	 * @param complexDataObjects
+	 * @return
+	 */
 	public static ComplexDataContainer createComplexDataContainer(
 			Iterable<? extends ComplexDataObject> complexDataObjects) {
 
@@ -46,6 +57,23 @@ public class ComplexDataContainers {
 
 	/**
 	 * @deprecated create ComplexDataContainer directly, with the new constructor.
+	 * @param complexDataObjects
+	 * @return
+	 */
+	public static ComplexDataContainer createComplexDataContainer(
+			Iterable<? extends ComplexDataObject> complexDataObjects, String primaryKeyAttribute) {
+		Objects.requireNonNull(primaryKeyAttribute);
+
+		List<ComplexDataObject> list = new ArrayList<>();
+
+		for (ComplexDataObject cdo : complexDataObjects)
+			list.add(cdo);
+
+		return new ComplexDataContainer(list, primaryKeyAttribute);
+	}
+
+	/**
+	 * @deprecated create ComplexDataContainer directly, with the new constructor.
 	 * @param cdo
 	 * @return
 	 */
@@ -53,6 +81,19 @@ public class ComplexDataContainers {
 		Objects.requireNonNull(cdo);
 
 		return new ComplexDataContainer(Arrays.asList(new ComplexDataObject[] { cdo }));
+
+	}
+
+	/**
+	 * @deprecated create ComplexDataContainer directly, with the new constructor.
+	 * @param cdo
+	 * @return
+	 */
+	public static ComplexDataContainer createComplexDataContainer(ComplexDataObject cdo, String primaryKeyAttribute) {
+		Objects.requireNonNull(cdo);
+		Objects.requireNonNull(primaryKeyAttribute);
+
+		return new ComplexDataContainer(Arrays.asList(new ComplexDataObject[] { cdo }), primaryKeyAttribute);
 
 	}
 
@@ -80,6 +121,7 @@ public class ComplexDataContainers {
 			String primaryAttribute) {
 
 		Objects.requireNonNull(containers);
+		Objects.requireNonNull(primaryAttribute);
 
 		Map<String, List<ComplexDataObject>> objects = new HashMap<String, List<ComplexDataObject>>();
 

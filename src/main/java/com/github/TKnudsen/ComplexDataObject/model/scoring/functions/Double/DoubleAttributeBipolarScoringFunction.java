@@ -162,8 +162,9 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 						true);
 		if (!Double.isNaN(statisticsSupportNegative.getMean()) && statisticsSupportNegative.getCount() > 0)
 			normalizationFunctionNegative = new LinearNormalizationFunction(statisticsSupportNegative, true);
-		else
- 			System.err.println(getClass().getSimpleName()
+		else if (outlierPruningMinValue < neutralValue)
+			// OK when minimum cap == neutral value (means that it is no true bipolar ASF)
+			System.err.println(getClass().getSimpleName()
 					+ ": negative value range below neutral value did not contain entries for attribute "
 					+ getAttribute() + ". check input data or adjust neutral value");
 
@@ -230,7 +231,7 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 
 		return new StatisticsSupport(values);
 	}
-	
+
 	@Override
 	protected Double toDouble(Double t) {
 		return t;
