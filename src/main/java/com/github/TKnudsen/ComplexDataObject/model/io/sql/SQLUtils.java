@@ -23,13 +23,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.DataSchemaEntry;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.PrimaryKeyDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableSelector.Order;
 
@@ -668,7 +666,7 @@ public class SQLUtils {
 	 * @return column name that is extended in the database
 	 */
 	public static String mitigateDataTruncationError(Connection conn, SQLException e,
-			PrimaryKeyDataContainer dataContainer, String schema, String tableName) {
+			ComplexDataContainer dataContainer, String schema, String tableName) {
 		return mitigateDataTruncationError(conn, e, createKeyValuePairs(dataContainer), schema, tableName);
 	}
 

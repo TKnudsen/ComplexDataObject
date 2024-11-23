@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.Parsers;
+
 public class SQLTableDeleter {
 
 	public static void dropColumn(Connection conn, String tableName, String columnName) {
@@ -130,9 +132,18 @@ public class SQLTableDeleter {
 //				? "DELETE FROM " + schema + "." + tableName + " WHERE "
 //				: "DELETE FROM `" + tableName + "` WHERE ";
 
-		for (int i = 0; i < columns.size(); i++)
-			sql += ("`" + columns.get(i) + "` = '" + queryObjects.get(i) + "' and ");
-		sql = sql.substring(0, sql.length() - 5); // get rid of tail-and
+		String likeForFloats = !postgres ? "` LIKE '" : "` = '";
+		for (int i = 0; i < columns.size(); i++) {
+			String substring = "`" + columns.get(i);
+			if (Parsers.parseDouble(queryObjects.get(i)) != null
+					&& !Double.isNaN(Parsers.parseDouble(queryObjects.get(i))))
+				substring += likeForFloats;
+			else
+				substring += "` = '";
+			substring += queryObjects.get(i) + "' and ";
+			sql += substring;
+		}
+		sql = sql.substring(0, sql.length() - 5); // get rid of and (tail)
 
 		if (postgres)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
