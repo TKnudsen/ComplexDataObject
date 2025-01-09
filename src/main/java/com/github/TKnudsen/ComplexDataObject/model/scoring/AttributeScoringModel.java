@@ -170,7 +170,7 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		handleAttributeScoringChangeEvent(event);
 	}
 
-	public void clearAttributeScoringFunctions() {
+	public void clear() {
 		attributeScoringFunctions.clear();
 		attributeScoringFunctionsLookup.clear();
 

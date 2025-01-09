@@ -9,7 +9,7 @@ public class SQLTableAlternator {
 	public static void modifyColumnVarCharSize(Connection conn, String schema, String tableName, String columnName,
 			int size, boolean checkIfTableExists) throws SQLException {
 
-		modifyColumn(conn, schema, tableName, columnName, "varchar(" + size + ") NULL", checkIfTableExists);
+		modifyColumn(conn, schema, tableName, columnName, "varchar(" + size + ")", checkIfTableExists);
 	}
 
 	public static void modifyColumn(Connection conn, String schema, String tableName, String columnName,
@@ -27,9 +27,11 @@ public class SQLTableAlternator {
 
 			System.out.print("SQLTableCreator.alterTable: alter table " + tableName + " in schema " + schema + "...");
 
-			String sql = createModifyColumnString(tableName, columnName, columnDefinition);
+			String sqlString = createModifyColumnString(schema, tableName, columnName, columnDefinition,
+					PostgreSQL.isPostgreSQLConnection(conn));
+
 			stmt = conn.createStatement();
-			stmt.executeUpdate(sql);
+			stmt.executeUpdate(sqlString);
 			System.out.println("done");
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -41,9 +43,29 @@ public class SQLTableAlternator {
 		}
 	}
 
-	private static String createModifyColumnString(String tableName, String columnName, String columnDefinition) {
-		String sql = "ALTER TABLE `" + tableName + "` MODIFY `" + columnName + "` " + columnDefinition + ";";
+	private static String createModifyColumnString(String schema, String tableName, String columnName,
+			String columnDefinition, boolean postgres) {
+		String sqlString = "ALTER TABLE `" + tableName + "` MODIFY `" + columnName + "` ";
 
-		return sql;
+		if (postgres)
+			sqlString = sqlString + "TYPE ";
+
+		sqlString = sqlString + columnDefinition;
+
+		if (!postgres)
+			sqlString = sqlString + " NULL";
+
+		if (!postgres)
+			sqlString = sqlString + ";";
+
+		if (postgres) {
+			sqlString = PostgreSQL.replaceMySQLQuotes(sqlString);
+			sqlString = PostgreSQL.replaceMySQLAttributeTypes(sqlString);
+			sqlString = sqlString.replace(tableName, schema + "\".\"" + tableName);
+			sqlString = sqlString.replace("MODIFY", "ALTER COLUMN");
+			sqlString = sqlString.replace("NULL", "");
+		}
+
+		return sqlString;
 	}
 }

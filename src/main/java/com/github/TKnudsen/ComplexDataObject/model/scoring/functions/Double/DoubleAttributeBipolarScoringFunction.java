@@ -12,6 +12,7 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectPar
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
@@ -243,6 +244,19 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 			return -output;
 		else
 			return 1 - output;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Attribute Scoring Function:\t" + getClass().getSimpleName() + "\n");
+		sb.append("Attribute:\t" + getAttribute() + "\n");
+		sb.append("MinClamp:\t" + getOutlierPruningMinValue() + "\n");
+		sb.append("MaxClamp:\t" + getOutlierPruningMaxValue() + "\n");
+		sb.append("Missing Value Score: " + MathFunctions.round(getScoreForMissingObjects(), 3) + "\n");
+		sb.append("Neutral Value:\t" + getNeutralValue() + "\n");
+
+		return sb.toString().trim();
 	}
 
 	public double getNeutralValue() {

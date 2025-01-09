@@ -90,11 +90,13 @@ public class SQLTableInserter {
 
 		int i = 0;
 		for (LinkedHashMap<String, Object> keyValuePairs : listOfMapWithKeyValuePairs) {
-			if (showTimingLog)
-				if (i++ % 100 == 0)
+			if (showTimingLog) {
+				if (i++ % 2000 == 0)
+					System.out.println();
+				if (i % 100 == 0)
 					if (i > 1)
-						System.out.print("[" + (i - 1) + "]");
-
+						System.out.print("[" + (i) + "]");
+			}
 			insertRow(conn, schema, tableName, insertType, keyValuePairs, useFloatInsteadOfDouble);
 		}
 		if (showTimingLog)

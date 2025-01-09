@@ -95,6 +95,15 @@ public abstract class NormalizationFunction implements Function<Number, Number> 
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getClass().getSimpleName() + ":\n");
+		sb.append("Global min:\t" + getGlobalMin() + "\n");
+		sb.append("Global max:\t" + getGlobalMax() + "\n");
+		return sb.toString();
+	}
+
 	public Number getGlobalMin() {
 		return globalMin;
 	}

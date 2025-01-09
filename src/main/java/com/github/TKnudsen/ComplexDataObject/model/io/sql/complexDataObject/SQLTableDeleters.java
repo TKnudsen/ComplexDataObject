@@ -31,14 +31,15 @@ public class SQLTableDeleters {
 
 		long l = System.currentTimeMillis();
 
-		List<String> pks = SQLUtils.primaryKeysForTable(conn, schema, tableName);
+		int removals = 0;
+
+		List<String> pks = SQLUtils.primaryKeysForTable(conn, schema, tableName, true);
 
 		Map<ComplexDataObject, Boolean> rowsExist = SQLUtils.rowsExist(conn, schema, tableName, pks, dataContainer);
 
 		System.out.print("... duplicate check done in " + (System.currentTimeMillis() - l) + " ms. ");
 		l = System.currentTimeMillis();
 
-		int removals = 0;
 		for (ComplexDataObject cdo : dataContainer) {
 			if (rowsExist != null && rowsExist.get(cdo)) {
 				List<String> columns = new ArrayList<>();
@@ -52,6 +53,7 @@ public class SQLTableDeleters {
 				System.out.print(".");
 			}
 		}
+
 		System.out.println("... removal of " + removals + " duplicate(s) done in another "
 				+ (System.currentTimeMillis() - l) + " ms");
 

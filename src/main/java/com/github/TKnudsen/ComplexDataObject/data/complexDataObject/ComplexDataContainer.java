@@ -96,8 +96,10 @@ public class ComplexDataContainer extends DataContainer<ComplexDataObject> imple
 		// update attribute
 		if (attributeValues.get(attribute) != null)
 			this.attributeValues.get(attribute).put(cdo, cdo.getAttribute(attribute));
-		else
-			calculateEntities(attribute);
+		// this part will not be done any more
+		// attributeValues are now treated lazy
+		// else
+		// calculateEntities(attribute);
 	}
 
 	@Override

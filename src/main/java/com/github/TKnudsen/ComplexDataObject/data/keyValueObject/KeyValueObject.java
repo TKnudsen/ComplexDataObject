@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
@@ -27,7 +26,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 
 public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<String> {
@@ -200,21 +199,37 @@ public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<Strin
 
 	@Override
 	public String toString() {
-		String output = "";
+//		String output = "";
+//
+//		SortedSet<String> a = new TreeSet<>(attributes.keySet());
+//		for (String key : a)
+//			output += (toLineString(key) + "\n");
+//		return output;
 
-		SortedSet<String> a = new TreeSet<>(attributes.keySet());
-		for (String key : a)
-			output += (toLineString(key) + "\n");
-		return output;
+		StringBuilder sb = new StringBuilder();
+
+		// Add header row
+		sb.append(String.format("%-40s\t%-10s\t%-15s\n", "Attribute:", "Type:", "Value:"));
+
+		// Add each attribute
+		for (String a : new TreeSet<>(attributes.keySet()))
+			if (attributes.get(a) == null)
+				sb.append(String.format("%-40s\t%-10s\t%-15s\n", a.substring(0, Math.min(a.length(), 41)), "unknown",
+						"null"));
+			else
+				sb.append(String.format("%-40s\t%-10s\t%-15s\n", a.substring(0, Math.min(a.length(), 41)),
+						attributes.get(a).getClass().toString().replace("class java.lang.", ""), attributes.get(a)));
+
+		return sb.toString();
 	}
 
-	private String toLineString(String attribute) {
-		String output = "Attribute: " + attribute + "\t";
-
-		if (attributes.get(attribute) == null)
-			output += ("Type: unknown\tValue: null");
-		else
-			output += ("Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
-		return output;
-	}
+//	private String toLineString(String attribute) {
+//		String output = "Attribute: " + attribute + "\t";
+//
+//		if (attributes.get(attribute) == null)
+//			output += ("Type: unknown\tValue: null");
+//		else
+//			output += ("Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
+//		return output;
+//	}
 }

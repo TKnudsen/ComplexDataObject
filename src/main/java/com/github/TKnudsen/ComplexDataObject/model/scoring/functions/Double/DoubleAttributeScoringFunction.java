@@ -11,6 +11,7 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectPar
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
@@ -222,6 +223,18 @@ public abstract class DoubleAttributeScoringFunction extends AttributeScoringFun
 
 		// this version has a strong effect, more what is expected
 		return (dq * getQuantileNormalizationRate() + dl * (1 - getQuantileNormalizationRate()));
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Attribute Scoring Function:\t" + getClass().getSimpleName() + "\n");
+		sb.append("Attribute:\t" + getAttribute() + "\n");
+		sb.append("MinClamp:\t" + getOutlierPruningMinValue() + "\n");
+		sb.append("MaxClamp:\t" + getOutlierPruningMaxValue() + "\n");
+		sb.append("Missing Value Score: " + MathFunctions.round(getScoreForMissingObjects(), 3) + "\n");
+
+		return sb.toString().trim();
 	}
 
 	public Double getOutlierStd() {

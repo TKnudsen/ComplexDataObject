@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.github.TKnudsen.ComplexDataObject.data.DataContainers;
 import com.github.TKnudsen.ComplexDataObject.data.DataSchema;
 
 /**
@@ -159,5 +160,18 @@ public class ComplexDataContainers {
 	public static void removeAsListener(ComplexDataContainer container) {
 		for (ComplexDataObject cdo : container)
 			cdo.removeComplexDataObjectListener(container);
+	}
+
+	/**
+	 * creates a map with the ID attribute of ComplexDataObjects as key.
+	 * 
+	 * @deprecated uses the ID attribute of ComplexDataObjects that was replaced by
+	 *             a dynamic primary key concept. Those primary keys do not need to
+	 *             be of type Long any more.
+	 * @param attribute
+	 * @return
+	 */
+	public static Map<Long, Object> getAttributeValues(ComplexDataContainer container, String attribute) {
+		return DataContainers.getAttributeValues(container, attribute);
 	}
 }

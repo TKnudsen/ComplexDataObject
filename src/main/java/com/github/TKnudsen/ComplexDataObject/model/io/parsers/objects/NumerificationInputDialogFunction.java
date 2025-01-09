@@ -8,6 +8,11 @@ import javax.swing.JOptionPane;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
 
+/**
+ * @deprecated first version of a NumerificationFunction that was bond to Double
+ *             output
+ * @param <T>
+ */
 public class NumerificationInputDialogFunction implements IObjectParser<Double>, INumerificationInput<Object> {
 
 	private Map<Object, Double> numerificationLookup = new HashMap<Object, Double>();
@@ -94,18 +99,18 @@ public class NumerificationInputDialogFunction implements IObjectParser<Double>,
 
 			finished = true;
 
-//			SwingUtilities.invokeLater(new Runnable() {
-//				@Override
-//				public void run() {
-//					String inputValue = JOptionPane.showInputDialog(frame, "User input required for object [" + t
-//							+ "]. Please input a numerical value; 0,5 for zero point five.");
-//					if (inputValue != null) {
-//						inputValue = inputValue.replace(".", ",");
-//						d = doubleParser.apply(inputValue);
-//					}
-//					finished = true;
-//				}
-//			});
+//	SwingUtilities.invokeLater(new Runnable() {
+//		@Override
+//		public void run() {
+//			String inputValue = JOptionPane.showInputDialog(frame, "User input required for object [" + t
+//					+ "]. Please input a numerical value; 0,5 for zero point five.");
+//			if (inputValue != null) {
+//				inputValue = inputValue.replace(".", ",");
+//				d = doubleParser.apply(inputValue);
+//			}
+//			finished = true;
+//		}
+//	});
 		}
 
 		public double getValue() {
