@@ -106,6 +106,8 @@ public class PostgreSQL {
 					e.printStackTrace();
 				}
 		}
+		
+		SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 	}
 
 }

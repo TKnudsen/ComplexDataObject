@@ -18,9 +18,7 @@ public class SQLTableCreator {
 
 	public static void createSchema(Connection conn, String schema) throws SQLException {
 
-		// String sqlString = postgreSQL ? "CREATE SCHEMA \"" + schema + "\"" : "CREATE
-		// SCHEMA `" + schema + "`";
-		String sqlString = "CREATE SCHEMA `" + schema + "`";
+		String sqlString = "CREATE SCHEMA IF NOT EXISTS `" + schema + "`";
 
 		if (PostgreSQL.isPostgreSQLConnection(conn))
 			sqlString = PostgreSQL.replaceMySQLQuotes(sqlString);
@@ -29,11 +27,13 @@ public class SQLTableCreator {
 		try {
 			stmt = conn.createStatement();
 			stmt.executeUpdate(sqlString);
-			System.out.println("SQLTableCreator.createSchema: schema " + schema + " created");
+			System.out.println("SQLTableCreator.createSchema: schema " + schema + " created (if not existed yet)");
+
+			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 		} catch (SQLException se) {
-//			se.printStackTrace();
+			se.printStackTrace();
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			if (stmt != null)
 				stmt.close();
@@ -65,9 +65,6 @@ public class SQLTableCreator {
 
 		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
-		// test if schema exists
-		createSchema(conn, schema);
-
 		String sqlString = createTableString(schema, tableName, schemaEntries, valuesFunctions, primaryKeyAttributes,
 				useFloatInsteadOfDouble, postgreSQL);
 
@@ -94,6 +91,9 @@ public class SQLTableCreator {
 	public static void createTable(Connection conn, String schema, String tableName, String sqlString,
 			boolean printIfAlreadyExists) throws SQLException {
 
+		// test if schema exists
+		createSchema(conn, schema);
+		
 		Statement stmt = null;
 		try {
 			if (SQLUtils.tableExists(conn, schema, tableName)) {
@@ -107,6 +107,8 @@ public class SQLTableCreator {
 			stmt = conn.createStatement();
 			stmt.executeUpdate(sqlString);
 			System.out.println("done");
+
+			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 		} catch (SQLException se) {
 			se.printStackTrace();
 			System.err.println("SQL STRING: " + sqlString);
@@ -250,7 +252,7 @@ public class SQLTableCreator {
 				System.out.println(
 						"SQLTableCreator.addColumnString: postgreSQL does not allow adding columns AFTER others. column ordering request ignored for attribute "
 								+ afterAColumnName);
-		
+
 		if (postgreSQL)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 

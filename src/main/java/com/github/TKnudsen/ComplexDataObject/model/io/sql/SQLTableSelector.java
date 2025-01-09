@@ -56,6 +56,9 @@ public class SQLTableSelector {
 			String tableName, String orderAttribute, Order order, Map<String, Class<?>> attributeCharacterization)
 			throws SQLException {
 
+		if (tableName.equals("ChatGPTIndustryGroupPK"))
+			System.out.println("DIDS");
+
 		System.out.print("SQLTableSelector.selectAllFromTable: selecting all rows from table " + tableName + " ...");
 		long l = System.currentTimeMillis();
 
@@ -311,7 +314,8 @@ public class SQLTableSelector {
 		}
 
 		while (resultSet.next()) {
-			LinkedHashMap<String, Object> map = SQLUtils.interpreteResultSetRow(resultSet, columnNames, columnTypes);
+			LinkedHashMap<String, Object> map = SQLUtils.interpreteResultSetRow(resultSet, columnNames, columnTypes,
+					false);
 			values.add(map.values());
 		}
 
@@ -388,4 +392,15 @@ public class SQLTableSelector {
 		return columns;
 	}
 
+	public static int countRows(Connection conn, String schema, String tableName) throws SQLException {
+
+		String sql = "SELECT COUNT(*) FROM \"" + schema + "\".\"" + tableName + "\"";
+		PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		if (resultSet.next())
+			return resultSet.getInt(1);
+		return 0;
+	}
 }

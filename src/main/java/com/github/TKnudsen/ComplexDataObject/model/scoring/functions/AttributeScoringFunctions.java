@@ -12,11 +12,12 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.DoubleNumerificationInputDialogFunction;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParsers;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
@@ -133,8 +134,9 @@ public class AttributeScoringFunctions {
 					true, 1.0, uncertaintyFunction);
 			break;
 		case "String":
-			f = new DoubleAttributeBipolarScoringFunction(container, new NumerificationInputDialogFunction(true, 10000),
-					attribute, null, false, true, 1.0, uncertaintyFunction);
+			f = new DoubleAttributeBipolarScoringFunction(container,
+					new DoubleNumerificationInputDialogFunction(true, 10000), attribute, null, false, true, 1.0,
+					uncertaintyFunction);
 			break;
 
 		default:
@@ -270,6 +272,8 @@ public class AttributeScoringFunctions {
 
 				@Override
 				public Double apply(ComplexDataObject cdo) {
+					if (cdo == null)
+						return 1.0;
 					Object value = cdo.getAttribute(uncertaintyAttribute);
 					if (value == null)
 						value = 1.0;

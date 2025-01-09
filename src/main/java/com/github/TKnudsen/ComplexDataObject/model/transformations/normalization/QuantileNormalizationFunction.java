@@ -1,8 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.transformations.normalization;
 
 import java.util.Collection;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Rankings;
@@ -22,7 +20,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * </p>
  * 
  * <p>
- * Copyright: Copyright (c) 2016-2023
+ * Copyright: Copyright (c) 2016-2024
  * </p>
  * 
  * @author Juergen Bernard
@@ -30,10 +28,7 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  */
 public class QuantileNormalizationFunction extends NormalizationFunction {
 
-	private Ranking<Double> valueRanking;
-
-//	// TODO replace by interpolation search
-//	private SortedMap<Double, Integer> rankingLookup;
+	protected Ranking<Float> valueRanking;
 
 	/**
 	 * for serialization purposes only
@@ -55,6 +50,13 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		initializeRanking(values);
 	}
 
+	public QuantileNormalizationFunction(Number globalMin, Number globalMax, Collection<Number> values,
+			boolean limitToBounds) {
+		super(globalMin, globalMax, limitToBounds);
+
+		initializeRanking(values);
+	}
+
 	public QuantileNormalizationFunction(StatisticsSupport statisticsSupport) {
 		super(statisticsSupport);
 
@@ -67,42 +69,39 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 		initializeRanking(statisticsSupport.getValues());
 	}
 
+	public QuantileNormalizationFunction(Number globalMin, Number globalMax, StatisticsSupport statisticsSupport,
+			boolean limitToBounds) {
+		super(globalMin, globalMax, limitToBounds);
+
+		initializeRanking(statisticsSupport.getValues());
+	}
+
 	private void initializeRanking(Collection<? extends Number> values) {
 		valueRanking = new Ranking<>();
 
 		for (Number value : values)
-			valueRanking.add(value.doubleValue());
+			valueRanking.add(value.floatValue());
 
-//		refreshRankingLookup();
 	}
 
 	private void initializeRanking(double[] values) {
 		valueRanking = new Ranking<>();
 
 		for (double value : values)
-			valueRanking.add(value);
-
-//		refreshRankingLookup();
+			valueRanking.add((float) value);
 	}
-
-//	private final void refreshRankingLookup() {
-//		rankingLookup = new TreeMap<Double, Integer>();
-//
-//		for (int i = 0; i < valueRanking.size(); i += 50)
-//			rankingLookup.put(valueRanking.get(i), i);
-//	}
 
 	@Override
 	public void setGlobalMin(Number globalMin) {
 		super.setGlobalMin(globalMin);
 
-		valueRanking.add(globalMin.doubleValue());
+		valueRanking.add(globalMin.floatValue());
 
 		// crop values outside bounds to the new value interval
 		for (int i = 0; i < valueRanking.size(); i++)
-			if (valueRanking.get(i) < getGlobalMin().doubleValue()) {
+			if (valueRanking.get(i) < getGlobalMin().floatValue()) {
 				valueRanking.remove(i);
-				valueRanking.add(getGlobalMin().doubleValue());
+				valueRanking.add(getGlobalMin().floatValue());
 				i--;
 			} else
 				break;
@@ -112,13 +111,13 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 	public void setGlobalMax(Number globalMax) {
 		super.setGlobalMax(globalMax);
 
-		valueRanking.add(globalMax.doubleValue());
+		valueRanking.add(globalMax.floatValue());
 
 		// crop values outside bounds to the new value interval
 		for (int i = valueRanking.size() - 1; i >= 0; i--)
-			if (valueRanking.get(i) > getGlobalMax().doubleValue()) {
+			if (valueRanking.get(i) > getGlobalMax().floatValue()) {
 				valueRanking.remove(i);
-				valueRanking.add(getGlobalMax().doubleValue());
+				valueRanking.add(getGlobalMax().floatValue());
 				i++;
 			} else
 				break;
@@ -127,15 +126,14 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 	@Override
 	public Number apply(Number t) {
 		// check bounds
-		if (t.doubleValue() <= getGlobalMin().doubleValue())
+		if (t.floatValue() <= getGlobalMin().floatValue())
 			return 0.0;
-		else if (t.doubleValue() >= getGlobalMax().doubleValue())
+		else if (t.floatValue() >= getGlobalMax().floatValue())
 			return 1.0;
-		if (Double.isNaN(t.doubleValue()))
+		if (Double.isNaN(t.floatValue()))
 			return Double.NaN;
 
-//		int interpolationSearch = Rankings.interpolationSearch(t, valueRanking, Double::doubleValue);
-		int binarySearch = Rankings.binarySearch(t, valueRanking, Double::doubleValue);
+		int binarySearch = Rankings.binarySearch(t, valueRanking, Float::doubleValue);
 
 		if (binarySearch == -1) {
 			System.err.println("QuantileNormalizationFunction: unable to find quantile for value " + t);
@@ -144,34 +142,14 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 		double res = binarySearch / (double) (valueRanking.size() - 1);
 		return res;
+	}
 
-//		// iterate the ranking
-//		double q = 1.0 / (double) (valueRanking.size() - 1);
-//
-//		// speedup: lookup the index range
-//		Integer startIndex = 0;
-//		for (Double d : rankingLookup.keySet())
-//			if (d <= t.doubleValue())
-//				startIndex = rankingLookup.get(d);
-//			else
-//				break;
-//
-//		for (int i = startIndex; i < valueRanking.size(); i++)
-//			if (t.doubleValue() < valueRanking.get(i))
-//				return (double) (i - 1) / (double) (valueRanking.size() - 1) + q * 0.5;
-//			else if (t.doubleValue() == valueRanking.get(i)) {
-//				double lower = (double) (i) / (double) (valueRanking.size() - 1);
-//				// check how many equal values exist
-//				double upper = lower;
-//				for (int j = i + 1; j < valueRanking.size(); j++)
-//					if (t.doubleValue() == valueRanking.get(j))
-//						upper = (double) (j) / (double) (valueRanking.size() - 1);
-//					else
-//						break;
-//				return (lower + upper) * 0.5;
-//			}
-//
-//		return Double.NaN;
+	@Override
+	public String toString() {
+		String s = super.toString();
+		s += ("Count of Value Ranking: " + (valueRanking != null ? valueRanking.size() : "unknown"));
+
+		return s;
 	}
 
 }

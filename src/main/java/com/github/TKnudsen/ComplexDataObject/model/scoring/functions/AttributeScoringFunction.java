@@ -14,6 +14,7 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeListener;
+import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
@@ -470,7 +471,12 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 
 	@Override
 	public String toString() {
-		return getAttribute();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Attribute Scoring Function:\t" + getClass().getSimpleName() + "\n");
+		sb.append("Attribute:\t" + getAttribute() + "\n");
+		sb.append("Missing Value Score: " + MathFunctions.round(getScoreForMissingObjects(), 3) + "\n");
+
+		return sb.toString().trim();
 	}
 
 	public double getTruncatedValueRateBottom() {

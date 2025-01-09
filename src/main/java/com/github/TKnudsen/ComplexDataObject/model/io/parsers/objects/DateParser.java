@@ -139,6 +139,8 @@ public class DateParser implements IObjectParser<Date> {
 
 	@Override
 	public synchronized Date apply(Object object) {
+		if (object == null)
+			return null;
 		if (object instanceof Date)
 			return new Date(((Date) object).getTime());
 		if (object instanceof Long)
@@ -153,6 +155,7 @@ public class DateParser implements IObjectParser<Date> {
 		pruned = pruned.replace("_", "-");
 		pruned = pruned.replace("/", "-");
 		pruned = pruned.replace(".", "-");
+		pruned = pruned.trim();
 
 		String dateFormatString = determineDateFormat(pruned);
 
@@ -279,6 +282,12 @@ public class DateParser implements IObjectParser<Date> {
 				}
 			}
 		}
+
+		if (date == null && object.toString().contains("+"))
+			return apply(object.toString().subSequence(0, object.toString().indexOf("+")));
+		else if (date == null && object.toString().contains("-"))
+			return apply(object.toString().subSequence(0, object.toString().indexOf("-")));
+
 
 		return date;
 	}

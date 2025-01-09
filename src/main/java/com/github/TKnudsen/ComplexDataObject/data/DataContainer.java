@@ -28,7 +28,7 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * </p>
  * 
  * @author Juergen Bernard
- * @version 1.06
+ * @version 1.07
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
@@ -51,7 +51,6 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	/**
 	 * Map of attributes, each storing a Map of T and corresponding attribute vales.
 	 */
-
 	protected Map<String, Map<T, Object>> attributeValues = new TreeMap<String, Map<T, Object>>();
 
 	protected DataSchema dataSchema;
@@ -151,8 +150,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			extendDataSchema(object);
 		}
 
-		for (String attribute : getAttributeNames())
-			calculateEntities(attribute);
+		// lazy implementation of attributeValues
+		// for (String attribute : getAttributeNames())
+		// calculateEntities(attribute);
 	}
 
 	/**
@@ -202,7 +202,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		extendDataSchema(object);
 
 		for (String attribute : getAttributeNames())
-			calculateEntities(attribute);
+			// lazy implementation of attributeValues
+			if (attributeValues.get(attribute) != null)
+				attributeValues.get(attribute).put(object, object.getAttribute(attribute));
 
 		return true;
 	}
@@ -327,6 +329,11 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	 * @return
 	 */
 	public Map<Long, Object> getAttributeValues(String attribute) {
+		if (dataSchema.contains(attribute))
+			// lazy implementation to save memory
+			if (!attributeValues.containsKey(attribute))
+				calculateEntities(attribute);
+
 		Map<Long, Object> result = new HashMap<>();
 		for (T t : attributeValues.get(attribute).keySet())
 			result.put(t.getID(), t);
@@ -335,9 +342,15 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	public Collection<Object> getAttributeValueCollection(String attribute) {
-		if (attributeValues.containsKey(attribute))
+		if (dataSchema.contains(attribute)) {
+			// lazy implementation to save memory
+			if (!attributeValues.containsKey(attribute))
+				calculateEntities(attribute);
+
+			// if (attributeValues.containsKey(attribute))
 			if (attributeValues.get(attribute) != null)
 				return attributeValues.get(attribute).values();
+		}
 
 		System.err.println(getClass().getSimpleName() + ".getAttributeValueCollection: attribute " + attribute
 				+ " not part of the attribute set");

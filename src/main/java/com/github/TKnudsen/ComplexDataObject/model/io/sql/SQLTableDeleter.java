@@ -22,6 +22,8 @@ public class SQLTableDeleter {
 				sql = PostgreSQL.replaceMySQLQuotes(sql);
 
 			stmt.executeUpdate(sql);
+
+			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -40,6 +42,8 @@ public class SQLTableDeleter {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+
+			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -93,7 +97,7 @@ public class SQLTableDeleter {
 	 * @param queryObjects
 	 * @throws SQLException
 	 */
-	public static void deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
+	public static boolean deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
 			List<String> queryObjects, boolean showTimingLog) throws SQLException {
 		Objects.requireNonNull(tableName);
 		Objects.requireNonNull(columns);
@@ -112,8 +116,6 @@ public class SQLTableDeleter {
 		// others like "prices" are (prices.tableName; without "" by the way). Is it due
 		// to the name public? or is there an active/default
 		// schema which would be the public in this case?
-
-		// TODO find out why schema Attributes requires "Attributes"."tablename".
 
 		String sql = null;
 		if (postgres && schema != null) {
@@ -148,11 +150,15 @@ public class SQLTableDeleter {
 		if (postgres)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
+		int rowCount = SQLTableSelector.countRows(conn, schema, tableName);
+
 		PreparedStatement preparedStmt = conn.prepareStatement(sql);
 		preparedStmt.execute();
 		preparedStmt.close();
 
 		if (showTimingLog)
 			System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
+
+		return rowCount > SQLTableSelector.countRows(conn, schema, tableName);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableCreator;
+import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLUtils;
 
 public class SQLTableCreators {
 
@@ -19,6 +20,7 @@ public class SQLTableCreators {
 
 		SQLTableCreator.createTable(conn, schema, tableName, dataSchema, dataContainer::getAttributeValueCollection,
 				primaryKeyAttributes, useFloatInsteadOfDouble);
+		SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
 	}
 
 	/**

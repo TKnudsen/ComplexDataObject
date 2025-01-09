@@ -30,7 +30,6 @@ public class DataSchema {
 	private final String name;
 	private final String description;
 
-	// why sorted?!
 	protected final SortedMap<String, DataSchemaEntry<?>> attributes = new TreeMap<String, DataSchemaEntry<?>>();
 
 	public DataSchema() {
@@ -53,8 +52,6 @@ public class DataSchema {
 	 * @return
 	 */
 	public boolean contains(String attribute) {
-		// return attributes.keySet().contains(attribute);
-		// supposed to be faster
 		return attributes.containsKey(attribute);
 	}
 
@@ -160,7 +157,7 @@ public class DataSchema {
 	 * Introduces or updates a new attribute to the data schema with 'null' as
 	 * default value.
 	 * 
-	 * @param attribute    the attribute name
+	 * @param attribute the attribute name
 	 * @param type
 	 * @return the data schema instance for call-chaining.
 	 */
@@ -187,8 +184,8 @@ public class DataSchema {
 	/**
 	 * Introduces or updates a new attribute to the data schema.
 	 * 
-	 * @param attribute    the attribute name
-	 * @param type         the expected data type.
+	 * @param attribute  the attribute name
+	 * @param type       the expected data type.
 	 * @param dataSchema
 	 * @return the data schema instance for call-chaining.
 	 */
