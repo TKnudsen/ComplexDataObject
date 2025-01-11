@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.scoring;
+package com.github.TKnudsen.ComplexDataObject.model.scoring.ranking;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,10 +8,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.correlation.Correlations;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 
-public class AttributeScoringModels {
+/**
+ * @deprecateds
+ */
+public class ItemRankingModelsModels {
 
 	/**
-	 * 
+	 * @deprecated use AttributeScoringFunctions.getCorrelation
 	 * @param container
 	 * @param f1
 	 * @param f2

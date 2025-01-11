@@ -1,8 +1,6 @@
-package com.github.TKnudsen.ComplexDataObject.model.scoring;
+package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import javax.swing.event.ChangeEvent;
-
-import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 
 public class AttributeScoringFunctionChangeEvent extends ChangeEvent {
 

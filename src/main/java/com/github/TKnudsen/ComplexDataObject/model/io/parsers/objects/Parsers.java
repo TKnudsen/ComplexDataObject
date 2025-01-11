@@ -65,7 +65,7 @@ public class Parsers {
 		return String.valueOf(o);
 	}
 
-	public static synchronized Collection<Double> parseDoubles(Collection<Object> objects) {
+	public static synchronized Collection<Double> parseDoubles(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -75,7 +75,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<Float> parseFloats(Collection<Object> objects) {
+	public static synchronized Collection<Float> parseFloats(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -85,7 +85,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<Integer> parseIntegers(Collection<Object> objects) {
+	public static synchronized Collection<Integer> parseIntegers(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -98,7 +98,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<Long> parseLongs(Collection<Object> objects) {
+	public static synchronized Collection<Long> parseLongs(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -108,7 +108,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<Date> parseDates(Collection<Object> objects) {
+	public static synchronized Collection<Date> parseDates(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -118,7 +118,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<Boolean> parseBooleans(Collection<Object> objects) {
+	public static synchronized Collection<Boolean> parseBooleans(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 
@@ -128,7 +128,7 @@ public class Parsers {
 		return values;
 	}
 
-	public static synchronized Collection<String> parseStrings(Collection<Object> objects) {
+	public static synchronized Collection<String> parseStrings(Collection<? extends Object> objects) {
 		if (objects == null)
 			return null;
 

@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.scoring;
+package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import java.util.EventListener;
 

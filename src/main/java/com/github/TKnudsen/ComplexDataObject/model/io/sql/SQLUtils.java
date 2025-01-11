@@ -354,13 +354,13 @@ public class SQLUtils {
 		long l;
 		float f;
 		double d;
-
+		
 		for (int i = 0; i < columnNames.length; i++) {
-
+			
 			String attribute = columnNames[i];
 
 			switch (columnTypes[i]) {
-
+			
 			case Types.INTEGER:
 				l = resultSet.getInt(i + 1);
 				if (resultSet.wasNull()) {

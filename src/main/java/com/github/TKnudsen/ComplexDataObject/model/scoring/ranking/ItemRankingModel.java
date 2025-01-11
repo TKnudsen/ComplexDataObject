@@ -1,4 +1,4 @@
-package com.github.TKnudsen.ComplexDataObject.model.scoring;
+package com.github.TKnudsen.ComplexDataObject.model.scoring.ranking;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
-import javax.swing.event.ChangeListener;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
@@ -18,11 +16,13 @@ import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctionChangeEvent;
+import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctionChangeListener;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 
-public final class AttributeScoringModel implements AttributeScoringFunctionChangeListener {
+public final class ItemRankingModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();
 	private Map<String, AttributeScoringFunction<?>> attributeScoringFunctionsLookup = new HashMap<>();
@@ -32,7 +32,9 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	private Boolean validationMode = false;
 
 	@JsonIgnore
-	private List<ChangeListener> changeListeners = new ArrayList<>();
+	private List<AttributeScoringFunctionChangeListener> attributeScoringFunctionChangeListeners = new ArrayList<>();
+	@JsonIgnore
+	private List<ItemRankingChangeListener> itemRankingChangeListeners = new ArrayList<>();
 
 	/**
 	 * is not stored internally as the objects to be ranked may differ from the ones
@@ -43,28 +45,29 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	 * @param container
 	 * @return
 	 */
-	public Ranking<EntryWithComparableKey<Double, ComplexDataObject>> calculateRanking(ComplexDataContainer container) {
+	public Ranking<EntryWithComparableKey<Double, String>> calculateRanking(ComplexDataContainer container) {
 
 		if (container == null)
 			return null;
 
-		Ranking<EntryWithComparableKey<Double, ComplexDataObject>> cdoRanking = new Ranking<>();
+		Ranking<EntryWithComparableKey<Double, String>> cdoRanking = new Ranking<>();
 
 		for (ComplexDataObject cdo : container) {
 			double score = getScore(cdo);
 
-			cdoRanking.add(new EntryWithComparableKey<Double, ComplexDataObject>(score, cdo));
+			cdoRanking.add(new EntryWithComparableKey<Double, String>(score,
+					cdo.getAttribute(container.getPrimaryKeyAttribute()).toString()));
 		}
 
 		if (validationMode)
-			for (EntryWithComparableKey<Double, ComplexDataObject> entry : cdoRanking)
-				System.out.println(MathFunctions.round(entry.getKey(), 3) + ":\t" + entry.getValue().getName() + ":\t"
-						+ entry.getValue().getAttribute("ISIN"));
+			for (EntryWithComparableKey<Double, String> entry : cdoRanking)
+				System.out.println(
+						MathFunctions.round(entry.getKey(), 3) + ":\t" + entry.getValue() + ":\t" + entry.getValue());
 
 		normalizationFunction = new LinearNormalizationFunction(cdoRanking.getFirst().getKey(),
 				cdoRanking.getLast().getKey());
 
-		handleItemRankingChangeEvent(new ItemRankingChangeEvent(this, cdoRanking));
+		handleItemRankingChangeEvent(new ItemRankingChangeEvent<Double>(this, cdoRanking));
 
 		return cdoRanking;
 	}
@@ -183,50 +186,11 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 	}
 
 	public AttributeScoringFunction<?> getAttributeScoringFunction(String attribute) {
-//		for (int i = 0; i < attributeScoringFunctions.size(); i++)
-//			if (attributeScoringFunctions.get(i).getAttribute().equals(attribute))
-//				return attributeScoringFunctions.get(i);
 		return attributeScoringFunctionsLookup.get(attribute);
-//		return null;
 	}
 
 	public List<AttributeScoringFunction<?>> getAttributeScoringFunctions() {
 		return new CopyOnWriteArrayList<AttributeScoringFunction<?>>(attributeScoringFunctions);
-	}
-
-	/**
-	 * @deprecated use AttributeScoringModels.getAttributeScoringCorrelation
-	 * @param container
-	 * @param f1
-	 * @param f2
-	 * @param minimumSize default: 2 (leading to a perfect correlation though)
-	 * @return
-	 */
-	public double getAttributeScoringCorrelation(ComplexDataContainer container, AttributeScoringFunction<?> f1,
-			AttributeScoringFunction<?> f2, int minimumSize) {
-		return AttributeScoringModels.getAttributeScoringCorrelation(container, f1, f2, true, false, minimumSize);
-
-//		Collection<Double> values1 = new ArrayList<>();
-//		Collection<Double> values2 = new ArrayList<>();
-//
-//		for (ComplexDataObject cdo : container) {
-//			double v1 = f1.apply(cdo);
-//			double v2 = f2.apply(cdo);
-//
-//			if (!Double.isNaN(v1) && !Double.isNaN(v2)) {
-//				values1.add(v1);
-//				values2.add(v2);
-//			}
-//		}
-//
-//		PearsonsCorrelation pc = new PearsonsCorrelation();
-//		double[] xArray = DataConversion.toPrimitives(values1);
-//		double[] yArray = DataConversion.toPrimitives(values2);
-//
-//		if (xArray.length < 2 || yArray.length < 2)
-//			return 0.0;
-//
-//		return pc.correlation(xArray, yArray);
 	}
 
 	public List<String> getAttributes() {
@@ -277,22 +241,28 @@ public final class AttributeScoringModel implements AttributeScoringFunctionChan
 		handleAttributeScoringChangeEvent(event);
 	}
 
-	public void addChangeListener(ChangeListener listener) {
-		changeListeners.remove(listener);
+	public void addAttributeScoringChangeListener(AttributeScoringFunctionChangeListener listener) {
+		attributeScoringFunctionChangeListeners.remove(listener);
 
-		changeListeners.add(listener);
+		attributeScoringFunctionChangeListeners.add(listener);
+	}
+
+	public void addItemRankingChangeListener(ItemRankingChangeListener listener) {
+		itemRankingChangeListeners.remove(listener);
+
+		itemRankingChangeListeners.add(listener);
 	}
 
 	private final void handleAttributeScoringChangeEvent(AttributeScoringFunctionChangeEvent event) {
 		normalizationFunction = null;
 
-		for (ChangeListener listener : changeListeners)
-			listener.stateChanged(event);
+		for (AttributeScoringFunctionChangeListener listener : attributeScoringFunctionChangeListeners)
+			listener.attributeScoringFunctionChanged(event);
 	}
 
-	private final void handleItemRankingChangeEvent(ItemRankingChangeEvent event) {
-		for (ChangeListener listener : changeListeners)
-			listener.stateChanged(event);
+	private final void handleItemRankingChangeEvent(ItemRankingChangeEvent<Double> event) {
+		for (ItemRankingChangeListener listener : itemRankingChangeListeners)
+			listener.rankingChanged(event);
 	}
 
 	public Boolean isValidationMode() {
