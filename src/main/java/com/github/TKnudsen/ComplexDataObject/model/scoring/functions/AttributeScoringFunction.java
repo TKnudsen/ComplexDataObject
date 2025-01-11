@@ -12,8 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeEvent;
-import com.github.TKnudsen.ComplexDataObject.model.scoring.AttributeScoringFunctionChangeListener;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
@@ -448,7 +446,7 @@ public abstract class AttributeScoringFunction<T> implements Function<ComplexDat
 		notifyListeners(event);
 	}
 
-	public ComplexDataContainer getContainer() {
+	public final ComplexDataContainer getContainer() {
 		return container;
 	}
 

@@ -22,15 +22,14 @@ public class AttributeScoresDescriptor implements INumericFeatureVectorDescripto
 	public List<NumericalFeatureVector> transform(ComplexDataObject cdo) {
 		List<NumericalFeature> features = new ArrayList<>();
 
-		for (AttributeScoringFunction<?> attributeScoringFunction : attributeWeightingFunctions) {
+		for (AttributeScoringFunction<?> asf : attributeWeightingFunctions) {
 			try {
-				features.add(new NumericalFeature(attributeScoringFunction.getAttribute(),
-						attributeScoringFunction.apply(cdo) * attributeScoringFunction.getWeight()));
+				features.add(new NumericalFeature(asf.getAttribute(), asf.apply(cdo) * asf.getWeight()));
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("AttributeScoresDescriptor.transform: unable to extract a feature for attribute "
-						+ attributeScoringFunction.getAttribute() + " for object " + cdo.getName());
-				features.add(new NumericalFeature(attributeScoringFunction.getAttribute(), 0.0));
+						+ asf.getAttribute() + " for object " + cdo.getName());
+				features.add(new NumericalFeature(asf.getAttribute(), 0.0));
 			}
 		}
 

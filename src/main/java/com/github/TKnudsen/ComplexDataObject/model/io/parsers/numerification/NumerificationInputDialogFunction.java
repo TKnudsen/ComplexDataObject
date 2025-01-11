@@ -1,5 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,4 +109,7 @@ public abstract class NumerificationInputDialogFunction<T extends Number>
 		return numerificationLookup.put(object, value);
 	}
 
+	public Map<Object, T> getNumerificationLookup() {
+		return Collections.unmodifiableMap(numerificationLookup);
+	}
 }
