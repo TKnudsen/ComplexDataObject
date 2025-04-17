@@ -1,9 +1,11 @@
-package com.github.TKnudsen.ComplexDataObject.model.io;
+package com.github.TKnudsen.ComplexDataObject.model.tools;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * <p>
@@ -170,5 +172,32 @@ public class FileUtils {
 	private static List<String> evilCharsForDirectoryNames() {
 		return Arrays.asList("#", "<", "$", "+", "%", ">", "!", "`", "&", "*", "‘", "|", "{", "?", "“", "=", "}", // ":"
 				"\\", "@"); // "/",
+	}
+	
+	public static String getFilenameNameWithoutExtension(String fileName) {
+		File file = new File(fileName);
+
+		if (!fileName.contains("."))
+			return fileName;
+
+		int index = file.getName().lastIndexOf('.');
+		if (index > 0 && index <= file.getName().length() - 2) {
+			return file.getName().substring(0, index);
+		}
+		return "";
+	}
+	
+	public static String getDirectoryName(String fileName) {
+		File file = new File(fileName);
+		if (file.isDirectory()) {
+			return fileName;
+		} else {
+			file = new File(new File(fileName).getParentFile().getAbsolutePath());
+			return file.getPath();
+		}
+	}
+
+	public static String getFileExtension(String fileName) {
+		return FilenameUtils.getExtension(fileName);
 	}
 }

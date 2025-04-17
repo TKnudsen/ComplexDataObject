@@ -140,7 +140,8 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 			return Double.NaN;
 		}
 
-		double res = binarySearch / (double) (valueRanking.size() - 1);
+		double res = valueRanking.size() < 2 ? (getGlobalMin().doubleValue() + getGlobalMax().doubleValue()) * 0.5
+				: binarySearch / (double) (valueRanking.size() - 1);
 		return res;
 	}
 

@@ -20,6 +20,9 @@ import org.apache.commons.collections4.list.TreeList;
  * Tip: you can also use a List of AbstractMap.SimpleEntry as a simple
  * alternative. Then, a comparable key can be obtained by
  * Collections.sort(collection, Entry.comparingByKey());
+ * 
+ * Tip: for traversing the ranking, use an iterator, which is supposed to be the
+ * fastest for LinkedLists.
  * </p>
  * 
  * <p>

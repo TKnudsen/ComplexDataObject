@@ -123,15 +123,23 @@ public class StatisticsSupport extends DescriptiveStatistics implements Iterable
 		double dNotOutmin = this.getPercentile(quantile);
 		double dNotOutmax = this.getPercentile(100.0 - quantile);
 
-		List<Double> outliers = new ArrayList<>();
-		for (int i = 0; i < getValues().length; i++)
-			if (getValues()[i] < dNotOutmin || getValues()[i] > dNotOutmax)
-				outliers.add(getValues()[i]);
+		// List<Double> outliers = new ArrayList<>();
+		// for (int i = 0; i < getValues().length; i++)
+		// if (getValues()[i] < dNotOutmin || getValues()[i] > dNotOutmax)
+		// outliers.add(getValues()[i]);
 
-		double[] ret = new double[outliers.size()];
-		for (int i = 0; i < outliers.size(); i++)
-			ret[i] = outliers.get(i);
-		return ret;
+		// much faster
+		List<Double> outliers = new ArrayList<>();
+		for (double d : getValues())
+			if (d < dNotOutmin || d > dNotOutmax)
+				outliers.add(d);
+
+		// double[] ret = new double[outliers.size()];
+		// for (int i = 0; i < outliers.size(); i++)
+		// ret[i] = outliers.get(i);
+
+		// faster
+		return outliers.stream().mapToDouble(Double::doubleValue).toArray();
 	}
 
 	private void resetValues() {
