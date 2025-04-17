@@ -145,7 +145,7 @@ public class JSONLoader {
 		return null;
 	}
 
-	public static AttributeScoringFunction<?> loadAttributeScoringFunctionFromFile(String file) {
+	public static AttributeScoringFunction<?> loadAttributeScoringFunctionFromFile(String file) throws IOException {
 
 		AttributeScoringFunction<?> function;
 		try {
@@ -160,8 +160,6 @@ public class JSONLoader {
 			} catch (IOException e_) {
 				e_.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 		return null;

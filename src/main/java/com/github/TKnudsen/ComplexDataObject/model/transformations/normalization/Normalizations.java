@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
+
 /**
  * <p>
  * Little helper so that locally there is no need to iterate through a
@@ -29,4 +31,5 @@ public class Normalizations {
 
 		return output;
 	}
+
 }

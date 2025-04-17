@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.tknudsen</groupId>
 	<artifactId>complex-data-object</artifactId>
 	<version>0.2.15-SNAPSHOT</version>
 	<name>ComplexDataObject</name>
-	<description>A library that models real-world objects in Java, referred to as ComplexDataObjects. Other features: IO and preprocessing of ComplexDataObjects.</description>
+	<description>A library that models real-world objects in Java, referred to
+		as ComplexDataObjects. Other features: IO and preprocessing of
+		ComplexDataObjects.</description>
 	<url>https://github.com/TKnudsen/ComplexDataObject</url>
 	<licenses>
 		<license>
@@ -15,7 +19,7 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/TKnudsen/ComplexDataObject</url>
-		<connection>https://github.	com/TKnudsen/ComplexDataObject.git</connection>
+		<connection>https://github. com/TKnudsen/ComplexDataObject.git</connection>
 		<developerConnection>https://github.com/TKnudsen/ComplexDataObject.git</developerConnection>
 	</scm>
 	<developers>
@@ -32,7 +36,8 @@
 		</snapshotRepository>
 		<repository>
 			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<url>
+				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
 	<properties>
@@ -108,6 +113,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbutils</groupId>

@@ -1,5 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * Title: StringUtils
@@ -10,11 +13,11 @@ package com.github.TKnudsen.ComplexDataObject.model.tools;
  * </p>
  *
  * <p>
- * Copyright: Copyright (c) 2017-2024
+ * Copyright: Copyright (c) 2017-2025
  * </p>
  *
  * @author Juergen Bernard
- * @version 1.04
+ * @version 1.05
  */
 public class StringUtils {
 
@@ -92,5 +95,27 @@ public class StringUtils {
 		// }
 		//
 		// return count > 0 ? matches / count : 0.0;
+	}
+	
+	/**
+	 * 
+	 * @param row
+	 * @param separator
+	 * @return
+	 */
+	public static List<String> tokenize(String row, String separator) {
+		List<String> lineTokens = new ArrayList<String>();
+		while (true) {
+			if (row.contains(separator)) {
+				lineTokens.add(row.substring(0, row.indexOf(separator)));
+				row = row.substring(row.indexOf(separator) + separator.length(), row.length());
+				if (!row.contains(separator))
+					lineTokens.add(row.trim());
+				continue;
+			}
+			break;
+		}
+
+		return lineTokens;
 	}
 }

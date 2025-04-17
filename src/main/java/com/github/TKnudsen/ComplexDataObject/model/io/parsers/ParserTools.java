@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public abstract class ParserTools implements Serializable {
 		System.out.println("reading " + dataFile + " ...");
 		File file = new File(dataFile);
 		BufferedReader reader = null;
-
+		
 		// file input
 		try {
 			reader = new BufferedReader(new FileReader(file));

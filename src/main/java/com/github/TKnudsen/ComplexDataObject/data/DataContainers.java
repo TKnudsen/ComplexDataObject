@@ -13,11 +13,12 @@ public class DataContainers {
 	}
 
 	/**
-	 * creates a map with the ID attribute of ComplexDataObjects as key.
+	 * Creates a map with the ID attribute of ComplexDataObjects as key.
 	 * 
-	 * @deprecated uses the ID attribute of ComplexDataObjects that was replaced by
-	 *             a dynamic primary key concept. Those primary keys do not need to
-	 *             be of type Long any more.
+	 * Uses the ID attribute of ComplexDataObjects that was replaced by a dynamic
+	 * primary key concept. Those primary keys do not need to be of type Long any
+	 * more.
+	 * 
 	 * @param attribute
 	 * @return
 	 */
