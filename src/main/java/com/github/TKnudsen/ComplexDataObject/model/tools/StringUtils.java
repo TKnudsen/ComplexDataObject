@@ -1,121 +1,90 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * <p>
- * Title: StringUtils
- * </p>
+ * Compatibility wrapper for the renamed {@link StringTools} class.
  *
  * <p>
- * Description: little helpers when working with String.
+ * This class existed before {@link StringTools} was introduced. All methods
+ * delegate directly to {@link StringTools}. New code should use
+ * {@link StringTools} directly.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2017-2025
- * </p>
- *
- * @author Juergen Bernard
- * @version 1.05
+ * @deprecated Use {@link StringTools} instead. This wrapper will be removed in
+ *             a future major release.
  */
-public class StringUtils {
+@Deprecated
+public final class StringUtils {
 
-	public static void main(String[] args) {
-		int count = 10000000;
-		int length = 4;
-		String s1 = "Subset AutomSystemsotive Components";
-		String s2 = "SubsetSub Components and Systems";
-
-		long l = System.currentTimeMillis();
-
-		for (int i = 0; i < count; i++)
-			subStringSimilarity(s1, s2, length);
-		System.out.println("subStringSimilarity took " + (System.currentTimeMillis() - l) + " ms");
-
-		System.out.println();
-	}
-
-	public static String truncateDouble(double value, int decimals) {
-		if (decimals < 0)
-			return null;
-
-		String result = (Double.valueOf(value)).toString();
-		int dot = result.lastIndexOf(".");
-		int length = result.length();
-		result = result.substring(0, (int) (Math.min(dot + 1 + decimals, length)));
-
-		return result;
+	private StringUtils() {
 	}
 
 	/**
-	 * simple similarity measure based on the ratio of matching substrings
-	 * 
-	 * @param query
-	 * @param target
-	 * @param length length of substring that is used as sliding window kernel
-	 * @return
+	 * @deprecated Use {@link StringTools#substringSimilarity(String, String, int)}
+	 *             instead.
 	 */
+	@Deprecated
 	public static double subStringSimilarity(String query, String target, int length) {
-		if (query == null || target == null || query.length() == 0 || target.length() == 0)
-			return 0.0;
-
-		int kernel = Math.min(length, Math.min(query.length(), target.length()));
-		int totalWindows = query.length() - kernel + 1;
-
-		int matches = 0;
-		for (int i = 0; i <= query.length() - kernel; i++) {
-			String windowQuery = query.substring(i, i + kernel);
-			int index = target.indexOf(windowQuery);
-			if (index != -1 && index + kernel <= target.length())
-				matches++;
-
-		}
-
-		return totalWindows > 0 ? (double) matches / totalWindows : 0.0;
-
-		// old version, ten times slower
-		// if (query == null || target == null)
-		// return 0.0;
-		// if (query.length() == 0 || target.length() == 0)
-		// return 0.0;
-		//
-		// int kernel = Math.max(length, 1);
-		// kernel = Math.min(length, Math.min(query.length(), target.length()));
-		//
-		// double count = 0;
-		// double matches = 0;
-		// for (int i = 0; i <= query.length() - kernel; i++) {
-		// for (int j = 0; j <= target.length() - kernel; j++)
-		// if (query.regionMatches(true, i, target, j, kernel)) {
-		// matches++;
-		// break;
-		// }
-		// count++;
-		// }
-		//
-		// return count > 0 ? matches / count : 0.0;
+		return StringTools.substringSimilarity(query, target, length);
 	}
-	
-	/**
-	 * 
-	 * @param row
-	 * @param separator
-	 * @return
-	 */
-	public static List<String> tokenize(String row, String separator) {
-		List<String> lineTokens = new ArrayList<String>();
-		while (true) {
-			if (row.contains(separator)) {
-				lineTokens.add(row.substring(0, row.indexOf(separator)));
-				row = row.substring(row.indexOf(separator) + separator.length(), row.length());
-				if (!row.contains(separator))
-					lineTokens.add(row.trim());
-				continue;
-			}
-			break;
-		}
 
-		return lineTokens;
+	/**
+	 * @deprecated Use {@link StringTools#countSubstring(String, String, boolean)}
+	 *             instead.
+	 */
+	@Deprecated
+	public static int countSubstring(String s, String sub, boolean allowOverlaps) {
+		return StringTools.countSubstring(s, sub, allowOverlaps);
+	}
+
+	/** @deprecated Use {@link StringTools#tokenize(String, String)} instead. */
+	@Deprecated
+	public static java.util.List<String> tokenize(String text, String separator) {
+		return StringTools.tokenize(text, separator);
+	}
+
+	/** @deprecated Use {@link StringTools#truncateDouble(double, int)} instead. */
+	@Deprecated
+	public static String truncateDouble(double value, int decimals) {
+		return StringTools.truncateDouble(value, decimals);
+	}
+
+	/** @deprecated Use {@link StringTools#padRight(String, int)} instead. */
+	@Deprecated
+	public static String padRight(String s, int width) {
+		return StringTools.padRight(s, width);
+	}
+
+	/** @deprecated Use {@link StringTools#padLeft(String, int)} instead. */
+	@Deprecated
+	public static String padLeft(String s, int width) {
+		return StringTools.padLeft(s, width);
+	}
+
+	/** @deprecated Use {@link StringTools#repeatChar(char, int)} instead. */
+	@Deprecated
+	public static String repeatChar(char c, int count) {
+		return StringTools.repeatChar(c, count);
+	}
+
+	/**
+	 * @deprecated Use
+	 *             {@link StringTools#stripNonAsciiAndControlChars(String, String)}
+	 *             instead.
+	 */
+	@Deprecated
+	public static String cleanNonASCIIContent(String text, String replaceBy) {
+		return StringTools.stripNonAsciiAndControlChars(text, replaceBy);
+	}
+
+	/**
+	 * @deprecated Use
+	 *             {@link org.apache.commons.lang3.exception.ExceptionUtils#getStackTrace(Throwable)}
+	 *             instead.
+	 */
+	@Deprecated
+	public static String stackTraceToString(Throwable e) {
+		if (e == null)
+			return "";
+		return org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
 	}
 }
