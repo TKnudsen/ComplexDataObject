@@ -14,6 +14,15 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
+/**
+ * <p>
+ * Abstract AttributeScoringFunction base class for Double-valued attributes.
+ * Adds standard-deviation-based outlier pruning (clamping of extreme values
+ * on both ends of the value range), maintains raw and pruned statistics
+ * support, and delegates normalization strategy (linear vs. quantile, with
+ * optional linear transition between the two) to subclasses.
+ * </p>
+ */
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
 
 	private Double preFilterOutlierStd = 10.0;

@@ -4,6 +4,14 @@ import java.util.Arrays;
 
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities.KolmogorovSmirnovDistance;
 
+/**
+ * <p>
+ * Standalone test/demo harness that exercises KolmogorovSmirnovDistance on
+ * synthetic probability distributions (increasing and decreasing triangular
+ * distributions and random distributions) and prints the resulting
+ * distances to the console.
+ * </p>
+ */
 public class KolmogorovSmirnovDistanceTest {
 
 	public static void main(String[] args) {

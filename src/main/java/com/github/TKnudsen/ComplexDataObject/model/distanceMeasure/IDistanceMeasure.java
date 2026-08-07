@@ -6,21 +6,12 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * <p>
- * Title: IDistanceMeasure
- * </p>
- * 
- * <p>
- * Description: Basic interface modeling distances between two objects of
+ * Basic interface modeling distances between two objects of
  * identical type.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public interface IDistanceMeasure<T> extends ToDoubleBiFunction<T, T>, ISelfDescription {
 

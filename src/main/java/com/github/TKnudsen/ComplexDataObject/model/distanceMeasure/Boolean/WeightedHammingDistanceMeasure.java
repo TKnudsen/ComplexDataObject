@@ -6,19 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedHammingDistanceMeasure
+ * Computes a weighted Hamming distance between two Boolean arrays: weights
+ * are normalized to sum to one, and the distance is the normalized weighted
+ * sum of positions where the two arrays differ, with missing values
+ * contributing the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedHammingDistanceMeasure extends WeightedDistanceMeasure<Boolean[]> {
 

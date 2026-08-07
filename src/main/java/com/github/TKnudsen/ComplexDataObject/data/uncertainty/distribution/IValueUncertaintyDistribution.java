@@ -4,7 +4,7 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.range.IValueUncert
 
 /**
  * <p>
- * * Representation of a distribution of uncertainties for a single value. It is
+ * Representation of a distribution of uncertainties for a single value. It is
  * the statistical summary or accumulation of several possible uncertainties. It
  * can roughly be imagined as describing the probabilities of the possible
  * deviations of the uncertain value to the actual value: For a given uncertain
@@ -13,14 +13,9 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.range.IValueUncert
  * than <code>(v+lower)</code> and never be greater than <code>(v+upper)</code>,
  * and "on average", the actual value will be <code>(v+mean)</code>
  * </p>
- * 
- * <p>
- * Copyright: (c) 2015-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2015
  */
 public interface IValueUncertaintyDistribution extends IValueUncertaintyRange {
 

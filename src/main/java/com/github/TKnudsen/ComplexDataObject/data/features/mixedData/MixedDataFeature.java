@@ -5,20 +5,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
- * Title: MixedDataFeature
- * </p>
- *
- * <p>
- * Description: Single feature, e.g. for a MixedDataVector. Can be numerical,
+ * Single feature, e.g. for a MixedDataVector. Can be numerical,
  * categorical, or binary.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2015-2016
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2015
  */
 public class MixedDataFeature extends Feature<Object> {
 

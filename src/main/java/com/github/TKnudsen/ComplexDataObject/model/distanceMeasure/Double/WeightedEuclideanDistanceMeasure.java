@@ -6,19 +6,13 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedEuclideanDistanceMeasure
+ * Computes a weighted Euclidean distance between two double arrays,
+ * weighting each dimension's squared difference before taking the square
+ * root; missing/NaN values contribute the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedEuclideanDistanceMeasure extends WeightedDistanceMeasure<double[]> {
 

@@ -9,19 +9,13 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: ImplausibleValueRemover
+ * Replaces implausible values of a named feature with a configured neutral
+ * element, for every MixedDataFeatureVector in a container whose feature
+ * value matches one of a given list of implausible values.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2017
  */
 public class ImplausibleValueRemover<T extends Object> implements IMixedDataFeatureVectorProcessor {
 

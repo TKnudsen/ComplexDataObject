@@ -11,19 +11,15 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
 
 /**
  * <p>
- * Title: IDataMiningWorkflow
+ * Contract for a data mining workflow pipeline that turns a list of input
+ * objects into a list of feature vectors: pre-processors condition the raw
+ * objects, a descriptor extracts feature vectors, feature processors refine
+ * them, and a distance measure enables subsequent comparison of the
+ * resulting feature vectors.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2016
  */
 public interface IDataMiningWorkflow<O, F, FV extends AbstractFeatureVector<F, ? extends Feature<F>>>
 		extends Function<List<O>, List<FV>> {

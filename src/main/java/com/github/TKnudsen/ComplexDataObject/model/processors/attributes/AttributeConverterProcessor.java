@@ -10,6 +10,15 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectPar
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
 
+/**
+ * <p>
+ * Converts the values of a single attribute in a ComplexDataContainer or list
+ * of ComplexDataObjects by applying an {@link IObjectParser} to each value
+ * and replacing the attribute definition with the parser's output type. Acts
+ * as the common base for the type-specific converters (boolean, date,
+ * numeric, integer) in this package.
+ * </p>
+ */
 public class AttributeConverterProcessor implements IComplexDataObjectProcessor {
 
 	private String attribute;

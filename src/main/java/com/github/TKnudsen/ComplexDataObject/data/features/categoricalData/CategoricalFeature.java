@@ -5,19 +5,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
- * Title: CategoricalFeature
+ * A Feature holding a categorical (String-valued) feature value, identified
+ * by FeatureType.STRING.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.0
+ * @since 2017
  */
 
 public class CategoricalFeature extends Feature<String> {

@@ -6,19 +6,13 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedJaccardDistanceMeasure
+ * Computes the weighted Jaccard distance between two Boolean arrays, i.e.
+ * one minus the weighted intersection-over-union of the two sets, treating
+ * missing values via the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter, J�rgen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedJaccardDistanceMeasure extends WeightedDistanceMeasure<Boolean[]> {
 

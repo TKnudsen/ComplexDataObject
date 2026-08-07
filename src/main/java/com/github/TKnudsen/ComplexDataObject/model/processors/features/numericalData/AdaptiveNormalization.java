@@ -11,10 +11,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
  * Compares different normalization methods based on a quality measure
  * (kurtosis) and chooses an individual normalization for each feature based on
  * that measure.
- * 
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

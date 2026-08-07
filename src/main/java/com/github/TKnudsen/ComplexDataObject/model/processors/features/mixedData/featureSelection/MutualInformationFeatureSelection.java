@@ -15,6 +15,13 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.IMixedDataFeatureVectorProcessor;
 
 /**
+ * <p>
+ * Selects the most relevant features of a set of labeled
+ * MixedDataFeatureVectors by computing the mutual information between each
+ * feature and the class label (discretizing numeric features as needed),
+ * then keeps the top-ranked features via {@link IndexFeatureSelection}.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

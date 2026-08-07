@@ -8,6 +8,15 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
 import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 
+/**
+ * <p>
+ * Static helper methods for MixedDataFeature/MixedDataFeatureVector
+ * instances: guessing or resolving a FeatureType from a raw value or class,
+ * adding class/numeric attributes to a list of feature vectors, and
+ * converting NumericalFeatureVector/Feature instances into their
+ * MixedDataFeature/MixedDataFeatureVector counterparts.
+ * </p>
+ */
 public class MixedDataFeatureTools {
 
 	public static FeatureType guessFeatureType(Object feature) throws IllegalArgumentException {

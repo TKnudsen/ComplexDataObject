@@ -16,19 +16,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
 /**
  * <p>
- * Title: DataStore
+ * stores collections of IDObjects.
  * </p>
- * 
- * <p>
- * Description: stores collections of IDObjects.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2012-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2012
  */
 public class DataStore<T extends IDObject> implements IDObject, ISelfDescription, Iterable<T> {
 

@@ -10,6 +10,13 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.numericalData.INumericalFeatureVectorProcessor;
 
 /**
+ * <p>
+ * Feature selection processor that, for each feature, sums the absolute
+ * Pearson correlation with every other feature as a redundancy score, then
+ * keeps only the given number of least redundant features and removes the
+ * rest via {@link IndexFeatureSelection}.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

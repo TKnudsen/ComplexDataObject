@@ -4,19 +4,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.
 
 /**
  * <p>
- * Title: BigramGenerator
+ * Creates a bi-gram from two given strings.
  * </p>
- * 
- * <p>
- * Description: Creates a bi-gram from two given strings.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class BigramGenerator implements IObjectMerger<String> {
 

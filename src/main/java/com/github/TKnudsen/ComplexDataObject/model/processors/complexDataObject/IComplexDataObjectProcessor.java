@@ -6,20 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
  * <p>
- * Title: IComplexDataObjectProcessor
+ * Interface for processors that operate on ComplexDataObject instances. It
+ * extends the generic IDataProcessor with an additional process method that
+ * operates directly on a ComplexDataContainer.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
- * 
+ * @since 2016
+ *
  * TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */
 

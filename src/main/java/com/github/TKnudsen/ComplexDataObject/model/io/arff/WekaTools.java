@@ -12,8 +12,6 @@ import org.apache.commons.math3.exception.NullArgumentException;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 import com.github.TKnudsen.ComplexDataObject.data.enums.AttributeType;
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeature;
-import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.NumericalFeatureVector;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IntegerParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.LongParser;
@@ -25,20 +23,12 @@ import weka.core.Instances;
 
 /**
  * <p>
- * Title: WekaTools
- * </p>
- * 
- * <p>
- * Description: Tools class for dealing with resources stemming from the WEKA
+ * Tools class for dealing with resources stemming from the WEKA
  * library. At heart Instance and Attribute objects are handled.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public class WekaTools {
 

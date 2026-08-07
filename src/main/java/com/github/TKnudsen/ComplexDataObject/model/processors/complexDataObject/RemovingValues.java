@@ -9,9 +9,11 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataC
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
 /**
+ * <p>
  * Used to delete a given list of (extreme) values from each
  * {@link ComplexDataObject} in the {@link ComplexDataContainer}.
- * 
+ * </p>
+ *
  * @author Robert Heimbach
  *
  * @param <T>

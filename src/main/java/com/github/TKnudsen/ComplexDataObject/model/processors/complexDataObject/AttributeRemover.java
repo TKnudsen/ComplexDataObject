@@ -7,19 +7,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: AttributeRemover
+ * Removes a single named attribute from every ComplexDataObject in a
+ * container or list, effectively deleting that attribute/column from the
+ * data set.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 
 public class AttributeRemover implements IComplexDataObjectProcessor {

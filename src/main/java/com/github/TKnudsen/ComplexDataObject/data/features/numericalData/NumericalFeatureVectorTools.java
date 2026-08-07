@@ -6,12 +6,16 @@ import java.util.Set;
 
 /**
  * <p>
- * Copyright: Copyright (c) 2016-2018
+ * Static helper methods for NumericalFeatureVector instances and lists
+ * thereof, covering min/max/mean statistics per dimension, conversion to
+ * primitive double arrays and matrix representations, retrieving a variable
+ * or class attribute across a list of vectors, and adding class/numeric
+ * attributes.
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @deprecated use NumericalFeatureVectors
  * @version 1.02
+ * @since 2016
  */
 public class NumericalFeatureVectorTools {
 

@@ -8,6 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
+ * Raises each feature value to a configurable power. When safe domain
+ * handling is enabled, values are first min-max normalized before the power
+ * function is applied.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

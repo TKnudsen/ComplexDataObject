@@ -14,20 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
 
 /**
  * <p>
- * Title: IRISDataDescriptor
- * </p>
- * 
- * <p>
- * Description: Creates feature vectors from complex data objects containing the
+ * Creates feature vectors from complex data objects containing the
  * information of the famous IRIS data set.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2017
  */
 public class IRISDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 

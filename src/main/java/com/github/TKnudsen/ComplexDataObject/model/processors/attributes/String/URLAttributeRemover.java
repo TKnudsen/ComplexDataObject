@@ -1,6 +1,8 @@
 package com.github.TKnudsen.ComplexDataObject.model.processors.attributes.String;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
@@ -9,6 +11,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.IComplexDataObjectProcessor;
 
+/**
+ * <p>
+ * Removes a given attribute entirely from a ComplexDataContainer or list of
+ * ComplexDataObjects if the share of its values that look like URLs meets or
+ * exceeds a configurable removal threshold.
+ * </p>
+ */
 public class URLAttributeRemover implements IComplexDataObjectProcessor {
 
 	double removalThreshold = 0.8;
@@ -71,9 +80,9 @@ public class URLAttributeRemover implements IComplexDataObjectProcessor {
 
 	private boolean isURL(String string) {
 		try {
-			URL url = new URL(string);
+			URL url = new URI(string).toURL();
 			return true;
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException | MalformedURLException e) {
 			return false;
 		}
 	}

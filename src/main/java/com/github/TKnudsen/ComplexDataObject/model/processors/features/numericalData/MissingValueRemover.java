@@ -9,20 +9,12 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: MissingValueRemover
- * </p>
- * 
- * <p>
- * Description: removes NumericalFeatureVectors from a collection if one of the
+ * removes NumericalFeatureVectors from a collection if one of the
  * Features is NAN.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2018
  */
 public class MissingValueRemover implements INumericalFeatureVectorProcessor {
 

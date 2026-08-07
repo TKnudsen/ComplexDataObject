@@ -12,19 +12,14 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: CollectionToBooleanAttributesConverter
+ * Parses the value of an attribute into a Double, using an optional
+ * NumberFormat, Locale, or configurable decimal/thousands separators, and
+ * stores the result under a new target attribute. Missing values or values
+ * matching configured missing-value indicators are mapped to NaN.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class DoubleConverter implements IComplexDataObjectProcessor {
 

@@ -8,19 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: FeatureRemover
+ * Removes a single named feature from every MixedDataFeatureVector in a
+ * container or list.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class MixedDataFeatureRemover implements IMixedDataFeatureVectorProcessor {
 

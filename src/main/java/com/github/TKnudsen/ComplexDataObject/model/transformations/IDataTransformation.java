@@ -6,19 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: IDataTransformation
+ * Basic transformation of an object into another 'space'.
  * </p>
- * 
- * <p>
- * Description: Basic transformation of an object into another 'space'.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public interface IDataTransformation<I, O> {
 

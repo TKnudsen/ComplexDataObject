@@ -2,20 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.data.interval;
 
 /**
  * <p>
- * ComplexDataObject
- * </p>
- * 
- * <p>
  * Stores a numerical interval defined by a start and an end value. The start
  * value must not be larger than the end value.
  * </p>
- * 
- * <p>
- * Copyright (c) 2016-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2016
  */
 public class NumberInterval {
 

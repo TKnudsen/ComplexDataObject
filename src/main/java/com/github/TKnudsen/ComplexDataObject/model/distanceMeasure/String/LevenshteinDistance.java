@@ -1,5 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.String;
 
+/**
+ * <p>
+ * Computes the Levenshtein edit distance between two strings
+ * (case-insensitive) using a dynamic programming approach with a single
+ * rolling cost array.
+ * </p>
+ */
 public class LevenshteinDistance extends StringDistanceMeasure {
 
 	/**

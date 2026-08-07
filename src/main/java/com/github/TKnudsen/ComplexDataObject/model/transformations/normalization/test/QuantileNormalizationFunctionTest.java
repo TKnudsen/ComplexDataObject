@@ -5,6 +5,13 @@ import java.util.Collection;
 
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
+/**
+ * <p>
+ * Manual test/demo harness with a main method that exercises
+ * QuantileNormalizationFunction against a fixed sample of values, printing
+ * expected versus observed output for a series of query values.
+ * </p>
+ */
 public class QuantileNormalizationFunctionTest {
 
 	public static void main(String[] args) {

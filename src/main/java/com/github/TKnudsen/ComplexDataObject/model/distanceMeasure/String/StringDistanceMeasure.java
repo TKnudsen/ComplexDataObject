@@ -6,19 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: StringDistanceMeasure
+ * Basic class for String distance measures.
  * </p>
- * 
- * <p>
- * Description: Basic class for String distance measures.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2024
  */
 public abstract class StringDistanceMeasure implements IDistanceMeasure<String>, Serializable {
 

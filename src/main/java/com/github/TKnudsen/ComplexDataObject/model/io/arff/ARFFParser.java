@@ -17,20 +17,17 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 /**
+ * <p>
  * Parses ComplexDataObjects from an ARFF file. Note: this parser is not part of
  * the persistence layer. In fact, it gathers new ComplexDataObjects from a
  * given file.
- * 
+ *
  * a flag can be set to assign IDs of ComplexDataObjects incrementally starting
  * with 0, reflecting the lines of instances within the arff file.
- *
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2020
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public class ARFFParser implements ComplexDataObjectParser {
 

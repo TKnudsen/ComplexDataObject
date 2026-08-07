@@ -9,6 +9,13 @@ import javax.swing.JOptionPane;
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
 
 /**
+ * <p>
+ * Resolves a Double value for an arbitrary (typically categorical) input
+ * object by looking it up in an internal cache or, if absent, prompting the
+ * user via a Swing input dialog with a configurable timeout. Resolved values
+ * are cached in a lookup map for reuse.
+ * </p>
+ *
  * @deprecated first version of a NumerificationFunction that was bond to Double
  *             output
  * @param <T>

@@ -11,21 +11,13 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: MissingFeaturesCleanser
- * </p>
- * 
- * <p>
- * Description: guarantees that every mixed feature vector has the same
+ * guarantees that every mixed feature vector has the same
  * features/dimensions. missing features/dimensions are added and filled with
  * missing value indicators.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class MissingFeaturesCleanser implements IMixedDataFeatureVectorProcessor {
 

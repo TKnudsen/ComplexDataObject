@@ -8,19 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
 
 /**
  * <p>
- * Title: IKeyValueObjectParser
+ * Interface for parsers to parse files towards KeyValueObjects.
  * </p>
- * 
- * <p>
- * Description: Interface for parsers to parse files towards KeyValueObjects.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public interface IKeyValueObjectParser<KV extends KeyValueObject> {
 

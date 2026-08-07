@@ -10,6 +10,15 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.IDescriptor;
 
+/**
+ * <p>
+ * Descriptor that transforms a ComplexDataObject into a
+ * NumericalFeatureVector by applying a given list of
+ * AttributeScoringFunctions, each producing a weighted numerical feature for
+ * one attribute. Failures for individual attributes are caught and result in
+ * a fallback feature value of 0.0 rather than aborting the whole transform.
+ * </p>
+ */
 public class AttributeScoresDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
 	private final List<AttributeScoringFunction<?>> attributeWeightingFunctions;

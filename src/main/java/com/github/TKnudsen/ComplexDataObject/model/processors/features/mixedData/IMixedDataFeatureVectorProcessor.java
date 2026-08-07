@@ -6,20 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
  * <p>
- * Title: IMixedDataFeatureVectorProcessor
+ * Interface for processors that operate on MixedDataFeatureVector
+ * instances. It extends the generic IDataProcessor with an additional
+ * process method that operates directly on a MixedDataFeatureContainer.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
- * 
+ * @since 2017
+ *
  *          TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor
  *          and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */

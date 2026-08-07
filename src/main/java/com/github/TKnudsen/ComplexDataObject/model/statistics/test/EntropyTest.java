@@ -7,11 +7,12 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.Entropy;
 
 /**
  * <p>
- * Copyright: Copyright (c) 2016-2019
+ * Simple demo/test class that computes and prints the entropy of an example
+ * probability distribution using the Entropy utility class.
  * </p>
  *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2016
  */
 public class EntropyTest {
 

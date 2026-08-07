@@ -4,19 +4,11 @@ import java.util.Comparator;
 
 /**
  * <p>
- * Title: NumberComparator
- * </p>
- * 
- * <p>
- * Description: compares numbers
+ * compares numbers
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2018
  */
 public class NumberComparator implements Comparator<Number> {
 

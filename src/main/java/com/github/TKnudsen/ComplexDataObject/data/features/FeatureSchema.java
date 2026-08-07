@@ -9,20 +9,12 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * Title: FeatureSchema
- * </p>
- * 
- * <p>
- * Description: Contains and maintains the keys/attributes of a given set of
+ * Contains and maintains the keys/attributes of a given set of
  * features. Can be seen as a sort of header for features tables.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.00
+ * @since 2016
  */
 public class FeatureSchema {
 	private final String name;

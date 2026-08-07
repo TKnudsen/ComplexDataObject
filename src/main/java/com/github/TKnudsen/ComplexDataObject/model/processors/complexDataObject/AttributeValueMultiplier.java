@@ -11,13 +11,9 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  * Multiplies a scalar with the numerical values in the given numerical
  * attribute.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class AttributeValueMultiplier implements IComplexDataObjectProcessor {
 

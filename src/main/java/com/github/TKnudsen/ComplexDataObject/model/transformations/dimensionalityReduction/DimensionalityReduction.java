@@ -13,14 +13,10 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * <p>
  * Basis for dimensionality reduction algorithms. Maintains generalizable data
  * structures.
- * 
- * <p>
- * Copyright: Copyright (c) 2012-2020 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2012
  */
 public abstract class DimensionalityReduction<X> implements IDimensionalityReduction<X, NumericalFeatureVector> {
 

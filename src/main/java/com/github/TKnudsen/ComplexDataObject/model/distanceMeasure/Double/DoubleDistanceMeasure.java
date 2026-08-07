@@ -6,20 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: DoubleDistanceMeasure
+ * Basic class for all double[] distance measures.
  * </p>
- * 
- * <p>
- * Description: Basic class for all double[] distance measures.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2017
  */
 public abstract class DoubleDistanceMeasure implements IDistanceMeasure<double[]>, Serializable {
 

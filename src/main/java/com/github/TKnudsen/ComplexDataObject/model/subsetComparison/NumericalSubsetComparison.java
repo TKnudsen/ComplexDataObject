@@ -9,6 +9,14 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
+/**
+ * <p>
+ * SubsetComparison implementation for numerical values. Compares a target
+ * subset against a reference set by the difference of their means, with an
+ * optional buffering mode that caches reference-set statistics for reuse
+ * across repeated comparisons.
+ * </p>
+ */
 public class NumericalSubsetComparison implements SubsetComparison<Number> {
 
 	private boolean referenceSetBuffering = false;

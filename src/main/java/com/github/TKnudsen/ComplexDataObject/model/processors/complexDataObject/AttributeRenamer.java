@@ -12,13 +12,9 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
  * <p>
  * Renames an attribute
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2020
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2020
  */
 
 public class AttributeRenamer implements IComplexDataObjectProcessor {

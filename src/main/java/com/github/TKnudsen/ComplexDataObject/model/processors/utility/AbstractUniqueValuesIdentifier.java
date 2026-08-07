@@ -3,10 +3,12 @@ package com.github.TKnudsen.ComplexDataObject.model.processors.utility;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 
 /**
- * Default implementations of the getter and setter methods of the {@link IUniqueValuesIdentifier} 
- * interface and definition of constructors allowing none, one or both of the input 
+ * <p>
+ * Default implementations of the getter and setter methods of the {@link IUniqueValuesIdentifier}
+ * interface and definition of constructors allowing none, one or both of the input
  * arguments to be specified.
- * 
+ * </p>
+ *
  * @author Robert Heimbach
  *
  */

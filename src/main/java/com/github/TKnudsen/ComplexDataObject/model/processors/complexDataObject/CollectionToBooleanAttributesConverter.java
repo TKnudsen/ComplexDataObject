@@ -12,19 +12,14 @@ import com.github.TKnudsen.ComplexDataObject.data.enums.FuzzyBooleanCategory;
 
 /**
  * <p>
- * Title: CollectionToBooleanAttributesConverter
+ * Expands a Collection-valued attribute into a set of new boolean (or fuzzy
+ * boolean) attributes, one per distinct value observed across the
+ * container, indicating for each ComplexDataObject whether that value was
+ * present in its collection.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 public class CollectionToBooleanAttributesConverter implements IComplexDataObjectProcessor {
 

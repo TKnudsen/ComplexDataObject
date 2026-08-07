@@ -5,20 +5,11 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
  * <p>
- * Title: PearsonsCorrelationMeasure
+ * measures the Pearson correlation for two given arrays.
  * </p>
- * 
- * <p>
- * Description: measures the Pearson correlation for two given arrays.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class PearsonsCorrelationMeasure {
 	PearsonsCorrelation correlationMeasure = new PearsonsCorrelation();

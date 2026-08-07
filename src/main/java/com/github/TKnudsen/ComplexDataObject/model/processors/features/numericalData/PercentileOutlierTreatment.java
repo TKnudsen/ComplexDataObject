@@ -8,19 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: OutlierTreatment
+ * Removes the
  * </p>
- * 
- * <p>
- * Description: Removes the
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard, Christian Ritter
+ *
  * @version 1.01
+ * @since 2017
  */
 public class PercentileOutlierTreatment extends AbstractOutlierTreatment {
 

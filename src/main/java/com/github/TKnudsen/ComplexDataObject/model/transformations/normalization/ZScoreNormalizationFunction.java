@@ -7,25 +7,17 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: ZScoreNormalizationFunction
- * </p>
- * 
- * <p>
- * Description: scales a value by subtracting the mean (predefined) and by
+ * scales a value by subtracting the mean (predefined) and by
  * division through the standard deviation (predefined). Characteristics of an
  * output distribution: mean is equals 0.0 and standard deviation is equals 1.0.
  * </p>
- * 
+ *
  * <p>
  * Returns NaN if the predetermined standard deviation is zero.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2022
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2022
  */
 public class ZScoreNormalizationFunction implements Function<Number, Number> {
 

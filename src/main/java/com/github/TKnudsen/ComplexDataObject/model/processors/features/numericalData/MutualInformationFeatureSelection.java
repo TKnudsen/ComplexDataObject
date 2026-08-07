@@ -15,6 +15,14 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.numericalData.featureSelection.IndexFeatureSelection;
 
+/**
+ * <p>
+ * Feature selection processor that discretizes numerical features and
+ * computes the mutual information between each feature and a set of provided
+ * class labels, then removes the least informative features so that only a
+ * target number of features remains.
+ * </p>
+ */
 public class MutualInformationFeatureSelection implements INumericalFeatureVectorProcessor {
 
 	private int discretization = 100;

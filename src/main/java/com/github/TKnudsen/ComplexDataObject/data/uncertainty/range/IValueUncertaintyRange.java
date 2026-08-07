@@ -10,11 +10,8 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.Double.IValueUncer
  * an (absolute) value uncertainty range <code>(lower,upper)</code>, the actual
  * value will be in <code>[v+lower,v+upper]</code>.
  * </p>
- * 
- * <p>
- * Copyright: (c) 2015-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
+ *
+ * @since 2015
  */
 public interface IValueUncertaintyRange extends IValueUncertainty {
 

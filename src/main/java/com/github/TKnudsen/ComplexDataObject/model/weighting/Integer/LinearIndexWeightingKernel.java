@@ -2,19 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.weighting.Integer;
 
 /**
  * <p>
- * Title: LinearIndexWeightingKernel
+ * Weighting kernel that linearly decays from 1.0 at the reference index to
+ * 0.0 at the edge of the configured interval, and returns 0.0 for indices
+ * further away than the interval.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class LinearIndexWeightingKernel implements IIntegerWeightingKernel {
 

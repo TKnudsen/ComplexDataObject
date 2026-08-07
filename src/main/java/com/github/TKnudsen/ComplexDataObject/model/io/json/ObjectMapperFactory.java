@@ -12,6 +12,14 @@ import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 
+/**
+ * <p>
+ * Factory class that creates and configures Jackson ObjectMapper instances
+ * used to serialize and deserialize ComplexDataObject data. Configures
+ * default typing, field-only visibility, and null-value handling; also
+ * caches a shared, lazily-initialized ObjectMapper instance for reuse.
+ * </p>
+ */
 public class ObjectMapperFactory {
 
 	private static ObjectMapper complexDataObjectObjectMapper;

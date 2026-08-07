@@ -14,21 +14,13 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
- * Title: ProbabilityDistribution
- * </p>
- * 
- * <p>
- * Description: Stores the probability distribution of a given set of items. The
+ * Stores the probability distribution of a given set of items. The
  * given set of items may be empty. If it is not empty, the associated
  * probabilities must add up to 1.0.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.07
+ * @since 2016
  */
 public class ProbabilityDistribution<I> {
 

@@ -12,19 +12,11 @@ import weka.core.Instances;
 
 /**
  * <p>
- * Title: WekaWriterTools
+ * Tools easing the output of Weka-associated data structures.
  * </p>
- * 
- * <p>
- * Description: Tools easing the output of Weka-associated data structures.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2016
  */
 public class WekaWriterTools {
 

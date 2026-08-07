@@ -4,19 +4,13 @@ import org.apache.commons.math3.ml.distance.DistanceMeasure;
 
 /**
  * <p>
- * Title: ChebyshevDistance
+ * Double-array distance measure that delegates to Apache Commons Math's
+ * ChebyshevDistance, i.e. the maximum absolute difference across all
+ * dimensions.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class ChebyshevDistance extends DoubleDistanceMeasure {
 

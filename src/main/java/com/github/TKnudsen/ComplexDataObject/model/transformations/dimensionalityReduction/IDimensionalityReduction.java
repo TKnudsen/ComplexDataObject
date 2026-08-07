@@ -5,15 +5,15 @@ import java.util.Map;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransformation;
 
 /**
- * 
  * <p>
- * Copyright: Copyright (c) 2012-2020 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
+ * Contract for dimensionality reduction algorithms that map input objects of
+ * type X onto a lower-dimensional representation of type Y. Implementations
+ * compute and expose the resulting mapping as well as the achieved output
+ * dimensionality.
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
- * 
+ * @since 2012
  */
 public interface IDimensionalityReduction<X, Y> extends IDataTransformation<X, Y> {
 

@@ -27,20 +27,12 @@ import weka.core.Instances;
 
 /**
  * <p>
- * Title: WekaConversion
- * </p>
- *
- * <p>
- * Description: helper tools that ease the use of WEKA data structures, i.e.,
+ * helper tools that ease the use of WEKA data structures, i.e.,
  * Instances and Instance objects.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2020
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.08
+ * @since 2016
  */
 public class WekaConversion {
 

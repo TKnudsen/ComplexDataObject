@@ -8,19 +8,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: MinimumLimiter
+ * Caps the value of a numeric attribute at a configured minimum, raising
+ * any value of a ComplexDataObject that falls below the minimum up to that
+ * limit.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 
 public class MinimumLimiter implements IComplexDataObjectProcessor {

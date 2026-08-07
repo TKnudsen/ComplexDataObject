@@ -1,5 +1,14 @@
 package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
 
+/**
+ * <p>
+ * Static utility class with factory methods to create a
+ * DoubleAttributeBipolarScoringFunction from an existing
+ * DoubleAttributeScoringFunction configuration, or to clone an existing
+ * DoubleAttributeBipolarScoringFunction while carrying over its
+ * normalization, outlier, and uncertainty settings.
+ * </p>
+ */
 public class DoubleAttributeBipolarScoringFunctions {
 
 	public static DoubleAttributeBipolarScoringFunction create(DoubleAttributeScoringFunction scoringFunction,

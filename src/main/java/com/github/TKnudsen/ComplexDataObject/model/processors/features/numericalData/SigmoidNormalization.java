@@ -8,6 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
+ * Applies the logistic sigmoid function to each feature value, squashing it
+ * into the open interval (0, 1).
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

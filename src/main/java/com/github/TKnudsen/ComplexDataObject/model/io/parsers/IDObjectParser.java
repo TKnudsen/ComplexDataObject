@@ -8,19 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 
 /**
  * <p>
- * Title: IDObjectParser
+ * Interface for parsers to parse files towards IDObjects.
  * </p>
- * 
- * <p>
- * Description: Interface for parsers to parse files towards IDObjects.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2015
  */
 public interface IDObjectParser<O extends IDObject> {
 

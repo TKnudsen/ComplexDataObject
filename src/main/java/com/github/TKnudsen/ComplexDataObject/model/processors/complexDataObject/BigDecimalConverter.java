@@ -12,19 +12,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: BigDecimalConverter
+ * Converts the value of an attribute into a BigDecimal, parsing it with a
+ * configurable decimal and thousands separator, and stores the result under
+ * a new target attribute.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 public class BigDecimalConverter implements IComplexDataObjectProcessor {
 

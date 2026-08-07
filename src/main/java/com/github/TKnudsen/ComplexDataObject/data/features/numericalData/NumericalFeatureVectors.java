@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorUtils;
+import com.github.TKnudsen.ComplexDataObject.data.features.Features;
 
 import de.javagl.nd.tuples.d.DoubleTuple;
 
@@ -12,12 +13,9 @@ import de.javagl.nd.tuples.d.DoubleTuple;
  * <p>
  * Little helpers for NumericalFeatureVectors.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2020
- * </p>
- * 
+ *
  * @version 1.06
+ * @since 2016
  */
 public class NumericalFeatureVectors {
 
@@ -47,10 +45,11 @@ public class NumericalFeatureVectors {
 	 */
 	public static NumericalFeatureVector create(Iterable<? extends Number> values) {
 		List<NumericalFeature> features = new ArrayList<NumericalFeature>();
-		int counter = 0;
+		int i = 0;
 		for (Number value : values) {
-			features.add(new NumericalFeature("dim" + counter, value.doubleValue()));
-			counter++;
+			features.add(
+					new NumericalFeature(Features.DEFAULT_FEATURE_NAME_PREFIX + " " + (i + 1), value.doubleValue()));
+			i++;
 		}
 		return create(features);
 	}
@@ -70,7 +69,7 @@ public class NumericalFeatureVectors {
 
 		List<NumericalFeature> features = new ArrayList<>();
 		for (int i = 0; i < vector.length; i++)
-			features.add(new NumericalFeature("[" + i + "]", vector[i]));
+			features.add(new NumericalFeature(Features.DEFAULT_FEATURE_NAME_PREFIX + " " + (i + 1), vector[i]));
 
 		NumericalFeatureVector numericalFeatureVector = new NumericalFeatureVector(features);
 		numericalFeatureVector.setName(name);
@@ -86,7 +85,7 @@ public class NumericalFeatureVectors {
 
 		List<NumericalFeature> features = new ArrayList<>();
 		for (int i = 0; i < vector.length; i++)
-			features.add(new NumericalFeature("[" + i + "]", vector[i]));
+			features.add(new NumericalFeature(Features.DEFAULT_FEATURE_NAME_PREFIX + " " + (i + 1), vector[i]));
 
 		NumericalFeatureVector numericalFeatureVector = new NumericalFeatureVector(features);
 		numericalFeatureVector.setName(name);

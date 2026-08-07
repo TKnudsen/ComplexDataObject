@@ -7,20 +7,16 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 /**
  * <p>
  * Distance matrix interface. Stores distances of pairs of objects (T's).
- * 
+ *
  * The interface was shrinked in its functionality down to the mandatory parts.
  * Four statistical nice-to-have functions have been externalized to the new
  * class DistanceMatrixStatistics.
- * 
+ *
  * With the method isSymmetric() a speedup paramter was introduced.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2020
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.07
+ * @since 2017
  */
 public interface IDistanceMatrix<T> extends IDistanceMeasure<T> {
 

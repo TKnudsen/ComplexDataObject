@@ -9,20 +9,12 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: NullAttributeValueObjectRemover
- * </p>
- * 
- * <p>
- * Description: Removes ComplexDataObjects with null values for a given
+ * Removes ComplexDataObjects with null values for a given
  * Attribute.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class NullAttributeValueObjectRemover implements IComplexDataObjectProcessor {
 

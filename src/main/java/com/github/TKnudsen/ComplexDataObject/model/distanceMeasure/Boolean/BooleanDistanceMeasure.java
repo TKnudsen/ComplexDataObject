@@ -6,19 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: BooleanDistanceMeasure
+ * Basic class for boolean[] distance measures.
  * </p>
- * 
- * <p>
- * Description: Basic class for boolean[] distance measures.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public abstract class BooleanDistanceMeasure implements IDistanceMeasure<Boolean[]>, Serializable {
 

@@ -6,20 +6,13 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.IDataProcessor;
 
 /**
  * <p>
- * Title: INumericalFeatureVectorProcessor
+ * Common contract for processors that operate on numerical feature vectors,
+ * either as a plain list or wrapped in a {@link NumericalFeatureVectorContainer}.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.03
- * 
+ * @since 2016
+ *
  *          TODO_GENERICS Could probably unify IMixedDataFeatureVectorProcessor
  *          and INumericalFeatureVectorProcessor and ICompledDataObjectProcessor
  */

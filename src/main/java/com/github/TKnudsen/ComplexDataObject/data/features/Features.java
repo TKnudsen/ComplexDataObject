@@ -5,13 +5,17 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 
 /**
  * <p>
- * Copyright: Copyright (c) 2017-2020
+ * Static helper methods for Feature instances, currently offering a factory
+ * that creates a default Feature (numerical or mixed-data) for a given
+ * feature name and FeatureType.
  * </p>
  *
- * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
+ * @since 2017
  */
 public class Features {
+
+	public static final String DEFAULT_FEATURE_NAME_PREFIX = "Dim";
 
 	public static Feature<?> createDefaultFeature(String featureName, FeatureType featureType) {
 		switch (featureType) {

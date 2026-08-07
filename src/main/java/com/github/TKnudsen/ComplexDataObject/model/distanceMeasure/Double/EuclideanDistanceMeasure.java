@@ -2,19 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double;
 
 /**
  * <p>
- * Title: EuclideanDistanceMeasure
+ * Computes the standard (unweighted) Euclidean distance between two double
+ * arrays of equal length.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class EuclideanDistanceMeasure extends DoubleDistanceMeasure {
 

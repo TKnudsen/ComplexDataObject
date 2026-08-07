@@ -4,6 +4,12 @@ import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 
+/**
+ * <p>
+ * Identifies and retrieves the unique values of a given attribute within a
+ * {@link ComplexDataContainer}.
+ * </p>
+ */
 public interface IUniqueValuesIdentifier {
 	
 	public Set<Object> getUniqueValues();

@@ -6,19 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedMinkowskiDistance
+ * Computes a weighted Minkowski distance between two double arrays with a
+ * configurable exponent (defaulting to 2, i.e. Euclidean), weighting each
+ * dimension's absolute difference raised to that exponent; missing/NaN
+ * values contribute the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedMinkowskiDistance extends WeightedDistanceMeasure<double[]> {
 

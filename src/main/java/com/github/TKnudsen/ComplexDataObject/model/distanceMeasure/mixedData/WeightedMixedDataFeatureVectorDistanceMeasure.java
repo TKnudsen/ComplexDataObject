@@ -8,19 +8,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedMixedDataFeatureVectorDistanceMeasure
+ * Distance measure for MixedDataFeatureVector objects that combines separate
+ * weighted distance measures for the double, Boolean, and String-typed
+ * features of the vector, aggregating their contributions using
+ * per-feature-type weights.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedMixedDataFeatureVectorDistanceMeasure extends WeightedDistanceMeasure<MixedDataFeatureVector> {
 	private WeightedDistanceMeasure<double[]> doubleDistanceMeasure;

@@ -9,14 +9,12 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * returns the most interesting category of a subset compared to the reference
- * set. Interestingness is defined by the most differing ratio of occurrences.
- * 
- * Throws an exception, if target subset contains a category that is not
- * contained in the reference set.
- * 
- * @author Juergern Bernard
- *
+ * <p>
+ * Returns the most interesting category of a subset compared to the
+ * reference set. Interestingness is defined by the most differing ratio of
+ * occurrences. Throws an exception if the target subset contains a category
+ * that is not contained in the reference set.
+ * </p>
  */
 public class CategoricalSubsetComparison implements SubsetComparison<String> {
 

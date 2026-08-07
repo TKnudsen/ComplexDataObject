@@ -12,20 +12,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: DimensionalityReductions
+ * little helpers to better cope with DimensionalityReduction results
+ * (mappings from highDim to lowDim).
  * </p>
- * 
- * <p>
- * Description: little helpers to better cope with DimensionalityReduction
- * results (mappings from highDim to lowDim).
- * 
- * <p>
- * Copyright: Copyright (c) 2012-2020 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2012
  */
 public class DimensionalityReductions {
 
@@ -33,7 +25,7 @@ public class DimensionalityReductions {
 		List<Double[]> data = new ArrayList<>();
 
 		for (X x : mapping.keySet()) {
-			data.add(DataConversion.doublePrimitivesToArray(mapping.get(x).getVector()));
+			data.add(DataConversion.doubleToArray(mapping.get(x).getVector()));
 		}
 
 		return data;
@@ -43,7 +35,7 @@ public class DimensionalityReductions {
 		Map<X, Double[]> data = new LinkedHashMap<>();
 
 		for (X x : mapping.keySet()) {
-			data.put(x, DataConversion.doublePrimitivesToArray(mapping.get(x).getVector()));
+			data.put(x, DataConversion.doubleToArray(mapping.get(x).getVector()));
 		}
 
 		return data;

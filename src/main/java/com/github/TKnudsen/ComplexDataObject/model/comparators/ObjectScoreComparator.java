@@ -5,20 +5,11 @@ import java.util.function.Function;
 
 /**
  * <p>
- * Title: ObjectScoreComparator
+ * maps CDOs to numerical values to facilitate item comparison.
  * </p>
- * 
- * <p>
- * Description: maps CDOs to numerical values to facilitate item comparison.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class ObjectScoreComparator<ITEM> implements Comparator<ITEM> {
 

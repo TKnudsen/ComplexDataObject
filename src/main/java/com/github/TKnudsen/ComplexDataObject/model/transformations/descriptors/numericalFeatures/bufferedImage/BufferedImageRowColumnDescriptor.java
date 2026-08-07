@@ -14,22 +14,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
 
 /**
  * <p>
- * Title: BufferedImageRowColumnDescriptor
- * </p>
- * 
- * <p>
- * Description: Transforms BufferedImages into the numerical feature space. The
+ * Transforms BufferedImages into the numerical feature space. The
  * luminance values of rows and columns build the features space. Thus, the
  * dimensionality of the feature vector is rows+columns of the original
  * BufferedImage.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2016
  */
 public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -70,7 +62,7 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 			for (int x = cropBorders; x < width - cropBorders; x++) {
 				lum = 0;
 				for (int y = 0; y < height; y++) {
-					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
+					double luminance = BufferedImageTools.getLuminanceForPixel(image, x, y);
 					lum += luminance;
 				}
 				if ((x - cropBorders) % sampling == 0)
@@ -80,7 +72,7 @@ public class BufferedImageRowColumnDescriptor implements INumericFeatureVectorDe
 			for (int y = cropBorders; y < height - cropBorders; y++) {
 				lum = 0;
 				for (int x = 0; x < width; x++) {
-					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
+					double luminance = BufferedImageTools.getLuminanceForPixel(image, x, y);
 					lum += luminance;
 				}
 				if ((y - cropBorders) % sampling == 0)

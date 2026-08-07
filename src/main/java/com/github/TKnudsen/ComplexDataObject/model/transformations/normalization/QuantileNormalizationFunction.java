@@ -8,23 +8,15 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: QuantileNormalizationFunction
- * </p>
- * 
- * <p>
- * Description: scales a value into the interval [0...1]. Normalization is based
+ * scales a value into the interval [0...1]. Normalization is based
  * on a quantile normalization based on a given collection of numbers.
- * 
+ *
  * Setting new bounds is possible (even if previously calculated values will be
  * obsolete then). Reason: keeping the instance alive in value-dynamic contexts.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2016
  */
 public class QuantileNormalizationFunction extends NormalizationFunction {
 
@@ -81,7 +73,6 @@ public class QuantileNormalizationFunction extends NormalizationFunction {
 
 		for (Number value : values)
 			valueRanking.add(value.floatValue());
-
 	}
 
 	private void initializeRanking(double[] values) {

@@ -7,20 +7,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
- * Title: Feature
- * </p>
- *
- * <p>
- * Description: Representation of a single feature consisting of its name and
+ * Representation of a single feature consisting of its name and
  * its value.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2016
  */
 public abstract class Feature<V> implements IDObject, Comparable<Feature<V>>, Serializable {
 

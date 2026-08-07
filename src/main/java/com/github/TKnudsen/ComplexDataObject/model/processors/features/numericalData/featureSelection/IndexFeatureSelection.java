@@ -9,6 +9,11 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.numericalData.INumericalFeatureVectorProcessor;
 
 /**
+ * <p>
+ * Removes the features at a given list of indices from every numerical
+ * feature vector in a container or list.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

@@ -2,21 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * ComplexDataObject
- * </p>
- * 
- * <p>
  * Parses values that contain abbreviations such as MIO and BIO for million and
  * billions. Important German and English abbreviations are included.
  * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2021 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2016
  */
 public class DoubleParserForNumberAbbreviations extends DoubleParser {
 

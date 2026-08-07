@@ -8,6 +8,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
+ * Applies a logarithmic normalization (to a configurable basis) to each
+ * feature value. When safe domain handling is enabled, values are first
+ * min-max normalized and shifted into a strictly positive range so that the
+ * logarithm is always defined.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

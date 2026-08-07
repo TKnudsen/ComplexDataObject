@@ -7,19 +7,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContaine
 
 /**
  * <p>
- * Title: NumericalFeatureVectorContainer
+ * A FeatureVectorContainer specialized for NumericalFeatureVector objects,
+ * i.e. feature vectors whose features are all purely numeric.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2017
  */
 public class NumericalFeatureVectorContainer extends FeatureVectorContainer<NumericalFeatureVector> {
 

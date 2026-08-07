@@ -12,13 +12,9 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
  * <p>
  * Removes ComplexDataObject which contain a missing value.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018-2020
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2018
  */
 public class MissingValueObjectRemover implements IComplexDataObjectProcessor {
 

@@ -2,6 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 
 import java.util.Comparator;
 
+/**
+ * <p>
+ * Comparator that orders AttributeScoringFunction instances alphabetically
+ * by the name of the attribute they score.
+ * </p>
+ */
 public class AttributeScoringFunctionComparator implements Comparator<AttributeScoringFunction<?>> {
 
 	@Override

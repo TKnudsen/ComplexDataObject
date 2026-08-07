@@ -9,19 +9,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
 
 /**
  * <p>
- * Title:
+ * Manual test/demo that builds a MixedDataFeatureVector from a small set of
+ * mixed-type features and exercises removing a feature, run via a main
+ * method.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.0
+ * @since 2016
  */
 
 public class MixedDataVectorTester {

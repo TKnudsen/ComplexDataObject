@@ -1,7 +1,11 @@
 package com.github.TKnudsen.ComplexDataObject.data.keyValueObject;
 
 /**
- * 
+ * <p>
+ * Static helper methods for KeyValueObject instances, currently offering a
+ * value-equality check that ignores ID, name and description.
+ * </p>
+ *
  * @deprecated seems like no support functionality is needed
  *
  */

@@ -11,19 +11,11 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: AttributeSizeCounter
+ * Counts the number of attributes provided in a ComplexDataObject.
  * </p>
- * 
- * <p>
- * Description: Counts the number of attributes provided in a ComplexDataObject.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class AttributeSizeCounter implements IFeatureExtractor<ComplexDataObject, NumericalFeature> {
 

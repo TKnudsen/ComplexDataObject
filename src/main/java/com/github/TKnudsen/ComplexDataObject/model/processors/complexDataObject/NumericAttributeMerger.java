@@ -14,13 +14,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
  * <p>
  * Merges values from a list of given numerical attributes.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class NumericAttributeMerger implements IComplexDataObjectProcessor {
 

@@ -4,20 +4,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probab
 
 /**
  * <p>
- * Title: JensenShannonDivergence
- * </p>
- *
- * <p>
- * Description: calculates the Jensen Shannon Divergence - a measure to assess
+ * calculates the Jensen Shannon Divergence - a measure to assess
  * the difference between to probability distibutions.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2018
  */
 public class JensenShannonDivergence {
 

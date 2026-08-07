@@ -7,6 +7,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
+ * Mean-centers numerical feature vectors by subtracting, for every feature
+ * dimension, the mean value computed across the given list of vectors.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

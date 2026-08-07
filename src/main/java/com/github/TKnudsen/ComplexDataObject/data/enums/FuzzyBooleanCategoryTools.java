@@ -2,19 +2,11 @@ package com.github.TKnudsen.ComplexDataObject.data.enums;
 
 /**
  * <p>
- * Title: FuzzyBooleanCategoryTools
+ * little helpers for working with FuzzyBooleanCategory objects.
  * </p>
- * 
- * <p>
- * Description: little helpers for working with FuzzyBooleanCategory objects.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2016
  */
 
 public class FuzzyBooleanCategoryTools {

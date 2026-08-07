@@ -2,20 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.data.interfaces;
 
 /**
  * <p>
- * Title: IDObject
- * </p>
- * 
- * <p>
- * Description: interface for all objects having an identifier, a name and a
+ * interface for all objects having an identifier, a name and a
  * (small) textual description.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2011-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.07
+ * @since 2011
  */
 public interface IDObject {
 

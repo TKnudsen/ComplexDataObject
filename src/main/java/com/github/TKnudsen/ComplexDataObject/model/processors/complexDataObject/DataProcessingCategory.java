@@ -4,19 +4,14 @@ import java.awt.Color;
 
 /**
  * <p>
- * Title: DataProcessingCategory
+ * Enumerates categories of data processing operations, such as cleaning,
+ * reduction, observation, normalization, segmentation, and secondary data
+ * provisioning. Each category carries a display name and a pair of colors
+ * used for visualization purposes.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2011-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2011
  */
 public enum DataProcessingCategory {
 

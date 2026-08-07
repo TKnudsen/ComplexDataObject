@@ -2,19 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.weighting.Integer;
 
 /**
  * <p>
- * Title: BlockKernel
+ * Weighting kernel with a block/step shape: returns a constant weight of 1.0
+ * for any integer value within the configured interval of the reference
+ * value, and 0.0 outside that interval.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class BlockKernel implements IIntegerWeightingKernel {
 

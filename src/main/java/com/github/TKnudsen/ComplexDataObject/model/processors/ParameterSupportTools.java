@@ -7,6 +7,14 @@ import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
+/**
+ * <p>
+ * Generates alternative numeric values (floats, doubles, integers, longs)
+ * around a given baseline value, used to build alternative parameterizations
+ * for parameter sweeps. Values below the baseline are spread by linear
+ * fractions of it, values above by successive powers of two.
+ * </p>
+ */
 public class ParameterSupportTools {
 
 	public static List<Float> getAlternativeFloats(float baseline, int count) {

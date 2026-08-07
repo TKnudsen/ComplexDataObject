@@ -2,6 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification;
 
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 
+/**
+ * <p>
+ * Numerification input dialog function that parses Float values from raw
+ * input by delegating to a DoubleParser and converting the parsed result to
+ * a float, using NaN as the missing-value marker.
+ * </p>
+ */
 public class FloatDoubleNumerificationInputDialogFunction extends NumerificationInputDialogFunction<Float> {
 
 	private final DoubleParser doubleParser;

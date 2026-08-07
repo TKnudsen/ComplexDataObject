@@ -8,20 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
- * Title: IAlgorithmDataObject
- * </p>
- *
- * <p>
- * Description: Interface for all objects that can be accepted by algorithms
+ * Interface for all objects that can be accepted by algorithms
  * (data mining, machine learning, information retrieval, etc.).
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2016
  */
 
 public interface IFeatureVectorObject<O, F extends Feature<O>> extends IDObject, IKeyValueProvider<Object> {

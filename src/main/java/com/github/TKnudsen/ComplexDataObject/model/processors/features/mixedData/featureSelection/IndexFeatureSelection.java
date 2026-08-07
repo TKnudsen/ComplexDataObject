@@ -9,6 +9,12 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 import com.github.TKnudsen.ComplexDataObject.model.processors.features.mixedData.IMixedDataFeatureVectorProcessor;
 
 /**
+ * <p>
+ * Removes features at a given list of indices from every
+ * MixedDataFeatureVector in a container, used to drop features that were
+ * selected for exclusion by index.
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

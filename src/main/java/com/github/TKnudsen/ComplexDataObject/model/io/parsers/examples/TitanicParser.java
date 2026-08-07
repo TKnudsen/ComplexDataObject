@@ -15,11 +15,14 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.ParserTools;
 
 /**
  * <p>
- * Copyright: Copyright (c) 2013-2020
+ * Parses the Titanic data set (either a reduced 4-column variant or an
+ * extended 13-column variant, tab-separated) into ComplexDataObjects,
+ * mapping columns to typed attributes such as class, gender, age, fare and
+ * survival status, and dropping records with missing age or fare values.
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.14
+ * @since 2013
  */
 public class TitanicParser implements ComplexDataObjectParser {
 

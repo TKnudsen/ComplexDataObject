@@ -12,22 +12,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
 
 /**
  * <p>
- * Title: BufferedImageRowColumnDiagonalsDescriptor
- * </p>
- * 
- * <p>
- * Description: Transforms BufferedImages into the numerical feature space. The
+ * Transforms BufferedImages into the numerical feature space. The
  * luminance values of rows, columns and diagonals is used to build the feature
  * space. diagonal streaks need to be at least half of min(row,column) length to
  * be considered. BufferedImage.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2016
  */
 public class BufferedImageRowColumnDiagonalsDescriptor
 		implements INumericFeatureVectorDescriptor<ComplexDataObject> {

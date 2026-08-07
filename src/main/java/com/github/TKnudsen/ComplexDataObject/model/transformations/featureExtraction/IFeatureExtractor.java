@@ -5,21 +5,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.IDataTransfor
 
 /**
  * <p>
- * Title: IFeatureExtractor
- * </p>
- * 
- * <p>
- * Description: Interface for the extraction of "one-value" information,
+ * Interface for the extraction of "one-value" information,
  * represented as a Feature. Examples are statistical information, etc.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
- * 
+ * @since 2017
  */
 public interface IFeatureExtractor<I, F extends Feature<?>> extends IDataTransformation<I, F> {
 

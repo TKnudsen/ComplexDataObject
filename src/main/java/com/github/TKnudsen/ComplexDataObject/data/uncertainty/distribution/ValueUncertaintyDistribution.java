@@ -10,14 +10,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * Data model for uncertainties of numerical values characterized by a
  * statistical distribution.
  * </p>
- * 
- * <p>
- * Copyright: (c) 2015-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.08
+ * @since 2015
  */
 public class ValueUncertaintyDistribution extends ValueUncertaintyRange implements IValueUncertaintyDistribution {
 

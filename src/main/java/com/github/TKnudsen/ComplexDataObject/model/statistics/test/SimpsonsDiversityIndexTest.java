@@ -4,19 +4,13 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.SimpsonsIndex;
 
 /**
  * <p>
- * Title: SimpsonsDiversityIndexTest
+ * Simple demo/test class that exercises the SimpsonsIndex utility with
+ * several example distributions, printing the resulting Simpson's Diversity
+ * Index to the console.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2023
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2016
  */
 public class SimpsonsDiversityIndexTest {
 

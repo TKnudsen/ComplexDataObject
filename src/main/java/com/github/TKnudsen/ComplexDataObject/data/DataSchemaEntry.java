@@ -4,19 +4,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title:
+ * Describes individual attributes of key-value data structures.
  * </p>
- * 
- * <p>
- * Description: Describes individual attributes of key-value data structures.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2016
  */
 
 public class DataSchemaEntry<T> {

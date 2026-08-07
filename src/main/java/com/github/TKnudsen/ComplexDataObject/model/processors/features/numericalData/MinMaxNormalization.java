@@ -10,20 +10,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
- * Title: MinMaxNormalization
+ * min-max normalization per feature, across all feature vectors.
  * </p>
- * 
- * <p>
- * Description: min-max normalization per feature, across all feature vectors.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2023
- * </p>
- * 
- * @author Juergen Bernard
- * @author Christian Ritter
+ *
  * @version 1.11
+ * @since 2017
  */
 public class MinMaxNormalization implements INumericalFeatureVectorProcessor {
 

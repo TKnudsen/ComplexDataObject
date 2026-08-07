@@ -11,13 +11,9 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoublePars
  * <p>
  * Divides two numerical attributes to create a new (secondary data) attribute.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class AttributeDivision implements IComplexDataObjectProcessor {
 

@@ -5,19 +5,12 @@ import org.apache.commons.math3.ml.distance.ManhattanDistance;
 
 /**
  * <p>
- * Title: ManhattanDistanceMeasure
+ * Double-array distance measure that delegates to Apache Commons Math's
+ * ManhattanDistance, representing the Minkowski distance with exponent 1.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class ManhattanDistanceMeasure extends DoubleDistanceMeasure {
 

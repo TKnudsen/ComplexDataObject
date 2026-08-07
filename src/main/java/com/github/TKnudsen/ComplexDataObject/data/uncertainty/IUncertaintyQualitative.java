@@ -4,19 +4,11 @@ import java.util.Map;
 
 /**
  * <p>
- * Title: IUncertaintyQualitative
+ * Interface for uncertainty information for qualitative data.
  * </p>
- * 
- * <p>
- * Description: Interface for uncertainty information for qualitative data.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2015
  */
 public interface IUncertaintyQualitative<T> extends IUncertainty<T> {
 

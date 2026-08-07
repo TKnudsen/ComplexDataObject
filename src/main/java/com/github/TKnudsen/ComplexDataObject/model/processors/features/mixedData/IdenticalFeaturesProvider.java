@@ -17,23 +17,15 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: Feature
- * </p>
+ * two goals:
  *
- * <p>
- * Description: two goals:
- * 
  * (1) achieve equal size of all featureVectors
- * 
+ *
  * (2) guarantee same order
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2017
  */
 public class IdenticalFeaturesProvider implements IMixedDataFeatureVectorProcessor {
 

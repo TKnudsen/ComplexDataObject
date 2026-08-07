@@ -2,19 +2,11 @@ package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
 /**
  * <p>
- * Title: ComplexDataObjectTools
+ * Provides little helpers for the work with ComplexDataObjects.
  * </p>
- * 
- * <p>
- * Description: Provides little helpers for the work with ComplexDataObjects.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2015
  */
 public class ComplexDataObjectTools {
 

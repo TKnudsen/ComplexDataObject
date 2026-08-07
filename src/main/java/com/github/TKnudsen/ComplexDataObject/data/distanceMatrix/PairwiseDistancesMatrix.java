@@ -8,17 +8,12 @@ import java.util.Map;
  * <p>
  * Distance matrix implementation that accepts a matrix of pairwise distances
  * from an external source.
- * 
+ *
  * Assumes that the given pairwise distances are symmetric.
  * </p>
- * 
- * *
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard, https://github.com/TKnudsen/DMandML
- * </p>
- * 
- * @author Christian Ritter, Juergen Bernard
+ *
  * @version 1.05
+ * @since 2016
  */
 public class PairwiseDistancesMatrix<T> implements IDistanceMatrix<T> {
 

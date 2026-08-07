@@ -2,11 +2,14 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Copyright: Copyright (c) 2016-2020
+ * Parses arbitrary objects into a Boolean value. Accepts Boolean instances,
+ * Integers (0/1), and a range of German and English string tokens such as
+ * "ja"/"nein" and "yes"/"no", optionally printing a warning when a value
+ * cannot be interpreted.
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2016
  */
 public class BooleanParser implements IObjectParser<Boolean> {
 

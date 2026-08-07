@@ -2,6 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double;
 
 import org.apache.commons.math3.ml.distance.EarthMoversDistance;
 
+/**
+ * <p>
+ * Double-array distance measure that delegates to Apache Commons Math's
+ * EarthMoversDistance, validating that both input arrays are non-null and of
+ * equal length before computing the distance.
+ * </p>
+ */
 public class EarthMoverDistance extends DoubleDistanceMeasure {
 
 	/**

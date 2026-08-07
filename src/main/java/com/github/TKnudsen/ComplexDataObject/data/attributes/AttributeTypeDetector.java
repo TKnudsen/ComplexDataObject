@@ -4,19 +4,11 @@ import java.util.Collection;
 
 /**
  * <p>
- * Title: AttributeTypeDetector
+ * determines the type of an attribute (column of a table)
  * </p>
- * 
- * <p>
- * Description: determines the type of an attribute (column of a table)
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2018
  */
 public interface AttributeTypeDetector {
 

@@ -8,8 +8,10 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
  * Allows to scale the range of feature values by a given factor.
- * 
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

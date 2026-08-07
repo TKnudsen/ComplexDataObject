@@ -8,22 +8,20 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.processors.utility.IUniqueValuesIdentifier;
 
 /**
+ * <p>
  * A multistage preprocessing routine.
  * 
- * <p>
+ * 
  * For a given attribute, which is assumed to store a List of Objects, all
  * unique values are identified, using a {@link IUniqueValuesIdentifier}, and
  * Dummy Variables, stored as 0/1 Integer, are created.
  * 
- * <p>
  * The naming scheme of the dummy variables is as follows: <br>
  * attribute-nameOfUniqueValue
  * 
- * <p>
  * The old attribute storing the List is removed.
+ * </p>
  * 
- * @author Robert Heimbach
- *
  */
 public class DummyVariableConverter implements IComplexDataObjectProcessor {
 
@@ -81,7 +79,7 @@ public class DummyVariableConverter implements IComplexDataObjectProcessor {
 		// Remove the old attribute from the data schema
 		container.remove(attribute);
 	}
-	
+
 	@Override
 	public void process(List<ComplexDataObject> data) {
 		ComplexDataContainer container = new ComplexDataContainer(data);

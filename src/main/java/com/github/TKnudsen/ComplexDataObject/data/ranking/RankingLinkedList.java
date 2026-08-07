@@ -4,20 +4,12 @@ import java.util.LinkedList;
 
 /**
  * <p>
- * Title: RankingLinkedList
- * </p>
- * 
- * <p>
- * Description: structures objects in sorted manner. Based on a
+ * structures objects in sorted manner. Based on a
  * {@link LinkedList}.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2011-2015
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2011
  */
 public class RankingLinkedList<T extends Comparable<T>> extends LinkedList<T> {
 

@@ -5,19 +5,12 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
- * Title: NumericalFeature
+ * A Feature holding a numeric (Double-valued) feature value, identified by
+ * FeatureType.DOUBLE, and providing convenience access as a primitive double.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2016
  */
 
 public class NumericalFeature extends Feature<Double> {

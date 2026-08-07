@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * <p>
+ * Utility class providing helper functions for functional-style programming,
+ * such as wrapping a Function with a memoizing (result-caching) buffer.
+ * </p>
+ */
 public class Functions {
 
 	/**

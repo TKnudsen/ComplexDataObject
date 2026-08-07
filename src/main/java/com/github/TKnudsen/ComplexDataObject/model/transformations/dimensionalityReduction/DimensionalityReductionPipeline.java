@@ -19,22 +19,18 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
  * <p>
  * The dimensionality reduction pipeline helps to streamline dim-red approaches.
  * Embedded is the following:
- * 
+ *
  * - an upstream descriptor which transforms the objects of type X into
  * NumericalFeatureVector
- * 
+ *
  * - a IDimensionalityReduction routine
- * 
+ *
  * - some useful downstream functionality to look-up X in the low-dimensional
  * space, as well as in the relative low-dimensional space.
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2019 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
  * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 public class DimensionalityReductionPipeline<X> {
 

@@ -15,6 +15,15 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectPar
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
+/**
+ * <p>
+ * Abstract base class for scoring functions that map a single attribute of a
+ * ComplexDataObject to a normalized double score. Handles parsing of raw
+ * attribute values, linear/quantile normalization, missing-value handling,
+ * uncertainty consideration, weighting, score buffering, and notification of
+ * registered change listeners whenever the function's configuration changes.
+ * </p>
+ */
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
 
 	private IObjectParser<T> parser;

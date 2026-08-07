@@ -16,13 +16,9 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
  * Loads ComplexDataObjects from JSON. Brings its own ObjectMapper for speedup
  * purposes, but can also be run with an external ObjectMapper parameter.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2017
  */
 public class JSONLoader {
 

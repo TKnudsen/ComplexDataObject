@@ -8,19 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: DistanceMatrix
+ * Stores and manages distances of pairs of objects (T's)
  * </p>
- * 
- * <p>
- * Description: Stores and manages distances of pairs of objects (T's)
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2017
  */
 public class DistanceMatrix<T> implements IDistanceMatrix<T> {
 

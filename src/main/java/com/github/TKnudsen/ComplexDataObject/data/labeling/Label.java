@@ -6,19 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: Label
+ * Label represented with a name and a color.
  * </p>
- * 
- * <p>
- * Description: Label represented with a name and a color.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public class Label extends ComplexDataObject {
 

@@ -5,24 +5,16 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.JensenShannonDiver
 
 /**
  * <p>
- * Title: JensenShannonDivergenceDistance
- * </p>
- * 
- * <p>
- * Description: Metric assessing distance between two probability distributions.
+ * Metric assessing distance between two probability distributions.
  * Builds up in Jensen Shannon Divergence, which, in turn, builds upon the
  * Kullback Leibler. The Jensen Shannon distances mitigates Kullback's problem
  * of infinite values (if one attribute is 0), though.
- * 
+ *
  * References
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018, https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2018
  */
 public class JensenShannonDivergenceDistance extends DoubleDistanceMeasure {
 

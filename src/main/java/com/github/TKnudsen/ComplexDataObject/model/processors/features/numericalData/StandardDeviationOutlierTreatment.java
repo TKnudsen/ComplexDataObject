@@ -8,14 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: StandardDeviationOutlierTreatment
+ * Outlier treatment that bounds each feature's values to a range defined by a
+ * configurable multiple of its standard deviation around the mean, clamped to
+ * the feature's actual minimum and maximum.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
  */
 public class StandardDeviationOutlierTreatment extends AbstractOutlierTreatment {

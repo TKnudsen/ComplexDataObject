@@ -22,6 +22,15 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.LinearNormalizationFunction;
 
+/**
+ * <p>
+ * Aggregates a collection of AttributeScoringFunction instances to compute a
+ * ranking of ComplexDataObjects. Combines the weighted scores of the
+ * registered attribute scoring functions per object, supports relative score
+ * normalization and uncertainty estimation, and propagates attribute-scoring
+ * and ranking change events to registered listeners.
+ * </p>
+ */
 public final class ItemRankingModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();

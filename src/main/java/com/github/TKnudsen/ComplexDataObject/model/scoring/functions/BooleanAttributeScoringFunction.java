@@ -3,7 +3,6 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -17,6 +16,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
+/**
+ * <p>
+ * Concrete AttributeScoringFunction for Boolean-valued attributes. Converts
+ * boolean values to 0.0/1.0 doubles and normalizes them via linear and
+ * (optionally) quantile normalization functions built from the value
+ * distribution of the underlying data container.
+ * </p>
+ */
 public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Boolean> {
 
 	@JsonIgnore

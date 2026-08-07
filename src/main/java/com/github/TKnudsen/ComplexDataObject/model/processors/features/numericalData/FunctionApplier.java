@@ -9,9 +9,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
  * Allows to apply an arbitrary function from double to double to each feature
  * value of a feature vector.
- * 
+ * </p>
+ *
  * @author Christian Ritter
  *
  */

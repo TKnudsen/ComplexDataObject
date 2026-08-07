@@ -8,19 +8,13 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: MaximumLimiter
+ * Caps the value of a numeric attribute at a configured maximum, clamping
+ * any value of a ComplexDataObject that exceeds the maximum down to that
+ * limit.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 
 public class MaximumLimiter implements IComplexDataObjectProcessor {

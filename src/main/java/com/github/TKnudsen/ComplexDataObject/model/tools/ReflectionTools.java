@@ -9,15 +9,11 @@ import java.util.Map;
 
 /**
  * <p>
- * Description: little helpers when reflection is needed.
+ * little helpers when reflection is needed.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2017-2021
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.03
+ * @since 2017
  */
 public class ReflectionTools {
 

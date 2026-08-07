@@ -11,19 +11,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
 
 /**
  * <p>
- * Title:
+ * Manual test/demo that builds a MixedDataFeatureContainer from a couple of
+ * MixedDataFeatureVector objects and exercises adding a feature and reading
+ * feature values, run via a main method.
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2016
  */
 
 public class FeatureContainerTester {

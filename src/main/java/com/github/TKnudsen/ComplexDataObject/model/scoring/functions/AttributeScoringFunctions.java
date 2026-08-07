@@ -17,12 +17,21 @@ import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.Dou
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
-import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParsers;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
+import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.Parsers;
 import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double.DoubleAttributeBipolarScoringFunction;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
+/**
+ * <p>
+ * Static utility class providing helper operations for
+ * AttributeScoringFunction instances, including alphabetical sorting,
+ * average/impact score calculations, categorical grouping, correlation
+ * computation between two functions, and factory methods for creating
+ * scoring and uncertainty functions for a given attribute.
+ * </p>
+ */
 public class AttributeScoringFunctions {
 
 	public static List<AttributeScoringFunction<?>> sortAlphabetically(
@@ -212,7 +221,7 @@ public class AttributeScoringFunctions {
 			Object o = cdo.getAttribute(function.getAttribute());
 			Double value;
 			if (o instanceof Number)
-				value = DoubleParsers.apply(o);
+				value = Parsers.parseDouble(o);
 			else
 				value = o == null ? null : 1.0;
 
@@ -288,7 +297,7 @@ public class AttributeScoringFunctions {
 		} else
 			return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param container

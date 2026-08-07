@@ -17,20 +17,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
 
 /**
  * <p>
- * Title: MixedDataDescriptor
- * </p>
- *
- * <p>
- * Description: creates MixedDataFeatureVector out of a given list of
+ * creates MixedDataFeatureVector out of a given list of
  * ComplexDataObjects. Tries to transform all attributes.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.03
+ * @since 2016
  */
 public class MixedDataDescriptor implements IMixedDataFeatureVectorDescriptor<ComplexDataObject> {
 

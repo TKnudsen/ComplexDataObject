@@ -4,19 +4,11 @@ import java.util.List;
 
 /**
  * <p>
- * Title: IndexTools
+ * little helpers to apply index operations on arrays and lists.
  * </p>
  *
- * <p>
- * Description: little helpers to apply index operations on arrays and lists.
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2017
  */
 public class IndexTools {
 

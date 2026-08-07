@@ -11,20 +11,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.mixedData.Mix
 
 /**
  * <p>
- * Title: FeatureVectorDistanceMeasureFactory
- * </p>
- * 
- * <p>
- * Description: what if the implementation of distance measure (be it numerical
+ * what if the implementation of distance measure (be it numerical
  * or mixed is only available at runtime)? use this factory.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2016
  */
 public class FeatureVectorDistanceMeasureFactory {
 

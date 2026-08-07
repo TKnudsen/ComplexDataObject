@@ -8,19 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: FeatureRemover
+ * Removes a single named feature from a container or a list of numerical
+ * feature vectors.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class NumericalFeatureVectorFeatureRemover implements INumericalFeatureVectorProcessor {
 

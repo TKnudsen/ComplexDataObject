@@ -8,8 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
- * merges a mergeAttribute in a baseAttribute
- *
+ * <p>
+ * Merges the values of a mergeAttribute into a baseAttribute for each
+ * ComplexDataObject in a container, optionally overwriting existing base
+ * values, and removes the merge attribute from the container afterwards.
+ * </p>
  */
 public class AttributeMergeProcessor implements IComplexDataObjectProcessor {
 

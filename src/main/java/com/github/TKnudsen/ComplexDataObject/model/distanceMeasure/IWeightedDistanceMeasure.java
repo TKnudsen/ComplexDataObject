@@ -4,19 +4,12 @@ import java.util.List;
 
 /**
  * <p>
- * Title: IWeightedDistanceMeasure
+ * Extends IDistanceMeasure by adding access to the per-dimension weights
+ * used internally by the distance calculation.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public interface IWeightedDistanceMeasure<T> extends IDistanceMeasure<T> {
 

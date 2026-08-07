@@ -4,14 +4,9 @@ package com.github.TKnudsen.ComplexDataObject.data.uncertainty;
  * <p>
  * Basic interface for uncertainty data modeling.
  * </p>
- * 
- * <p>
- * Copyright: (c) 2015-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public interface IUncertainty<T> {
 

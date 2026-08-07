@@ -8,19 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: EuclideanDistanceMeasure
+ * Euclidean's Distance Measure for NumericalFeatureVectors
  * </p>
- * 
- * <p>
- * Description: Euclidean's Distance Measure for NumericalFeatureVectors
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2012-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2012
  */
 public class EuclideanDistanceMeasure implements IDistanceMeasure<NumericalFeatureVector> {
 

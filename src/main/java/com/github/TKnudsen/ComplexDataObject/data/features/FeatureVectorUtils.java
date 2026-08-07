@@ -4,6 +4,13 @@ import java.util.Set;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 
+/**
+ * <p>
+ * Static helper methods for feature vector objects, currently offering a
+ * utility to build a human-readable string representation of an
+ * IFeatureVectorObject, listing its features and any additional attributes.
+ * </p>
+ */
 public class FeatureVectorUtils {
 	/**
 	 * Create a sensible string representation of the given feature vector

@@ -8,14 +8,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * <p>
  * Basic interface uncertainties of numerical values modeled as Double.
  * </p>
- * 
- * <p>
- * Copyright: (c) 2015-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.06
+ * @since 2015
  */
 public class ValueUncertainty implements IValueUncertainty {
 

@@ -13,19 +13,14 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
- * Title: MinMaxNormalization
+ * Applies min-max normalization to all double-valued features across a
+ * MixedDataFeatureContainer (or list of feature vectors), rescaling each
+ * feature's values based on the observed minimum and maximum for that
+ * feature.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class MinMaxNormalization implements IMixedDataFeatureVectorProcessor {
 

@@ -6,19 +6,13 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedOverlapDistanceMeasure
+ * Computes a weighted overlap distance between two String arrays as one
+ * minus the normalized weighted sum of positions where the two arrays match
+ * exactly, with missing values contributing the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedOverlapDistanceMeasure extends WeightedDistanceMeasure<String[]> {
 

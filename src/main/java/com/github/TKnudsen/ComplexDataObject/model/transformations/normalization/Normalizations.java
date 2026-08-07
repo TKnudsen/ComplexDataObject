@@ -5,20 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
-
 /**
  * <p>
  * Little helper so that locally there is no need to iterate through a
  * distribution of values to normalize.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2022
- * </p>
- * 
- * @author Juergen Bernard
  *
+ * @since 2022
  */
 public class Normalizations {
 

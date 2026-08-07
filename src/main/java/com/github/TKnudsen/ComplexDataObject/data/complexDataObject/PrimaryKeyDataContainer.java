@@ -2,24 +2,16 @@ package com.github.TKnudsen.ComplexDataObject.data.complexDataObject;
 
 /**
  * <p>
- * Title: PrimaryKeyDataContainer
- * </p>
- * 
- * <p>
- * Description: PrimaryKeyDataContainer stores and manages ComplexDataObjects.
- * 
+ * PrimaryKeyDataContainer stores and manages ComplexDataObjects.
+ *
  * A DataSchema contains all keys of the ComplexDataObjects.
- * 
+ *
  * The primary key specifics enables the quick lookup of objects with
  * primary-key characteristics.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2020-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2020
  * @deprecated the inherited DataContainer now contains a more flexible primary
  *             key implementation that adopts the best-practice functionality
  *             from PrimaryKeyDataContainer completely. Just just

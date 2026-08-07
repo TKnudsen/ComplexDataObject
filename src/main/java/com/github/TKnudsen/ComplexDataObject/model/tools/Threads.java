@@ -1,5 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.tools;
 
+/**
+ * <p>
+ * Utility class offering convenience methods to pause the current thread,
+ * optionally adding a random jitter on top of a fixed delay, with
+ * InterruptedException handled internally.
+ * </p>
+ */
 public class Threads {
 
 	public static void sleep(long milliseconds) {

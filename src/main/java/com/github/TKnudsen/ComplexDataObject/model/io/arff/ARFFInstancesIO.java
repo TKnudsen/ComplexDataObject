@@ -12,19 +12,11 @@ import weka.core.converters.ConverterUtils.DataSink;
 
 /**
  * <p>
- * Title: ARFFInstancesIO
+ * Tools for the IO if Weka Instanes to *.arff and vice versa.
  * </p>
- * 
- * <p>
- * Description: Tools for the IO if Weka Instanes to *.arff and vice versa.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class ARFFInstancesIO {
 

@@ -11,6 +11,14 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 
+/**
+ * <p>
+ * Abstract base class for file-based parsers that produce IDObject
+ * instances. Holds a tokenizer token and a missing-value identifier used by
+ * subclasses to interpret file contents, and provides helper methods for
+ * reading a file into a list of line strings.
+ * </p>
+ */
 public abstract class AbstractIDObjectFileParser<O extends IDObject> implements IDObjectParser<O>, ISelfDescription {
 
 	protected String tokenizerToken;

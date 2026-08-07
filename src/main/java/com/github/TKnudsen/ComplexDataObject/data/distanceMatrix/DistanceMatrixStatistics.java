@@ -12,13 +12,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * distance statistics in a static way, or be wrapped around a distance matrix
  * instance.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2020
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2020
  */
 public class DistanceMatrixStatistics<T> implements IDistanceMatrix<T> {
 

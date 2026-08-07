@@ -2,21 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.weighting.Integer;
 
 /**
  * <p>
- * Title: GaussianWeightingFunction
- * </p>
- * 
- * <p>
- * Description: Provides a weighting for a given interval, the center of the
+ * Provides a weighting for a given interval, the center of the
  * values is defined by a reference (default: 0.0). The variance defines the
  * diversity of the kernel.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2016
  */
 public class GaussianIntegerWeightingFunction implements IIntegerWeightingKernel {
 

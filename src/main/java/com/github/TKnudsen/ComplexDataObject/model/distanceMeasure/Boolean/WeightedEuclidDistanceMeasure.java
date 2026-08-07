@@ -6,19 +6,13 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedEuclidDistanceMeasure
+ * Computes a weighted Euclidean-style distance between two Boolean arrays by
+ * weighting the XOR (mismatch) of each position and taking the square root
+ * of the weighted sum; missing values contribute the configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedEuclidDistanceMeasure extends WeightedDistanceMeasure<Boolean[]> {
 

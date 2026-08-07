@@ -2,6 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification;
 
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.DoubleParser;
 
+/**
+ * <p>
+ * Numerification input dialog function that parses Double values from raw
+ * input using a DoubleParser configured for locale-specific handling of the
+ * thousands separator, and uses NaN as the missing-value marker.
+ * </p>
+ */
 public class DoubleNumerificationInputDialogFunction extends NumerificationInputDialogFunction<Double> {
 
 	private final DoubleParser doubleParser;

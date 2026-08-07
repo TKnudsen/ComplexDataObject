@@ -12,20 +12,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.featureExtrac
 
 /**
  * <p>
- * Title: StatisticalFeaturesExtractorDescriptor
- * </p>
- * 
- * <p>
- * Description: Baseline implementation for a statistical descriptor. Uses
+ * Baseline implementation for a statistical descriptor. Uses
  * IFeatureExtractors for building a set of features.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class StatisticalFeaturesExtractorDescriptor<T extends IDObject> implements INumericFeatureVectorDescriptor<T> {
 

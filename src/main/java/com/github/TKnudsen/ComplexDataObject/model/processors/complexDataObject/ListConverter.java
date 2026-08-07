@@ -8,10 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.processors.utility.IItemSplitter;
 
 /**
+ * <p>
  * Used to split each value for a given attribute of each
  * {@link ComplexDataObject} in the {@link ComplexDataContainer}, using a
  * routine implementing {@link IItemSplitter}.
- * 
+ * </p>
+ *
  * @author Robert Heimbach
  *
  */

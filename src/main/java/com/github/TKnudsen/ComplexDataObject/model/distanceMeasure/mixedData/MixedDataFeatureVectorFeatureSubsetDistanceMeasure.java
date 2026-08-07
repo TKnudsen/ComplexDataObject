@@ -8,20 +8,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.IDistanceMeas
 
 /**
  * <p>
- * Title: MixedDataFeatureVectorFeatureSubsetDistanceMeasure
- * </p>
- * 
- * <p>
- * Description: Allows the selection of a set of features for the calculation of
+ * Allows the selection of a set of features for the calculation of
  * distances between MixedDataFeatureVectors.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class MixedDataFeatureVectorFeatureSubsetDistanceMeasure implements IDistanceMeasure<MixedDataFeatureVector> {
 

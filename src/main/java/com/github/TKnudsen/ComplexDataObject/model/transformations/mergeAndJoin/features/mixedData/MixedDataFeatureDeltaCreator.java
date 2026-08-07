@@ -18,21 +18,13 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.
 
 /**
  * <p>
- * Title: MixedDataFeatureDeltaCreator
- * </p>
- * 
- * <p>
- * Description: Creates a so-called 'delta-feature vector'. The value domains of
+ * Creates a so-called 'delta-feature vector'. The value domains of
  * two MixedDataFeatures are differentiated for every feature. The resulting
  * values define a new deltaFV.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class MixedDataFeatureDeltaCreator implements IObjectMerger<MixedDataFeatureVector> {
 

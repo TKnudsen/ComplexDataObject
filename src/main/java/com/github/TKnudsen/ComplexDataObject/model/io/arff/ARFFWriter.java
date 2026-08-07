@@ -13,13 +13,9 @@ import weka.core.Instances;
  * <p>
  * Writes relevant data contained in ComplexDataContainer to ARFF.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018-2020
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  * @deprecated switch to a static variant
  */
 public class ARFFWriter {

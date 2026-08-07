@@ -16,20 +16,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.I
 
 /**
  * <p>
- * Title: NumericalFeatureVectorDescriptor
- * </p>
- * 
- * <p>
- * Description: Basic descriptor to transform real-world data (represented as a
+ * Basic descriptor to transform real-world data (represented as a
  * ComplexDataObject) into numerical feature spaces.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2016
  */
 public class NumericalFeatureVectorDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 

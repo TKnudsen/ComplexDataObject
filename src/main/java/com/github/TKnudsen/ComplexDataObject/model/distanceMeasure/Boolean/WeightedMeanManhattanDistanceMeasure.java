@@ -6,19 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedMeanManhattanDistanceMeasure
+ * Computes a weighted mean Manhattan-style distance between two Boolean
+ * arrays as the ratio of the weighted sum of differing positions to the
+ * total weighted sum of all positions, with missing values contributing the
+ * configured null value.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedMeanManhattanDistanceMeasure extends WeightedDistanceMeasure<Boolean[]> {
 

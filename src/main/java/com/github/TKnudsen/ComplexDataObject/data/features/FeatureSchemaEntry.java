@@ -2,19 +2,11 @@ package com.github.TKnudsen.ComplexDataObject.data.features;
 
 /**
  * <p>
- * Title: FeatureSchemaEntry
+ * Describes individual features within a FeatureSchema.
  * </p>
- * 
- * <p>
- * Description: Describes individual features within a FeatureSchema.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2016
  */
 
 public class FeatureSchemaEntry<T> {

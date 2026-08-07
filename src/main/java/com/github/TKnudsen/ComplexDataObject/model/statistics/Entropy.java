@@ -4,14 +4,12 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Calculates the entropy for various value distributions.
- *
  * <p>
- * Copyright: Copyright (c) 2016-2020
+ * Calculates the entropy for various value distributions.
  * </p>
  *
- * @author Juergen Bernard
  * @version 1.02
+ * @since 2016
  */
 public class Entropy {
 

@@ -16,12 +16,8 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * the features of the collection.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2020
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.05
+ * @since 2016
  */
 public class FeatureVectorContainer<FV extends IFeatureVectorObject<?, ?>> implements Iterable<FV> {
 

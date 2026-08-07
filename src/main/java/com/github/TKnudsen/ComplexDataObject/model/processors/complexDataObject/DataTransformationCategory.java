@@ -4,19 +4,14 @@ import java.awt.Color;
 
 /**
  * <p>
- * Title: DataTransformationCategory
+ * Enumerates categories of data transformation operations, such as
+ * dimension reduction, feature extraction, data cleaning, segmentation, and
+ * model uncertainty. Each category carries a display name and a pair of
+ * colors used for visualization purposes.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2017
  */
 public enum DataTransformationCategory {
 

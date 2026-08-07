@@ -5,20 +5,11 @@ import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 
 /**
  * <p>
- * Title: SpearmanCorrelationMeasure
+ * measures the Spearman's rank correlation for two given arrays.
  * </p>
- * 
- * <p>
- * Description: measures the Spearman's rank correlation for two given arrays.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class SpearmanCorrelationMeasure {
 	SpearmansCorrelation correlationMeasure = new SpearmansCorrelation();

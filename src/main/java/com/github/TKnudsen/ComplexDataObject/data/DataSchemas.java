@@ -5,6 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * <p>
+ * Static helper methods for DataSchema and DataSchemaEntry instances, in
+ * particular for deriving simple attribute-name-to-type maps and for
+ * constructing a DataSchema from such a map.
+ * </p>
+ */
 public class DataSchemas {
 
 	/**
@@ -18,7 +25,7 @@ public class DataSchemas {
 		Objects.requireNonNull(dataSchema);
 
 		Map<String, Class<?>> map = new LinkedHashMap<String, Class<?>>();
-		for (DataSchemaEntry<?> entry : dataSchema.getAttributeEntries())
+		for (DataSchemaEntry<?> entry : dataSchema.getAttributeEntries(true))
 			map.put(entry.getName(), entry.getType());
 
 		return map;

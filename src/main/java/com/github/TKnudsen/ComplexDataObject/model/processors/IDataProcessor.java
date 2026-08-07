@@ -6,19 +6,11 @@ import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.
 
 /**
  * <p>
- * Title: IDataProcessor
+ * Baseline behavior of a data processing routine.
  * </p>
- * 
- * <p>
- * Description: Baseline behavior of a data processing routine.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2011-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2011
  */
 public interface IDataProcessor<D> {
 

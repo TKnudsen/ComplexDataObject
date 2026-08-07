@@ -5,6 +5,13 @@ import javax.swing.event.ChangeEvent;
 import com.github.TKnudsen.ComplexDataObject.data.entry.EntryWithComparableKey;
 import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
 
+/**
+ * <p>
+ * Change event fired when an item ranking is (re-)calculated. Carries the
+ * resulting Ranking of entries with comparable keys produced by an
+ * ItemRankingModel.
+ * </p>
+ */
 public class ItemRankingChangeEvent<T extends Comparable<T>> extends ChangeEvent {
 
 	/**

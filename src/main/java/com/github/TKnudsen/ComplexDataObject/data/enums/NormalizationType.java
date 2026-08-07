@@ -2,20 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.data.enums;
 
 /**
  * <p>
- * Title: NormalizationType
- * </p>
- * 
- * <p>
- * Description: type of normalization, e.g., needed in the feature creation
+ * type of normalization, e.g., needed in the feature creation
  * process.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2016
  */
 
 public enum NormalizationType {

@@ -18,6 +18,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
+/**
+ * <p>
+ * DoubleAttributeScoringFunction that treats values above and below a
+ * configurable neutral value as separate positive and negative ranges, each
+ * with its own statistics and normalization functions, so scores can be
+ * bipolar (positive or negative) around that neutral point.
+ * </p>
+ */
 public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScoringFunction {
 
 	@JsonIgnore
@@ -225,10 +233,10 @@ public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScorin
 	 */
 	public StatisticsSupport getStatisticsSupport() {
 		Collection<Double> values = new ArrayList<>(
-				DataConversion.doublePrimitivesToList(statisticsSupportPositive.getValues()));
+				DataConversion.doubleToList(statisticsSupportPositive.getValues()));
 
 		if (statisticsSupportNegative != null)
-			values.addAll(DataConversion.doublePrimitivesToList(statisticsSupportNegative.getValues()));
+			values.addAll(DataConversion.doubleToList(statisticsSupportNegative.getValues()));
 
 		return new StatisticsSupport(values);
 	}

@@ -6,17 +6,13 @@ import java.io.Writer;
 
 /**
  * <p>
- * Description: support functionality to facilitate .csv output
- * 
+ * support functionality to facilitate .csv output
+ *
  * Possible add on: add encapsulation of special chars and comma
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018-2021
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class CSVWriterTools {
 

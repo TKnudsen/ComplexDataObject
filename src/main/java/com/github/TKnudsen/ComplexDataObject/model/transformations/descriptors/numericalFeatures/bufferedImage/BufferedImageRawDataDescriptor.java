@@ -14,20 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
 
 /**
  * <p>
- * Title: BufferedImageRawDataDescriptor
- * </p>
- * 
- * <p>
- * Description: Basic transformation of BufferedImages into the numerical
+ * Basic transformation of BufferedImages into the numerical
  * feature space. The luminance of every pixel creates an individual dimension.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2016
  */
 public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDescriptor<ComplexDataObject> {
 
@@ -56,7 +48,7 @@ public class BufferedImageRawDataDescriptor implements INumericFeatureVectorDesc
 
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < heigth; y++) {
-					double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
+					double luminance = BufferedImageTools.getLuminanceForPixel(image, x, y);
 					features.add(new NumericalFeature(x + "_" + y, luminance));
 				}
 

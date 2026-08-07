@@ -12,19 +12,14 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
 
 /**
  * <p>
- * Title: OutlierRemover
+ * Clamps outlier values of a numeric attribute to a range around the mean,
+ * defined as a configurable multiple of the standard deviation. Values
+ * further above or below the mean than that threshold are replaced by
+ * mean plus/minus the scaled standard deviation, rather than being removed.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class OutlierRemover implements IComplexDataObjectProcessor {
 

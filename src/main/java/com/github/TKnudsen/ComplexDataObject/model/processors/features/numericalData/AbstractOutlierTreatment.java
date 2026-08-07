@@ -14,14 +14,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
 
 /**
  * <p>
- * Title: AbstractOutlierTreatment
+ * Base class for outlier treatment processors on numerical feature vectors.
+ * For every feature it derives a lower and an upper bound via
+ * {@link #calculateBounds(List)}, which subclasses implement, and then crops
+ * all feature values into that bound using a linear scale.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
  */
 public abstract class AbstractOutlierTreatment implements INumericalFeatureVectorProcessor {

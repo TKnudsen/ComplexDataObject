@@ -9,6 +9,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFe
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureContainer;
 import com.github.TKnudsen.ComplexDataObject.data.features.mixedData.MixedDataFeatureVector;
 
+/**
+ * <p>
+ * Manual test/demo that builds a MixedDataFeatureContainer from a couple of
+ * MixedDataFeatureVector objects and exercises adding a feature and reading
+ * feature values, run via a main method.
+ * </p>
+ */
 public class FeatureContainerTest {
 
 	public static void main(String[] args) {

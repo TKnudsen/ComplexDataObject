@@ -1,5 +1,12 @@
 package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
+/**
+ * <p>
+ * Utility class providing the two-sample Kolmogorov-Smirnov statistical test
+ * for comparing two probability distributions, delegating to the Apache
+ * Commons Math implementation.
+ * </p>
+ */
 public class KolmogorovSmirnovTest {
 
 	/**

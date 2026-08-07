@@ -15,6 +15,15 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.m
 
 import weka.core.Instances;
 
+/**
+ * <p>
+ * Ad-hoc test harness with a main method that exercises the conversion
+ * between ComplexDataObject data and Weka Instances, including
+ * round-tripping through MixedDataFeatureVector/MixedDataDescriptor and
+ * benchmarking conversion performance for varying numbers of attributes and
+ * objects.
+ * </p>
+ */
 public class WekaConversionTester {
 
 	public static void main(String[] args) throws IOException {

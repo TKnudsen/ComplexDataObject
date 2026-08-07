@@ -8,9 +8,11 @@ import com.github.TKnudsen.ComplexDataObject.data.features.numericalData.Numeric
 import com.github.TKnudsen.ComplexDataObject.model.processors.complexDataObject.DataProcessingCategory;
 
 /**
+ * <p>
  * Allows the translation of all feature values by a given amount. Useful for
  * preventing illegal values for mathematical operations, e.g. values smaller than or
  * equal to 0 when applying log.
+ * </p>
  *
  * @author Christian Ritter
  *

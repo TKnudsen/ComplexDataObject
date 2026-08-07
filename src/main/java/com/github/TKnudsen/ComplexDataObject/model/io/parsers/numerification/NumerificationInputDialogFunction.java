@@ -10,6 +10,15 @@ import javax.swing.JOptionPane;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
 
+/**
+ * <p>
+ * Abstract IObjectParser implementation that resolves a numeric value for an
+ * arbitrary (typically categorical) input object by looking it up in an
+ * internal cache or, if absent, prompting the user via a Swing input dialog
+ * with a configurable timeout. Resolved values are cached in a lookup map so
+ * each distinct object is only asked for once.
+ * </p>
+ */
 public abstract class NumerificationInputDialogFunction<T extends Number>
 		implements IObjectParser<T>, INumerificationInput<Object, T> {
 

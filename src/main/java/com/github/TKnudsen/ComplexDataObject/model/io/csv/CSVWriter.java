@@ -8,6 +8,15 @@ import java.util.List;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
 
+/**
+ * <p>
+ * Static utility class that writes a ComplexDataContainer or a list of
+ * ComplexDataObjects to a CSV file using a given separator character. String
+ * attribute values that contain the separator token are sanitized by
+ * replacing it with an underscore before delegating the actual file writing
+ * to CSVWriterTools.
+ * </p>
+ */
 public class CSVWriter {
 
 	/**

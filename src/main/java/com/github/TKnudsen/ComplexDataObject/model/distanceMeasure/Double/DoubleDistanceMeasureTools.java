@@ -5,19 +5,13 @@ import java.util.List;
 
 /**
  * <p>
- * Title: DoubleDistanceMeasureTools
+ * Utility class providing a factory method to instantiate a
+ * DoubleDistanceMeasure from its String name, along with a listing of the
+ * distance measure names currently supported.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2018
  */
 public class DoubleDistanceMeasureTools {
 	public static DoubleDistanceMeasure getDistFunction(String distanceFunctionName) {

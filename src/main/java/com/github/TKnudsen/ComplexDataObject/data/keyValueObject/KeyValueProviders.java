@@ -7,19 +7,11 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title: KeyValueProviders
+ * support tools for KeyValueProvider data.
  * </p>
- * 
- * <p>
- * Description: support tools for KeyValueProvider data.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class KeyValueProviders {
 

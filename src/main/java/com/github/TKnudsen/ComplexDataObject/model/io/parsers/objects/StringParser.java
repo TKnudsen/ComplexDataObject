@@ -2,19 +2,12 @@ package com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects;
 
 /**
  * <p>
- * Title: StringParser
+ * Parses arbitrary objects into their String representation by delegating to
+ * String.valueOf, returning null for null input.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class StringParser implements IObjectParser<String> {
 

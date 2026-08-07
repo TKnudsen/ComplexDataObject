@@ -4,19 +4,11 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.mergeAndJoin.
 
 /**
  * <p>
- * Title: SubtractionFunction
+ * provides the difference between two doubles.
  * </p>
- * 
- * <p>
- * Description: provides the difference between two doubles.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public class SubtractionFunction implements IObjectMerger<Double> {
 

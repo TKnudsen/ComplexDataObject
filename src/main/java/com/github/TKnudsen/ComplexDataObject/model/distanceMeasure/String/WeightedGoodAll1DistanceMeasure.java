@@ -7,19 +7,14 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.WeightedDista
 
 /**
  * <p>
- * Title: WeightedGoodAll1DistanceMeasure
+ * Computes the weighted Goodall1 distance between two String arrays, using
+ * per-attribute maps of squared value frequencies (pSquares) to weight
+ * matches by how rare the matching value is, and normalizing per-attribute
+ * weights before aggregating.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: (c) 2016-2017 Juergen Bernard
- * </p>
- * 
- * @author Christian Ritter
+ *
  * @version 1.01
+ * @since 2016
  */
 public class WeightedGoodAll1DistanceMeasure extends WeightedDistanceMeasure<String[]> {
 	private List<Map<String, Double>> pSquares;

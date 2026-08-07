@@ -12,13 +12,9 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.ReflectionTools;
  * provides ComplexDataObjects for data sets. Requires that ComplexDataObject is
  * checked out.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2022
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2015
  */
 public class DataSets {
 

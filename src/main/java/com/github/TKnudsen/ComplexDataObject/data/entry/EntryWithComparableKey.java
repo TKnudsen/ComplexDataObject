@@ -5,24 +5,16 @@ import java.util.Map;
 
 /**
  * <p>
- * Title: EntryWithComparableKey
- * </p>
- * 
- * <p>
- * Description: Key-Value pair implementation of {@link Map.Entry}, with a key
+ * Key-Value pair implementation of {@link Map.Entry}, with a key
  * that extends {@link Comparable}.
- * 
+ *
  * Tip: you can also use AbstractMap.SimpleEntry as a simple alternative. Then,
  * a comparable key can be obtained by Collections.sort(collection,
  * Entry.comparingByKey());
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.03
+ * @since 2015
  */
 public class EntryWithComparableKey<K extends Comparable<K>, V>
 		implements Comparable<EntryWithComparableKey<K, V>>, Map.Entry<K, V>, Serializable {

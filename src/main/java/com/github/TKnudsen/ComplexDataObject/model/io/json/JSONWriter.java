@@ -11,19 +11,11 @@ import com.github.TKnudsen.ComplexDataObject.model.scoring.functions.AttributeSc
 
 /**
  * <p>
- * Title: JSONWriter
+ * writes ComplexDataObjects as JSON
  * </p>
- * 
- * <p>
- * Description: writes ComplexDataObjects as JSON
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2019
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class JSONWriter {
 

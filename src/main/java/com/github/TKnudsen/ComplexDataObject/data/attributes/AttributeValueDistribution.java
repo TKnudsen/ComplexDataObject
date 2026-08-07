@@ -10,27 +10,19 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: AttributeValueDistribution
- * </p>
- * 
- * <p>
- * Description: stores the value distribution of an attribute AND the
+ * stores the value distribution of an attribute AND the
  * priorization of external entities w.r.t. attributes.
- * 
+ *
  * Example: Distribution of horse power (attribute) of cars. Two different
  * scoring functions A and B have different priorizations of horse power, e.g.,
  * A: 100PS, B: 200PS.
  * </p>
- * 
+ *
  * TODO check if this is still used. seems like these two functionalities
  * deserve their own resources.
- * 
- * <p>
- * Copyright: Copyright (c) 2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class AttributeValueDistribution<T> extends ComplexDataObject implements Comparable<T> {
 

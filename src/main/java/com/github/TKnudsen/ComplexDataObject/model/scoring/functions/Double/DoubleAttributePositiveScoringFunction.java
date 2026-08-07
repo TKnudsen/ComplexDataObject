@@ -12,6 +12,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.NormalizationFunction;
 import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization.QuantileNormalizationFunction;
 
+/**
+ * <p>
+ * DoubleAttributeScoringFunction implementation for attributes whose values
+ * are treated as a single, non-bipolar (positive) range. Builds one set of
+ * statistics and linear/quantile normalization functions over the full
+ * (outlier-pruned) value distribution.
+ * </p>
+ */
 public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScoringFunction {
 
 	@JsonIgnore

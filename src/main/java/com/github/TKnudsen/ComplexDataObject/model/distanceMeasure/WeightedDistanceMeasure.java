@@ -4,19 +4,14 @@ import java.util.List;
 
 /**
  * <p>
- * Title: WeightedDistanceMeasure
+ * Abstract base implementation of IWeightedDistanceMeasure that manages the
+ * list of per-dimension weights and a configurable nullValue, which
+ * subclasses use as a substitute contribution whenever one of the compared
+ * values is missing.
  * </p>
- * 
- * <p>
- * Description:
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.01
+ * @since 2017
  */
 public abstract class WeightedDistanceMeasure<T> implements IWeightedDistanceMeasure<T> {
 	private double nullValue;

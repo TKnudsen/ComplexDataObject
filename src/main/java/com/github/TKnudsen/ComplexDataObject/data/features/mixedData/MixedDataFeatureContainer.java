@@ -7,19 +7,13 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureVectorContaine
 
 /**
  * <p>
- * Title: MixedFeatureContainer
+ * A FeatureVectorContainer specialized for MixedDataFeatureVector objects,
+ * i.e. feature vectors whose individual features can be of mixed data types
+ * (numeric, boolean, string).
  * </p>
  *
- * <p>
- * Description:
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2016-2017
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.01
+ * @since 2016
  */
 public class MixedDataFeatureContainer extends FeatureVectorContainer<MixedDataFeatureVector> {
 

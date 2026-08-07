@@ -6,16 +6,14 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 
 /**
  * <p>
- * Title: ComplexDataObjectAttributeComparator
+ * Comparator for ComplexDataObject instances that compares two objects based
+ * on the value of a single named attribute, using numeric comparison for
+ * Number values and falling back to String comparison otherwise. Null
+ * objects and null attribute values are sorted to the end.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2017-2022,
- * https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2017
  */
 public class ComplexDataObjectAttributeComparator implements Comparator<ComplexDataObject> {
 

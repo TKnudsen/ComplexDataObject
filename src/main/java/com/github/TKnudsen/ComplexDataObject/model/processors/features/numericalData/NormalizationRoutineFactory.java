@@ -2,6 +2,13 @@ package com.github.TKnudsen.ComplexDataObject.model.processors.features.numerica
 
 import com.github.TKnudsen.ComplexDataObject.data.enums.NormalizationType;
 
+/**
+ * <p>
+ * Factory that creates an {@link INumericalFeatureVectorProcessor} instance
+ * implementing the normalization routine requested via a given
+ * {@link NormalizationType}.
+ * </p>
+ */
 public class NormalizationRoutineFactory {
 	public static INumericalFeatureVectorProcessor createNormalizationRoutine(NormalizationType normalizationType) {
 

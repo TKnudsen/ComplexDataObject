@@ -21,21 +21,11 @@ import weka.core.converters.CSVLoader;
 
 /**
  * <p>
- * Title: CSVParser
+ * Parses ComplexDataObjects from a CSV file.
  * </p>
- * 
- * <p>
- * Description: Parses ComplexDataObjects from a CSV file. Note: this parser is
- * not part of the persistence layer. In fact, it gathers new ComplexDataObjects
- * from a given file.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.0
+ * @since 2015
  */
 public class CSVParser implements ComplexDataObjectParser {
 

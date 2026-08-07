@@ -9,21 +9,13 @@ import com.github.TKnudsen.ComplexDataObject.data.uncertainty.IUncertaintyQualit
 
 /**
  * <p>
- * Title: LabelUncertainty
- * </p>
- * 
- * <p>
- * Description: data model for uncertainties of string data. In general, high
+ * data model for uncertainties of string data. In general, high
  * values mean high uncertainty. This is incontrast to probability distributions
  * where high values mean high probabilities.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2015
  */
 public class LabelUncertainty implements IUncertaintyQualitative<String> {
 

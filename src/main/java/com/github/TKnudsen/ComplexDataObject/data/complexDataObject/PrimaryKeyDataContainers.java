@@ -8,6 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * <p>
+ * Static helper methods for creating and merging PrimaryKeyDataContainer
+ * instances based on a designated primary key attribute.
+ * </p>
+ *
+ * @deprecated use ComplexDataContainer
+ */
 public class PrimaryKeyDataContainers {
 
 	/**
