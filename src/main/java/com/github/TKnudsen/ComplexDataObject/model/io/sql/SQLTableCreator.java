@@ -14,6 +14,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * <p>
+ * Creates SQL schemas and tables, and adds columns to existing tables,
+ * supporting both MySQL and PostgreSQL connections. Builds the corresponding
+ * CREATE TABLE / ADD COLUMN statements from Java attribute schemas, inferring
+ * column types and sizes from the given classes and (optionally) sample
+ * values.
+ * </p>
+ */
 public class SQLTableCreator {
 
 	public static void createSchema(Connection conn, String schema) throws SQLException {
@@ -29,11 +38,13 @@ public class SQLTableCreator {
 			stmt.executeUpdate(sqlString);
 			System.out.println("SQLTableCreator.createSchema: schema " + schema + " created (if not existed yet)");
 
-			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
+			SQLTableStatistics.clearCache(schema);
 		} catch (SQLException se) {
 			se.printStackTrace();
+			throw se;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			if (stmt != null)
 				stmt.close();
@@ -93,7 +104,7 @@ public class SQLTableCreator {
 
 		// test if schema exists
 		createSchema(conn, schema);
-		
+
 		Statement stmt = null;
 		try {
 			if (SQLUtils.tableExists(conn, schema, tableName)) {
@@ -108,13 +119,15 @@ public class SQLTableCreator {
 			stmt.executeUpdate(sqlString);
 			System.out.println("done");
 
-			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
+			SQLTableStatistics.clearCache(schema);
 		} catch (SQLException se) {
 			se.printStackTrace();
 			System.err.println("SQL STRING: " + sqlString);
+			throw se;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("SQL STRING: " + sqlString);
+			throw e;
 		} finally {
 			if (stmt != null)
 				stmt.close();
@@ -282,8 +295,10 @@ public class SQLTableCreator {
 			} else if (e.getMessage().contains("column") && e.getMessage().endsWith("already exists")) {
 				System.out.println();
 				System.err.println("SQLTableCreator.addColumn: column already in table, skip.");
-			} else
+			} else {
 				e.printStackTrace();
+				throw e;
+			}
 		} finally {
 			if (stmt != null)
 				stmt.close();

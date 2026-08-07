@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
@@ -19,11 +18,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.DataSchemaEntry;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
@@ -31,24 +29,22 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableSelector.Order;
 
+/**
+ * <p>
+ * Collection of shared SQL helper routines used across the io.sql package:
+ * mapping Java classes to SQL column types, checking table existence,
+ * converting JDBC ResultSets into ComplexDataObjects/ComplexDataContainers,
+ * building key-value row representations, mitigating data truncation errors,
+ * checking for existing/duplicate rows, and estimating JDBC batch sizes for
+ * bulk inserts.
+ * </p>
+ */
 public class SQLUtils {
 
 	public static String columnQuote = "`";
 	public static String valueQuote = "'";
 
 	private static BooleanParser booleanParser = new BooleanParser();
-
-	private static Map<String, LinkedHashMap<String, List<String>>> primaryKeyAttributesPerTableAndSchema = new HashMap<String, LinkedHashMap<String, List<String>>>();
-
-	/**
-	 * can be used to reset the buffer with primary keys for every schema and table.
-	 * Useful if the database was extended, e.g., through a new schema or a new
-	 * table or changed primary keys for a table.
-	 */
-	public static void resetprimaryKeyAttributesPerTableAndSchema() {
-		primaryKeyAttributesPerTableAndSchema = new HashMap<String, LinkedHashMap<String, List<String>>>();
-		System.out.println("SQLUtils: reset of primary key lookup data");
-	}
 
 	/**
 	 * creates a new database / schema if not exists
@@ -68,7 +64,7 @@ public class SQLUtils {
 			stmt.executeUpdate(sql);
 			System.out.println("done");
 
-			resetprimaryKeyAttributesPerTableAndSchema();
+			SQLTableStatistics.clearCache();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,11 +80,29 @@ public class SQLUtils {
 	}
 
 	/**
-	 * @param conn
-	 * @param schema
-	 * @param tableName
-	 * @return
-	 * @throws SQLException
+	 * Checks whether a given table exists in the specified schema.
+	 * <p>
+	 * For PostgreSQL connections, this method uses the fast, system-cache-backed
+	 * {@code to_regclass(format('%I.%I', ?, ?))} query, which avoids full catalog
+	 * scans. For all other databases, it falls back to
+	 * {@link DatabaseMetaData#getTables}, normalizing identifier case according to
+	 * the database's storage rules.
+	 * <p>
+	 * All JDBC resources are properly closed using try-with-resources.
+	 *
+	 * <h4>Behavior</h4>
+	 * <ul>
+	 * <li>For PostgreSQL, the lookup is case-sensitive and schema-qualified.</li>
+	 * <li>For other databases, identifier case is adjusted via metadata.</li>
+	 * <li>Only real tables ({@code TABLE}) are considered; add "VIEW" etc. if
+	 * needed.</li>
+	 * </ul>
+	 *
+	 * @param conn      an open {@link Connection}; not closed by this method
+	 * @param schema    the schema name (must not be {@code null})
+	 * @param tableName the table name (must not be {@code null})
+	 * @return {@code true} if the table exists, {@code false} otherwise
+	 * @throws SQLException if a database access error occurs
 	 */
 	public static boolean tableExists(Connection conn, String schema, String tableName) throws SQLException {
 
@@ -98,56 +112,52 @@ public class SQLUtils {
 		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
 
 		if (postgreSQL) {
-			String sqlQuery = "			   SELECT EXISTS " + "(" + "	SELECT " + "	FROM pg_tables"
-					+ "	WHERE schemaname = '" + schema + "'" + "	AND tablename = '" + tableName + "'" + ");";
-
-			ResultSet resultSet = null;
-			try {
-				PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
-				resultSet = preparedStatement.executeQuery();
-				List<ComplexDataObject> all = SQLUtils.interpreteResultSet(resultSet);
-				for (ComplexDataObject cdo : all)
-					return new BooleanParser().apply(cdo.getAttribute("exists"));
-
-				System.out.println(all);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (resultSet != null)
-					resultSet.close();
+			final String sql = "select to_regclass(format('%I.%I', ?, ?)) is not null";
+			try (PreparedStatement ps = conn.prepareStatement(sql)) {
+				ps.setString(1, schema);
+				ps.setString(2, tableName);
+				try (ResultSet rs = ps.executeQuery()) {
+					return rs.next() && rs.getBoolean(1);
+				}
 			}
 
 		} else {
-			DatabaseMetaData dbm = conn.getMetaData();
+			// Generic JDBC path
+			DatabaseMetaData md = conn.getMetaData();
 
-			ResultSet resultSet = dbm.getTables(null, schema, tableName, null);
+			String normSchema = normalizeIdentifier(md, schema);
+			String normTable = normalizeIdentifier(md, tableName);
 
-			try {
-				while (resultSet.next()) {
-					String cat = resultSet.getString("TABLE_CAT");
-					String schem = resultSet.getString("TABLE_SCHEM");
-					String name = resultSet.getString("TABLE_NAME");
-					// String type = resultSet.getString("TABLE_TYPE");
-					// String remarks = resultSet.getString("REMARKS");
-
-					if (!PostgreSQL.isPostgreSQLConnection(conn))
-						if (schema.toLowerCase().equals(cat)
-								|| schema.toLowerCase().equals(schem) && tableName.toLowerCase().equals(name))
-							return true;
-						else {
-						}
-					else
-						return (schema.equals(schem) && tableName.equals(name));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (resultSet != null)
-					resultSet.close();
+			// Limit to real tables; add "VIEW" etc. if you want those to count
+			String[] types = new String[] { "TABLE" };
+			try (ResultSet rs = md.getTables(conn.getCatalog(), normSchema, normTable, types)) {
+				return rs.next();
 			}
 		}
+	}
 
-		return false;
+	/**
+	 * Normalizes an identifier (schema or table name) to match how the database
+	 * stores unquoted identifiers, using the metadata flags
+	 * {@link DatabaseMetaData#storesLowerCaseIdentifiers()} and
+	 * {@link DatabaseMetaData#storesUpperCaseIdentifiers()}.
+	 *
+	 * @param md    the {@link DatabaseMetaData} for the connection
+	 * @param ident the identifier (may be {@code null})
+	 * @return a normalized identifier suitable for metadata lookups, or
+	 *         {@code null}
+	 * @throws SQLException if metadata access fails
+	 */
+	private static String normalizeIdentifier(DatabaseMetaData md, String ident) throws SQLException {
+		if (ident == null)
+			return null;
+		if (md.storesLowerCaseIdentifiers()) {
+			return ident.toLowerCase(Locale.ROOT);
+		} else if (md.storesUpperCaseIdentifiers()) {
+			return ident.toUpperCase(Locale.ROOT);
+		} else {
+			return ident; // case-sensitive store
+		}
 	}
 
 	public static String classToSQLType(Class<?> javaClass, boolean primaryKey, boolean useFloatInsteadOfDouble,
@@ -257,6 +267,9 @@ public class SQLUtils {
 			throw new IllegalArgumentException(
 					"MySQLUtils.interpreteResultSet: targetAttributeCharacterization was null/empty. use interpreteResultSet without the characterization in such a case.");
 
+		if (resultSet == null)
+			return java.util.Collections.emptyList();
+
 		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
 
 		while (resultSet.next()) {
@@ -267,7 +280,8 @@ public class SQLUtils {
 			} catch (SQLException sqlex) {
 			}
 
-			ComplexDataObject cdo = (id == null) ? new ComplexDataObject() : new ComplexDataObject(id);
+			ComplexDataObject cdo = (id == null) ? new ComplexDataObject(targetAttributeCharacterization.size())
+					: new ComplexDataObject(targetAttributeCharacterization.size(), id);
 
 			for (String attribute : targetAttributeCharacterization.keySet()) {
 				resultSet.findColumn(attribute);
@@ -278,6 +292,9 @@ public class SQLUtils {
 					e.printStackTrace();
 				}
 			}
+
+			if (cdo == null)
+				System.err.println("SQLUtils.interpreteResultSet: null object returned.");
 
 			result.add(cdo);
 		}
@@ -291,49 +308,41 @@ public class SQLUtils {
 	 * jackson-databind.
 	 * 
 	 * @param resultSet
+	 * @param doubleAsFloat if floats shall replace double
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<ComplexDataObject> interpreteResultSet(ResultSet resultSet) throws SQLException {
+	public static List<ComplexDataObject> interpreteResultSet(ResultSet resultSet, boolean doubleAsFloat)
+			throws SQLException {
 
-		List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
+		if (resultSet == null)
+			return java.util.Collections.emptyList();
 
-		if (resultSet != null)
-			try {
-				ResultSetMetaData rsmd = resultSet.getMetaData();
-				String[] columnNames = new String[rsmd.getColumnCount()];
-				int[] columnTypes = new int[rsmd.getColumnCount()];
+		// one unified step:
+		ResultSetInterpreter.ResultSetDescriptor desc = ResultSetInterpreter.createExtractors(resultSet, doubleAsFloat);
 
-				for (int i = 0; i < columnNames.length; i++) {
-					columnNames[i] = rsmd.getColumnLabel(i + 1);
-					columnTypes[i] = rsmd.getColumnType(i + 1);
-				}
+		// fast mapping into ComplexDataObjects:
+		return ResultSetMapper.asListOfComplexObjects(resultSet, desc.getColumnNames(), desc.getExtractors());
+	}
 
-				while (resultSet.next()) {
-					Long id = null;
-					try {
-						resultSet.findColumn("ID");
-						id = resultSet.getLong("ID");
-					} catch (SQLException sqlex) {
-					}
+	/**
+	 * Interprets a single ResultSet row (does not call next()) using the same
+	 * optimized mechanism as the full ResultSet version.
+	 *
+	 * @param resultSet
+	 * @param columnNames
+	 * @param columnTypes
+	 * @param doubleAsFloat
+	 * @return a map of columnName to value
+	 * @throws SQLException
+	 */
+	public static LinkedHashMap<String, Object> interpreteResultSetRow(ResultSet resultSet, String[] columnNames,
+			int[] columnTypes, boolean doubleAsFloat) throws SQLException {
 
-					ComplexDataObject cdo = (id == null) ? new ComplexDataObject() : new ComplexDataObject(id);
+		ResultSetInterpreter.ResultSetDescriptor desc = ResultSetInterpreter.createExtractors(resultSet, doubleAsFloat);
 
-					LinkedHashMap<String, Object> map = interpreteResultSetRow(resultSet, columnNames, columnTypes,
-							false);
-					for (String attribute : map.keySet())
-						if (attribute.equals("ID"))
-							continue;
-						else
-							cdo.add(attribute, map.get(attribute));
-
-					result.add(cdo);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-		return result;
+		// assumes resultSet is already positioned at a valid row
+		return ResultSetInterpreter.interpreteResultSetRow(resultSet, desc.getColumnNames(), desc.getExtractors());
 	}
 
 	/**
@@ -346,9 +355,12 @@ public class SQLUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static LinkedHashMap<String, Object> interpreteResultSetRow(ResultSet resultSet, String[] columnNames,
+	public static LinkedHashMap<String, Object> interpreteResultSetRowOld(ResultSet resultSet, String[] columnNames,
 			int[] columnTypes, boolean doubleAsFloat) throws SQLException {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+
+		// Pre-size the map to reduce internal resizing and rehashing
+		final int len = columnNames.length;
+		final LinkedHashMap<String, Object> map = new LinkedHashMap<>(len * 4 / 3);
 
 		boolean b;
 		long l;
@@ -577,86 +589,42 @@ public class SQLUtils {
 	}
 
 	/**
-	 * creates a list of key value pairs (attributes and values) for
-	 * ComplexDataObjects.
-	 * 
-	 * Part of the generalization process.
-	 * 
-	 * @param cdos
-	 * @param attributeList attributes that will be ignored
-	 * @param blackList     determines if the attributeList is a black list
-	 *                      (attributes will be ignored) or a whiteLit (only those
-	 *                      attributes will be considered)
-	 * @return
-	 */
-	public static List<LinkedHashMap<String, Object>> createKeyValuePairs(Iterable<ComplexDataObject> cdos,
-			Set<String> attributeList, boolean blackList) {
-		List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs = new ArrayList<LinkedHashMap<String, Object>>();
-
-		for (ComplexDataObject cdo : cdos)
-			listOfMapWithKeyValuePairs.add(createKeyValuePairs(cdo, attributeList, blackList));
-
-		return listOfMapWithKeyValuePairs;
-	}
-
-	/**
-	 * creates a list of key value pairs (attributes and values) for a container
-	 * with ComplexDataObjects.
-	 * 
-	 * Part of the generalization process.
-	 * 
-	 * @param container
-	 * @return
+	 * Creates a list of key-value pairs (attributes and values) for all
+	 * ComplexDataObjects in a container.
+	 *
+	 * Ensures that each resulting map has entries for every attribute present in
+	 * the container. Missing attributes are assigned {@code null}, so that
+	 * downstream batch insert operations in databases can rely on uniform column
+	 * structure, which can be much faster.
+	 *
+	 * @param container the ComplexDataContainer to transform
+	 * @return a list of LinkedHashMaps, each representing one row with uniform keys
 	 */
 	public static List<LinkedHashMap<String, Object>> createKeyValuePairs(ComplexDataContainer container) {
-		List<LinkedHashMap<String, Object>> listOfMapWithKeyValuePairs = new ArrayList<LinkedHashMap<String, Object>>();
+		Objects.requireNonNull(container, "container must not be null");
 
-		SortedSet<String> whiteList = new TreeSet<>(container.getAttributeNames());
+		// 1. Collect all attribute names (acts as white list and column schema)
+		SortedSet<String> allAttributes = new java.util.TreeSet<>(container.getAttributes());
 
-		for (ComplexDataObject cdo : container)
-			listOfMapWithKeyValuePairs.add(createKeyValuePairs(cdo, whiteList, false));
+		// 2. Prepare output
+		List<LinkedHashMap<String, Object>> list = new ArrayList<>(container.size());
 
-		return listOfMapWithKeyValuePairs;
-	}
+		// 3. For each ComplexDataObject, fill all keys (missing ones to null)
+		for (ComplexDataObject cdo : container) {
+			LinkedHashMap<String, Object> row = new LinkedHashMap<>();
 
-	/**
-	 * creates key value pairs (attributes and values) for a ComplexDataObject.
-	 * 
-	 * Part of the generalization process.
-	 * 
-	 * @param cdo
-	 * @param attributeList attributes that will be ignored. can be null
-	 * @param blackList     determines if the list is a black list (true) or a white
-	 *                      list (false)
-	 * @return
-	 */
-	public static LinkedHashMap<String, Object> createKeyValuePairs(ComplexDataObject cdo, Set<String> attributeList,
-			boolean blackList) {
+			// Always include ID if available
+			row.put("ID", cdo.getID());
 
-		LinkedHashMap<String, Object> keyValuePairs = new LinkedHashMap<>();
-		keyValuePairs.put("ID", cdo.getID());
+			for (String attr : allAttributes) {
+				Object value = cdo.containsAttribute(attr) ? cdo.getAttribute(attr) : null;
+				row.put(attr, value);
+			}
 
-		Iterator<String> iterator = cdo.iterator();
-		while (iterator.hasNext()) {
-			String attribute = iterator.next();
-
-			if (attributeList != null)
-				if (blackList)
-					if (attributeList.contains(attribute))
-						continue;
-					else {// let pass
-					}
-				else // white list
-				if (!attributeList.contains(attribute))
-					continue;
-				else {// let pass
-				}
-
-			keyValuePairs.put(attribute, cdo.getAttribute(attribute));
+			list.add(row);
 		}
 
-		return keyValuePairs;
-
+		return list;
 	}
 
 	/**
@@ -759,76 +727,49 @@ public class SQLUtils {
 	 * @param tableName
 	 * @param dataPerAttribute
 	 * @return
+	 * @throws SQLException
 	 */
 	public static boolean rowExists(Connection conn, String schema, String tableName,
-			Map<String, Object> dataPerAttribute) {
+			Map<String, Object> dataPerAttribute) throws SQLException {
 
 		if (dataPerAttribute == null || dataPerAttribute.isEmpty())
 			return false;
 
-		String schemaAndTable = PostgreSQL.isPostgreSQLConnection(conn)
-				? PostgreSQL.schemaAndTableName(schema, tableName)
-				: tableName; // here the schema is already part of the connection
+		boolean postgreSQL = PostgreSQL.isPostgreSQLConnection(conn);
+		String schemaAndTable = postgreSQL ? PostgreSQL.schemaAndTableName(schema, tableName) : tableName;
 
-		PreparedStatement preparedStatement = null;
-
-		String where = "";
-		for (String attribute : dataPerAttribute.keySet()) {
-			if (!where.equals(""))
-				where += " and ";
-			where += (attribute + "='" + dataPerAttribute.get(attribute) + "'");
+		SQLWhereClause clause = SQLWhereClause.mysql();
+		int i = 0;
+		for (Map.Entry<String, Object> entry : dataPerAttribute.entrySet()) {
+			if (i++ > 0)
+				clause.and();
+			clause.eq(entry.getKey(), entry.getValue() != null ? entry.getValue().toString() : null);
 		}
+		String where = clause.build();
 
 		String sql = "select exists(select 1 from `" + schemaAndTable + "` where " + where + ")";
-
-		if (PostgreSQL.isPostgreSQLConnection(conn))
+		if (postgreSQL)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = null;
 		try {
-			preparedStatement = conn.prepareStatement(sql);
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-			List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
-			result.addAll(SQLUtils.interpreteResultSet(resultSet));
-
-			if (resultSet != null)
-				resultSet.close();
-			if (preparedStatement != null)
-				preparedStatement.close();
-
+			rs = ps.executeQuery();
+			List<ComplexDataObject> result = SQLUtils.interpreteResultSet(rs, false);
 			if (result != null && !result.isEmpty())
 				if (result.get(0).getAttribute("exists") != null)
 					return booleanParser.apply(result.get(0).getAttribute("exists"));
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					/* ignore */ }
+			ps.close();
 		}
 
 		return false;
 	}
-
-//	/**
-//	 * Identifies duplicates by checking against values of table primary keys.
-//	 * 
-//	 * Note: only tested for postgresql.
-//	 * 
-//	 * @param conn
-//	 * @param schema
-//	 * @param tableName
-//	 * @param dataPerAttribute
-//	 * @return boolean per object in the container (e.g., supposed to become a row
-//	 *         in an insert workflow)
-//	 * @throws SQLException
-//	 */
-//	public static Map<ComplexDataObject, Boolean> rowsExist(Connection conn, String schema, String tableName,
-//			ComplexDataContainer container) throws SQLException {
-//
-//		if (container == null)
-//			return null;
-//
-//		List<String> pks = primaryKeysForTable(conn, schema, tableName);
-//
-//		return rowsExist(conn, schema, tableName, pks, container);
-//	}
 
 	/**
 	 * Identifies duplicates by checking against values of table primary keys.
@@ -840,27 +781,28 @@ public class SQLUtils {
 	 * @param schema
 	 * @param tableName
 	 * @param dataPerAttribute
-	 * @param primaryKeys      the primary keys of the table, if known
+	 * @param primaryKeysForTable the primary keys of the table, if known
 	 * @return boolean per object in the container (e.g., supposed to become a row
 	 *         in an insert workflow)
 	 * @throws SQLException
 	 */
 	public static Map<ComplexDataObject, Boolean> rowsExist(Connection conn, String schema, String tableName,
-			List<String> primaryKeys, ComplexDataContainer container) throws SQLException {
+			List<String> primaryKeysForTable, ComplexDataContainer container) throws SQLException {
 
 		if (container == null)
 			return null;
 
-		if (primaryKeys == null || primaryKeys.isEmpty())
+		if (primaryKeysForTable == null || primaryKeysForTable.isEmpty())
 			return null;
 
 		Map<ComplexDataObject, Boolean> existsMap = new HashMap<>();
 
-		Collection<Collection<Object>> pksValues = SQLTableSelector.selectColumnsFromTable(conn, schema, tableName,
-				primaryKeys, null, null, Order.ASC);
+		Collection<List<Object>> pksValues = SQLTableSelector.selectColumnsFromTable(conn, schema, tableName,
+				primaryKeysForTable, null, null, Order.ASC);
 
+		// TODO check if there exists a faster way. If need be.
 		Map<Object, List<Collection<Object>>> pkValuesIndex = new HashMap<>();
-		for (Collection<Object> pkValues : pksValues) {
+		for (List<Object> pkValues : pksValues) {
 			Object firstPKValue = pkValues.iterator().next();
 			if (!pkValuesIndex.containsKey(firstPKValue))
 				pkValuesIndex.put(firstPKValue, new ArrayList<>());
@@ -868,7 +810,7 @@ public class SQLUtils {
 		}
 
 		for (ComplexDataObject cdo : container) {
-			String firstPKAttribute = primaryKeys.get(0);
+			String firstPKAttribute = primaryKeysForTable.get(0);
 			Object firstPKvalue = cdo.getAttribute(firstPKAttribute);
 
 			if (firstPKvalue != null) {
@@ -878,10 +820,10 @@ public class SQLUtils {
 					for (Collection<Object> pksCombi : collection) {
 						int i = 0;
 						for (Object pk : pksCombi) {
-							if (!cdo.getAttribute(primaryKeys.get(i)).equals(pk))
+							if (!cdo.getAttribute(primaryKeysForTable.get(i)).equals(pk))
 								break;
 							// check if also the last criterion is met
-							else if (i == primaryKeys.size() - 1)
+							else if (i == primaryKeysForTable.size() - 1)
 								existsMap.put(cdo, true);
 							i++;
 						}
@@ -896,151 +838,155 @@ public class SQLUtils {
 		return existsMap;
 	}
 
-	public static List<String> primaryKeysForTable(Connection conn, String schema, String tableName) {
-		List<String> pks = new ArrayList<>();
+	/**
+	 * Estimates a JDBC batch size (rows per batch) based on the number of
+	 * attributes (columns) per row. Uses a 10-interval lookup table with values
+	 * rounded to the nearest multiple of 50.
+	 *
+	 * The function decreases smoothly as the number of attributes grows, keeping
+	 * the total pay-load roughly stable across different row widths.
+	 *
+	 * @param attributeCount number of attributes (columns) per row
+	 * @return recommended batch size, always a multiple of 50
+	 */
+	public static int estimateBatchLimit(int attributeCount) {
+		if (attributeCount <= 0)
+			return 1000; // default safety fallback
 
-		Map<String, List<String>> primaryKeysForTables = primaryKeysForTables(conn, schema, true);
-		if (primaryKeysForTables == null)
-			return pks;
+		// Lookup table boundaries (in attribute counts)
+		// Each interval covers a power-of-two-like expansion for smoothness
+		final int[] attrThresholds = { 10, 20, 50, 100, 200, 400, 800, 1600, 3200, 6400 };
 
-		return primaryKeysForTables.get(tableName);
+		// Corresponding batch sizes (rows per batch), all multiples of 50
+		final int[] batchValues = { 5000, 4000, 3000, 2000, 1250, 800, 500, 300, 150, 100 };
 
+		// Find first threshold >= attributeCount
+		for (int i = 0; i < attrThresholds.length; i++)
+			if (attributeCount <= attrThresholds[i])
+				return batchValues[i];
+
+		// Beyond the largest interval to minimal safe batch size
+		return 50;
 	}
 
 	/**
-	 * retrieves the primary keys for all tables in all schemas.
-	 * 
-	 * @param conn
-	 * @param schema
-	 * @return
+	 * Estimate batch size from row bytes. Samples rows, uses p90 size, targets
+	 * ~6MB/batch.
+	 *
+	 * @param rows                    rows to insert (uniform schema)
+	 * @param postgreSQL              whether the connection is PostgreSQL (affects
+	 *                                minor overhead assumptions)
+	 * @param useFloatInsteadOfDouble numeric mapping hint
+	 * @param targetBytesPerBatch     desired total pay-load per executeBatch (e.g.
+	 *                                6MB)
+	 * @return batch size, clamped [50..5000], multiple of 50
 	 */
-	public static Map<String, LinkedHashMap<String, List<String>>> primaryKeys(Connection conn) {
+	public static int estimateBatchLimitByBytes(java.util.List<LinkedHashMap<String, Object>> rows, boolean postgreSQL,
+			boolean useFloatInsteadOfDouble, int targetBytesPerBatch) {
 
-		PreparedStatement preparedStatement = null;
+		if (rows == null || rows.isEmpty())
+			return 1000;
 
-		String sql = "select tab.table_schema, tab.table_name, tco.constraint_name, string_agg(kcu.column_name, ', ') as key_columns from information_schema.tables tab left join information_schema.table_constraints tco on tco.table_schema = tab.table_schema and tco.table_name = tab.table_name and tco.constraint_type = 'PRIMARY KEY' left join information_schema.key_column_usage kcu on kcu.constraint_name = tco.constraint_name and kcu.constraint_schema = tco.constraint_schema and kcu.constraint_name = tco.constraint_name where tab.table_schema not in ('pg_catalog', 'information_schema') and tab.table_type = 'BASE TABLE' group by tab.table_schema, tab.table_name, tco.constraint_name order by tab.table_schema, tab.table_name";
+		int sampleSize = 100;
 
-		try {
-			preparedStatement = conn.prepareStatement(sql);
+		// Sample up to first sampleSize rows; cheap and stable
+		int sampleN = Math.min(sampleSize, rows.size());
+		int[] sizes = new int[sampleN];
+		for (int i = 0; i < sampleN; i++)
+			sizes[i] = estimateRowBytes(rows.get(i), postgreSQL, useFloatInsteadOfDouble);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+		java.util.Arrays.sort(sizes);
+		int p90 = sizes[(int) Math.ceil(sampleN * 0.90) - 1];
+		if (p90 <= 0)
+			p90 = Math.max(estimateRowBytes(rows.get(0), postgreSQL, useFloatInsteadOfDouble), 1);
 
-			List<ComplexDataObject> result = new ArrayList<ComplexDataObject>();
+		// Target pay load / p90 row size = rows per batch
+		long raw = Math.max(1L, targetBytesPerBatch / Math.max(1, p90));
 
-			result.addAll(SQLUtils.interpreteResultSet(resultSet));
+		// Clamp and quantize
+		if (raw > 5000)
+			raw = 5000;
+		int rounded = roundToNearest50((int) raw);
+		return rounded;
+	}
 
-			// fill buffer
-			Map<String, LinkedHashMap<String, List<String>>> primaryKeyAttributesPerTableAndSchema = new HashMap<String, LinkedHashMap<String, List<String>>>();
-			if (primaryKeyAttributesPerTableAndSchema.isEmpty())
-				for (ComplexDataObject cdo : result) {
-					Object sch = cdo.getAttribute("table_schema");
-					if (sch != null) {
-						if (!primaryKeyAttributesPerTableAndSchema.containsKey(sch))
-							primaryKeyAttributesPerTableAndSchema.put(sch.toString(),
-									new LinkedHashMap<String, List<String>>());
-
-						Object tab = cdo.getAttribute("table_name");
-						if (tab != null) {
-
-							if (cdo.getAttribute("key_columns") != null) {
-								String pkks = cdo.getAttribute("key_columns").toString();
-								List<String> pks = new ArrayList<>();
-								if (pkks != null && pkks.length() > 0) {
-									while (pkks.length() > 0) {
-										if (pkks.contains(",")) {
-											pks.add(pkks.substring(0, pkks.indexOf(",")).trim());
-											pkks = pkks.substring(pkks.indexOf(",") + 1, pkks.length()).trim();
-										} else {
-											pks.add(pkks.trim());
-											pkks = "";
-										}
-									}
-								}
-								primaryKeyAttributesPerTableAndSchema.get(sch.toString()).put(tab.toString(), pks);
-							}
-						} else
-							System.err.println("SQLUtils.primaryKeys: table_name null");
-					}
-				}
-
-			if (resultSet != null)
-				resultSet.close();
-			if (preparedStatement != null)
-				preparedStatement.close();
-
-			return primaryKeyAttributesPerTableAndSchema;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+	private static int roundToNearest50(int x) {
+		int r = ((x + 25) / 50) * 50;
+		return (r < 50) ? 50 : r;
 	}
 
 	/**
-	 * @deprecated decide for the boolean bufferingForSpeedup.
-	 * 
-	 *             Retrieves the primary keys for all tables in all schemas
-	 * 
-	 * @param conn
-	 * @param schema
-	 * @return
+	 * Roughly estimates the serialized byte size of a single database row, based on
+	 * its column values. The estimate is used for adaptive batching and avoids
+	 * expensive per-character or per-type introspection.
+	 *
+	 * <p>
+	 * This approximation assumes text-based transmission (e.g., JDBC text protocol
+	 * or string conversion of parameters). It trades precision for speed and should
+	 * be accurate within +/-20--30% for typical data sets.
+	 * </p>
+	 *
+	 * @param row                     the row to estimate, mapping column name to
+	 *                                value
+	 * @param postgreSQL              unused but kept for signature consistency
+	 * @param useFloatInsteadOfDouble unused but kept for signature consistency
+	 * @return approximate row size in bytes (for tuning batch pay loads)
 	 */
-	public static Map<String, List<String>> primaryKeysForTables(Connection conn, String schema) {
+	private static int estimateRowBytes(LinkedHashMap<String, Object> row, boolean postgreSQL,
+			boolean useFloatInsteadOfDouble) {
+		// Per-column bookkeeping and separators overhead (commas, delimiters, etc.)
+		final int PER_COLUMN_OVERHEAD = 4;
+		// Placeholder bytes for null fields
+		final int NULL_PLACEHOLDER = 2;
 
-		return primaryKeysForTables(conn, schema, false);
-	}
+		int total = 0;
 
-	/**
-	 * Retrieves the primary keys for all tables in a schema. Can buffer the
-	 * information locally for later lookup, based on the assumption that schemas,
-	 * tables, and respective primary keys do not change during runtime.
-	 * 
-	 * @param conn
-	 * @param schema
-	 * @param bufferingForSpeedup
-	 * @return
-	 */
-	public static LinkedHashMap<String, List<String>> primaryKeysForTables(Connection conn, String schema,
-			boolean bufferingForSpeedup) {
-
-		LinkedHashMap<String, List<String>> forSchema = null;
-
-		if (bufferingForSpeedup) {
-			if (primaryKeyAttributesPerTableAndSchema.isEmpty()) {
-				primaryKeyAttributesPerTableAndSchema.putAll(primaryKeys(conn));
+		for (Object v : row.values()) {
+			if (v == null) {
+				total += NULL_PLACEHOLDER + PER_COLUMN_OVERHEAD;
+				continue;
 			}
-			if (primaryKeyAttributesPerTableAndSchema.containsKey(schema))
-				forSchema = primaryKeyAttributesPerTableAndSchema.get(schema);
+
+			// === Simplified type buckets ===
+			if (v instanceof String) {
+				// For performance, skip ASCII scan or getBytes() allocation.
+				// Assume average UTF-8 expansion factor ~ 1.5x.
+				int len = ((String) v).length();
+				total += (int) (len * 1.5) + 2 /* quotes */ + PER_COLUMN_OVERHEAD;
+				continue;
+			}
+
+			if (v instanceof Number) {
+				// Covers int, long, float, double, BigDecimal, etc.
+				// Textual representation usually 8--24 bytes to use ~16 avg.
+				total += 16 + PER_COLUMN_OVERHEAD;
+				continue;
+			}
+
+			if (v instanceof Boolean) {
+				// "T"/"F" or 1/0 in most drivers
+				total += 1 + PER_COLUMN_OVERHEAD;
+				continue;
+			}
+
+			if (v instanceof java.util.Date || v instanceof java.sql.Timestamp) {
+				// "YYYY-MM-DD" (10) or "YYYY-MM-DD HH:MM:SS.mmmuuu" (26)
+				total += 24 + PER_COLUMN_OVERHEAD;
+				continue;
+			}
+
+			if (v instanceof byte[]) {
+				// Base64/text overhead ~40%
+				total += (int) Math.ceil(((byte[]) v).length * 1.4) + PER_COLUMN_OVERHEAD;
+				continue;
+			}
+
+			// Fallback: unknown or complex object, assume medium string representation
+			total += 16 + PER_COLUMN_OVERHEAD;
 		}
 
-		if (forSchema == null) {
-			Map<String, LinkedHashMap<String, List<String>>> primaryKeys = primaryKeys(conn);
-			if (primaryKeys.containsKey(schema))
-				forSchema = primaryKeys.get(schema);
-		}
-
-		return forSchema;
-	}
-
-	/**
-	 * Retrieves the primary keys for all tables in a schema. Can buffer the
-	 * information locally for later lookup, based on the assumption that schemas,
-	 * tables, and respective primary keys do not change during runtime.
-	 * 
-	 * @param conn
-	 * @param schema
-	 * @param bufferingForSpeedup
-	 * @return
-	 */
-	public static List<String> primaryKeysForTable(Connection conn, String schema, String tableName,
-			boolean bufferingForSpeedup) {
-
-		LinkedHashMap<String, List<String>> forSchema = primaryKeysForTables(conn, schema, bufferingForSpeedup);
-
-		if (forSchema != null && forSchema.containsKey(tableName))
-			return forSchema.get(tableName);
-
-		return null;
+		// Add fixed per-row framing overhead (statement wrapper, separators, etc.)
+		return total + 32;
 	}
 
 }

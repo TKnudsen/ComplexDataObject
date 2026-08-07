@@ -9,23 +9,72 @@ import java.util.Objects;
 
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.Parsers;
 
+/**
+ * <p>
+ * Deletes columns, tables, and individual rows from SQL tables for both MySQL
+ * and PostgreSQL connections. Row deletion builds a WHERE clause from given
+ * column/value pairs and reports whether the row count changed as a result.
+ * </p>
+ */
 public class SQLTableDeleter {
 
-	public static void dropColumn(Connection conn, String tableName, String columnName) {
+	/**
+	 * Drops a column from a database table. If it is not a PostgreSQL connection,
+	 * the schema is ignored. If it is PostgreSQL this method will throw an
+	 * exception (missing schema).
+	 *
+	 * @param conn       The database connection
+	 * @param tableName  The table name
+	 * @param columnName The column name to drop
+	 */
+	public static void dropColumn(Connection conn, String tableName, String columnName) throws SQLException {
+		dropColumn(conn, null, tableName, columnName);
+	}
 
+	/**
+	 * Drops a column from a database table. If it is not a PostgreSQL connection,
+	 * the schema is ignored.
+	 *
+	 * Tested for PostgreSQL and MySQL.
+	 *
+	 * @param conn       The database connection
+	 * @param schema     The schema name (only used for PostgreSQL)
+	 * @param tableName  The table name
+	 * @param columnName The column name to drop
+	 */
+	public static void dropColumn(Connection conn, String schema, String tableName, String columnName)
+			throws SQLException {
+
+		System.out.println(
+				"SQLTableDeleter.dropColumn: column '" + columnName + "' in table " + tableName + ", schema " + schema);
+		String sql = null;
 		Statement stmt = null;
+
 		try {
 			stmt = conn.createStatement();
-			String sql = "ALTER TABLE " + tableName + " DROP COLUMN `" + columnName + "`";
 
-			if (PostgreSQL.isPostgreSQLConnection(conn))
+			boolean isPostgres = PostgreSQL.isPostgreSQLConnection(conn);
+
+			if (isPostgres && (schema == null || schema.length() == 0))
+				throw new IllegalArgumentException(
+						"SQLTableDeleter.dropColumn: PostgreSQL operation requires schema specification, but was: "
+								+ schema);
+
+			String schemaAndTable = isPostgres ? PostgreSQL.schemaAndTableName(schema, tableName) : tableName;
+
+			sql = "ALTER TABLE `" + schemaAndTable + "` DROP COLUMN `" + columnName + "`";
+
+			if (isPostgres)
 				sql = PostgreSQL.replaceMySQLQuotes(sql);
 
 			stmt.executeUpdate(sql);
 
-			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
+			SQLTableStatistics.clearCache(schema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+
+			System.err.println("Failed to execute SQL: " + sql);
+			throw e;
 		} finally {
 			if (stmt != null)
 				try {
@@ -36,16 +85,18 @@ public class SQLTableDeleter {
 		}
 	}
 
-	public static void dropTable(Connection conn, String tableName) {
+	public static void dropTable(Connection conn, String tableName) throws SQLException {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
 
-			SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
+			SQLTableStatistics.clearCache();
 		} catch (SQLException e) {
 			e.printStackTrace();
+
+			throw e;
 		} finally {
 			if (stmt != null)
 				try {
@@ -56,14 +107,18 @@ public class SQLTableDeleter {
 		}
 	}
 
-	public static void dropTable(Connection conn, String schema, String tableName) {
+	public static void dropTable(Connection conn, String schema, String tableName) throws SQLException {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + schema + "." + tableName;
 			stmt.executeUpdate(sql);
+
+			SQLTableStatistics.clearCache(schema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+
+			throw e;
 		} finally {
 			if (stmt != null)
 				try {
@@ -72,20 +127,6 @@ public class SQLTableDeleter {
 					e.printStackTrace();
 				}
 		}
-	}
-
-	/**
-	 * @deprecated use the method with the showTimingLog parameter
-	 * 
-	 * @param conn
-	 * @param tableName
-	 * @param columns
-	 * @param queryObjects
-	 * @throws SQLException
-	 */
-	public static void deleteTableRow(Connection conn, String schema, String tableName, List<String> columns,
-			List<String> queryObjects) throws SQLException {
-		deleteTableRow(conn, schema, tableName, columns, queryObjects, false);
 	}
 
 	/**
@@ -150,7 +191,7 @@ public class SQLTableDeleter {
 		if (postgres)
 			sql = PostgreSQL.replaceMySQLQuotes(sql);
 
-		int rowCount = SQLTableSelector.countRows(conn, schema, tableName);
+		long rowCount = SQLTableStatistics.rowCount(conn, schema, tableName, true);
 
 		PreparedStatement preparedStmt = conn.prepareStatement(sql);
 		preparedStmt.execute();
@@ -159,6 +200,9 @@ public class SQLTableDeleter {
 		if (showTimingLog)
 			System.out.println("done in " + (System.currentTimeMillis() - l) + " ms");
 
-		return rowCount > SQLTableSelector.countRows(conn, schema, tableName);
+		// refresh
+		SQLTableStatistics.clearRowCountCache(schema);
+
+		return rowCount > SQLTableStatistics.rowCount(conn, schema, tableName, true);
 	}
 }

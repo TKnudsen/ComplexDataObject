@@ -9,6 +9,14 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableInserter;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLUtils;
 
+/**
+ * <p>
+ * Convenience wrapper around {@link SQLTableInserter} that inserts
+ * {@link ComplexDataObject}/{@link ComplexDataContainer} instances into a SQL
+ * table by first converting them into the key-value row representation
+ * expected by the underlying inserter.
+ * </p>
+ */
 public class SQLTableInserters {
 
 	/**

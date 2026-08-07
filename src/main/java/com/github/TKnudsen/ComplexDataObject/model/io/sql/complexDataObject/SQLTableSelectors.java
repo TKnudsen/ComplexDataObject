@@ -13,6 +13,14 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableSelector;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableSelector.Order;
 
+/**
+ * <p>
+ * Convenience wrapper around {@link SQLTableSelector} that selects
+ * {@link ComplexDataObject} rows from a SQL table using a {@link DataSchema}
+ * or a collection of {@link DataSchemaEntry} objects to describe the
+ * requested attribute types, instead of a raw class map.
+ * </p>
+ */
 public class SQLTableSelectors {
 
 	/**
@@ -62,7 +70,7 @@ public class SQLTableSelectors {
 	 * @param tableName
 	 * @param attributeCharacterization the target schema that is selected from the
 	 *                                  database
-	 * @param searchString              searchString the WHERE condition (without
+	 * @param where              searchString the WHERE condition (without
 	 *                                  WHERE). can be null. example a) column name
 	 *                                  greater or equals '2012-12-25 00:00:00'. b)
 	 *                                  searchColumn equals 'searchQuery'. Make sure
@@ -73,9 +81,10 @@ public class SQLTableSelectors {
 	 * @throws SQLException
 	 */
 	public static List<ComplexDataObject> selectFromTableWhere(Connection conn, String schema, String tableName,
-			Collection<DataSchemaEntry<?>> attributeCharacterization, String searchString, String orderAttribute,
+			Collection<DataSchemaEntry<?>> attributeCharacterization,
+			String where, String orderAttribute,
 			Order order) throws SQLException {
-		return SQLTableSelector.selectFromTableWhere(conn, schema, tableName, searchString, orderAttribute, order,
+		return SQLTableSelector.selectFromTableWhere(conn, schema, tableName, where, orderAttribute, order,
 				DataSchemas.getClassMap(attributeCharacterization));
 	}
 

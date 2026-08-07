@@ -7,8 +7,15 @@ import java.util.Map;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableCreator;
-import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLUtils;
+import com.github.TKnudsen.ComplexDataObject.model.io.sql.SQLTableStatistics;
 
+/**
+ * <p>
+ * Convenience wrapper around {@link SQLTableCreator} that creates SQL tables
+ * directly from the schema of a {@link ComplexDataContainer}, automatically
+ * adding an ID column to the schema before delegating table creation.
+ * </p>
+ */
 public class SQLTableCreators {
 
 	public static void createTable(Connection conn, String schema, String tableName, ComplexDataContainer dataContainer,
@@ -20,7 +27,8 @@ public class SQLTableCreators {
 
 		SQLTableCreator.createTable(conn, schema, tableName, dataSchema, dataContainer::getAttributeValueCollection,
 				primaryKeyAttributes, useFloatInsteadOfDouble);
-		SQLUtils.resetprimaryKeyAttributesPerTableAndSchema();
+
+		SQLTableStatistics.clearCache(schema);
 	}
 
 	/**
