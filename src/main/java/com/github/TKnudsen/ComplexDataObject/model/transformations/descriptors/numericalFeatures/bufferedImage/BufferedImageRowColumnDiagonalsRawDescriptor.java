@@ -13,22 +13,14 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.descriptors.n
 
 /**
  * <p>
- * Title: BufferedImageRowColumnDiagonalsRawDescriptor
- * </p>
- * 
- * <p>
- * Description: Transforms BufferedImages into the numerical feature space. The
+ * Transforms BufferedImages into the numerical feature space. The
  * luminance values of rows, columns and diagonals is used to build the feature
  * space. diagonal streaks need to be at least half of min(row,column) length to
  * be considered. BufferedImage.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2016-2018
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.05
+ * @since 2016
  */
 public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFeatureVectorDescriptor<BufferedImage> {
 
@@ -57,7 +49,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 		for (int x = cropBorders; x < width - cropBorders; x++) {
 			lum = 0;
 			for (int y = 0; y < height; y++) {
-				double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
+				double luminance = BufferedImageTools.getLuminanceForPixel(image, x, y);
 				lum += luminance;
 			}
 			if ((x - cropBorders) % sampling == 0)
@@ -68,7 +60,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 		for (int y = cropBorders; y < height - cropBorders; y++) {
 			lum = 0;
 			for (int x = 0; x < width; x++) {
-				double luminance = BufferedImageTools.getLuminanceforPixel(image, x, y);
+				double luminance = BufferedImageTools.getLuminanceForPixel(image, x, y);
 				lum += luminance;
 			}
 			if ((y - cropBorders) % sampling == 0)
@@ -91,7 +83,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 			lengthAkt = 0;
 			lum = 0;
 			while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-				lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
+				lum += BufferedImageTools.getLuminanceForPixel(image, deltaX, deltaY);
 				lengthAkt += 1;
 				// iterate
 				deltaX += 1;
@@ -111,7 +103,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 			lengthAkt = 0;
 			lum = 0;
 			while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-				lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
+				lum += BufferedImageTools.getLuminanceForPixel(image, deltaX, deltaY);
 				lengthAkt += 1;
 				// iterate
 				deltaX += 1;
@@ -132,7 +124,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 			lengthAkt = 0;
 			lum = 0;
 			while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-				lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
+				lum += BufferedImageTools.getLuminanceForPixel(image, deltaX, deltaY);
 				lengthAkt += 1;
 				// iterate
 				deltaX -= 1;
@@ -153,7 +145,7 @@ public class BufferedImageRowColumnDiagonalsRawDescriptor implements INumericFea
 			lengthAkt = 0;
 			lum = 0;
 			while (deltaX >= 0 && deltaX < width && deltaY >= 0 && deltaY < height) {
-				lum += BufferedImageTools.getLuminanceforPixel(image, deltaX, deltaY);
+				lum += BufferedImageTools.getLuminanceForPixel(image, deltaX, deltaY);
 				lengthAkt += 1;
 				// iterate
 				deltaX -= 1;

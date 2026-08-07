@@ -1,19 +1,16 @@
 package com.github.TKnudsen.ComplexDataObject.model.weighting.Long;
 
+import java.util.Objects;
+
 /**
- * 
- * ComplexDataObject
+ * <p>
+ * Linear kernel applied on long distances. Weight decays linearly from 1.0
+ * at the reference value to 0.0 at the edge of the configured interval, and
+ * is 0.0 beyond that interval.
+ * </p>
  *
- * Copyright: (c) 2016-2018 Juergen Bernard,
- * https://github.com/TKnudsen/ComplexDataObject<br>
- * <br>
- * 
- * Linear kernel applied on long distances.
- *
- * 
- * @author Juergen Bernard
- * 
- * @version 1.01
+ * @version 1.02
+ * @since 2016
  */
 public class LinearLongWeightingKernel implements ILongWeightingKernel {
 
@@ -29,6 +26,12 @@ public class LinearLongWeightingKernel implements ILongWeightingKernel {
 	}
 
 	public LinearLongWeightingKernel(Long interval) {
+		Objects.requireNonNull(interval);
+
+		if (interval < 1)
+			throw new IllegalArgumentException(
+					"LinearLongWeightingKernel: interval with negative duration: " + interval);
+
 		this.interval = interval;
 	}
 

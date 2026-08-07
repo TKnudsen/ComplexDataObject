@@ -2,35 +2,37 @@ package com.github.TKnudsen.ComplexDataObject.data;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.SortedMap;
+import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 
 /**
  * <p>
- * Title: DataSchema
+ * Contains and maintains the keys of a given set of key-value attributes.
+ * Can be seen as a sort of header for tabular data sets.
+ *
+ * Maintains a attributes in a sorted way, but uses a LinkedHashMap internally
+ * for better performance. Performance can be exploited when no sorted
+ * attributes are needed.
  * </p>
- * 
- * <p>
- * Description: Contains and maintains the keys of a given set of key-value
- * attributes. Can be seen as a sort of header for tabular data sets.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2019
- * </p>
- * 
- * @author Juergen Bernard
- * @version 1.02
+ *
+ * @version 1.03
+ * @since 2015
  */
 public class DataSchema {
 	private final String name;
 	private final String description;
 
-	protected final SortedMap<String, DataSchemaEntry<?>> attributes = new TreeMap<String, DataSchemaEntry<?>>();
+	private final Map<String, DataSchemaEntry<?>> attributes = new LinkedHashMap<>();
+
+	// ---- Sorted view cache (invalidated on mutation) ----
+	private transient boolean sortedDirty = true;
+	private transient NavigableMap<String, DataSchemaEntry<?>> sortedCache;
+	private transient Map<String, Class<?>> cachedTypes;
+	private transient Map<String, Object> cachedDefaultValues;
 
 	public DataSchema() {
 		this(null, null);
@@ -43,6 +45,26 @@ public class DataSchema {
 	public DataSchema(String name, String description) {
 		this.name = name;
 		this.description = description;
+	}
+
+	/**
+	 * Returns a cached sorted-by-name view of attributes. Recomputed only after
+	 * mutations (add/remove).
+	 */
+	private synchronized NavigableMap<String, DataSchemaEntry<?>> sorted() {
+		if (sortedDirty || sortedCache == null) {
+			sortedCache = new TreeMap<>(attributes);
+			sortedDirty = false;
+		}
+		return sortedCache;
+	}
+
+	/** Marks cached derived views as stale. Call on any mutation. */
+	private void invalidateCaches() {
+		sortedDirty = true;
+		sortedCache = null;
+		cachedTypes = null;
+		cachedDefaultValues = null;
 	}
 
 	/**
@@ -78,35 +100,75 @@ public class DataSchema {
 
 	@Override
 	public String toString() {
-		String output = "DataSchema with " + attributes.size() + " attributes\n";
+		StringBuilder output = new StringBuilder("DataSchema with ").append(attributes.size()).append(" attributes\n");
 
-		for (String key : attributes.keySet())
-			output += (attributes.get(key) + "\n");
+		// Use cached sorted view
+		for (DataSchemaEntry<?> entry : sorted().values()) {
+			output.append(entry).append("\n");
+		}
 
-		return output;
+		return output.toString();
 	}
 
 	public String toStringInLine() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 
-		for (String key : attributes.keySet())
-			output += (key + attributes.get(key).toString() + "/t");
+		// Use cached sorted view
+		for (Map.Entry<String, DataSchemaEntry<?>> e : sorted().entrySet()) {
+			output.append(e.getKey()).append(e.getValue()).append("\t");
+		}
 
-		return output;
+		return output.toString();
 	}
 
 	/**
-	 * @return a collection of the attributes names defined in this schema.
+	 * Returns an unsorted collection of attribute names in insertion order. This is
+	 * faster than {@link #getAttributeNames()} as it doesn't require sorting.
+	 * 
+	 * @return unmodifiable collection of attribute names
+	 */
+	public Collection<String> getAttributes() {
+		return Collections.unmodifiableCollection(attributes.keySet());
+	}
+
+	/**
+	 * @deprecated if sorted names are needed, go for getAttributesSorted()
+	 * @return a sorted collection of the attribute names defined in this schema.
+	 * 
+	 *         Note: This is a live view over the cached sorted map; cache is
+	 *         invalidated on add/remove.
 	 */
 	public Collection<String> getAttributeNames() {
-		return Collections.unmodifiableCollection(attributes.keySet());
+		return Collections.unmodifiableNavigableSet(sorted().navigableKeySet());
+	}
+
+	/**
+	 * @return a sorted collection of the attribute names defined in this schema.
+	 * 
+	 *         Note: This is a live view over the cached sorted map; cache is
+	 *         invalidated on add/remove.
+	 */
+	public Collection<String> getAttributesSorted() {
+		return Collections.unmodifiableNavigableSet(sorted().navigableKeySet());
 	}
 
 	/**
 	 * @return a collection of the attributes entries contained in this schema.
 	 */
 	public Collection<DataSchemaEntry<?>> getAttributeEntries() {
-		return Collections.unmodifiableCollection(attributes.values());
+		return getAttributeEntries(true);
+	}
+
+	/**
+	 * @return a sorted collection of the attribute entries contained in this
+	 *         schema.
+	 */
+	public Collection<DataSchemaEntry<?>> getAttributeEntries(boolean sorted) {
+		if (sorted)
+			// Live view over cached sorted map
+			return Collections.unmodifiableCollection(sorted().values());
+		else
+			return Collections.unmodifiableCollection(attributes.values());
 	}
 
 	public DataSchemaEntry<?> getAttributeEntry(String attribute) {
@@ -115,19 +177,38 @@ public class DataSchema {
 
 	/**
 	 * @return a map containing the types for each attribute defined in this schema.
+	 *         Note: cached after first access; invalidated on add/remove.
 	 */
 	public Map<String, Class<?>> getTypes() {
-		return Collections.unmodifiableMap(
-				attributes.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getType())));
+		ensureDerivedCaches();
+		return cachedTypes;
 	}
 
 	/**
 	 * @return a map containing the default values for each attribute defined in
-	 *         this schema.
+	 *         this schema. Note: cached after first access; invalidated on
+	 *         add/remove.
 	 */
 	public Map<String, Object> getDefaultValues() {
-		return Collections.unmodifiableMap(attributes.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getDefaultValue())));
+		ensureDerivedCaches();
+		return cachedDefaultValues;
+	}
+
+	private synchronized void ensureDerivedCaches() {
+		if (cachedTypes != null && cachedDefaultValues != null) {
+			return; // Already cached
+		}
+
+		TreeMap<String, Class<?>> types = new TreeMap<>();
+		TreeMap<String, Object> defaults = new TreeMap<>();
+
+		for (Map.Entry<String, DataSchemaEntry<?>> e : sorted().entrySet()) {
+			types.put(e.getKey(), e.getValue().getType());
+			defaults.put(e.getKey(), e.getValue().getDefaultValue());
+		}
+
+		cachedTypes = Collections.unmodifiableMap(types);
+		cachedDefaultValues = Collections.unmodifiableMap(defaults);
 	}
 
 	/**
@@ -135,10 +216,11 @@ public class DataSchema {
 	 * @return the type of the given attribute.
 	 */
 	public Class<?> getType(String attribute) {
-		if (!attributes.containsKey(attribute)) {
+		DataSchemaEntry<?> e = attributes.get(attribute);
+		if (e == null)
 			throw new IllegalArgumentException(String.format("unknown attribute name '%s'", attribute));
-		}
-		return attributes.get(attribute).getType();
+
+		return e.getType();
 	}
 
 	/**
@@ -147,10 +229,11 @@ public class DataSchema {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getDefaultValue(String attribute) {
-		if (!attributes.containsKey(attribute)) {
+		DataSchemaEntry<?> entry = attributes.get(attribute);
+		if (entry == null) {
 			throw new IllegalArgumentException(String.format("unknown attribute name '%s'", attribute));
 		}
-		return (T) attributes.get(attribute).getDefaultValue();
+		return (T) entry.getDefaultValue();
 	}
 
 	/**
@@ -175,8 +258,17 @@ public class DataSchema {
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <T> DataSchema add(String attribute, Class<T> type, T defaultValue) {
+		if (attribute == null || attribute.trim().isEmpty())
+			throw new IllegalArgumentException("Attribute name cannot be null or empty");
+
+		if (type == null)
+			throw new IllegalArgumentException("Type cannot be null");
+
 		final DataSchemaEntry<T> entry = new DataSchemaEntry<T>(attribute, type, defaultValue);
 		this.attributes.put(attribute, entry);
+
+		// Invalidate sorted cache
+		invalidateCaches();
 
 		return this;
 	}
@@ -204,8 +296,17 @@ public class DataSchema {
 	 */
 	public <T extends IKeyValueProvider<?>> DataSchema add(String attribute, Class<T> type, DataSchema dataSchema,
 			T defaultValue) {
+		if (attribute == null || attribute.trim().isEmpty())
+			throw new IllegalArgumentException("Attribute name cannot be null or empty");
+
+		if (type == null)
+			throw new IllegalArgumentException("Type cannot be null");
+
 		final DataSchemaEntry<T> entry = new DataSchemaEntry<T>(attribute, type, defaultValue, dataSchema);
 		this.attributes.put(attribute, entry);
+
+		// Invalidate sorted cache
+		invalidateCaches();
 
 		return this;
 	}
@@ -218,6 +319,10 @@ public class DataSchema {
 	 */
 	public DataSchema remove(String attribute) {
 		this.attributes.remove(attribute);
+
+		// Invalidate sorted cache
+		invalidateCaches();
+
 		return this;
 	}
 }

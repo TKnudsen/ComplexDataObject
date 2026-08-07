@@ -5,21 +5,27 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>
- * Title: MathFunctions
+ * little math helpers.
  * </p>
  *
- * <p>
- * Description: little math helpers.
- * </p>
- *
- * <p>
- * Copyright: Copyright (c) 2017-2022
- * </p>
- *
- * @author Juergen Bernard
- * @version 1.08
+ * @version 1.09
+ * @since 2017
  */
 public class MathFunctions {
+
+	/**
+	 * Returns a random long using Random.nextLong();
+	 * 
+	 * @return
+	 */
+	public static long randomLong() {
+		// return UUID.randomUUID().getMostSignificantBits();
+
+		return ThreadLocalRandom.current().nextLong();
+
+		// Random random = new Random();
+		// return random.nextLong();
+	}
 
 	/**
 	 * scales a value w.r.t. a given minimum and maximum value. The value can be
@@ -126,17 +132,39 @@ public class MathFunctions {
 	}
 
 	/**
-	 * Returns a random long using Random.nextLong();
+	 * Limits a value to a particular numeric interval
 	 * 
+	 * @param v
+	 * @param min
+	 * @param max
 	 * @return
 	 */
-	public static long randomLong() {
-		// return UUID.randomUUID().getMostSignificantBits();
+	public static int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(max, value));
+	}
 
-		return ThreadLocalRandom.current().nextLong();
+	/**
+	 * Limits a value to a particular numeric interval
+	 * 
+	 * @param v
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public static float clamp(float value, float min, float max) {
+		return Math.max(min, Math.min(max, value));
+	}
 
-		// Random random = new Random();
-		// return random.nextLong();
+	/**
+	 * Limits a value to a particular numeric interval
+	 * 
+	 * @param v
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public static double clamp(double value, double min, double max) {
+		return Math.max(min, Math.min(max, value));
 	}
 
 	/**
@@ -453,6 +481,25 @@ public class MathFunctions {
 	}
 
 	/**
+	 * sums up double values.
+	 * 
+	 * @param values
+	 * @param ignoreNAN
+	 * @return
+	 */
+	public static double getSum(double[] values, boolean ignoreNAN) {
+		double sum = 0.0;
+
+		for (double d : values)
+			if (Double.isNaN(d) && ignoreNAN)
+				continue;
+			else
+				sum += d;
+
+		return sum;
+	}
+
+	/**
 	 * simple Double.NaN checker.
 	 * 
 	 * @param values
@@ -499,5 +546,38 @@ public class MathFunctions {
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Compares two primitive {@code double} values for equality, treating
+	 * {@code NaN == NaN} as {@code true} -- intentionally deviating from IEEE 754 to
+	 * support value-based equality checks. Differently signed zeros are treated
+	 * differently.
+	 *
+	 * @param v1 the first value
+	 * @param v2 the second value
+	 * @return {@code true} if both values are considered equal
+	 */
+	public static boolean compareDoubles(double v1, double v2) {
+		return Double.compare(v1, v2) == 0;
+	}
+
+	/**
+	 * Compares two {@code Double} objects for equality.
+	 * 
+	 * Semantics: - {@code null == null} is {@code true} - one {@code null} is
+	 * {@code false} - {@code NaN == NaN} is {@code true} - differently signed zeros
+	 * are treated differently
+	 *
+	 * @param v1 the first value; may be {@code null}
+	 * @param v2 the second value; may be {@code null}
+	 * @return {@code true} if both values are considered equal
+	 */
+	public static boolean compareDoubles(Double v1, Double v2) {
+		if (v1 == null && v2 == null)
+			return true;
+		if (v1 == null || v2 == null)
+			return false;
+		return Double.compare(v1, v2) == 0;
 	}
 }

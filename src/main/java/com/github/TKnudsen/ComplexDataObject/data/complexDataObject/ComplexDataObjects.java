@@ -7,6 +7,16 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.events.IComplexDataObjectListener;
+
+/**
+ * <p>
+ * Static helper methods for ComplexDataObject instances, including value
+ * equality checks, cloning, merging of multiple objects into one (with
+ * configurable conflict/listener handling), extraction of key-value pairs,
+ * and computing the set of attributes that differ across a list of objects.
+ * </p>
+ */
 public class ComplexDataObjects {
 
 	/**
@@ -45,7 +55,20 @@ public class ComplexDataObjects {
 	 * @return
 	 */
 	public static ComplexDataObject merge(Iterable<ComplexDataObject> objects) {
-		return merge(objects, false);
+		return merge(objects, false, true);
+	}
+
+	/**
+	 * Merges ComplexDataObjects. Conflicting attributes are defined by the last
+	 * occurrence in the input data.
+	 * 
+	 * @param objects
+	 * @param preserveListeners if the listeners of source objects shall be added to
+	 *                          the merger.
+	 * @return
+	 */
+	public static ComplexDataObject merge(Iterable<ComplexDataObject> objects, boolean preserveListeners) {
+		return merge(objects, false, preserveListeners);
 	}
 
 	/**
@@ -54,9 +77,12 @@ public class ComplexDataObjects {
 	 * 
 	 * @param objects
 	 * @param skipNullValues
+	 * @param preserveListeners if the listeners of source objects shall be added to
+	 *                          the merger.
 	 * @return
 	 */
-	public static ComplexDataObject merge(Iterable<ComplexDataObject> objects, boolean skipNullValues) {
+	public static ComplexDataObject merge(Iterable<ComplexDataObject> objects, boolean skipNullValues,
+			boolean preserveListeners) {
 		ComplexDataObject mergedObject = new ComplexDataObject();
 
 		for (ComplexDataObject object : objects) {
@@ -73,6 +99,13 @@ public class ComplexDataObjects {
 			if (object.getDescription() != null)
 				mergedObject.setDescription(object.getDescription());
 		}
+
+		// transfer all listeners from input objects
+		if (preserveListeners)
+			for (ComplexDataObject object : objects)
+				for (IComplexDataObjectListener listener : object.getListeners())
+					mergedObject.addComplexDataObjectListener(listener);
+
 		return mergedObject;
 	}
 

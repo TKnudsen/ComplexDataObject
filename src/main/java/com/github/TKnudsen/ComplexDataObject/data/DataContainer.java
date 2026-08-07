@@ -14,21 +14,17 @@ import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
  * <p>
  * Stores and manages collections of IKeyValueProvider objects, such as
  * ComplexDataObjects.
- * 
+ *
  * A DataSchema manages the keys/attributes of the collection.
- * 
+ *
  * A primary key attribute allows managing objects using a primary key. The ID
  * attribute is the historic default, but it can also be an attribute defined in
  * the constructor, such as the "ISIN" for stocks. Attention: do not use
  * attributes with non-categorical values, such as continuous numbers
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.07
+ * @since 2015
  */
 public class DataContainer<T extends IKeyValueProvider<Object>> implements Iterable<T> {
 
@@ -50,6 +46,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 	/**
 	 * Map of attributes, each storing a Map of T and corresponding attribute vales.
+	 * Only used when per-attribute requests are made. Otherwise, to save memory,
+	 * this data structure is kept empty.
 	 */
 	protected Map<String, Map<T, Object>> attributeValues = new TreeMap<String, Map<T, Object>>();
 
@@ -143,7 +141,7 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			if (objectsMap.containsKey(pk))
 				System.err.println(this.getClass().getSimpleName()
 						+ ": warning for an input object with primary key that is already existing: "
-						+ primaryKeyAttribute);
+						+ primaryKeyAttribute + ", value " + pk);
 
 			objectsMap.put(pk, object);
 
@@ -201,8 +199,9 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 		extendDataSchema(object);
 
-		for (String attribute : getAttributeNames())
-			// lazy implementation of attributeValues
+		for (String attribute : getAttributes())
+			// lazy implementation of attributeValues. Only when it was activated in the
+			// past it is maintained. Otherwise skipped.
 			if (attributeValues.get(attribute) != null)
 				attributeValues.get(attribute).put(object, object.getAttribute(attribute));
 
@@ -210,9 +209,14 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	}
 
 	protected final void extendDataSchema(T object) {
-		for (String string : object.keySet())
-			if (!dataSchema.contains(string) && object.getAttribute(string) != null)
-				dataSchema.add(string, object.getAttribute(string).getClass());
+		for (String attribute : object.keySet()) {
+			if (dataSchema.getAttributeEntry(attribute) != null)
+				continue;
+
+			Object value = object.getAttribute(attribute);
+			if (value != null)
+				dataSchema.add(attribute, value.getClass());
+		}
 	}
 
 	/**
@@ -227,7 +231,6 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 	 * @return the data schema instance for call-chaining.
 	 */
 	public <A> DataSchema addAttribute(String attribute, Class<A> type, A defaultValue) {
-
 		dataSchema.add(attribute, type, defaultValue);
 
 		Iterator<T> objectIterator = iterator();
@@ -236,6 +239,21 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			if (next.getAttribute(attribute) == null)
 				next.add(attribute, defaultValue);
 		}
+
+		return dataSchema;
+	}
+
+	/**
+	 * Introduces or updates a new attribute.
+	 * 
+	 *
+	 * 
+	 * @param attribute the attribute name
+	 * @param type      the expected data type.
+	 * @return the data schema instance for call-chaining.
+	 */
+	public <A> DataSchema addAttribute(String attribute, Class<A> type) {
+		dataSchema.add(attribute, type, null);
 
 		return dataSchema;
 	}
@@ -269,11 +287,13 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			return false;
 
 		for (String attribute : attributeValues.keySet()) {
+			// lazy implementation of attributeValues. Only when it was activated in the
+			// past it is maintained. Otherwise skipped.
 			if (attributeValues.get(attribute) != null)
 				attributeValues.get(attribute).remove(object);
 		}
 
-		objectsMap.remove(object);
+		objectsMap.remove(pk);
 
 		return true;
 	}
@@ -290,6 +310,11 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 			T o = iterator.next();
 			o.removeAttribute(attribute);
 		}
+
+		// in case the primary key attribute is removed, the internal index needs to be
+		// rebuilt (lazy)
+		if (primaryKeyAttribute.equals(attribute))
+			attributeValues.clear();
 
 		return dataSchema.remove(attribute);
 	}
@@ -318,19 +343,54 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return false;
 	}
 
+	/**
+	 * number of attributes represented in the schema of the container
+	 * 
+	 * @return
+	 */
+	public int getAttributesSize() {
+		return dataSchema.getAttributes().size();
+	}
+
+	/**
+	 * unsorted collection for best performance
+	 * 
+	 * @return
+	 */
+	public Collection<String> getAttributes() {
+		return dataSchema.getAttributes();
+	}
+
+	/**
+	 * sorted collection (default) for most convenience
+	 * 
+	 * @deprecated decide for getAttributes() or getAttributesSorted()
+	 * @return
+	 */
 	public Collection<String> getAttributeNames() {
 		return dataSchema.getAttributeNames();
 	}
 
 	/**
-	 * @deprecated Use getAttributeValueCollection instead.
+	 * sorted collection (default) for most convenience
+	 * 
+	 * @return
+	 */
+	public Collection<String> getAttributesSorted() {
+		return dataSchema.getAttributesSorted();
+	}
+
+	/**
+	 * @deprecated Use getAttributeValueCollection for the values instead. Use
+	 *             DataContainers.getAttributeValues
 	 * 
 	 * @param attribute
 	 * @return
 	 */
 	public Map<Long, Object> getAttributeValues(String attribute) {
 		if (dataSchema.contains(attribute))
-			// lazy implementation to save memory
+			// lazy implementation of attributeValues. Only when it was activated in the
+			// past it is maintained. Otherwise skipped.
 			if (!attributeValues.containsKey(attribute))
 				calculateEntities(attribute);
 
@@ -343,7 +403,8 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 
 	public Collection<Object> getAttributeValueCollection(String attribute) {
 		if (dataSchema.contains(attribute)) {
-			// lazy implementation to save memory
+			// lazy implementation of attributeValues. Only when it was activated in the
+			// past it is maintained. Otherwise skipped.
 			if (!attributeValues.containsKey(attribute))
 				calculateEntities(attribute);
 
@@ -357,8 +418,17 @@ public class DataContainer<T extends IKeyValueProvider<Object>> implements Itera
 		return null;
 	}
 
+	/**
+	 * Null-pointer save version. Hope that it scales well even for high-frequency
+	 * calls.
+	 * 
+	 * @param attribute
+	 * @return
+	 */
 	public Class<?> getType(String attribute) {
-		return dataSchema.getAttributeEntry(attribute).getType();
+		final DataSchema schema = dataSchema;
+		final DataSchemaEntry<?> entry = schema.getAttributeEntry(attribute);
+		return (entry != null) ? entry.getType() : null;
 	}
 
 	public Map<String, Class<?>> getSchema() {

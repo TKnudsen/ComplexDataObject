@@ -9,20 +9,12 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.events.IComp
 
 /**
  * <p>
- * Title: ComplexDataContainer
- * </p>
- * 
- * <p>
- * Description: ComplexDataContainer stores and manages ComplexDataObjects. A
+ * ComplexDataContainer stores and manages ComplexDataObjects. A
  * DataSchema contains all keys of the ComplexDataObjects.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2024
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.04
+ * @since 2015
  */
 public class ComplexDataContainer extends DataContainer<ComplexDataObject> implements IComplexDataObjectListener {
 
@@ -87,6 +79,22 @@ public class ComplexDataContainer extends DataContainer<ComplexDataObject> imple
 		return b;
 	}
 
+	/**
+	 * Remove functionality for objects that are contained in the container.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	@Override
+	public boolean remove(ComplexDataObject object) {
+		if (!super.remove(object))
+			return false;
+
+		object.removeComplexDataObjectListener(this);
+
+		return true;
+	}
+
 	@Override
 	public void attributeValueChanged(ComplexDataObject cdo, String attribute) {
 		// extend schema if attribute does not exist and meaningful(value !=null)
@@ -107,6 +115,18 @@ public class ComplexDataContainer extends DataContainer<ComplexDataObject> imple
 		if (attributeValues.get(attribute) != null)
 			if (this.attributeValues.get(attribute).get(cdo) != null)
 				this.attributeValues.get(attribute).remove(cdo);
+	}
+
+	public boolean isEnableListening() {
+		for (ComplexDataObject cdo : this)
+			return cdo.isEnableListening();
+
+		return true;
+	}
+
+	public void setEnableListening(boolean enableListening) {
+		for (ComplexDataObject cdo : this)
+			cdo.setEnableListening(enableListening);
 	}
 
 }

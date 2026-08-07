@@ -19,14 +19,15 @@ import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
  * 
  * Update: Changed KeyValueObject<Object> to the non-generic KeyValueObject
  * form.
- * </p>
  * 
- * <p>
- * Copyright: Copyright (c) 2015-2024
+ * Update: added expectedAttributeCount to the constructor to avoid resizing and
+ * rehashing of the map. Especially for adding many attributes this should make
+ * a considerable difference. For few expected attributes, a new
+ * {@code SmallMap} Map implementation is now used in {@code KeyValueObject}.
  * </p>
- * 
- * @author Juergen Bernard
- * @version 1.10
+ *
+ * @version 1.11
+ * @since 2015
  */
 public class ComplexDataObject extends KeyValueObject implements ISelfDescription {
 
@@ -39,43 +40,68 @@ public class ComplexDataObject extends KeyValueObject implements ISelfDescriptio
 	@JsonIgnore
 	private List<IComplexDataObjectListener> listeners = new CopyOnWriteArrayList<>();
 
+	@JsonIgnore
+	private boolean enableListening = true;
+
+	/*
+	 * -------------------------------------------------------------------------
+	 * Constructors
+	 * ----------------------------------------------------------------------
+	 */
+
+	/** Default: 16 expected attributes, no ID, name="no name" */
 	public ComplexDataObject() {
-		super();
-
-		add(NAME, "no name");
-
-		// getting rid of the description field
-		// add(DESCRIPTION, "no description");
+		this(10, "no name", "no description");
 	}
 
-	public ComplexDataObject(long ID) {
-		super(ID);
-
-		add(NAME, "no name");
-
-		// getting rid of the description field
-		// add(DESCRIPTION, "no description");
+	/** With expected attribute count (for performance tuning) */
+	public ComplexDataObject(int expectedAttributeCount) {
+		this(expectedAttributeCount, "no name", "no description");
 	}
 
+	/** With ID only */
+	public ComplexDataObject(long id) {
+		this(10, id, "no name", "no description");
+	}
+
+	/** With expected attribute count and ID */
+	public ComplexDataObject(int expectedAttributeCount, long id) {
+		this(expectedAttributeCount, id, "no name", "no description");
+	}
+
+	/** With name only */
 	public ComplexDataObject(String name) {
-		this(name, null);
+		this(10, name, "no description");
 	}
 
+	/** With name and description */
 	public ComplexDataObject(String name, String description) {
-		super();
+		this(10, name, description);
+	}
 
-		if (name != null)
+	/** With ID, name, and description */
+	public ComplexDataObject(Long id, String name, String description) {
+		this(10, id, name, description);
+	}
+
+	/** Fully parameterized constructor without an ID */
+	public ComplexDataObject(int expectedAttributeCount, String name, String description) {
+		super(expectedAttributeCount);
+
+		// ensure basic attributes
+		if (name != null && !"no name".equals(name))
 			setName(name);
-
-		if (description != null)
+		if (description != null && !"no description".equals(description))
 			setDescription(description);
 	}
 
-	public ComplexDataObject(Long ID, String name, String description) {
-		super(ID);
+	/** Fully parameterized constructor */
+	public ComplexDataObject(int expectedAttributeCount, Long id, String name, String description) {
+		super(expectedAttributeCount, id);
 
-		setName(name);
-		setDescription(description);
+		// ensure basic attributes
+		setName(name != null ? name : "no name");
+		setDescription(description != null ? description : "no description");
 	}
 
 	/**
@@ -101,8 +127,9 @@ public class ComplexDataObject extends KeyValueObject implements ISelfDescriptio
 
 	@Override
 	public String getName() {
-		if (getAttribute(NAME) != null)
-			return getAttribute(NAME).toString();
+		if (containsAttribute(NAME))
+			if (getAttribute(NAME) != null)
+				return getAttribute(NAME).toString();
 
 		// return String.valueOf(getID());
 		return "no name";
@@ -114,8 +141,9 @@ public class ComplexDataObject extends KeyValueObject implements ISelfDescriptio
 
 	@Override
 	public String getDescription() {
-		if (getAttribute(DESCRIPTION) != null)
-			return getAttribute(DESCRIPTION).toString();
+		if (containsAttribute(DESCRIPTION))
+			if (getAttribute(DESCRIPTION) != null)
+				return getAttribute(DESCRIPTION).toString();
 
 		return "no description ";
 	}
@@ -173,13 +201,23 @@ public class ComplexDataObject extends KeyValueObject implements ISelfDescriptio
 	}
 
 	private final void fireAttributeValueChanged(String attribute) {
-		for (IComplexDataObjectListener listener : listeners)
-			listener.attributeValueChanged(this, attribute);
+		if (enableListening)
+			for (IComplexDataObjectListener listener : listeners)
+				listener.attributeValueChanged(this, attribute);
 	}
 
 	private final void fireAttributeRemoved(String attribute) {
-		for (IComplexDataObjectListener listener : listeners)
-			listener.attributeRemoved(this, attribute);
+		if (enableListening)
+			for (IComplexDataObjectListener listener : listeners)
+				listener.attributeRemoved(this, attribute);
+	}
+
+	public boolean isEnableListening() {
+		return enableListening;
+	}
+
+	public void setEnableListening(boolean enableListening) {
+		this.enableListening = enableListening;
 	}
 
 }

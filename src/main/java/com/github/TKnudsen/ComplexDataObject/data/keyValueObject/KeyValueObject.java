@@ -3,98 +3,150 @@ package com.github.TKnudsen.ComplexDataObject.data.keyValueObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IKeyValueProvider;
 import com.github.TKnudsen.ComplexDataObject.model.tools.MathFunctions;
+import com.github.TKnudsen.ComplexDataObject.model.tools.StringTools;
 
 /**
+ * Basic data structure for objects with string-keyed attributes and arbitrary
+ * object values.
+ *
  * <p>
- * Title: KeyValueObject
+ * Attribute storage is backed by either a {@link SmallMap} (for objects with
+ * few attributes) or a pre-sized {@link HashMap}, selected at construction time
+ * based on {@code expectedAttributeCount} to avoid resizing overhead.
  * </p>
- * 
+ *
  * <p>
- * Description: Basic data structure for an objects with keys/attributes and
- * values/objects.
- * 
- * Update: Changed KeyValueObject<V> to the non-generic KeyValueObject form
+ * <b>ID handling:</b> A special {@link #ID} attribute is maintained for legacy
+ * compatibility. If no ID has been set, {@link #getID()} assigns a random
+ * {@code long} on first call. This side effect is intentional but regrettable --
+ * see field Javadoc for migration guidance.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2024
- * </p>
- * 
- * @author Juergen Bernard
- * @version 1.05
+ *
+ * @version 2.0 revised February 2026
+ * @since 2015
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<String> {
 
 	/**
-	 * I regret that I found it necessary to have an ID field/attribute present
-	 * always. In practice, even ID-based usage forms simply define a primary key
-	 * attribute and do not make use of the ID attribute.
-	 * 
-	 * Prepare for its deletion and replacement by a standard attribute.
+	 * The reserved attribute name for the legacy numeric ID.
+	 *
+	 * <p>
+	 * Prepare for its deletion and replacement by a standard attribute. In
+	 * practice, even ID-based usage forms define a primary key attribute and do not
+	 * rely on this field.
+	 * </p>
 	 */
-	// protected long ID;
-	public final String ID = "ID";
+	public static final String ID = "ID";
 
 	/**
-	 * map with the attributes of the KeyValueObject. Historically, this was
-	 * implemented as a SortedMap, even if this is not visible and exploited from
-	 * the outside.
-	 * 
-	 * The decision was to go for a Map/HashMap implementation for performance
-	 * reasons. In the unexpected case that errors such as sorted-attribute
-	 * expectations occur, this decision may need to be reverted.
+	 * Default expected attribute count, used to select the backing map
+	 * implementation and initial capacity.
 	 */
-	// protected SortedMap<String, Object> attributes = new TreeMap<String,
-	// Object>();
-	protected Map<String, Object> attributes = new HashMap<>();
+	private static final int DEFAULT_EXPECTED_ATTRIBUTE_COUNT = 8;
 
+	/**
+	 * Attribute map. Uses {@link SmallMap} for small objects and {@link HashMap}
+	 * for larger ones to balance memory and lookup performance.
+	 */
+	protected Map<String, Object> attributes;
+
+	// -----------------------------------------------------------------------
+	// Construction
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Default constructor -- initializes with
+	 * {@value #DEFAULT_EXPECTED_ATTRIBUTE_COUNT} expected attributes.
+	 */
 	public KeyValueObject() {
+		this(DEFAULT_EXPECTED_ATTRIBUTE_COUNT);
 	}
 
 	/**
-	 * @deprecated better add IDs as key-value pairs.
-	 * 
-	 * @param ID use add(KeyValueObject.ID, yourID) instead
+	 * Main constructor. Initializes a backing map sized to accommodate the expected
+	 * number of attributes without resizing.
+	 *
+	 * @param expectedAttributeCount estimated number of attributes; used for
+	 *                               capacity pre-allocation, not enforced as a
+	 *                               limit
 	 */
-	public KeyValueObject(long ID) {
-		attributes.put(this.ID, ID);
+	public KeyValueObject(int expectedAttributeCount) {
+		this.attributes = createAttributeMap(expectedAttributeCount);
+		attributes.put(ID, MathFunctions.randomLong()); // assign directly, skip getID() overhead
 	}
+
+	// -----------------------------------------------------------------------
+	// Deprecated ID-based constructors
+	// -----------------------------------------------------------------------
+
+	/** @deprecated prefer {@code add(KeyValueObject.ID, yourID)} */
+	@Deprecated
+	public KeyValueObject(long id) {
+		this(DEFAULT_EXPECTED_ATTRIBUTE_COUNT);
+		attributes.put(ID, id);
+	}
+
+	/** @deprecated prefer {@code add(KeyValueObject.ID, yourID)} */
+	@Deprecated
+	public KeyValueObject(int expectedAttributeCount, long id) {
+		this(expectedAttributeCount);
+		attributes.put(ID, id);
+	}
+
+	/** @deprecated prefer {@code add(KeyValueObject.ID, yourID)} */
+	@Deprecated
+	public KeyValueObject(Long id) {
+		this(DEFAULT_EXPECTED_ATTRIBUTE_COUNT);
+		if (id == null)
+			throw new IllegalArgumentException("ID must not be null");
+		attributes.put(ID, id);
+	}
+
+	/** @deprecated prefer {@code add(KeyValueObject.ID, yourID)} */
+	@Deprecated
+	public KeyValueObject(int expectedAttributeCount, Long id) {
+		this(expectedAttributeCount);
+		if (id == null)
+			throw new IllegalArgumentException("ID must not be null");
+		attributes.put(ID, id);
+	}
+
+	// -----------------------------------------------------------------------
+	// Identity
+	// -----------------------------------------------------------------------
 
 	/**
-	 * @deprecated better add IDs as key-value pairs.
-	 * 
-	 * @param ID use add(KeyValueObject.ID, yourID) instead
+	 * Returns the numeric ID of this object.
+	 *
+	 * <p>
+	 * <b>Side effect:</b> if no {@link #ID} attribute is present or its value is
+	 * not a {@link Number}, a random {@code long} is assigned and stored. This
+	 * mutation on first access is intentional for legacy compatibility but should
+	 * be avoided in new code.
+	 * </p>
+	 *
+	 * @deprecated Prepare to make protected. The primary key should not be limited
+	 *             to {@code long}.
 	 */
-	public KeyValueObject(Long ID) {
-		if (ID == null)
-			throw new IllegalArgumentException("ID was null");
-
-		attributes.put(this.ID, ID.longValue());
-	}
-
+	@JsonIgnore
 	@Override
-	/**
-	 * I regret that I found it necessary to have an ID field/attribute present
-	 * always. In practice, even ID-based usage forms simply define a primary key
-	 * attribute and do not make use of the ID attribute.
-	 * 
-	 * @deprecated Prepare to make it protected. The primary key should not need to
-	 *             be limited to the type long.
-	 */
 	public long getID() {
-		if (!keySet().contains(this.ID))
-			attributes.put(this.ID, MathFunctions.randomLong());
-
-		if (!(getAttribute(this.ID) instanceof Number))
-			attributes.put(this.ID, MathFunctions.randomLong());
-
-		return ((Number) getAttribute(this.ID)).longValue();
+		Object idValue = getAttribute(ID);
+		if (!(idValue instanceof Number)) {
+			long random = MathFunctions.randomLong();
+			attributes.put(ID, random);
+			return random;
+		}
+		return ((Number) idValue).longValue();
 	}
 
 	@Override
@@ -102,45 +154,59 @@ public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<Strin
 		return Long.hashCode(getID());
 	}
 
-	@Override
 	/**
-	 * Revised version does not instantiate a KeyValueObject any more for the other
-	 * object
+	 * Two {@link KeyValueObject} instances are equal if and only if they have the
+	 * same class and the same numeric ID.
+	 *
+	 * <p>
+	 * Note: hash collisions are theoretically possible but extremely unlikely given
+	 * 64-bit IDs. ID comparison is used directly to avoid false positives from hash
+	 * collisions.
+	 * </p>
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-
 		if (getClass() != obj.getClass())
 			return false;
-
-		return this.hashCode() == ((KeyValueObject) obj).hashCode() ? true : false;
+		return this.getID() == ((KeyValueObject) obj).getID();
 	}
 
 	/**
-	 * True if this and an object have identical attributes and values. Revised
-	 * version does not instantiate a KeyValueObject any more for the other object.
-	 * 
-	 * @param obj
-	 * @return
+	 * Returns {@code true} if this object and {@code obj} have identical attribute
+	 * sets and equal values for all attributes.
+	 *
+	 * @param obj the object to compare; may be null
+	 * @return {@code true} if all attributes and values are equal
 	 */
 	public boolean equalValues(Object obj) {
 		if (obj == null)
 			return false;
-
 		if (getClass() != obj.getClass())
 			return false;
 
-		if (!this.keySet().equals(((KeyValueObject) obj).keySet()))
+		KeyValueObject other = (KeyValueObject) obj;
+		if (!this.keySet().equals(other.keySet()))
 			return false;
 
-		for (String string : keySet())
-			if (!getAttribute(string).equals(((KeyValueObject) obj).getAttribute(string)))
+		for (String key : keySet())
+			if (!Objects.equals(getAttribute(key), other.getAttribute(key)))
 				return false;
 
 		return true;
 	}
 
+	// -----------------------------------------------------------------------
+	// Attribute access
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Returns {@code true} if an attribute with the given name is present.
+	 *
+	 * @param attribute the attribute name; must not be null
+	 * @return {@code true} if the attribute exists
+	 */
 	public boolean containsAttribute(String attribute) {
 		return attributes.containsKey(attribute);
 	}
@@ -160,15 +226,6 @@ public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<Strin
 		return attributes.keySet();
 	}
 
-	/**
-	 * convenient method identical with keySet();
-	 * 
-	 * @return
-	 */
-	public Set<String> getAttributes() {
-		return attributes.keySet();
-	}
-
 	@Override
 	public Object removeAttribute(String attribute) {
 		return attributes.remove(attribute);
@@ -176,20 +233,16 @@ public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<Strin
 
 	@Override
 	public Class<?> getType(String attribute) {
-		if (attributes.get(attribute) != null)
-			return attributes.get(attribute).getClass();
-		return null;
+		Object value = attributes.get(attribute);
+		return value != null ? value.getClass() : null;
 	}
 
 	@Override
 	public Map<String, Class<?>> getTypes() {
-		Map<String, Class<?>> ret = new HashMap<>();
-		for (String string : attributes.keySet())
-			if (attributes.get(string) == null)
-				ret.put(string, null);
-			else
-				ret.put(string, attributes.get(string).getClass());
-		return null;
+		Map<String, Class<?>> result = new HashMap<>();
+		for (Map.Entry<String, Object> entry : attributes.entrySet())
+			result.put(entry.getKey(), entry.getValue() != null ? entry.getValue().getClass() : null);
+		return result;
 	}
 
 	@Override
@@ -197,39 +250,31 @@ public class KeyValueObject implements IKeyValueProvider<Object>, Iterable<Strin
 		return attributes.keySet().iterator();
 	}
 
+	// -----------------------------------------------------------------------
+	// String representation
+	// -----------------------------------------------------------------------
+
 	@Override
 	public String toString() {
-//		String output = "";
-//
-//		SortedSet<String> a = new TreeSet<>(attributes.keySet());
-//		for (String key : a)
-//			output += (toLineString(key) + "\n");
-//		return output;
+		StringBuilder sb = new StringBuilder(128 + attributes.size() * 64);
+		sb.append("Attribute:").append('\t').append("Type:").append('\t').append("Value:").append('\n');
 
-		StringBuilder sb = new StringBuilder();
-
-		// Add header row
-		sb.append(String.format("%-40s\t%-10s\t%-15s\n", "Attribute:", "Type:", "Value:"));
-
-		// Add each attribute
-		for (String a : new TreeSet<>(attributes.keySet()))
-			if (attributes.get(a) == null)
-				sb.append(String.format("%-40s\t%-10s\t%-15s\n", a.substring(0, Math.min(a.length(), 41)), "unknown",
-						"null"));
-			else
-				sb.append(String.format("%-40s\t%-10s\t%-15s\n", a.substring(0, Math.min(a.length(), 41)),
-						attributes.get(a).getClass().toString().replace("class java.lang.", ""), attributes.get(a)));
-
+		for (String key : new TreeSet<>(attributes.keySet())) {
+			Object value = attributes.get(key);
+			String type = value != null ? value.getClass().getSimpleName() : "unknown";
+			sb.append(StringTools.padRight(key, 36)).append('\t').append(StringTools.padRight(type, 10)).append('\t')
+					.append(String.valueOf(value)).append('\n');
+		}
 		return sb.toString();
 	}
 
-//	private String toLineString(String attribute) {
-//		String output = "Attribute: " + attribute + "\t";
-//
-//		if (attributes.get(attribute) == null)
-//			output += ("Type: unknown\tValue: null");
-//		else
-//			output += ("Type: " + attributes.get(attribute).getClass() + "\t" + "Value: " + attributes.get(attribute));
-//		return output;
-//	}
+	// -----------------------------------------------------------------------
+	// Private helpers
+	// -----------------------------------------------------------------------
+
+	private static Map<String, Object> createAttributeMap(int expectedCount) {
+		if (expectedCount <= DEFAULT_EXPECTED_ATTRIBUTE_COUNT)
+			return new SmallMap<>();
+		return new HashMap<>((int) Math.ceil(expectedCount / 0.75) + 1);
+	}
 }

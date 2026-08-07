@@ -2,30 +2,21 @@ package com.github.TKnudsen.ComplexDataObject.model.statistics;
 
 /**
  * <p>
- * Title: KullbackLeiblerDivergence
- * </p>
- * 
- * <p>
- * Description: Measure for the difference between two probability
+ * Measure for the difference between two probability
  * distributions, also referred to as relative Entropy.
- * 
+ *
  * References, according to Wikipedia:
- * 
+ *
  * Kullback, S.; Leibler, R.A. (1951). "On information and sufficiency". Annals
- * of Mathematical Statistics. 22 (1): 79–86. doi:10.1214/aoms/1177729694. MR
- * 0039968.
- * 
+ * of Mathematical Statistics. 22 (1). doi:10.1214/aoms/1177729694. MR 0039968.
+ *
  * Kullback, S. (1959), Information Theory and Statistics, John Wiley and Sons.
  * Republished by Dover Publications in 1968; reprinted in 1978: ISBN
  * 0-8446-5625-9.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018, https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class KullbackLeiblerDivergence {
 

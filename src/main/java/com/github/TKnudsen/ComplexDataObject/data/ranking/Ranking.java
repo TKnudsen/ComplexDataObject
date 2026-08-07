@@ -8,29 +8,21 @@ import org.apache.commons.collections4.list.TreeList;
 
 /**
  * <p>
- * Title: Ranking
- * </p>
- * 
- * <p>
- * Description: structures objects in sorted manner. Based on Apache Common's
+ * structures objects in sorted manner. Based on Apache Common's
  * {@link TreeList} it provides fast insertion and removal, even in the middle
  * of the List. The earlier implementation extended a {@link LinkedList} - if
  * doesn't perform well it is possible to return to {@link LinkedList}.
- * 
+ *
  * Tip: you can also use a List of AbstractMap.SimpleEntry as a simple
  * alternative. Then, a comparable key can be obtained by
  * Collections.sort(collection, Entry.comparingByKey());
- * 
+ *
  * Tip: for traversing the ranking, use an iterator, which is supposed to be the
  * fastest for LinkedLists.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2015-2016
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 2.01
+ * @since 2015
  */
 public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Collection<T> {
 
@@ -58,21 +50,6 @@ public class Ranking<T extends Comparable<T>> extends TreeList<T> implements Col
 			}
 		}
 		super.add(t);
-		return true;
-	}
-
-	/**
-	 * Fast way to add at the end of the Ranking. Tests if the sorting criterion is
-	 * fulfilled, otherwise the value is added at the correct position.
-	 *
-	 * @param t
-	 * @return
-	 */
-	public boolean addLast(T t) {
-		if (size() == 0)
-			return add(t);
-		else
-			add(size() - 1, t);
 		return true;
 	}
 

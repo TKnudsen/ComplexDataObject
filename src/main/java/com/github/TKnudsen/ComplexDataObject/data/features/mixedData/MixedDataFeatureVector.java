@@ -10,26 +10,16 @@ import com.github.TKnudsen.ComplexDataObject.data.features.FeatureType;
 
 /**
  * <p>
- * Title: MixedDataVector
- * </p>
+ * Feature vector for mixed data types (Double, String, Boolean).
+ * Used for objects containing numerical, categorical, and binary attributes.
  *
- * <p>
- * Description: AlgorithmDataObject representation for mixed data involving
- * Double, String, and Boolean. Used for objects containing numerical,
- * categorical, and binary attributes.
- * 
  * Update: featuresMap does not need to be sorted any more. Improves
  * performance.
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2015-2024
- * </p>
- *
- * @author Juergen Bernard
- * @version 1.02
+ * @version 1.03
+ * @since 2015
  */
-
 public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedDataFeature> {
 
 	public MixedDataFeatureVector(List<MixedDataFeature> features) {
@@ -40,20 +30,13 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 		super(features);
 	}
 
-	/**
-	 * 
-	 * @param featuresMap Update: featuresMap does not need to be sorted any more.
-	 *                    Improves performance.
-	 */
 	public MixedDataFeatureVector(Map<String, MixedDataFeature> featuresMap) {
 		super(featuresMap);
 	}
 
 	@Override
 	public MixedDataFeatureVector subTuple(int fromIndex, int toIndex) {
-		if (featuresList != null)
-			return new MixedDataFeatureVector(featuresList.subList(fromIndex, toIndex));
-		return null;
+		return new MixedDataFeatureVector(getVectorRepresentation().subList(fromIndex, toIndex));
 	}
 
 	@Override
@@ -64,17 +47,15 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 	@Override
 	public MixedDataFeatureVector clone() {
 		List<MixedDataFeature> features = new ArrayList<>();
-		for (MixedDataFeature f : featuresList)
-			features.add(f.clone());
+		for (MixedDataFeature f : getVectorRepresentation())
+			features.add(f == null ? null : f.clone());
 
 		MixedDataFeatureVector clone = new MixedDataFeatureVector(features);
 
-		// attributes and meta information
 		clone.setMaster(getMaster());
 		for (String s : attributes.keySet())
 			clone.add(s, getAttribute(s));
 
-		// name and description
 		clone.setName(getName());
 		clone.setDescription(getDescription());
 
@@ -83,28 +64,24 @@ public class MixedDataFeatureVector extends AbstractFeatureVector<Object, MixedD
 
 	@Override
 	public String toString() {
-		String output = "";
-		for (Feature<?> f : featuresList)
+		StringBuilder sb = new StringBuilder();
+		for (Feature<?> f : getVectorRepresentation())
 			if (f != null && f.getFeatureValue() != null)
-				output += (f.getFeatureName() + ": " + f.getFeatureValue().toString() + "\n");
-		return output;
+				sb.append(f.getFeatureName()).append(": ").append(f.getFeatureValue()).append("\n");
+		return sb.toString();
 	}
 
 	/**
-	 * retrieves the featureNames of a given FeatureType.
+	 * Retrieves feature names of a given FeatureType.
 	 * 
-	 * @param featureType
-	 * @return
+	 * @param featureType the feature type to filter by
+	 * @return list of feature names matching the type
 	 */
-	public Iterable<String> getFeatureNames(FeatureType featureType) {
+	public List<String> getFeatureNames(FeatureType featureType) {
 		List<String> featureNames = new ArrayList<>();
-
-		for (Feature<?> f : featuresList)
-			if (f != null)
-				if (f.getFeatureType() != null)
-					if (f.getFeatureType().equals(featureType))
-						featureNames.add(f.getFeatureName());
-
-		return new ArrayList<>(featureNames);
+		for (Feature<?> f : getVectorRepresentation())
+			if (f != null && f.getFeatureType() != null && f.getFeatureType().equals(featureType))
+				featureNames.add(f.getFeatureName());
+		return featureNames;
 	}
 }

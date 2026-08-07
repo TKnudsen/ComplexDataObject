@@ -8,33 +8,25 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.DataConversion;
 
 /**
  * <p>
- * Title: SimpsonsIndex
- * </p>
- *
- * <p>
- * Description: Simpson's Index (D) measures the probability that two
+ * Simpson's Index (D) measures the probability that two
  * individuals randomly selected from a sample will belong to the same species
  * (or some category other than species). The value of D ranges between 0 and 1.
  * With this index, 0 represents infinite diversity and 1, no diversity. That
  * is, the bigger the value of D, the lower the diversity.
- * 
+ *
  * Source of the text: http://www.countrysideinfo.co.uk/simpsons.htm
- * 
+ *
  * NOTE: The Simpson's Index is NOT Simpson's index of Diversity!
- * 
+ *
  * Variation: Simpson's Index of Diversity: 1 - D
- * 
+ *
  * Variation: Simpson's Reciprocal Index: 1 / D
- * 
+ *
  * Simpson EH. Measurement of diversity. Nature (1949).
  * </p>
  *
- * <p>
- * Copyright: Copyright (c) 2016-2020
- * </p>
- *
- * @author Juergen Bernard
  * @version 1.03
+ * @since 2016
  */
 public class SimpsonsIndex {
 

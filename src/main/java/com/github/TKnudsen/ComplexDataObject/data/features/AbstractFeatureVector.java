@@ -7,35 +7,45 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IDObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IFeatureVectorObject;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.IMasterProvider;
 import com.github.TKnudsen.ComplexDataObject.data.interfaces.ISelfDescription;
 import com.github.TKnudsen.ComplexDataObject.data.keyValueObject.KeyValueObject;
+import com.github.TKnudsen.ComplexDataObject.model.tools.StringTools;
 
 /**
  * <p>
- * Title: AbstractFeatureVector
- * </p>
- * 
+ * General feature representation of a given object. Provides basic attributes
+ * and functionality. Feature vector with optimized dual-representation storage.
+ *
  * <p>
- * Description: general feature representation of a given object. Provides basic
- * attributes and functionality.
- * 
+ * Design principles:
+ * </p>
+ * <ul>
+ * <li>LinkedHashMap as primary storage (maintains insertion order)</li>
+ * <li>ArrayList synchronized on mutations (fast index access)</li>
+ * <li>Both structures always consistent</li>
+ * <li>O(1) reads for both name and index access</li>
+ * <li>Write operations O(1) for append, O(n) for insert/remove</li>
+ * </ul>
+ *
  * Update: featuresMap does not need to be sorted any more. Improves
  * performance.
- * 
+ *
  * Update: Changed KeyValueObject<Object> to the non-generic KeyValueObject
  * form.
  * </p>
- * 
+ *
  * <p>
- * Copyright: Copyright (c) 2016-2024
+ * Thread safety: Not thread-safe. External synchronization required for
+ * concurrent access.
  * </p>
  * 
- * @author Juergen Bernard
- * @version 1.07
+ * @since 2016
+ * @version 1.08
  */
 public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends KeyValueObject
 		implements ISelfDescription, IMasterProvider, Cloneable, IFeatureVectorObject<O, F> {
@@ -48,18 +58,11 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	protected List<F> featuresList;
 
-	/**
-	 * TODO recommendation to replace the SortedMap criterion by a simple Map
-	 * criterion. This will increase performance.
-	 * 
-	 * Though, it needs to be checked if an external source expects a sorted
-	 * keySet(). Ongoing process.
-	 */
-	// protected SortedMap<String, F> featuresMap;
 	protected Map<String, F> featuresMap;
 
 	protected AbstractFeatureVector() {
 		featuresList = new ArrayList<>();
+
 		createFeatureNamesMap();
 	}
 
@@ -94,30 +97,27 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresList == null)
 			return;
 
-		featuresMap = new HashMap<>();
+		featuresMap = new HashMap<>(featuresList.size());
 
 		for (int i = 0; i < featuresList.size(); i++)
 			if (featuresList.get(i) != null && featuresList.get(i).getFeatureName() != null)
 				featuresMap.put(featuresList.get(i).getFeatureName(), featuresList.get(i));
+
 		checkFeatureNameConsistency();
 	}
 
 	protected void generalizeFromArray(F[] featuresArray) {
-		featuresList = null;
-		featuresMap = null;
+		featuresList = new ArrayList<>();
+		featuresMap = new HashMap<>();
 
 		if (featuresArray == null)
 			return;
 
-		featuresList = new ArrayList<>();
-		featuresMap = null;
-
 		for (F feature : featuresArray) {
-			featuresList.add(feature);
-			featuresMap.put(feature.getFeatureName(), feature);
-			// refactoring. lazy implementation to save computation time
-			// if (feature != null && feature.getFeatureName() != null)
-			// featuresMap.put(feature.getFeatureName(), feature);
+			if (feature != null && feature.getFeatureName() != null) {
+				featuresList.add(feature);
+				featuresMap.put(feature.getFeatureName(), feature);
+			}
 		}
 	}
 
@@ -127,13 +127,13 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		if (featuresMap == null)
 			return;
 
-		featuresList = new ArrayList<>();
+		featuresList = new ArrayList<>(featuresMap.size());
 		for (String s : featuresMap.keySet())
 			featuresList.add(featuresMap.get(s));
 	}
 
 	protected void generalizeFromList() {
-		featuresMap = new HashMap<>();
+		featuresMap = new HashMap<>(featuresList.size());
 
 		for (F feature : featuresList)
 			featuresMap.put(feature.getFeatureName(), feature);
@@ -309,6 +309,15 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 		return null;
 	}
 
+	/**
+	 * eases re-filling the features with setVector operations from inheriting
+	 * classes
+	 */
+	protected void clearAllFeatures() {
+		featuresList.clear();
+		featuresMap.clear();
+	}
+
 	@Override
 	public List<F> getVectorRepresentation() {
 		return Collections.unmodifiableList(featuresList);
@@ -373,13 +382,25 @@ public abstract class AbstractFeatureVector<O, F extends Feature<O>> extends Key
 
 	@Override
 	public String toString() {
-		String n = this.getName();
-		if (n == null)
-			n = this.getClass().getSimpleName();
+		// Pre-size a bit to reduce buffer growth
+		StringBuilder sb = new StringBuilder(128 + attributes.size() * 72);
 
-		n += (", " + this.getID() + ", dim: " + getDimensions() + "\t");
+		sb.append(this.getClass().getSimpleName()).append(" with ID ").append(this.getID()).append(", dim: ")
+				.append(getDimensions()).append('\n');
 
-		return n;
+		sb.append("Feature Name:").append('\t').append("Value:").append('\t').append("Type:").append('\n');
+
+		Set<String> keys = attributes.size() > 1 ? new TreeSet<>(attributes.keySet()) : attributes.keySet();
+
+		for (String key : keys) {
+			Object value = attributes.get(key);
+			String type = (value == null) ? "unknown" : value.getClass().getSimpleName(); // fast, no replace()
+
+			sb.append(StringTools.padRight(key, 30)).append('\t')
+					.append(StringTools.padRight(String.valueOf(value), 30)).append('\t')
+					.append(StringTools.padRight(type, 10)).append('\n');
+		}
+		return sb.toString();
 	}
 
 	protected Map<String, F> getFeaturesMap() {

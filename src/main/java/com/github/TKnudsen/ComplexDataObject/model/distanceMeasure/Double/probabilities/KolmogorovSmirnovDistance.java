@@ -8,35 +8,27 @@ import com.github.TKnudsen.ComplexDataObject.model.statistics.KolmogorovSmirnovT
 
 /**
  * <p>
- * Title: KolmogorovSmirnovDistance
- * </p>
- * 
- * <p>
- * Description: nonparametric test of the equality of continuous,
+ * nonparametric test of the equality of continuous,
  * one-dimensional probability distributions. Used to compare two samples
- * (two-sample K–S test).
- * 
- * The Kolmogorov–Smirnov statistic quantifies a distance between the empirical
+ * (two-sample KS test).
+ *
+ * The Kolmogorov Smirnov statistic quantifies a distance between the empirical
  * distribution function of the sample and the cumulative distribution function
  * of the reference distribution, or between the empirical distribution
  * functions of two samples.
- * 
+ *
  * Named after Andrey Kolmogorov and Nikolai Smirnov. References:
- * 
+ *
  * Kolmogorov A (1933). "Sulla determinazione empirica di una legge di
- * distribuzione". G. Ist. Ital. Attuari. 4: 83–91.
- * 
+ * distribuzione". G. Ist. Ital. Attuari.
+ *
  * Smirnov N (1948). "Table for estimating the goodness of fit of empirical
- * distributions". Annals of Mathematical Statistics. 19: 279–281.
+ * distributions". Annals of Mathematical Statistics.
  * doi:10.1214/aoms/1177730256.
  * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2018, https://github.com/TKnudsen/ComplexDataObject
- * </p>
- * 
- * @author Juergen Bernard
+ *
  * @version 1.02
+ * @since 2018
  */
 public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 
