@@ -25,7 +25,17 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
  * with its own statistics and normalization functions, so scores can be
  * bipolar (positive or negative) around that neutral point.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.impl.FloatAttributeScoringFunction}
+ *             instead (bipolar behavior is just a matter of where
+ *             {@code minScore}/{@code maxScore} land relative to zero). Kept
+ *             here only because
+ *             {@code AttributeScoringFunctions.transform(...)} in the
+ *             scoring project still recognizes this type when migrating
+ *             old-format saved scoring functions.
  */
+@Deprecated
 public class DoubleAttributeBipolarScoringFunction extends DoubleAttributeScoringFunction {
 
 	@JsonIgnore

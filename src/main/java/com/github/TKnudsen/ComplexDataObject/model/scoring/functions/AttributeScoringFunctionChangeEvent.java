@@ -9,7 +9,12 @@ import javax.swing.event.ChangeEvent;
  * Carries the affected attribute name and a reference to the function that
  * triggered the change.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.listeners.AttributeScoringFunctionChangeEvent}
+ *             instead.
  */
+@Deprecated
 public class AttributeScoringFunctionChangeEvent extends ChangeEvent {
 
 	/**

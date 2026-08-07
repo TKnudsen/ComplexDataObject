@@ -31,7 +31,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * computation between two functions, and factory methods for creating
  * scoring and uncertainty functions for a given attribute.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.AttributeScoringFunctions}
+ *             instead.
  */
+@Deprecated
 public class AttributeScoringFunctions {
 
 	public static List<AttributeScoringFunction<?>> sortAlphabetically(

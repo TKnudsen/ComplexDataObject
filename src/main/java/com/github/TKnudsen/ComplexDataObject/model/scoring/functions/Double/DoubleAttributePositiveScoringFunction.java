@@ -19,7 +19,13 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
  * statistics and linear/quantile normalization functions over the full
  * (outlier-pruned) value distribution.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.impl.FloatAttributeScoringFunction}
+ *             instead (positive-only behavior is just a matter of setting
+ *             {@code minScore} to 0).
  */
+@Deprecated
 public class DoubleAttributePositiveScoringFunction extends DoubleAttributeScoringFunction {
 
 	@JsonIgnore

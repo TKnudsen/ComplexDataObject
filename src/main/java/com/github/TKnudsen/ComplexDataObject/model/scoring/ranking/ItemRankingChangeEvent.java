@@ -11,7 +11,13 @@ import com.github.TKnudsen.ComplexDataObject.data.ranking.Ranking;
  * resulting Ranking of entries with comparable keys produced by an
  * ItemRankingModel.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.listeners.RankingChangedEvent}
+ *             instead, which no longer extends this class and additionally
+ *             carries score/rank/uncertainty maps.
  */
+@Deprecated
 public class ItemRankingChangeEvent<T extends Comparable<T>> extends ChangeEvent {
 
 	/**

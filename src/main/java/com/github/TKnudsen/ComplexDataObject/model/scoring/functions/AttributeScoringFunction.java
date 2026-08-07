@@ -23,7 +23,17 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * uncertainty consideration, weighting, score buffering, and notification of
  * registered change listeners whenever the function's configuration changes.
  * </p>
+ *
+ * @deprecated Superseded by the standalone scoring library. Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.AttributeScoringFunction}
+ *             instead, which decouples the scoring function from
+ *             {@code ComplexDataObject}/{@code ComplexDataContainer} and is
+ *             not tied to Swing's {@code ChangeEvent}. Kept here only because
+ *             {@code AttributeScoringFunctions.transform(...)} in the
+ *             scoring project still reads old-format saved scoring functions
+ *             of this type.
  */
+@Deprecated
 public abstract class AttributeScoringFunction<T> implements Function<ComplexDataObject, Double> {
 
 	private IObjectParser<T> parser;

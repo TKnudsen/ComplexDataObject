@@ -22,7 +22,12 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.StatisticsSupport;
  * support, and delegates normalization strategy (linear vs. quantile, with
  * optional linear transition between the two) to subclasses.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.impl.FloatAttributeScoringFunction}
+ *             instead.
  */
+@Deprecated
 public abstract class DoubleAttributeScoringFunction extends AttributeScoringFunction<Double> {
 
 	private Double preFilterOutlierStd = 10.0;

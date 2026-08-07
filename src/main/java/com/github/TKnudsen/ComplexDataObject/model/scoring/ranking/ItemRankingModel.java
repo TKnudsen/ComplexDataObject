@@ -30,7 +30,17 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
  * normalization and uncertainty estimation, and propagates attribute-scoring
  * and ranking change events to registered listeners.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.RankingController}
+ *             instead, together with
+ *             {@code com.github.TKnudsen.scoring.model.scoring.RankingCalculator}
+ *             and
+ *             {@code com.github.TKnudsen.scoring.model.scoring.RankingComputationData},
+ *             which split this class's responsibilities across three
+ *             collaborators.
  */
+@Deprecated
 public final class ItemRankingModel implements AttributeScoringFunctionChangeListener {
 
 	private List<AttributeScoringFunction<?>> attributeScoringFunctions = new ArrayList<>();

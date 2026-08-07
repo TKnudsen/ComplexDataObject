@@ -8,7 +8,12 @@ package com.github.TKnudsen.ComplexDataObject.model.scoring.functions.Double;
  * DoubleAttributeBipolarScoringFunction while carrying over its
  * normalization, outlier, and uncertainty settings.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.AttributeScoringFunctions#clone}
+ *             instead.
  */
+@Deprecated
 public class DoubleAttributeBipolarScoringFunctions {
 
 	public static DoubleAttributeBipolarScoringFunction create(DoubleAttributeScoringFunction scoringFunction,

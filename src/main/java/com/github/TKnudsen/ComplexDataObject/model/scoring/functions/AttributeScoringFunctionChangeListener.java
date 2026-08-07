@@ -7,7 +7,12 @@ import java.util.EventListener;
  * Listener interface for receiving notifications when an
  * AttributeScoringFunction's configuration changes.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.listeners.AttributeScoringFunctionChangeListener}
+ *             instead.
  */
+@Deprecated
 public interface AttributeScoringFunctionChangeListener extends EventListener {
 
 	void attributeScoringFunctionChanged(AttributeScoringFunctionChangeEvent event);

@@ -7,7 +7,12 @@ import java.util.Comparator;
  * Comparator that orders AttributeScoringFunction instances alphabetically
  * by the name of the attribute they score.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.AttributeScoringFunctions#sortAlphabetically(java.util.Collection)}
+ *             instead.
  */
+@Deprecated
 public class AttributeScoringFunctionComparator implements Comparator<AttributeScoringFunction<?>> {
 
 	@Override

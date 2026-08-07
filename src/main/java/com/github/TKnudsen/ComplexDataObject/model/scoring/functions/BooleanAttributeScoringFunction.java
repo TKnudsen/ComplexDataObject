@@ -23,7 +23,12 @@ import com.github.TKnudsen.ComplexDataObject.model.transformations.normalization
  * (optionally) quantile normalization functions built from the value
  * distribution of the underlying data container.
  * </p>
+ *
+ * @deprecated Use
+ *             {@code com.github.TKnudsen.scoring.model.scoring.impl.BooleanAttributeScoringFunction}
+ *             instead.
  */
+@Deprecated
 public class BooleanAttributeScoringFunction extends AttributeScoringFunction<Boolean> {
 
 	@JsonIgnore
