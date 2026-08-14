@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.tknudsen</groupId>
 	<artifactId>complex-data-object</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.3.1-SNAPSHOT</version>
 	<name>ComplexDataObject</name>
 	<description>A library that models real-world objects in Java, referred to
 		as ComplexDataObjects. Other features: IO and preprocessing of
@@ -19,7 +19,7 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/TKnudsen/ComplexDataObject</url>
-		<connection>https://github. com/TKnudsen/ComplexDataObject.git</connection>
+		<connection>https://github.com/TKnudsen/ComplexDataObject.git</connection>
 		<developerConnection>https://github.com/TKnudsen/ComplexDataObject.git</developerConnection>
 	</scm>
 	<developers>
