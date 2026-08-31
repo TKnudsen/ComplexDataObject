@@ -18,10 +18,10 @@ import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataO
 /**
  * <p>
  * Selects data from SQL tables for MySQL and PostgreSQL connections and
- * converts the resulting rows into {@link ComplexDataObject} instances.
- * Offers selection of whole tables or filtered subsets via WHERE clauses,
- * retrieval of table/column metadata, and row counting (either an exact
- * COUNT(*) or a fast PostgreSQL reltuples-based estimate).
+ * converts the resulting rows into {@link ComplexDataObject} instances. Offers
+ * selection of whole tables or filtered subsets via WHERE clauses, retrieval of
+ * table/column metadata, and row counting (either an exact COUNT(*) or a fast
+ * PostgreSQL reltuples-based estimate).
  * </p>
  */
 public class SQLTableSelector {
@@ -102,8 +102,8 @@ public class SQLTableSelector {
 		// separately (before the query ran) let a concurrent caller's own
 		// println land in between the two calls, splicing unrelated log lines
 		// together once queries started running in parallel across threads.
-		System.out.println("SQLTableSelector.selectAllFromTable: selected all rows from table " + tableName
-				+ " in " + (System.currentTimeMillis() - l) + " ms");
+		System.out.println("SQLTableSelector.selectAllFromTable: selected all rows from table " + schema + "."
+				+ tableName + " in " + (System.currentTimeMillis() - l) + " ms");
 
 		return result;
 	}
@@ -232,17 +232,24 @@ public class SQLTableSelector {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			String sql = (orderAttribute == null) ? "SELECT * FROM `" + schemaAndTable + "` WHERE PLACEHOLDER"
-					: "SELECT " + fromString + " FROM `" + schemaAndTable + "` WHERE PLACEHOLDER ORDER BY `"
+			String whereFragment = where == null ? "" : "WHERE PLACEHOLDER ";
+			String sql = (orderAttribute == null) ? "SELECT * FROM `" + schemaAndTable + "` " + whereFragment
+					: "SELECT " + fromString + " FROM `" + schemaAndTable + "` " + whereFragment + "ORDER BY `"
 							+ orderAttribute + "` " + order.name();
 
 			if (postgreSQL)
 				sql = PostgreSQL.replaceMySQLQuotes(sql);
 
-			// the search string needs to be postgreSQL conform, values may have the other
-			// escape string in use (')
-			String ss = PostgreSQL.replaceMySQLQuotes(where);
-			sql = sql.replace("PLACEHOLDER", ss);
+			// where is documented as nullable (a pure projection/order query with no
+			// filter) -- only substitute PLACEHOLDER when there actually is a WHERE
+			// clause to insert; skipping this for a null where avoids both an NPE here
+			// and a literal "WHERE PLACEHOLDER" left in the final SQL.
+			if (where != null) {
+				// the search string needs to be postgreSQL conform, values may have the
+				// other escape string in use (')
+				String ss = PostgreSQL.replaceMySQLQuotes(where);
+				sql = sql.replace("PLACEHOLDER", ss);
+			}
 
 			preparedStatement = conn.prepareStatement(sql);
 
@@ -274,8 +281,8 @@ public class SQLTableSelector {
 			preparedStatement.close();
 
 		// Single atomic write -- see selectAllFromTable's identical comment.
-		System.out.println("SQLTableSelector.selectFromTableWhere: selected all rows from table " + tableName
-				+ " in " + (System.currentTimeMillis() - l) + " ms");
+		System.out.println("SQLTableSelector.selectFromTableWhere: selected all rows from table " + tableName + " in "
+				+ (System.currentTimeMillis() - l) + " ms");
 
 		return result;
 	}

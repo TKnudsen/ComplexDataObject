@@ -1,11 +1,13 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.IObjectParser;
 import com.github.TKnudsen.ComplexDataObject.model.tools.Threads;
@@ -60,14 +62,26 @@ public abstract class NumerificationInputDialogFunction<T extends Number>
 	}
 
 	private T retrieveNumber(Object t) {
+		DialogRunnable dialogRunnable = new DialogRunnable(t);
+
+		if (SwingUtilities.isEventDispatchThread()) {
+			// Already on the EDT (e.g. triggered from an interactive Swing action) --
+			// showInputDialog() is modal and pumps its own nested event loop, so it is
+			// safe to call directly and synchronously here. Routing this through the
+			// background-thread-plus-poll path below would deadlock: the poll loop
+			// would block the EDT via Thread.sleep (which does not pump events), while
+			// SwingUtilities.invokeAndWait would then wait forever for that same
+			// blocked EDT to process it.
+			dialogRunnable.showDialog();
+			return dialogRunnable.getValue();
+		}
+
 		long start = System.currentTimeMillis();
 
-		DialogRunnable dialogRunnable = new DialogRunnable(t);
 		Thread thread = new Thread(dialogRunnable);
 		thread.start();
 
 		while (!dialogRunnable.isFinished() && System.currentTimeMillis() - start < maxWaitTimeUntilDialogKill) {
-			// dialog does not work because the thread does not finish through sleep
 			Threads.sleep(250);
 		}
 
@@ -81,7 +95,11 @@ public abstract class NumerificationInputDialogFunction<T extends Number>
 	private class DialogRunnable implements Runnable {
 		private final Object t;
 		private T n;
-		private boolean finished = false;
+		// volatile: written on the EDT (via showDialog), read by the polling caller
+		// thread in retrieveNumber() -- without volatile there is no guaranteed
+		// happens-before edge, so the poll loop could spin past the timeout without
+		// ever observing completion.
+		private volatile boolean finished = false;
 
 		DialogRunnable(Object t) {
 			this.t = t;
@@ -89,6 +107,24 @@ public abstract class NumerificationInputDialogFunction<T extends Number>
 
 		@Override
 		public void run() {
+			// Reached only on the background-thread path (see retrieveNumber): this
+			// thread is never the EDT, so building/showing the JFrame/JOptionPane here
+			// directly (the original bug) produced a dialog that was realized but never
+			// properly painted or made responsive to input -- Swing components must only
+			// be created and touched on the EDT. Marshal onto it instead.
+			try {
+				SwingUtilities.invokeAndWait(this::showDialog);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				finished = true;
+			} catch (InvocationTargetException e) {
+				e.getCause().printStackTrace();
+				finished = true;
+			}
+		}
+
+		/** Must only run on the EDT -- called directly if already there, or marshaled via invokeAndWait otherwise. */
+		private void showDialog() {
 			JFrame frame = new JFrame();
 			frame.setAlwaysOnTop(true);
 
@@ -101,7 +137,6 @@ public abstract class NumerificationInputDialogFunction<T extends Number>
 			}
 
 			finished = true;
-
 		}
 
 		public T getValue() {

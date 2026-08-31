@@ -50,6 +50,9 @@ public class PostgreSQL {
 	}
 
 	public static String replaceMySQLQuotes(String sql) {
+		if (sql == null)
+			return null;
+
 		String r = sql.replace("`", "\"");
 		return r;
 

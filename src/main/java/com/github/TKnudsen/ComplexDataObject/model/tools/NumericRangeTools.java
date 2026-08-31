@@ -10,7 +10,9 @@ import java.util.function.Function;
  *
  * Guarantees: returns only finite and usable ranges. Throws if: - no finite
  * values exist - minimum/maximum are not finite (before or after bounds) -
- * final range is invalid or degenerate
+ * final range is invalid or degenerate (min == max -- thrown as
+ * {@link DegenerateRangeException}, a dedicated type so callers can catch
+ * this specific, well-understood condition deliberately)
  * </p>
  */
 public final class NumericRangeTools {
@@ -92,8 +94,9 @@ public final class NumericRangeTools {
 					"NumericRangeTools.computeFiniteRangeStrict: invalid range: min=" + min + " > max=" + max);
 		}
 		if (min == max) {
-			throw new IllegalStateException("NumericRangeTools.computeFiniteRangeStrict: degenerate range (min==max=="
-					+ min + "). Ensure variance or widen bounds.");
+			throw new DegenerateRangeException(
+					"NumericRangeTools.computeFiniteRangeStrict: degenerate range (min==max==" + min
+							+ "). Ensure variance or widen bounds.");
 		}
 
 		return new NumericRange(min, max, finiteCount);

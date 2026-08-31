@@ -1,5 +1,10 @@
 package com.github.TKnudsen.ComplexDataObject.model.io.sql;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,6 +103,23 @@ public class SQLTableIndex {
 	 */
 	public static double WRITE_HEAVY_WARN_RATIO = 2.0;
 
+	/**
+	 * How long a "disqualified" (too few rows) verdict is trusted before being
+	 * re-checked.
+	 *
+	 * <p>
+	 * Without this, a table that was too small the first time it was queried
+	 * (e.g. a newly created score type, starting at 0 rows) stayed marked
+	 * disqualified for the remaining lifetime of the JVM process, even after
+	 * growing past {@link #MIN_ROWS_FOR_INDEX} -- {@link #tableDisqualifiedCache}
+	 * was never invalidated except by a full process restart or an explicit
+	 * {@link #clearCache()} call. A "qualified" verdict has no equivalent TTL: a
+	 * table that has already earned an index only grows in these workloads
+	 * (append-only score/time-series tables), so re-checking it can only ever
+	 * confirm the same answer.
+	 */
+	public static long DISQUALIFICATION_TTL_MILLIS = TimeUnit.HOURS.toMillis(24);
+
 	// -------------------------------------------------------------------------
 	// In-memory registries -- all cached per session so DB is only hit once.
 	// Key for combinations : "schema.table|col1,col2,..."
@@ -107,8 +131,8 @@ public class SQLTableIndex {
 	private static final Set<String> tableQualifiedCache = Collections
 			.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
-	private static final Set<String> tableDisqualifiedCache = Collections
-			.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	/** tableKey -> the {@link System#currentTimeMillis()} at which it was marked disqualified. See {@link #DISQUALIFICATION_TTL_MILLIS}. */
+	private static final ConcurrentHashMap<String, Long> tableDisqualifiedCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Per-combinationKey lock objects, so concurrent callers for different
@@ -118,6 +142,111 @@ public class SQLTableIndex {
 	 * grow unbounded across a long-running process with many distinct tables.
 	 */
 	private static final ConcurrentHashMap<String, Object> keyLocks = new ConcurrentHashMap<String, Object>();
+
+	// -------------------------------------------------------------------------
+	// Optional cross-restart persistence of verified combinations
+	//
+	// handledCombinations above is what makes a combination free for the rest
+	// of *this* JVM run, but it starts empty every time the process restarts --
+	// so a table verified and found already-indexed yesterday pays the same
+	// row-count/selectivity/pg_indexes round trips again today, for no reason:
+	// the verdict can't have changed. This section makes that verdict durable,
+	// entirely opt-in (see setPersistenceFile) -- with no file configured, this
+	// class behaves exactly as it always has.
+	// -------------------------------------------------------------------------
+
+	/**
+	 * File to persist verified combinations to, across JVM restarts. {@code
+	 * null} (the default) means no persistence: every combination is verified
+	 * fresh once per session, same as before this mechanism existed. This
+	 * module has no file-location or application-location awareness of its own
+	 * -- see {@link #setPersistenceFile(File)}.
+	 */
+	private static volatile File persistenceFile;
+
+	private static volatile boolean persistenceLoaded = false;
+
+	private static final Object persistLock = new Object();
+
+	/**
+	 * Installs (or clears, with {@code null}) the file this class persists
+	 * verified combinations to, and immediately loads any combinations already
+	 * recorded there into {@link #handledCombinations} -- so a combination
+	 * verified in a prior run skips straight past every check in {@link
+	 * #ensureIndexForWhereClause} this run, not just within a single session.
+	 * Only combinations found to already have a satisfying index are persisted
+	 * (see the call site in {@code ensureIndexForWhereClause}) -- a
+	 * disqualified table (too few rows, poor selectivity) is deliberately never
+	 * persisted, so it keeps being re-checked fresh each run in case it grew
+	 * past the threshold since.
+	 *
+	 * <p>
+	 * Intended to be called once, early at application startup, before any
+	 * query using this mechanism runs.
+	 *
+	 * @param file the file to persist to and load from, or {@code null} to
+	 *             disable persistence (session-only caching, as before)
+	 */
+	public static void setPersistenceFile(File file) {
+		persistenceFile = file;
+		persistenceLoaded = false;
+		loadPersistedCombinationsOnce();
+	}
+
+	private static void loadPersistedCombinationsOnce() {
+		if (persistenceLoaded)
+			return;
+
+		synchronized (persistLock) {
+			if (persistenceLoaded)
+				return;
+			persistenceLoaded = true;
+
+			File file = persistenceFile;
+			if (file == null || !file.exists())
+				return;
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					line = line.trim();
+					if (!line.isEmpty())
+						handledCombinations.add(line);
+				}
+			} catch (IOException e) {
+				// Best-effort -- a failed load just means every combination gets
+				// verified fresh this run, same as if no file were configured at all.
+			}
+		}
+	}
+
+	/**
+	 * Appends {@code combinationKey} to {@link #persistenceFile}, if one is
+	 * configured. Called only for combinations confirmed to already have a
+	 * satisfying index (see the call site) -- never for a disqualified table,
+	 * so a "too small to index" verdict is always re-checked fresh next run
+	 * rather than trusted forever.
+	 */
+	private static void persistCombinationKey(String combinationKey) {
+		File file = persistenceFile;
+		if (file == null)
+			return;
+
+		synchronized (persistLock) {
+			try {
+				File parent = file.getParentFile();
+				if (parent != null && !parent.exists())
+					parent.mkdirs();
+
+				try (FileWriter writer = new FileWriter(file, true)) {
+					writer.write(combinationKey + System.lineSeparator());
+				}
+			} catch (IOException e) {
+				// Best-effort -- losing one persisted verdict just means that
+				// combination gets re-verified next run, not a correctness issue.
+			}
+		}
+	}
 
 	// -------------------------------------------------------------------------
 	// Column extraction patterns
@@ -131,12 +260,44 @@ public class SQLTableIndex {
 	// and special chars (e.g. "Score Relative of wachstumFMP [-s]")
 	// P3: unquoted word before operator -> only plain [A-Za-z_][A-Za-z0-9_]*
 	// Used as last resort for legacy raw strings like: ISIN = 'x'
+	//
+	// The _OP variants additionally capture the comparison operator in group 2,
+	// used to classify a column as equality-like (=, IN, IS) or range-like
+	// (<, <=, >, >=, !=, <>, LIKE) -- see FilterColumn / buildOrderedIndexColumns.
+	// They are tried first; any identifier the plain (non-_OP) patterns find but
+	// the _OP variants miss (no operator directly adjacent, e.g. inside a nested
+	// expression) still gets included, defaulting to equality -- matching this
+	// class's previous behavior for every column, before operator classification
+	// existed.
 	// -------------------------------------------------------------------------
 	private static final Pattern P_DOUBLE_QUOTED = Pattern.compile("\"([^\"]+)\"");
 	private static final Pattern P_BACKTICK_QUOTED = Pattern.compile("`([^`]+)`");
-	private static final Pattern P_UNQUOTED = Pattern.compile(
-			"\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?:=|!=|<>|<=|>=|<|>|\\bIN\\b|\\bLIKE\\b|\\bIS\\b)",
+	private static final String OPERATOR_GROUP = "(=|!=|<>|<=|>=|<|>|\\bIN\\b|\\bLIKE\\b|\\bIS\\b)";
+	private static final Pattern P_DOUBLE_QUOTED_OP = Pattern.compile("\"([^\"]+)\"\\s*" + OPERATOR_GROUP,
 			Pattern.CASE_INSENSITIVE);
+	private static final Pattern P_BACKTICK_QUOTED_OP = Pattern.compile("`([^`]+)`\\s*" + OPERATOR_GROUP,
+			Pattern.CASE_INSENSITIVE);
+	private static final Pattern P_UNQUOTED = Pattern.compile(
+			"\\b([A-Za-z_][A-Za-z0-9_]*)\\s*" + OPERATOR_GROUP, Pattern.CASE_INSENSITIVE);
+
+	/** One column referenced in a WHERE clause, plus whether it was compared with an equality-like or range-like operator. */
+	static final class FilterColumn {
+		final String name;
+		/** true for =, IN, IS; false for range/inequality operators (<, <=, >, >=, !=, <>, LIKE). */
+		final boolean equality;
+
+		FilterColumn(String name, boolean equality) {
+			this.name = name;
+			this.equality = equality;
+		}
+	}
+
+	private static boolean isEqualityOperator(String op) {
+		if (op == null)
+			return true;
+		String o = op.trim().toUpperCase();
+		return o.equals("=") || o.equals("IN") || o.equals("IS");
+	}
 
 	// -------------------------------------------------------------------------
 	// Public API
@@ -166,14 +327,17 @@ public class SQLTableIndex {
 
 		long t = System.currentTimeMillis();
 
-		List<String> filterColumns = extractColumnsFromWhereClause(whereClause);
+		List<FilterColumn> filterColumns = extractColumnsFromWhereClause(whereClause);
 
 		if (filterColumns.isEmpty() && orderAttribute == null)
 			return;
 
-		List<String> allColumns = new ArrayList<String>(filterColumns);
-		if (orderAttribute != null && !filterColumns.contains(orderAttribute))
-			allColumns.add(orderAttribute);
+		// Equality columns first, then range columns, then the ORDER BY column
+		// last -- see buildOrderedIndexColumns. This is also the column order used
+		// for combinationKey, so two WHERE clauses referencing the same columns in
+		// different textual order (e.g. "date">=X AND "ISIN"=Y vs. the reverse)
+		// share one cache entry and one index instead of each computing its own.
+		List<String> allColumns = buildOrderedIndexColumns(filterColumns, orderAttribute);
 
 		String combinationKey = buildKey(schema, tableName, allColumns);
 
@@ -198,8 +362,26 @@ public class SQLTableIndex {
 					return;
 				}
 
-				if (tableQualifiesForIndex(conn, schema, tableName, filterColumns))
-					ensureIndexInDatabase(conn, schema, tableName, filterColumns, orderAttribute);
+				if (tableQualifiesForIndex(conn, schema, tableName, names(filterColumns))) {
+					// Redundancy check: an existing index whose leading columns already
+					// match allColumns (in order) already serves this access pattern --
+					// e.g. an existing (ISIN, date) index already covers a later need for
+					// just (ISIN). Without this, every new-but-overlapping WHERE/ORDER-BY
+					// combination created its own index, accumulating overlapping indexes
+					// that all cost write overhead without adding read benefit.
+					if (isLeftmostPrefixCovered(existingIndexColumnLists(conn, schema, tableName), allColumns))
+						System.out.println("SQLTableIndex: " + schema + "." + tableName + " columns " + allColumns
+								+ " already covered by an existing index -- skipping.");
+					else
+						ensureIndexInDatabase(conn, schema, tableName, allColumns, orderAttribute);
+
+					// Persisted only here, not for a disqualified table below: the table
+					// now has (or already had) a satisfying index either way, and that
+					// can't become untrue on its own -- whereas "too few rows" or "poor
+					// selectivity" can, so those verdicts stay session-only and get
+					// re-checked fresh every run.
+					persistCombinationKey(combinationKey);
+				}
 
 				// Mark as handled regardless so we don't re-check every query
 				handledCombinations.add(combinationKey);
@@ -287,6 +469,129 @@ public class SQLTableIndex {
 	}
 
 	/**
+	 * Returns just the plain column names of {@code filterColumns}, in order,
+	 * discarding the equality/range classification -- for callers (e.g.
+	 * {@link #tableQualifiesForIndex}) that only need the names.
+	 */
+	private static List<String> names(List<FilterColumn> filterColumns) {
+		List<String> result = new ArrayList<String>(filterColumns.size());
+		for (FilterColumn fc : filterColumns)
+			result.add(fc.name);
+		return result;
+	}
+
+	/**
+	 * Builds the final, ordered column list for a composite index: equality
+	 * columns first, then range columns, then {@code orderAttribute} appended
+	 * last (unless already present). Equality-before-range is the standard
+	 * composite-index design rule -- Postgres can narrow down via the equality
+	 * columns' exact match before scanning the range column, whereas a range
+	 * column earlier in the index would stop the equality columns after it from
+	 * being usable for narrowing at all.
+	 */
+	private static List<String> buildOrderedIndexColumns(List<FilterColumn> filterColumns, String orderAttribute) {
+		List<String> equality = new ArrayList<String>();
+		List<String> range = new ArrayList<String>();
+		for (FilterColumn fc : filterColumns) {
+			if (fc.name.equals(orderAttribute))
+				continue; // orderAttribute is appended explicitly below, in its own trailing position
+			(fc.equality ? equality : range).add(fc.name);
+		}
+		List<String> result = new ArrayList<String>(equality);
+		result.addAll(range);
+		if (orderAttribute != null)
+			result.add(orderAttribute);
+		return result;
+	}
+
+	/**
+	 * Returns {@code true} if some existing index on the table already covers
+	 * {@code neededColumns} as a leftmost prefix -- i.e. Postgres can already use
+	 * that index to serve this access pattern, so creating a new, overlapping one
+	 * would only add write overhead without adding read benefit.
+	 */
+	private static boolean isLeftmostPrefixCovered(List<List<String>> existingIndexColumnLists,
+			List<String> neededColumns) {
+		for (List<String> existing : existingIndexColumnLists) {
+			if (existing.size() < neededColumns.size())
+				continue;
+			boolean matches = true;
+			for (int i = 0; i < neededColumns.size(); i++)
+				if (!existing.get(i).equalsIgnoreCase(neededColumns.get(i))) {
+					matches = false;
+					break;
+				}
+			if (matches)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the column list (in definition order) of every existing index on
+	 * {@code schema.tableName}, parsed from {@code pg_indexes.indexdef}. Used by
+	 * {@link #isLeftmostPrefixCovered} -- always queries live, never cached,
+	 * since it must reflect indexes created in prior sessions too, not just ones
+	 * this process created.
+	 */
+	private static List<List<String>> existingIndexColumnLists(Connection conn, String schema, String tableName)
+			throws SQLException {
+		List<List<String>> result = new ArrayList<List<String>>();
+		String sql = "SELECT indexdef FROM pg_indexes WHERE schemaname = '" + schema + "' AND tablename = '"
+				+ tableName + "'";
+
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while (rs.next())
+				result.add(parseIndexDefColumns(rs.getString("indexdef")));
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					/* ignore */ }
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					/* ignore */ }
+		}
+		return result;
+	}
+
+	/**
+	 * Extracts the ordered column list from a {@code pg_indexes.indexdef} string,
+	 * e.g. {@code CREATE INDEX idx ON "s"."t" USING btree ("ISIN", "date" DESC)}
+	 * -> {@code ["ISIN", "date"]}. Takes the last parenthesized group (the column
+	 * list always comes last in this DDL shape) and strips quoting/ASC/DESC from
+	 * each comma-separated entry. Returns an empty list if the definition doesn't
+	 * match the expected shape rather than throwing -- a parse miss here should
+	 * degrade to "assume not covered, create the index anyway", never crash the
+	 * caller.
+	 */
+	private static List<String> parseIndexDefColumns(String indexDef) {
+		List<String> columns = new ArrayList<String>();
+		if (indexDef == null)
+			return columns;
+
+		int open = indexDef.lastIndexOf('(');
+		int close = indexDef.lastIndexOf(')');
+		if (open < 0 || close < 0 || close <= open)
+			return columns;
+
+		String inner = indexDef.substring(open + 1, close);
+		for (String part : inner.split(",")) {
+			String c = part.trim().replaceAll("(?i)\\s+(ASC|DESC)$", "").replaceAll("^\"|\"$", "").trim();
+			if (!c.isEmpty())
+				columns.add(c);
+		}
+		return columns;
+	}
+
+	/**
 	 * Drops an index by name. Use with care.
 	 *
 	 * @param conn      active JDBC connection
@@ -309,6 +614,11 @@ public class SQLTableIndex {
 		for (String key : new ArrayList<String>(handledCombinations))
 			if (key.startsWith(prefix))
 				handledCombinations.remove(key);
+
+		// ...and the persisted copy, if any -- otherwise a future run's
+		// loadPersistedCombinationsOnce() would silently resurrect the verdict
+		// this call just went out of its way to invalidate.
+		removePersistedCombinationsForSchema(schema);
 	}
 
 	/**
@@ -319,6 +629,47 @@ public class SQLTableIndex {
 		handledCombinations.clear();
 		tableQualifiedCache.clear();
 		tableDisqualifiedCache.clear();
+
+		// Same rationale as dropIndex(): an explicit "start over" call should not
+		// be quietly undone by a persisted file resurrecting the old verdicts on
+		// the very next load.
+		File file = persistenceFile;
+		if (file != null)
+			synchronized (persistLock) {
+				file.delete();
+			}
+	}
+
+	/**
+	 * Rewrites {@link #persistenceFile} (if configured) excluding every entry
+	 * for {@code schema} -- see {@link #dropIndex(Connection, String, String)}.
+	 */
+	private static void removePersistedCombinationsForSchema(String schema) {
+		File file = persistenceFile;
+		if (file == null || !file.exists())
+			return;
+
+		String prefix = schema + ".";
+		synchronized (persistLock) {
+			List<String> kept = new ArrayList<String>();
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					String trimmed = line.trim();
+					if (!trimmed.isEmpty() && !trimmed.startsWith(prefix))
+						kept.add(trimmed);
+				}
+			} catch (IOException e) {
+				return; // best-effort -- leave the file as-is rather than risk losing it on a read error
+			}
+
+			try (FileWriter writer = new FileWriter(file, false)) {
+				for (String line : kept)
+					writer.write(line + System.lineSeparator());
+			} catch (IOException e) {
+				// best-effort
+			}
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -344,15 +695,24 @@ public class SQLTableIndex {
 
 		if (tableQualifiedCache.contains(tableKey))
 			return true;
-		if (tableDisqualifiedCache.contains(tableKey))
-			return false;
+
+		Long disqualifiedAt = tableDisqualifiedCache.get(tableKey);
+		if (disqualifiedAt != null) {
+			if (System.currentTimeMillis() - disqualifiedAt < DISQUALIFICATION_TTL_MILLIS)
+				return false;
+			// TTL expired -- a table disqualified for row count can only have grown
+			// since, never shrunk (append-only score/time-series workloads), so it is
+			// worth spending one more row-count check rather than trusting a verdict
+			// that may be many hours or days stale.
+			tableDisqualifiedCache.remove(tableKey);
+		}
 
 		// --- Check 1: row count ---
 		long rowCount = SQLTableStatistics.rowCount(conn, schema, tableName, false);
 		if (rowCount < MIN_ROWS_FOR_INDEX) {
 //			System.out.println("SQLTableIndex: table " + tableKey + " has only " + rowCount + " rows (< "
 //					+ MIN_ROWS_FOR_INDEX + ")  -  skipping index.");
-			tableDisqualifiedCache.add(tableKey);
+			tableDisqualifiedCache.put(tableKey, System.currentTimeMillis());
 			return false;
 		}
 
@@ -384,7 +744,7 @@ public class SQLTableIndex {
 		if (!anyColumnQualifies && !filterColumns.isEmpty()) {
 			System.out
 					.println("SQLTableIndex: no filter column in " + tableKey + " qualifies for indexing  -  skipping.");
-			tableDisqualifiedCache.add(tableKey);
+			tableDisqualifiedCache.put(tableKey, System.currentTimeMillis());
 			return false;
 		}
 
@@ -559,13 +919,17 @@ public class SQLTableIndex {
 	 * Creates the index in the database using {@code CREATE INDEX IF NOT EXISTS}.
 	 * The index name is deterministically derived from schema, table, and columns
 	 * so it is stable across restarts.
+	 *
+	 * @param indexCols      the final, already-ordered column list (see
+	 *                       {@link #buildOrderedIndexColumns}) -- callers must
+	 *                       include {@code orderAttribute} in this list already if
+	 *                       they want it indexed; it is not appended here.
+	 * @param orderAttribute if non-null and present in {@code indexCols}, that
+	 *                       column gets a {@code DESC} suffix in the index
+	 *                       definition. May be null.
 	 */
 	private static void ensureIndexInDatabase(Connection conn, String schema, String tableName,
-			List<String> filterColumns, String orderAttribute) throws SQLException {
-
-		List<String> indexCols = new ArrayList<String>(filterColumns);
-		if (orderAttribute != null && !indexCols.contains(orderAttribute))
-			indexCols.add(orderAttribute);
+			List<String> indexCols, String orderAttribute) throws SQLException {
 
 		if (indexCols.isEmpty())
 			return;
@@ -612,25 +976,46 @@ public class SQLTableIndex {
 	 * <p>
 	 * Known limitation: {@code SIMILAR TO} is not in the operator list because the
 	 * column before it is always captured by the quoted patterns in practice.
+	 *
+	 * <p>
+	 * Each returned {@link FilterColumn} also records whether it was compared
+	 * with an equality-like or range-like operator (see {@link #OPERATOR_GROUP}),
+	 * used by {@link #buildOrderedIndexColumns} to put equality columns before
+	 * range columns in a composite index -- the standard index-design rule, since
+	 * an equality-first, range-last column order lets Postgres narrow down via the
+	 * equality columns before scanning the range. A column found without a
+	 * directly-adjacent operator (e.g. inside a nested expression the _OP
+	 * patterns don't match) defaults to equality, matching this method's
+	 * behavior before operator classification existed.
 	 */
-	static List<String> extractColumnsFromWhereClause(String whereClause) {
+	static List<FilterColumn> extractColumnsFromWhereClause(String whereClause) {
 
-		List<String> columns = new ArrayList<String>();
+		List<FilterColumn> columns = new ArrayList<FilterColumn>();
 		if (whereClause == null || whereClause.trim().isEmpty())
 			return columns;
 
-		Set<String> seen = new LinkedHashSet<String>();
+		Map<String, Boolean> seen = new LinkedHashMap<String, Boolean>();
 
-		// Pattern 1: double-quoted identifiers "Column Name"
-		Matcher m1 = P_DOUBLE_QUOTED.matcher(whereClause);
+		// Pattern 1: double-quoted identifiers "Column Name" = / IN / IS / etc.
+		Matcher m1 = P_DOUBLE_QUOTED_OP.matcher(whereClause);
 		while (m1.find())
-			seen.add(m1.group(1));
+			seen.putIfAbsent(m1.group(1), isEqualityOperator(m1.group(2)));
 
-		// Pattern 2: backtick-quoted identifiers `Column Name`
+		// Pattern 2: backtick-quoted identifiers `Column Name` = / IN / IS / etc.
 		// Covers legacy MySQL-style WHERE clauses including those with spaces.
-		Matcher m2 = P_BACKTICK_QUOTED.matcher(whereClause);
+		Matcher m2 = P_BACKTICK_QUOTED_OP.matcher(whereClause);
 		while (m2.find())
-			seen.add(m2.group(1));
+			seen.putIfAbsent(m2.group(1), isEqualityOperator(m2.group(2)));
+
+		// Any quoted identifier the operator-aware patterns above missed (no
+		// directly-adjacent operator found) -- keep this method's prior recall,
+		// defaulting to equality since no operator was captured to say otherwise.
+		Matcher mAllDouble = P_DOUBLE_QUOTED.matcher(whereClause);
+		while (mAllDouble.find())
+			seen.putIfAbsent(mAllDouble.group(1), true);
+		Matcher mAllBacktick = P_BACKTICK_QUOTED.matcher(whereClause);
+		while (mAllBacktick.find())
+			seen.putIfAbsent(mAllBacktick.group(1), true);
 
 		// Pattern 3: unquoted identifiers before a comparison operator.
 		// Only used as fallback when no quoted identifiers were found, to avoid
@@ -640,11 +1025,12 @@ public class SQLTableIndex {
 			while (m3.find()) {
 				String col = m3.group(1);
 				if (!isSQLKeyword(col))
-					seen.add(col);
+					seen.putIfAbsent(col, isEqualityOperator(m3.group(2)));
 			}
 		}
 
-		columns.addAll(seen);
+		for (Map.Entry<String, Boolean> entry : seen.entrySet())
+			columns.add(new FilterColumn(entry.getKey(), entry.getValue()));
 		return columns;
 	}
 

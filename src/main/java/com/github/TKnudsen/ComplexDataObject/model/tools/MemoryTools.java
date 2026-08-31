@@ -61,6 +61,85 @@ public class MemoryTools {
 		System.out.printf("Used Memory: %.2f MB%n", memoryUsedMb);
 	}
 
+	/** Tracks the previous {@link #logCheckpoint(String)} reading for delta reporting. */
+	private static volatile Double lastCheckpointMb;
+
+	/**
+	 * Labeled memory checkpoint for tracking usage across a multi-phase loading
+	 * sequence -- unlike {@link #freeMemory()} (an anonymous, un-timestamped
+	 * snapshot), this attributes each reading to a named phase and reports how
+	 * much memory that phase itself added, which is what actually helps narrow
+	 * down a leak rather than just observing that total usage grew somewhere
+	 * during the run.
+	 *
+	 * <p>
+	 * This class is a low-level, dependency-free utility used across many
+	 * projects, so it deliberately does not persist checkpoints to a file --
+	 * doing so would require a project-specific file-location convention this
+	 * class has no business knowing about. A caller that wants cross-run
+	 * persistence should use the returned value to write its own log entry (see
+	 * {@code PostgreSQLTools.selectContainer} in stocksapi for an example).
+	 *
+	 * <p>
+	 * Not thread-safe against concurrent callers racing on {@code
+	 * lastCheckpointMb} -- intended for a single logical loading sequence (a
+	 * startup path, a batch job's main phases), not for checkpoints fired from
+	 * multiple threads at once.
+	 *
+	 * @param label a short, human-readable name for this checkpoint (e.g. the
+	 *              attribute category or loading phase just completed)
+	 * @return the used-memory reading at this checkpoint, in MB
+	 */
+	public static double logCheckpoint(String label) {
+		Checkpoint checkpoint = checkpoint();
+
+		String delta = checkpoint.deltaMb == null ? "n/a" : String.format("%+.2f MB", checkpoint.deltaMb);
+		System.out.printf("Used Memory [%s]: %.2f MB (delta: %s since last checkpoint)%n", label, checkpoint.usedMb,
+				delta);
+
+		return checkpoint.usedMb;
+	}
+
+	/**
+	 * Silent counterpart to {@link #logCheckpoint(String)} -- reads and tracks
+	 * the same {@link #lastCheckpointMb} state (advancing it exactly as {@link
+	 * #logCheckpoint(String)} does) but returns the reading instead of printing
+	 * it. For a caller that wants to fold the memory reading into a line of its
+	 * own (e.g. one row of a table) rather than getting a separate printed line
+	 * it doesn't control.
+	 *
+	 * @return the used-memory reading and its delta from the previous checkpoint
+	 *         (whichever caller made it, {@link #logCheckpoint(String)} or this
+	 *         method)
+	 */
+	public static Checkpoint checkpoint() {
+		Runtime runtime = Runtime.getRuntime();
+		long memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+		double memoryUsedMb = (double) memoryUsed / (1024 * 1024);
+
+		Double previous = lastCheckpointMb;
+		Double deltaMb = previous == null ? null : memoryUsedMb - previous;
+		lastCheckpointMb = memoryUsedMb;
+
+		return new Checkpoint(memoryUsedMb, deltaMb);
+	}
+
+	/**
+	 * A single memory reading paired with its delta from the previous checkpoint
+	 * (whichever caller made it). {@link #deltaMb} is {@code null} for the first
+	 * checkpoint of a run, since there is nothing to compare against yet.
+	 */
+	public static final class Checkpoint {
+
+		public final double usedMb;
+		public final Double deltaMb;
+
+		private Checkpoint(double usedMb, Double deltaMb) {
+			this.usedMb = usedMb;
+			this.deltaMb = deltaMb;
+		}
+	}
+
 	/**
 	 * Analyzes and prints memory consumption of a ComplexDataObject. Shows detailed
 	 * breakdown per attribute including type and estimated size.
