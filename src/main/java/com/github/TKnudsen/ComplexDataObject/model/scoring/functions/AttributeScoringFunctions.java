@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.JB.statisticalTesting.statistics.Correlations;
+import com.github.TKnudsen.statistics.Correlations;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.DoubleNumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;

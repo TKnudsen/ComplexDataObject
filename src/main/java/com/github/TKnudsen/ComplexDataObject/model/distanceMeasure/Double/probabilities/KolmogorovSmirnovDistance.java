@@ -3,7 +3,7 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.proba
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.util.LocalizedFormats;
 
-import com.JB.statisticalTesting.hypothesisTests.ApacheKolmogorovSmirnovTest;
+import com.github.TKnudsen.statistics.hypothesisTests.KolmogorovSmirnovTest;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
 
 /**
@@ -37,7 +37,7 @@ public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 	 */
 	private static final long serialVersionUID = -5659522174712724493L;
 
-	private final ApacheKolmogorovSmirnovTest ksTest = new ApacheKolmogorovSmirnovTest();
+	private final KolmogorovSmirnovTest ksTest = new KolmogorovSmirnovTest();
 
 	public KolmogorovSmirnovDistance() {
 	}

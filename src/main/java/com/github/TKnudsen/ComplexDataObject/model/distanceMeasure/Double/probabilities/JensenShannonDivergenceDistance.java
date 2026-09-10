@@ -1,6 +1,6 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities;
 
-import com.JB.statisticalTesting.statistics.JensenShannonDivergence;
+import com.github.TKnudsen.statistics.JensenShannonDivergence;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
 
 /**
