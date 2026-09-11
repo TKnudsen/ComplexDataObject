@@ -10,9 +10,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
+
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataContainer;
 import com.github.TKnudsen.ComplexDataObject.data.complexDataObject.ComplexDataObject;
-import com.github.TKnudsen.statistics.Correlations;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.DoubleNumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.numerification.NumerificationInputDialogFunction;
 import com.github.TKnudsen.ComplexDataObject.model.io.parsers.objects.BooleanParser;
@@ -329,7 +331,37 @@ public class AttributeScoringFunctions {
 			}
 		}
 
-		return Correlations.compute(values1, values2, pearson, spearman, minimumSize);
+		return computeCorrelation(values1, values2, pearson, spearman, minimumSize);
+	}
+
+	/**
+	 * TODO nice to have: unify this with
+	 * com.github.TKnudsen.statistics.Correlations once the statistics project
+	 * has obtained a resolvable Maven coordinate; it is duplicated here so that
+	 * ComplexDataObject, being a root project, does not depend on it.
+	 */
+	private static double computeCorrelation(Collection<Double> values1, Collection<Double> values2,
+			boolean pearson, boolean spearman, int minimumSize) {
+		if (values1.size() != values2.size())
+			throw new IllegalArgumentException("AttributeScoringFunctions: collections must be equal length");
+
+		int n = values1.size();
+		if (n < Math.max(3, minimumSize))
+			return Double.NaN;
+
+		double[] a1 = values1.stream().mapToDouble(Double::doubleValue).toArray();
+		double[] a2 = values2.stream().mapToDouble(Double::doubleValue).toArray();
+
+		Double p = pearson ? new PearsonsCorrelation().correlation(a1, a2) : null;
+		Double s = spearman ? new SpearmansCorrelation().correlation(a1, a2) : null;
+
+		if (p != null && s == null)
+			return p;
+		if (p == null && s != null)
+			return s;
+		if (p == null)
+			return Double.NaN;
+		return (p + s) * 0.5;
 	}
 
 }

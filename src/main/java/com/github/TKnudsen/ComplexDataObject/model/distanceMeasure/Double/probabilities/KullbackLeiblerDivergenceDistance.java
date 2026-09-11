@@ -1,6 +1,5 @@
 package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.probabilities;
 
-import com.github.TKnudsen.statistics.KullbackLeiblerDivergence;
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
 
 /**
@@ -22,6 +21,12 @@ import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.Double
  *
  * @version 1.03
  * @since 2018
+ *
+ *        TODO nice to have: unify this Kullback-Leibler computation with
+ *        com.github.TKnudsen.statistics.KullbackLeiblerDivergence once the
+ *        statistics project has obtained a resolvable Maven coordinate; it is
+ *        duplicated here so that ComplexDataObject, being a root project,
+ *        does not depend on it.
  */
 public class KullbackLeiblerDivergenceDistance extends DoubleDistanceMeasure {
 
@@ -53,10 +58,34 @@ public class KullbackLeiblerDivergenceDistance extends DoubleDistanceMeasure {
 		if (o1.length != o2.length)
 			throw new IllegalArgumentException(getName() + ": given arrays have different length");
 
-		double kullbackLeiblerDivergence = KullbackLeiblerDivergence.getKullbackLeiblerDivergence(o1, o2,
-				handleZeroToInfinityProblem);
+		double kullbackLeiblerDivergence = getKullbackLeiblerDivergence(o1, o2, handleZeroToInfinityProblem);
 
 		return Math.sqrt(Math.abs(kullbackLeiblerDivergence));
+	}
+
+	private static double getKullbackLeiblerDivergence(double[] o1, double[] o2,
+			boolean handleZeroToInfinityProblem) {
+		double klDivergence = 0.0;
+
+		for (int i = 0; i < o1.length; ++i) {
+			double a = o1[i];
+			if (handleZeroToInfinityProblem) {
+				if (a >= 0.0 && a <= zeroReplacement)
+					a = zeroReplacement;
+			} else if (a == 0.0)
+				return Double.POSITIVE_INFINITY;
+
+			double b = o2[i];
+			if (handleZeroToInfinityProblem) {
+				if (b >= 0.0 && b <= zeroReplacement)
+					b = zeroReplacement;
+			} else if (b == 0.0)
+				return Double.POSITIVE_INFINITY;
+
+			klDivergence += a * Math.log(a / b);
+		}
+
+		return klDivergence;
 	}
 
 	@Override

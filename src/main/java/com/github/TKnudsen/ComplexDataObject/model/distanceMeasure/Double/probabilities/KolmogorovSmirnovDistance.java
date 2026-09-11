@@ -3,7 +3,8 @@ package com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.proba
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.util.LocalizedFormats;
 
-import com.github.TKnudsen.statistics.hypothesisTests.KolmogorovSmirnovTest;
+import org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest;
+
 import com.github.TKnudsen.ComplexDataObject.model.distanceMeasure.Double.DoubleDistanceMeasure;
 
 /**
@@ -52,7 +53,7 @@ public class KolmogorovSmirnovDistance extends DoubleDistanceMeasure {
 			// test will throw an exception. return max distance.
 			return 1.0;
 
-		return ksTest.statistic(o1, o2);
+		return ksTest.kolmogorovSmirnovStatistic(o1, o2);
 	}
 
 	@Override
