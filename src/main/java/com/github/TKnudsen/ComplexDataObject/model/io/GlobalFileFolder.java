@@ -126,6 +126,34 @@ public class GlobalFileFolder {
 				+ " deploy folder. Delete " + deployLocationFile + " and restart to re-select the folder.");
 	}
 
+	/**
+	 * Forces a fresh directory-chooser prompt and re-resolves the deploy
+	 * directory from scratch, regardless of any previously cached or persisted
+	 * value. Intended for callers that resolved a directory successfully (it
+	 * exists on disk) but then discovered it's actually the wrong one -- e.g. a
+	 * stale entry left over from before the deploy folder was moved -- and want
+	 * to self-heal by asking the user for the current location instead of just
+	 * failing. The newly picked path is written ahead of every existing entry
+	 * (see {@link #write(String)}), so it takes priority over stale entries on
+	 * this and future runs without discarding the file's history.
+	 *
+	 * @return the freshly selected deploy directory, or {@code null} if the user
+	 *         cancelled the chooser dialog
+	 */
+	public String resolveReselectedGlobalResourcesDir() {
+		globalResourcesDir = null;
+		queryForFolder();
+
+		try {
+			String path = load();
+			globalResourcesDir = path;
+			return path;
+		} catch (IOException e) {
+			throw new IllegalStateException(
+					"GlobalFileFolder.resolveReselectedGlobalResourcesDir: failed to read " + deployLocationFile, e);
+		}
+	}
+
 	public InputStream resolveResourceAsStream(String resourceName) throws IOException {
 		return new FileInputStream(resolveResourceFile(resourceName));
 	}
@@ -181,9 +209,31 @@ public class GlobalFileFolder {
 	    return null;
 	}
 
+	/**
+	 * Writes {@code folderPath} as the new first line of {@link
+	 * #deployLocationFile}, ahead of whatever lines are already there. {@link
+	 * #load()} always returns the first existing directory it finds, so a freshly
+	 * confirmed selection must win over any older entries that may still happen
+	 * to exist on disk (e.g. a stale mirror/backup folder from before a move) --
+	 * appending to the end would otherwise leave a stale-but-still-present entry
+	 * in permanent control of resolution. Existing lines are kept, not discarded,
+	 * so the file still doubles as a per-machine history of prior locations.
+	 */
 	private void write(String folderPath) {
 		try {
-			FileTools.writeString(deployLocationFile, folderPath, true);
+			List<String> existingLines;
+			try {
+				existingLines = FileTools.readLines(deployLocationFile.toString());
+			} catch (IOException e) {
+				existingLines = java.util.Collections.emptyList();
+			}
+
+			StringBuilder content = new StringBuilder(folderPath);
+			for (String line : existingLines)
+				if (!line.trim().equals(folderPath))
+					content.append(System.lineSeparator()).append(line);
+
+			FileTools.writeString(deployLocationFile, content.toString(), false);
 			LOG.info("GlobalFileFolder: deploy path written to " + deployLocationFile);
 		} catch (UncheckedIOException e) {
 			LOG.log(Level.WARNING, "GlobalFileFolder: failed to write deploy path to " + deployLocationFile, e);
