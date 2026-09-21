@@ -57,11 +57,11 @@ import com.github.TKnudsen.ComplexDataObject.model.tools.FileTools;
  * <p>
  * The path is persisted in a small text file (whose name is given to the
  * constructor) in the working directory. On first access, if that file does not
- * exist or contains no valid path, a Swing directory chooser is shown and the
- * selected path is appended to the file for future runs. The file may contain
- * multiple lines - the first line whose path actually exists on the current
- * machine is used, which allows the same file to be shared across machines with
- * different drive layouts.
+ * exist, contains no valid path, or contains more than one line that currently
+ * exists as a real directory (ambiguous -- which one is actually current?), a
+ * Swing directory chooser is shown; the confirmed selection then replaces the
+ * file's entire contents, so a stale entry from before a move can never again
+ * cause a silent, unconfirmed guess.
  * 
  * @version 2.0 added here in February 2026
  */
@@ -133,9 +133,9 @@ public class GlobalFileFolder {
 	 * exists on disk) but then discovered it's actually the wrong one -- e.g. a
 	 * stale entry left over from before the deploy folder was moved -- and want
 	 * to self-heal by asking the user for the current location instead of just
-	 * failing. The newly picked path is written ahead of every existing entry
-	 * (see {@link #write(String)}), so it takes priority over stale entries on
-	 * this and future runs without discarding the file's history.
+	 * failing. The confirmed selection replaces the deploy location file's
+	 * entire contents (see {@link #write(String)}), so it wins on this and every
+	 * future run.
 	 *
 	 * @return the freshly selected deploy directory, or {@code null} if the user
 	 *         cancelled the chooser dialog
@@ -199,41 +199,45 @@ public class GlobalFileFolder {
 		}
 	}
 
+	/**
+	 * Returns the single existing directory named in {@link #deployLocationFile},
+	 * or {@code null} if none exist yet (first run) or if more than one distinct
+	 * line currently exists as a real directory on disk. The latter case used to
+	 * silently resolve to whichever line came first -- e.g. a stale folder left
+	 * over from before a move, sitting ahead of the actual current one purely by
+	 * file order -- which meant a wrong-but-plausible answer could persist for a
+	 * long time with nothing ever prompting the user to confirm it. Returning
+	 * {@code null} here instead routes straight into {@link
+	 * #resolveGlobalResourcesDir()}'s existing "ask the user" fallback, so
+	 * ambiguity always surfaces as a chooser dialog rather than a silent guess.
+	 */
 	private String load() throws IOException {
 		List<String> lines = FileTools.readLines(deployLocationFile.toString());
-	    for (String line : lines) {
-	        String trimmed = line.trim();
-	        if (!trimmed.isEmpty() && Files.isDirectory(Paths.get(trimmed)))
-	            return trimmed;
-	    }
-	    return null;
+		List<String> existingCandidates = new java.util.ArrayList<>();
+		for (String line : lines) {
+			String trimmed = line.trim();
+			if (!trimmed.isEmpty() && Files.isDirectory(Paths.get(trimmed)) && !existingCandidates.contains(trimmed))
+				existingCandidates.add(trimmed);
+		}
+
+		if (existingCandidates.size() > 1)
+			LOG.warning("GlobalFileFolder: " + deployLocationFile + " lists " + existingCandidates.size()
+					+ " different folders that all currently exist (" + existingCandidates
+					+ ") -- ambiguous, prompting for the correct one instead of guessing.");
+
+		return existingCandidates.size() == 1 ? existingCandidates.get(0) : null;
 	}
 
 	/**
-	 * Writes {@code folderPath} as the new first line of {@link
-	 * #deployLocationFile}, ahead of whatever lines are already there. {@link
-	 * #load()} always returns the first existing directory it finds, so a freshly
-	 * confirmed selection must win over any older entries that may still happen
-	 * to exist on disk (e.g. a stale mirror/backup folder from before a move) --
-	 * appending to the end would otherwise leave a stale-but-still-present entry
-	 * in permanent control of resolution. Existing lines are kept, not discarded,
-	 * so the file still doubles as a per-machine history of prior locations.
+	 * Replaces {@link #deployLocationFile}'s entire contents with just {@code
+	 * folderPath} -- once the user has explicitly confirmed a folder via the
+	 * chooser dialog, that answer is authoritative, and discarding every other
+	 * line is what prevents a stale entry from ever causing the ambiguity {@link
+	 * #load()} checks for again.
 	 */
 	private void write(String folderPath) {
 		try {
-			List<String> existingLines;
-			try {
-				existingLines = FileTools.readLines(deployLocationFile.toString());
-			} catch (IOException e) {
-				existingLines = java.util.Collections.emptyList();
-			}
-
-			StringBuilder content = new StringBuilder(folderPath);
-			for (String line : existingLines)
-				if (!line.trim().equals(folderPath))
-					content.append(System.lineSeparator()).append(line);
-
-			FileTools.writeString(deployLocationFile, content.toString(), false);
+			FileTools.writeString(deployLocationFile, folderPath, false);
 			LOG.info("GlobalFileFolder: deploy path written to " + deployLocationFile);
 		} catch (UncheckedIOException e) {
 			LOG.log(Level.WARNING, "GlobalFileFolder: failed to write deploy path to " + deployLocationFile, e);
