@@ -107,4 +107,32 @@ public final class NumericRangeTools {
 
 		return computeFiniteRangeStrict(data, worldToNumberMapping, null, null);
 	}
+
+	/**
+	 * Same as {@link #computeFiniteRangeStrict(Collection, Function, Number, Number)},
+	 * except a degenerate (min == max) range does not throw
+	 * {@link DegenerateRangeException} -- it re-derives the single repeated
+	 * (finite) mapped value and returns a {@code [value, value]} range instead.
+	 * Useful for callers that render/lay out a single-value (or otherwise
+	 * zero-variance) dataset and must not crash on it, e.g. a distribution/
+	 * histogram widget over a column whose values are currently all identical
+	 * (or all still at a default such as 0.0).
+	 */
+	public static <T> NumericRange computeFiniteRangeTolerant(Collection<? extends T> data,
+			Function<? super T, ? extends Number> worldToNumberMapping, Number minGlobal, Number maxGlobal) {
+		try {
+			return computeFiniteRangeStrict(data, worldToNumberMapping, minGlobal, maxGlobal);
+		} catch (DegenerateRangeException e) {
+			double value = data.stream().map(worldToNumberMapping)
+					.filter(v -> v != null && Double.isFinite(v.doubleValue())).map(Number::doubleValue).findFirst()
+					.orElse(0d);
+			return new NumericRange(value, value, data.size());
+		}
+	}
+
+	public static <T> NumericRange computeFiniteRangeTolerant(Collection<? extends T> data,
+			Function<? super T, ? extends Number> worldToNumberMapping) {
+
+		return computeFiniteRangeTolerant(data, worldToNumberMapping, null, null);
+	}
 }
