@@ -7,6 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -82,7 +84,18 @@ public class FileClampConfigurationStore implements ClampConfigurationStore {
 			if (file.getParentFile() != null)
 				file.getParentFile().mkdirs();
 
-			MAPPER.writeValue(file, content);
+			// sorted alphabetically (case-insensitive), purely for findability
+			// when a human opens the file directly -- built fresh on every
+			// write rather than kept sorted in `content` itself, since
+			// Jackson recreates the map via its no-arg constructor on
+			// deserialization and would silently drop a custom comparator
+			FileContent sorted = new FileContent();
+			sorted.entries = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+			sorted.entries.putAll(content.entries);
+			sorted.ignored = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+			sorted.ignored.addAll(content.ignored);
+
+			MAPPER.writeValue(file, sorted);
 		} catch (IOException e) {
 			LOG.severe("FileClampConfigurationStore: failed to write '" + filePath + "': " + e.getMessage());
 		}
